@@ -1,104 +1,224 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/base/config/app_config.dart';
+import 'package:iroyal/base/design/colors.dart';
 
-const primary = Color(0xFF313352);
-const secondary = Color(0xFFFA8C26);
-const white = Color(0xFFFFFFFF);
-const black = Color.fromRGBO(0, 0, 0, 1);
-const grey = Color(0xFFD9D9D9);
-const greyHint = Color.fromRGBO(191, 186, 186, 1);
-const greyIcon = Color.fromRGBO(30, 30, 30, .4);
-const borderColor = Color.fromRGBO(217, 217, 217, 0.192);
-const red = Color.fromRGBO(236, 66, 96, 1);
-const greyText = Color.fromRGBO(99, 98, 98, 1);
-const green = Color(0xFF369B43);
+ThemeData appTheme(BuildContext context) {
+  return ThemeData(
+    platform: TargetPlatform.iOS,
+    primaryColor: MaterialColor(primary.value, materialColor),
+    primarySwatch: MaterialColor(primaryColor.value, materialColor),
+    fontFamily: AppConfig.fontFamily,
+    splashColor: Colors.white54,
+    scaffoldBackgroundColor: bgColor,
+    textTheme: context.textTheme.apply(bodyColor: appTextColor),
+    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: primaryColor),
+  );
+}
 
-const primaryColor = Color(0xFF004BBC);
-const primaryDark = Color.fromARGB(255, 13, 103, 98);
-const primaryAccent = Color.fromARGB(255, 156, 18, 220);
+ThemeData darkTheme(BuildContext context) {
+  return ThemeData(
+    platform: TargetPlatform.iOS,
 
-const Color primary10 = Color(0xFFB7CEF2);
-const Color primary30 = Color(0xFF5C8DD7);
-const Color primary50 = Color(0xFF004BBC);
-const Color primary70 = Color(0xFF002D71);
-const Color primary90 = Color(0xFF001E4B);
+    primaryColor: MaterialColor(primaryDark.value, materialColor),
+    primarySwatch: MaterialColor(primaryDark.value, materialColor),
+    fontFamily: AppConfig.fontFamily,
+    splashColor: Colors.white54,
+    scaffoldBackgroundColor: bgColorDark,
+    textTheme: context.textTheme.apply(bodyColor: Colors.white),
+    colorScheme: ColorScheme.fromSwatch(
+      brightness: Brightness.dark,
+    ).copyWith(secondary: primaryColor),
+    // textTheme: Theme.of(context).textTheme.apply(
+    //       bodyColor: Colors.white,
+    //       displayColor: Colors.white,
+    //     ),
+  );
+}
 
-const Color secondary90 = Color(0xFF003A49);
-const Color secondary70 = Color(0xFF007491);
-const Color secondary50 = Color(0xFF00C1F2);
-const Color secondary30 = Color(0xFF66DAF7);
-const Color secondary10 = Color(0xFFB2ECFB);
+class Insets {
+  static double get xs => 4.w;
+  static double get sm => 8.w;
+  static double get med => 12.w;
+  static double get lg => 16.w;
+  static double get xl => 20.w;
+  static double get xxl => 32.w;
+}
 
-const Color neutral90 = Color(0xFF101820);
-const Color neutral70 = Color(0xFF333333);
-const Color neutral50 = Color(0xFFBDBDBD);
-const Color neutral30 = Color(0xFFDCDCDC);
-const Color neutral20 = Color(0xFF808080);
-const Color neutral10 = Color(0xFFF5F1F1);
-const Color neutral5 = Color(0xFFFFFFFF);
+class IconSizes {
+  static double get xs => 12.w;
+  static double get sm => 20.w;
+  static double get med => 28.w;
+  static double get lg => 32.w;
+  static double get xl => 48.w;
+  static double get xxl => 64.w;
+}
 
-const bgColor = Color(0xFFFFFFFF);
-const bgColorDark = Color.fromARGB(255, 105, 105, 105);
+class Paddings {
+  static EdgeInsets get xxs => REdgeInsets.all(2);
+  static EdgeInsets get xs => REdgeInsets.all(4);
+  static EdgeInsets get sm => REdgeInsets.all(8);
+  static EdgeInsets get med => REdgeInsets.all(12);
+  static EdgeInsets get lg => REdgeInsets.all(16);
+  static EdgeInsets get xl => REdgeInsets.all(20);
+  static EdgeInsets get xxl => REdgeInsets.all(32);
 
-const focusColor = Color.fromARGB(255, 0, 183, 58);
-const errorColor = Color(0xFFFF013E);
-const successColor = Color.fromARGB(255, 91, 212, 109);
-const normalColor = Color.fromARGB(255, 177, 177, 177);
-const disabledColor = Color.fromARGB(255, 149, 149, 149);
+  static EdgeInsets hv(double h, double v) =>
+      REdgeInsets.symmetric(horizontal: h, vertical: v);
+}
 
-const appTextColor = Color.fromARGB(255, 27, 27, 27);
-const appHintColor = Color(0xFFBDBDBD);
-const inputColor = Color(0xFFF5F1F1);
+class Corners {
+  static double get xs => 4.r;
+  static double get sm => 8.r;
+  static double get med => 12.r;
+  static double get lg => 16.r;
+  static double get xl => 20.r;
+  static double get xxl => 32.r;
 
-const greySecond = Color.fromARGB(118, 231, 231, 231);
-const darkGrey = Color.fromARGB(255, 136, 136, 136);
-const cardColor = Color.fromARGB(255, 255, 255, 255);
-const favoriteColor = Color.fromARGB(255, 250, 200, 38);
-const tabbarColor = Color(0xFFFAFAFA);
+  static Radius get xsRadius => Radius.circular(xs);
+  static Radius get smRadius => Radius.circular(sm);
+  static Radius get medRadius => Radius.circular(med);
+  static Radius get lgRadius => Radius.circular(lg);
+  static Radius get xlRadius => Radius.circular(xl);
+  static Radius get xxlRadius => Radius.circular(xxl);
 
-const Map<int, Color> materialColor = {
-  50: Color.fromRGBO(136, 14, 79, .1),
-  100: Color.fromRGBO(136, 14, 79, .2),
-  200: Color.fromRGBO(136, 14, 79, .3),
-  300: Color.fromRGBO(136, 14, 79, .4),
-  400: Color.fromRGBO(136, 14, 79, .5),
-  500: Color.fromRGBO(136, 14, 79, .6),
-  600: Color.fromRGBO(136, 14, 79, .7),
-  700: Color.fromRGBO(136, 14, 79, .8),
-  800: Color.fromRGBO(136, 14, 79, .9),
-  900: Color.fromRGBO(136, 14, 79, 1),
-};
+  static BorderRadius get xsBorder => BorderRadius.all(xsRadius);
+  static BorderRadius get smBorder => BorderRadius.all(smRadius);
+  static BorderRadius get medBorder => BorderRadius.all(medRadius);
+  static BorderRadius get lgBorder => BorderRadius.all(lgRadius);
+  static BorderRadius get xlBorder => BorderRadius.all(xlRadius);
+  static BorderRadius get xxlBorder => BorderRadius.all(xxlRadius);
+}
 
-class Gradients {
-  static LinearGradient primary() {
-    return const LinearGradient(
-      colors: [
-        Color(0xFF004BBC),
-        Color(0xFF00C1F2),
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.topRight,
-    );
-  }
+// Default Material Text Styles
+class TS {
+  static TextStyle ts = TextStyle(
+    fontFamily: AppConfig.fontFamily,
+    letterSpacing: 0,
+    fontWeight: FontWeight.w400,
+  );
 
-  static LinearGradient primaryAccent() {
-    return const LinearGradient(
-      colors: [
-        Color(0xFF00C1F2),
-        Color(0xFFB2ECFB),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-  }
+  static TextStyle get displayLarge => ts.copyWith(fontSize: 57.sp);
+  static TextStyle get displayMedium => ts.copyWith(fontSize: 45.sp);
+  static TextStyle get displaySmall => ts.copyWith(fontSize: 44.sp);
 
-  static LinearGradient neutral() {
-    return const LinearGradient(
-      colors: [
-        Color(0xFFDCDCDC),
-        Color(0xFFF5F1F1),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-  }
+  static TextStyle get headlineLarge => ts.copyWith(
+        fontSize: 32.sp,
+        fontWeight: FontWeight.w700,
+      );
+  static TextStyle get headlineMedium => ts.copyWith(
+        fontSize: 28.sp,
+        fontWeight: FontWeight.w700,
+      );
+  static TextStyle get headlineSmall => ts.copyWith(
+        fontSize: 24.sp,
+        fontWeight: FontWeight.w700,
+      );
+
+  static TextStyle get titleLarge =>
+      ts.copyWith(fontSize: 20.sp, fontWeight: FontWeight.w700);
+  static TextStyle get titleMedium => ts.copyWith(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w700,
+        letterSpacing: .15,
+      );
+  static TextStyle get titleSmall => ts.copyWith(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w700,
+        letterSpacing: .1,
+      );
+
+  static TextStyle get labelLarge => ts.copyWith(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w600,
+        letterSpacing: .1,
+      );
+  static TextStyle get labelMedium => ts.copyWith(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w600,
+        letterSpacing: .1,
+      );
+  static TextStyle get labelSmall => ts.copyWith(
+        fontSize: 11.sp,
+        fontWeight: FontWeight.w600,
+        letterSpacing: .5,
+      );
+
+  static TextStyle get bodyLarge => ts.copyWith(
+        fontSize: 16.sp,
+        letterSpacing: .15,
+        fontWeight: FontWeight.w500,
+      );
+  static TextStyle get bodyMedium => ts.copyWith(
+        fontSize: 14.sp,
+        letterSpacing: .25,
+        fontWeight: FontWeight.w500,
+      );
+  static TextStyle get bodySmall => ts.copyWith(
+        fontSize: 12.sp,
+        letterSpacing: .1,
+        fontWeight: FontWeight.w500,
+      );
+  static TextStyle get bodyMini => ts.copyWith(
+        fontSize: 10.sp,
+        letterSpacing: .4,
+      );
+
+  static TextStyle get caption => ts.copyWith(
+        fontSize: 10.sp,
+        letterSpacing: .25,
+        fontWeight: FontWeight.w600,
+      );
+}
+
+class Shadows {
+  static List<BoxShadow> get universal => [
+        const BoxShadow(
+          color: Color(0x19202020),
+          blurRadius: 13.54,
+          offset: Offset(0, 3.85),
+        ),
+        const BoxShadow(
+          color: Color(0x10202020),
+          blurRadius: 37.44,
+          offset: Offset(0, 10.64),
+        ),
+        const BoxShadow(
+          color: Color(0x0C202020),
+          blurRadius: 90.14,
+          offset: Offset(0, 25.63),
+        ),
+        const BoxShadow(
+          color: Color(0x08202020),
+          blurRadius: 299,
+          offset: Offset(0, 85),
+        ),
+      ];
+
+  static List<BoxShadow> get up => [
+        const BoxShadow(
+          offset: Offset(0, -5),
+          blurRadius: 10,
+          spreadRadius: 2,
+          color: Color.fromARGB(31, 108, 108, 108),
+        ),
+      ];
+
+  static List<BoxShadow> get small => [
+        const BoxShadow(
+          color: Color.fromARGB(24, 126, 126, 126),
+          blurRadius: 5,
+          offset: Offset(0, 3),
+        ),
+        const BoxShadow(
+          color: Color.fromARGB(16, 141, 141, 141),
+          blurRadius: 10,
+          offset: Offset(0, 5),
+        ),
+        const BoxShadow(
+          color: Color.fromARGB(16, 141, 141, 141),
+          blurRadius: 50,
+        ),
+      ];
 }
