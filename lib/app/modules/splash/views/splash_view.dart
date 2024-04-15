@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/image.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
@@ -14,6 +16,8 @@ class SplashView extends GetView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      appBar: emptyBox,
+      showBackground: false,
       child: Stack(
         children: [
           Center(
@@ -50,13 +54,12 @@ class SplashView extends GetView<SplashController> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: ButtonPrimary(
+                color: primary,
                 key: const Key('splashLoginBtn'),
-                isOutline: true,
                 onPressed: controller.gotoLogin,
-                outlineColor: Colors.white,
                 fullWidth: true,
                 text: 'login'.tr,
-                textColor: Colors.white,
+                textColor: white,
               ),
             ),
           )

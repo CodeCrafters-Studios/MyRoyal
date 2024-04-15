@@ -6,5 +6,5 @@ void main() async => await setupAndRunApp(
       (config) => BaseApp(
         config: config,
       ),
-      environment: const EnvironmentConfig.production(),
+      environment: const EnvironmentConfig.staging(),
     );

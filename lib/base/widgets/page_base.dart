@@ -60,7 +60,7 @@ class PageBase extends StatelessWidget {
           children: [
             if (showBackground)
               Image.asset(
-                'assets/images/motif.png',
+                'assets/images/img_motif.png',
                 width: Get.width,
                 height: Get.height,
                 fit: BoxFit.cover,

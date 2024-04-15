@@ -23,6 +23,30 @@ if (flutterVersionName == null) {
 }
 
 android {
+    flavorDimensions "flavor-dimension"
+
+     productFlavors {
+        prod {
+            dimension "flavor-dimension"
+            applicationId "id.co.iroyal.basecodee"
+            resValue "string", "app_name", "I-Royal"
+         
+        }
+        dev {
+            dimension "flavor-dimension"
+            applicationId "id.co.iroyal.basecodee"
+            resValue "string", "app_name", "I-Royal Dev"
+            
+        }
+
+        staging {
+            dimension "flavor-dimension"
+            applicationId "id.co.iroyal.basecodee"
+            resValue "string", "app_name", "I-Royal Staging"
+           
+        }
+    }
+
     namespace "com.example.iroyal"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
@@ -45,10 +69,11 @@ android {
         applicationId "com.example.iroyal"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 25
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
