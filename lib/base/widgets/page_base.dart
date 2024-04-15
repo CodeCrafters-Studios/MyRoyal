@@ -25,6 +25,7 @@ class PageBase extends StatelessWidget {
     this.bgColors,
     this.showBackground = true,
     this.bottomBarDecoration,
+    this.showBackgroundLogin = false,
   });
   final Widget child;
   final Widget? appBar;
@@ -43,6 +44,7 @@ class PageBase extends StatelessWidget {
   final Color? appbarColor;
   final Color? bgColors;
   final bool showBackground;
+  final bool showBackgroundLogin;
   final BoxDecoration? bottomBarDecoration;
 
   @override
@@ -59,12 +61,19 @@ class PageBase extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             if (showBackground)
-              Image.asset(
-                'assets/images/img_motif.png',
-                width: Get.width,
-                height: Get.height,
-                fit: BoxFit.cover,
-              ),
+              showBackgroundLogin == false
+                  ? Image.asset(
+                      'assets/images/img_motif.png',
+                      width: Get.width,
+                      height: Get.height,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      'assets/images/img_bg_login.png',
+                      width: Get.width,
+                      height: Get.height,
+                      fit: BoxFit.cover,
+                    ),
             SizedBox(height: Get.height, width: Get.width),
             if (useTopPadding)
               Padding(
