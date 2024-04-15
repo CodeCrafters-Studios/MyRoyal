@@ -17,6 +17,7 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   flutter_api0v2_storage:
     git:
       url: https://gitlab.com/donny.hardyanto/flutter_api0v2_storage.git
