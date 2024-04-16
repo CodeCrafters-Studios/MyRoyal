@@ -96,7 +96,10 @@ class LoginView extends GetView<LoginController> {
                         },
                         child: Text(
                           'Forgot Password?',
-                          style: TS.caption.copyWith(color: primary),
+                          style: TS.caption.copyWith(
+                            color: primary,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ],
@@ -126,12 +129,12 @@ class LoginView extends GetView<LoginController> {
             //     ),
             //   ),
             // ),
-            40.verticalSpace,
+            30.verticalSpace,
             Padding(
               padding: REdgeInsets.symmetric(horizontal: 16),
               child: const OrLoginWith(),
             ),
-            30.verticalSpace,
+            50.verticalSpace,
             BiometricsLogin(
               key: const Key('loginBiometrics'),
               onTap: () {},

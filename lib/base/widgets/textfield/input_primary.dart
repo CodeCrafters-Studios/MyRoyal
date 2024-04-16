@@ -34,7 +34,7 @@ class InputPrimary extends StatelessWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.obsecureText = false,
     this.inputShape = TextFieldShape.box,
-    this.cursorColor = primaryColor,
+    this.cursorColor = primary,
     this.textAlign = TextAlign.start,
     this.isRequired = false,
     this.requiredText = 'Required',
@@ -152,6 +152,10 @@ class InputPrimary extends StatelessWidget {
               prefixIcon: prefixIcon,
               suffixIcon: suffixIcon,
               hoverColor: outlineColor,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: outlineColor ?? primary),
+                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+              ),
               enabledBorder: inputShape == TextFieldShape.box
                   ? OutlineInputBorder(
                       borderSide:
