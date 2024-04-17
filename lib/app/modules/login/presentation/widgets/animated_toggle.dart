@@ -20,10 +20,10 @@ class AnimatedToggle extends StatefulWidget {
   });
 
   @override
-  _AnimatedToggleState createState() => _AnimatedToggleState();
+  AnimatedToggleState createState() => AnimatedToggleState();
 }
 
-class _AnimatedToggleState extends State<AnimatedToggle> {
+class AnimatedToggleState extends State<AnimatedToggle> {
   bool initialPosition = true;
   @override
   Widget build(BuildContext context) {

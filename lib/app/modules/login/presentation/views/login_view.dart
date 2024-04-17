@@ -42,11 +42,10 @@ class LoginView extends GetView<LoginController> {
                     key: const Key('inputUsername'),
                     label: 'Username',
                     hint: 'Username',
-                    onChanged: (value) => {},
-                    // controller.setLoginValue(
-                    //   FormLoginValue.username,
-                    //   value,
-                    // ),
+                    onChanged: (value) => controller.setLoginValue(
+                      FormLoginValue.username,
+                      value,
+                    ),
                     validation: (value) {
                       if (value != null && value.isEmpty) {
                         return 'Cannot be empty';
@@ -66,11 +65,10 @@ class LoginView extends GetView<LoginController> {
                   InputPassword(
                     key: const Key('inputPassword'),
                     hint: 'Password',
-                    onChanged: (value) => {},
-                    // controller.setLoginValue(
-                    //   FormLoginValue.password,
-                    //   value,
-                    // ),
+                    onChanged: (value) => controller.setLoginValue(
+                      FormLoginValue.password,
+                      value,
+                    ),
                     prefixIcon: Padding(
                       padding: REdgeInsets.symmetric(horizontal: 12),
                       child: Image.asset(
@@ -104,31 +102,19 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ],
                   ),
-                  ButtonPrimary(
-                    key: const Key('loginBtn'),
-                    onPressed: () {},
-                    // controller.getParams,
-                    // isLoading: controller.isLoading.value,
-                    text: 'login'.tr,
-                    fullWidth: true,
+                  Obx(
+                    () => ButtonPrimary(
+                      key: const Key('loginBtn'),
+                      onPressed: controller.getParams,
+                      isLoading: controller.isLoading.value,
+                      text: 'login',
+                      fullWidth: true,
+                    ),
                   ),
                   10.verticalSpace
                 ],
               ),
             ),
-            // Obx(
-            //   () => Padding(
-            //     padding: REdgeInsets.symmetric(horizontal: 16),
-            //     child: ButtonPrimary(
-            //       key: const Key('loginBtn'),
-            //       onPressed: () {},
-            //       // controller.getParams,
-            //       // isLoading: controller.isLoading.value,
-            //       text: 'login'.tr,
-            //       fullWidth: true,
-            //     ),
-            //   ),
-            // ),
             30.verticalSpace,
             Padding(
               padding: REdgeInsets.symmetric(horizontal: 16),

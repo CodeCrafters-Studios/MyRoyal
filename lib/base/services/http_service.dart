@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -71,19 +73,20 @@ class HttpService extends getx.GetxService {
 
   Future<dynamic> request({
     String url = '',
+    String enpoint = '',
     Method method = Method.POST,
     Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
     bool withToken = false,
     bool showPopUp = false,
-    bool isEncrypted = true,
+    // bool isEncrypted = true,
   }) async {
     if (!await networkInfo.isConnected) {
       catchError('No Internet Connection!', showPopUp: showPopUp);
       return;
     }
     Response response;
-    final newUrl = url.isEmpty ? AppConfig.environment.baseUrl : url;
+    final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + enpoint : url;
 
     ///SET Default Headers
     if (headers == null) {
@@ -118,32 +121,36 @@ class HttpService extends getx.GetxService {
         AppUtils.logApp(
           '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}',
         );
+        AppUtils.logApp(
+          newUrl,
+        );
       } catch (e) {
         //
       }
     }
 
-    final encryptedParams =
-        params != null ? appEncrypt.encryptParams(params) : null;
+    // --- Encrypt Params ---
+
+    // final encryptedParams =
+    //     params != null ? appEncrypt.encryptParams(params) : null;
 
     // initInterceptors();
     try {
       if (method == Method.POST) {
         response = await dio.post(
           newUrl,
-          data: isEncrypted ? encryptedParams : params,
+          data: params,
         );
       } else if (method == Method.DELETE) {
         response = await dio.delete(newUrl);
       } else if (method == Method.PATCH) {
         response = await dio.patch(newUrl);
       } else if (method == Method.PUT) {
-        response =
-            await dio.put(newUrl, data: isEncrypted ? encryptedParams : params);
+        response = await dio.put(newUrl, data: params);
       } else {
         response = await dio.get(
           newUrl,
-          queryParameters: isEncrypted ? encryptedParams : params,
+          queryParameters: params,
         );
       }
 

@@ -6,7 +6,6 @@ import 'package:flutter_api0v2_storage/flutter_api0v2_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:iroyal/app/data/common_parameter.dart';
 import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
@@ -94,8 +93,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
         http: Get.find(),
         deviceInfo: Get.find(),
       ),
-    )
-    ..put(CommonParamsImpl(appToken: Get.find<AppTokenImpl>()));
+    );
+  // ..put(CommonParamsImpl(appToken: Get.find<AppTokenImpl>()));
 }
 
 /// Configures Firebase notifications

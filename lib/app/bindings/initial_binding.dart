@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/controllers/user_info_controller.dart';
 import 'package:iroyal/app/controllers/utility_controller.dart';
-import 'package:iroyal/app/data/common_parameter.dart';
 import 'package:iroyal/app/shared/data/datasources/local_data.dart';
 import 'package:iroyal/app/shared/data/datasources/remote_data.dart';
 import 'package:iroyal/app/shared/data/repositories/global_repository_impl.dart';
@@ -18,10 +17,10 @@ class InitialBinding extends Bindings {
       ..put(GlobalLocalDataImpl(appStorage: Get.find()))
       ..put(
         GlobalRemoteDataImpl(
-          commonParam: Get.find<CommonParamsImpl>(),
+          // commonParam: Get.find<CommonParamsImpl>(),
           http: Get.find(),
           appStorage: Get.find(),
-          deviceInfo: Get.find(),
+          // deviceInfo: Get.find(),
         ),
       )
       ..put(

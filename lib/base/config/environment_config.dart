@@ -5,7 +5,7 @@ enum EnvironmentType { development, staging, production }
 class EnvironmentConfig {
   const EnvironmentConfig.development()
       : environment = EnvironmentType.development,
-        androidBaseUrl = '',
+        androidBaseUrl = 'http://staging.hrms.ras.co.id',
         iosBaseUrl = '';
 
   const EnvironmentConfig.staging()
