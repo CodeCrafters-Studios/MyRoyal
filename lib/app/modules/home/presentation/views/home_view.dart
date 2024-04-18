@@ -8,6 +8,7 @@ import 'package:iroyal/app/modules/home/presentation/views/components/home_user_
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -23,8 +24,8 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: white,
         automaticallyImplyLeading: false,
         toolbarHeight: 70.h,
-        title: Padding(
-          padding: EdgeInsets.only(left: 8.w),
+        title: EPadding(
+          padding: const EdgeInsets.only(left: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,8 +41,8 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 20.w),
+          EPadding(
+            padding: const EdgeInsets.only(right: 20),
             child: EImages(
               name: "assets/images/img_logo.png",
               height: 55.h,
