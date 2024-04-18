@@ -30,7 +30,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   Widget build(BuildContext context) {
     return CardApp(
       width: 375,
-      height: 80,
+      height: 70,
       radius: 0,
       isShadow: true,
       shadows: Shadows.up,
