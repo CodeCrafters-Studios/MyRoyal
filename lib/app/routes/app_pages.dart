@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/bottomnavbar/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/views/bottomnavbar_view.dart';
-import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/home_view.dart';
+import '../modules/home/presentation/bindings/home_binding.dart';
+import '../modules/home/presentation/views/home_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';

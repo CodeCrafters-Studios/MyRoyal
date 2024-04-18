@@ -16,7 +16,7 @@ const primaryColor = Color(0xFF004BBC);
 const primaryDark = Color.fromARGB(255, 13, 103, 98);
 const primaryAccent = Color.fromARGB(255, 156, 18, 220);
 
-const Color primary10 = Color(0xFFB7CEF2);
+const Color primary10 = Color.fromARGB(255, 83, 85, 126);
 const Color primary30 = Color(0xFF5C8DD7);
 const Color primary50 = Color(0xFF004BBC);
 const Color primary70 = Color(0xFF002D71);
