@@ -112,7 +112,7 @@ class LoginController extends GetxController {
       },
       (r) {
         loginState = 'loginSuccess';
-        Get.offAllNamed(Routes.HOME);
+        Get.offAllNamed(Routes.BOTTOMNAVBAR);
       },
     );
   }
