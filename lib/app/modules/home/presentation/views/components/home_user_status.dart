@@ -32,40 +32,50 @@ class HomeUserStatus extends GetView<HomeController> {
               ],
             ),
             20.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CardApp(
-                  color: primary.withOpacity(0.8),
-                  outlineColor: black,
-                  child: const HomeUserCard(
-                    shapeBorder: true,
-                    isAvatarPicture: false,
-                    title: 'Yesterday Clock-in',
-                    subtitle: '00:00:00',
-                    isThridLine: false,
-                    textColor: white,
-                    backgroundColor: white,
-                    borderSideColor: greyHint,
-                    suffixIcon: false,
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CardApp(
+                    color: primary.withOpacity(0.8),
+                    outlineColor: black,
+                    child: HomeUserCard(
+                      shapeBorder: true,
+                      isAvatarPicture: false,
+                      title: 'Yesterday Clock-in',
+                      subtitle: controller.userData.value.attendance
+                              .yesterdayCheckin.isEmpty
+                          ? "00:00:00"
+                          : controller
+                              .userData.value.attendance.yesterdayCheckin,
+                      isThridLine: false,
+                      textColor: white,
+                      backgroundColor: white,
+                      borderSideColor: greyHint,
+                      suffixIcon: false,
+                    ),
                   ),
-                ),
-                const CardApp(
-                  color: grey,
-                  outlineColor: black,
-                  child: HomeUserCard(
-                    shapeBorder: true,
-                    isAvatarPicture: false,
-                    title: 'Yesterday Clock-out',
-                    subtitle: '00:00:00',
-                    isThridLine: false,
-                    textColor: black,
-                    backgroundColor: white,
-                    borderSideColor: greyHint,
-                    suffixIcon: false,
+                  CardApp(
+                    color: grey,
+                    outlineColor: black,
+                    child: HomeUserCard(
+                      shapeBorder: true,
+                      isAvatarPicture: false,
+                      title: 'Yesterday Clock-out',
+                      subtitle: controller.userData.value.attendance
+                              .yesterdayCheckout.isEmpty
+                          ? "00:00:00"
+                          : controller
+                              .userData.value.attendance.yesterdayCheckout,
+                      isThridLine: false,
+                      textColor: black,
+                      backgroundColor: white,
+                      borderSideColor: greyHint,
+                      suffixIcon: false,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             10.verticalSpace
           ],

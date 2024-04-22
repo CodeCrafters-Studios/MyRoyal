@@ -1,12 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
-class HomeUserInfo extends StatelessWidget {
+class HomeUserInfo extends GetView<HomeController> {
   const HomeUserInfo({super.key});
 
   @override
@@ -20,30 +22,24 @@ class HomeUserInfo extends StatelessWidget {
           shadows: Shadows.small,
           padding: REdgeInsets.all(8),
           margin: const EdgeInsets.all(16),
-          child: const Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HomeUserCard(
-                title: 'Alghany Kennedy Adam',
-                subtitle: '1234567890',
-                isThridLine: true,
-                isAvatarPicture: true,
-                suffixIcon: false,
+              Obx(
+                () => HomeUserCard(
+                  title: controller.userData.value.email,
+                  subtitle:
+                      '${controller.userData.value.job.employeeNumber} | ${controller.userData.value.job.position} | ${controller.userData.value.job.department}',
+                  isThridLine: true,
+                  thridLineTitle:
+                      'Join date: ${controller.userData.value.job.joinDate}',
+                  isAvatarPicture: true,
+                  suffixIcon: false,
+                ),
               ),
             ],
           ),
         ),
-        //      CustomCard(
-        //   shapeBorder: true,
-        //   isAvatarPicture: true,
-        //   title: controller.userData.job.workEmail, // controller.email.value,
-        //   subtitle:
-        //       '${controller.userData.job.employeeNumber} | ${controller.userData.job.position} ${controller.userData.job.section} | ${controller.userData.job.department}',
-        //   thridLineTitle:
-        //       "Join date: ${controller.userData.job.joinDate.toString().split(' ')[0]}", //"${controller.code.value} | ${controller.name.value}",
-        //   isThridLine: true,
-        //   suffixIcon: false,
-        // ),
       ),
     );
   }

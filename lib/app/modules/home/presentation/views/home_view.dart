@@ -33,9 +33,11 @@ class HomeView extends GetView<HomeController> {
                 "Welcome Back!👋",
                 style: TS.labelLarge,
               ),
-              Text(
-                "Alghany Kennedy",
-                style: TS.labelMedium,
+              Obx(
+                () => Text(
+                  '${controller.userData.value.employee.firstName} ${controller.userData.value.employee.lastName}',
+                  style: TS.labelMedium,
+                ),
               ),
             ],
           ),
