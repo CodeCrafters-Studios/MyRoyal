@@ -27,3 +27,4 @@ const CACHE_MENU = 'cache-menu';
 const CACHE_FAVORITES = 'cache-favorites';
 const CACHE_ONBOARDING_STEP = 'cache-onboarding-step';
 const CACHE_LANGUAGE = 'cache-language';
+const CACHE_USER = 'cache-user';
