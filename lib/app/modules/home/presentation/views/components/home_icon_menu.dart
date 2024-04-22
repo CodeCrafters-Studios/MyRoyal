@@ -31,7 +31,7 @@ class HomeIconMenu extends StatelessWidget {
           Container(
             width: 48,
             height: 48,
-            padding: const EdgeInsets.all(8),
+            padding: REdgeInsets.all(8),
             decoration: ShapeDecoration(
               color: Colors.white,
               shape: RoundedRectangleBorder(
