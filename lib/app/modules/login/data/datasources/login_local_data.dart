@@ -25,7 +25,11 @@ abstract class LoginLocalDataSource {
     required String clientSecret,
   });
   Future<bool> authBiometrics();
-  Future<void> saveLoginToken(String token, String refreshToken);
+  Future<void> saveLoginToken(
+    String token,
+    String refreshToken,
+    int expiresin,
+  );
 }
 
 class LoginLocalDataSourceImpl implements LoginLocalDataSource {
@@ -165,9 +169,16 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }
 
   @override
-  Future<void> saveLoginToken(String token, String refreshToken) async {
+  Future<void> saveLoginToken(
+      String token, String refreshToken, int expiresToken) async {
     await appStorage.write('ever-login', 'true');
     await appStorage.write(CACHE_ACCESS_TOKEN, token);
     await appStorage.write(CACHE_REFRESH_TOKEN, refreshToken);
+    final now = DateTime.now();
+    final later = now.add(Duration(milliseconds: expiresToken));
+    print('FIRST DATE TIME NOW :::::::$now');
+    print('FIRST GET TOKEN :::::::$later');
+
+    await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
   }
 }

@@ -20,6 +20,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: 'My Teams',
       child: SingleChildScrollView(
         child: Column(

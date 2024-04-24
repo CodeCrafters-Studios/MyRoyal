@@ -14,6 +14,7 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:iroyal/base/utils/token/app_token.dart';
 import 'package:iroyal/base/widgets/show_dialog.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
@@ -136,6 +137,19 @@ class HttpService extends getx.GetxService {
 
     // initInterceptors();
     try {
+      // var expToken = await appStorage.read(CACHE_EXPIRES_TOKEN);
+      // final int now = DateTime.now().minute * 60;
+      // AppTokenImpl appTokenImpl = AppTokenImpl(
+      //   appStorage: appStorage,
+      //   http: this,
+      // );
+      // if (expToken != '') {
+      //   var expTokenInt = int.parse(expToken ?? '0');
+      //   if (now > expTokenInt) {
+      //     appTokenImpl.getToken();
+      //   }
+      // }
+
       if (method == Method.POST) {
         response = await dio.post(
           newUrl,
