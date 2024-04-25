@@ -7,6 +7,7 @@ import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:get/get.dart' as getx;
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
@@ -138,16 +139,14 @@ class HttpService extends getx.GetxService {
     // initInterceptors();
     try {
       // var expToken = await appStorage.read(CACHE_EXPIRES_TOKEN);
-      // final int now = DateTime.now().minute * 60;
+      // final expiresIn = DateTime.parse(expToken ?? '');
+      // final now = DateTime.now();
       // AppTokenImpl appTokenImpl = AppTokenImpl(
       //   appStorage: appStorage,
       //   http: this,
       // );
-      // if (expToken != '') {
-      //   var expTokenInt = int.parse(expToken ?? '0');
-      //   if (now > expTokenInt) {
-      //     appTokenImpl.getToken();
-      //   }
+      // if (expToken != null && now.compareTo(expiresIn) > 0) {
+      //   return appTokenImpl.getToken();
       // }
 
       if (method == Method.POST) {
@@ -173,6 +172,7 @@ class HttpService extends getx.GetxService {
         return response.data;
       } else if (response.statusCode == 401) {
         catchError('Unauthorized', showPopUp: showPopUp);
+        Routes.LOGIN;
       } else if (response.statusCode == 500) {
         catchError('Internal Server Error', showPopUp: showPopUp);
       } else {

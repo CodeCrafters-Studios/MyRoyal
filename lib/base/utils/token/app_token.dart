@@ -44,22 +44,19 @@ class AppTokenImpl implements AppToken {
       final isValidRefreshToken = await isValid(refreshToken);
       if (isValidRefreshToken) {
         final params = {
-          'grant_type': 'password',
-          'username': "aji.yulianto",
-          'password': "Nginx*123#",
+          'grant_type': 'refresh_token',
+          'refresh_token': refreshToken,
           'client_id': 'H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM',
           'client_secret': 'dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE',
         };
         try {
           final r = await http.request(params: params);
-          if (r['response_msg'] == 'success') {
-            final responseToken = r['access_token'];
-            final responseRefreshToken = r['refresh_token'];
+          final responseToken = r['access_token'];
+          final responseRefreshToken = r['refresh_token'];
 
-            await appStorage.write(CACHE_ACCESS_TOKEN, responseToken);
-            await appStorage.write(CACHE_REFRESH_TOKEN, responseRefreshToken);
-            return responseToken;
-          }
+          await appStorage.write(CACHE_ACCESS_TOKEN, responseToken);
+          await appStorage.write(CACHE_REFRESH_TOKEN, responseRefreshToken);
+          return responseToken;
         } catch (e) {
           return null;
         }

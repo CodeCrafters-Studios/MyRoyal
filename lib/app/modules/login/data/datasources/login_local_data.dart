@@ -174,8 +174,13 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     await appStorage.write('ever-login', 'true');
     await appStorage.write(CACHE_ACCESS_TOKEN, token);
     await appStorage.write(CACHE_REFRESH_TOKEN, refreshToken);
+    await appStorage.write(CACHE_EXPIRES_TOKEN, expiresToken.toString());
     final now = DateTime.now();
-    final later = now.add(Duration(milliseconds: expiresToken));
+    // final expiresIn = appStorage.read(CACHE_EXPIRES_TOKEN);
+    // final convertExp = int.tryParse(expiresIn.toString());
+
+    final later = now.add(const Duration(milliseconds: 60000));
+    // final later = now.add( Duration(milliseconds: convertExp ?? 0));
     print('FIRST DATE TIME NOW :::::::$now');
     print('FIRST GET TOKEN :::::::$later');
 

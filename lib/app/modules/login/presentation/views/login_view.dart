@@ -123,8 +123,7 @@ class LoginView extends GetView<LoginController> {
             50.verticalSpace,
             BiometricsLogin(
               key: const Key('loginBiometrics'),
-              onTap: () {},
-              // controller.biometricAuthentication,
+              onTap: controller.biometricAuthentication,
             ),
 
             // const HaveNoAccount(

@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/app_divider.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
+
+class ItemMenuProfile extends StatelessWidget {
+  const ItemMenuProfile({
+    super.key,
+    required this.assetSvg,
+    required this.text,
+    this.onTap,
+  });
+  final String assetSvg;
+  final String text;
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWellTap(
+          onTap: onTap,
+          child: Padding(
+            padding: REdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              children: [
+                SvgPicture.asset(assetSvg),
+                12.horizontalSpace,
+                Expanded(
+                  child: Text(text, style: TS.labelLarge),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: primary,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const AppDivider(),
+      ],
+    );
+  }
+}
