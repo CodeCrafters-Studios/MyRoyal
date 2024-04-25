@@ -7,6 +7,7 @@ import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:get/get.dart' as getx;
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
@@ -14,6 +15,7 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:iroyal/base/utils/token/app_token.dart';
 import 'package:iroyal/base/widgets/show_dialog.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
@@ -136,6 +138,17 @@ class HttpService extends getx.GetxService {
 
     // initInterceptors();
     try {
+      // var expToken = await appStorage.read(CACHE_EXPIRES_TOKEN);
+      // final expiresIn = DateTime.parse(expToken ?? '');
+      // final now = DateTime.now();
+      // AppTokenImpl appTokenImpl = AppTokenImpl(
+      //   appStorage: appStorage,
+      //   http: this,
+      // );
+      // if (expToken != null && now.compareTo(expiresIn) > 0) {
+      //   return appTokenImpl.getToken();
+      // }
+
       if (method == Method.POST) {
         response = await dio.post(
           newUrl,
@@ -159,6 +172,7 @@ class HttpService extends getx.GetxService {
         return response.data;
       } else if (response.statusCode == 401) {
         catchError('Unauthorized', showPopUp: showPopUp);
+        Routes.LOGIN;
       } else if (response.statusCode == 500) {
         catchError('Internal Server Error', showPopUp: showPopUp);
       } else {

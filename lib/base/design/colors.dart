@@ -8,6 +8,7 @@ const grey = Color(0xFFD9D9D9);
 const greyHint = Color.fromRGBO(191, 186, 186, 1);
 const greyIcon = Color.fromRGBO(30, 30, 30, .4);
 const borderColor = Color.fromRGBO(217, 217, 217, 0.192);
+const bgMenuColor = Color.fromRGBO(217, 217, 217, 0.658);
 const red = Color.fromRGBO(236, 66, 96, 1);
 const greyText = Color.fromRGBO(99, 98, 98, 1);
 const green = Color(0xFF369B43);
@@ -16,7 +17,7 @@ const primaryColor = Color(0xFF004BBC);
 const primaryDark = Color.fromARGB(255, 13, 103, 98);
 const primaryAccent = Color.fromARGB(255, 156, 18, 220);
 
-const Color primary10 = Color(0xFFB7CEF2);
+const Color primary10 = Color.fromARGB(255, 83, 85, 126);
 const Color primary30 = Color(0xFF5C8DD7);
 const Color primary50 = Color(0xFF004BBC);
 const Color primary70 = Color(0xFF002D71);
