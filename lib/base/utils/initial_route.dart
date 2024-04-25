@@ -26,7 +26,7 @@ class InitialRouteImpl implements InitialRoute {
       final isExpired = await isTokenExpired(token);
       print('EXPIRED ::::::::: $isExpired');
       if (!isExpired) {
-        return Routes.HOME;
+        return Routes.BOTTOMNAVBAR;
       } else {
         print("TOKEN IS EXPIRED");
         return Routes.LOGIN;

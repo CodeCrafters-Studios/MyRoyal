@@ -62,6 +62,7 @@ class BottomnavbarBinding extends Bindings {
       ..lazyPut(() => LogoutApp(Get.find<ProfileRepositoryImpl>()))
       ..lazyPut(
         () => ProfileController(
+          getUser: Get.find(),
           // getCacheLogin: Get.find(),
           logoutApp: Get.find(),
         ),
