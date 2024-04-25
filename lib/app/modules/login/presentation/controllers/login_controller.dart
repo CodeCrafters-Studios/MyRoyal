@@ -156,6 +156,4 @@ class LoginController extends GetxController {
 
   //Navigation
   void gotoForgotPassword() {}
-
-  void gotoRegister() {}
 }

@@ -6,6 +6,8 @@ import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
+import '../modules/my_teams/bindings/my_teams_binding.dart';
+import '../modules/my_teams/views/my_teams_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -45,6 +47,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_TEAMS,
+      page: () => const MyTeamsView(),
+      binding: MyTeamsBinding(),
     ),
   ];
 }

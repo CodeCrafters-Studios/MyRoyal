@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
@@ -17,13 +19,13 @@ class HomeIconMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWellTap(
       onTap: () {
-        // switch (menu.code) {
-        //   case 'my-teams':
-        //     Get.toNamed(Routes.MY_TEAMS);
-        //     break;
-        //   default:
-        //     break;
-        // }
+        switch (menu.name) {
+          case 'My Teams':
+            Get.toNamed(Routes.MY_TEAMS);
+            break;
+          default:
+            break;
+        }
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,

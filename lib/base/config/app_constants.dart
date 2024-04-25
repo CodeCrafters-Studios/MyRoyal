@@ -9,6 +9,7 @@ const emptyBox = SizedBox();
 const String CACHE_ACCESS_TOKEN = 'access_token';
 const String CACHE_REFRESH_TOKEN = 'refresh_token';
 const String CACHE_FCM_TOKEN = 'fcm_token';
+const String CACHE_EXPIRES_TOKEN = 'exp_token';
 const String CACHE_ACCESS_USER_EMAIL = 'user_email';
 const String CACHE_ACCESS_USER_NAME = 'user_name';
 const String CACHE_ACCESS_USER_PASSWORD = 'user_password';
