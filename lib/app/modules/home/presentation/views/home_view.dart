@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_info.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_menu.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_status.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/loading_shimmer_text.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
@@ -40,14 +40,14 @@ class HomeView extends GetView<HomeController> {
                     ? Shimmer.fromColors(
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
-                        child: LoadingShimmerText(
+                        child: ShimmerText(
                           padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
                           margin: REdgeInsets.only(top: 5),
                           width: 80,
                         ),
                       )
                     : Text(
-                        '${controller.userData.value.employee.firstName} ${controller.userData.value.employee.lastName}',
+                        '${controller.userData.value.employee.firstName.toUpperCase()} ${controller.userData.value.employee.lastName.toUpperCase()}',
                         style: TS.labelMedium,
                       ),
               ),

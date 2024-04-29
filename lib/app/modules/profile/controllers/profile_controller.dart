@@ -17,6 +17,9 @@ class ProfileController extends GetxController {
   final GetUser getUser;
   final LogoutApp logoutApp;
 
+  RxBool isLoading = false.obs;
+  RxBool isSwitched = false.obs;
+
   final iUser = const User(
     id: 0,
     username: '',
@@ -76,8 +79,10 @@ class ProfileController extends GetxController {
   }
 
   Future<void> iGetCacheUser() async {
+    isLoading.value = true;
     final data = await getUser();
     userData.value = data.getOrElse(() => iUser);
+    isLoading.value = false;
     AppUtils.logApp(
         '${userData().employee.firstName} ${userData().employee.lastName}');
   }
