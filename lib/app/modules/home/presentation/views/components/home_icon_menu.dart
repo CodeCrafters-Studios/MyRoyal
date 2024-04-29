@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
 class HomeIconMenu extends StatelessWidget {
   const HomeIconMenu({
@@ -24,6 +23,7 @@ class HomeIconMenu extends StatelessWidget {
             Get.toNamed(Routes.MY_TEAMS);
             break;
           default:
+            Get.to(() => const ComingSoonScreen());
             break;
         }
       },
@@ -31,27 +31,12 @@ class HomeIconMenu extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 48,
-            height: 48,
-            padding: REdgeInsets.all(8),
-            decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            height: 54.h,
+            padding: REdgeInsets.all(4),
+            child: Center(
+              child: Image.asset(
+                'assets/icons/${menu.code}.png',
               ),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x0C555555),
-                  blurRadius: 10,
-                  offset: Offset(0, 10),
-                ),
-              ],
-            ),
-            child: SvgPicture.asset(
-              'assets/icons/${menu.code}.svg',
-              width: 32.w,
-              height: 32.w,
-              color: primary,
             ),
           ),
           4.verticalSpace,

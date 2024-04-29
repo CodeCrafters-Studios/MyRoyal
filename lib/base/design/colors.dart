@@ -8,6 +8,7 @@ const grey = Color(0xFFD9D9D9);
 const greyHint = Color.fromRGBO(191, 186, 186, 1);
 const greyIcon = Color.fromRGBO(30, 30, 30, .4);
 const borderColor = Color.fromRGBO(217, 217, 217, 0.192);
+const bgMenuColor = Color.fromRGBO(217, 217, 217, 0.658);
 const red = Color.fromRGBO(236, 66, 96, 1);
 const greyText = Color.fromRGBO(99, 98, 98, 1);
 const green = Color(0xFF369B43);
@@ -54,6 +55,10 @@ const darkGrey = Color.fromARGB(255, 136, 136, 136);
 const cardColor = Color.fromARGB(255, 255, 255, 255);
 const favoriteColor = Color.fromARGB(255, 250, 200, 38);
 const tabbarColor = Color(0xFFFAFAFA);
+
+// Switch Color
+const inactiveThumbColor = Color.fromRGBO(84, 110, 122, 1);
+const inactiveTrackColor = Color.fromRGBO(189, 189, 189, 1);
 
 const Map<int, Color> materialColor = {
   50: Color.fromRGBO(136, 14, 79, .1),

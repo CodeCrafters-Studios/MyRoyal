@@ -78,7 +78,7 @@ class AppDialogImpl implements AppDialog {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                title ?? 'confirmation'.tr,
+                title ?? 'Confirmation',
                 style: TS.titleMedium,
                 textAlign: TextAlign.center,
               ),
@@ -101,16 +101,18 @@ class AppDialogImpl implements AppDialog {
                   Expanded(
                     child: ButtonPrimaryOutlined(
                       onPressed: () => Get.back(result: false),
-                      text: textNo ?? 'no'.tr,
+                      text: textNo ?? 'No',
+                      textColor: primary,
+                      isOutline: true,
                       fullWidth: true,
-                      outlineColor: Colors.transparent,
+                      outlineColor: primary,
                     ),
                   ),
                   12.horizontalSpace,
                   Expanded(
                     child: ButtonPrimary(
                       onPressed: () => Get.back(result: true),
-                      text: textYes ?? 'yes'.tr,
+                      text: textYes ?? 'Yes',
                       fullWidth: true,
                     ),
                   ),

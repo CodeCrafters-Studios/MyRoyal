@@ -11,10 +11,12 @@ class ItemMenuProfile extends StatelessWidget {
     super.key,
     required this.assetSvg,
     required this.text,
+    this.withTrailing = false,
     this.onTap,
   });
   final String assetSvg;
   final String text;
+  final bool withTrailing;
   final Function()? onTap;
 
   @override
@@ -32,10 +34,12 @@ class ItemMenuProfile extends StatelessWidget {
                 Expanded(
                   child: Text(text, style: TS.labelLarge),
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: primary,
-                ),
+                withTrailing
+                    ? const Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: primary,
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),
