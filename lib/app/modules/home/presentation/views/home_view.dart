@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_info.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_menu.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_status.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/loading_shimmer_text.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
 import 'package:iroyal/base/widgets/padding.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -34,10 +36,20 @@ class HomeView extends GetView<HomeController> {
                 style: TS.labelLarge,
               ),
               Obx(
-                () => Text(
-                  '${controller.userData.value.employee.firstName} ${controller.userData.value.employee.lastName}',
-                  style: TS.labelMedium,
-                ),
+                () => controller.isLoading.value == true
+                    ? Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: LoadingShimmerText(
+                          padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
+                          margin: REdgeInsets.only(top: 5),
+                          width: 80,
+                        ),
+                      )
+                    : Text(
+                        '${controller.userData.value.employee.firstName} ${controller.userData.value.employee.lastName}',
+                        style: TS.labelMedium,
+                      ),
               ),
             ],
           ),
