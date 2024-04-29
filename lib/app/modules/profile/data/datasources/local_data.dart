@@ -13,7 +13,8 @@ class ProfileLocalDataImpl implements ProfileLocalData {
   final AppDialog appDialog;
   @override
   Future<bool> logout() async {
-    final confirm = await appDialog.showChoiceDialog(description: 'Exit App');
+    final confirm = await appDialog.showChoiceDialog(
+        description: 'Are you sure to exit app?');
     if (confirm) {
       await appStorage.delete(CACHE_ACCESS_TOKEN);
       await appStorage.delete(CACHE_REFRESH_TOKEN);

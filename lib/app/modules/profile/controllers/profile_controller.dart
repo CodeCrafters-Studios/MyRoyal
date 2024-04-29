@@ -101,7 +101,11 @@ class ProfileController extends GetxController {
     final result = await logoutApp();
     result.fold(
       (l) => null,
-      (r) => Get.offAllNamed(Routes.LOGIN),
+      (r) {
+        if (r) {
+          Get.offAllNamed(Routes.LOGIN);
+        }
+      },
     );
   }
 }

@@ -58,7 +58,7 @@ class SplashView extends GetView<SplashController> {
                 key: const Key('splashLoginBtn'),
                 onPressed: controller.gotoLogin,
                 fullWidth: true,
-                text: 'login'.tr,
+                text: 'Continue',
                 textColor: white,
               ),
             ),
