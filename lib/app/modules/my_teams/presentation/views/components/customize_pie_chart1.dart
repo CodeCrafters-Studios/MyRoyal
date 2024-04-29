@@ -3,13 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:iroyal/base/design/colors.dart';
 
 class PieChartSample1 extends StatefulWidget {
-  const PieChartSample1({super.key});
+  const PieChartSample1({
+    super.key,
+    required this.titleSection1,
+    required this.titleSection2,
+    required this.valueSection1,
+    required this.valueSection2,
+  });
+
+  final String titleSection1;
+  final String titleSection2;
+  final double valueSection1;
+  final double valueSection2;
 
   @override
   State<StatefulWidget> createState() => PieChart1State();
 }
 
-class PieChart1State extends State {
+class PieChart1State extends State<PieChartSample1> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -30,7 +41,12 @@ class PieChart1State extends State {
                   ),
                   sectionsSpace: 0,
                   centerSpaceRadius: 40,
-                  sections: showingSections(),
+                  sections: showingSections(
+                    widget.titleSection1,
+                    widget.titleSection2,
+                    widget.valueSection1,
+                    widget.valueSection2,
+                  ),
                 ),
               ),
             ),
@@ -40,8 +56,9 @@ class PieChart1State extends State {
     );
   }
 
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
+  List<PieChartSectionData> showingSections(String titleSection1,
+      String titleSection2, double valueSection1, double valueSection2) {
+    return List.generate(2, (i) {
       const fontSize = 12.0;
       const radius = 25.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
@@ -49,8 +66,8 @@ class PieChart1State extends State {
         case 0:
           return PieChartSectionData(
             color: Colors.blue,
-            value: 40,
-            title: '40%',
+            value: valueSection1,
+            title: titleSection1,
             radius: radius,
             titleStyle: const TextStyle(
               fontSize: fontSize,
@@ -61,35 +78,9 @@ class PieChart1State extends State {
           );
         case 1:
           return PieChartSectionData(
-            color: Colors.red,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: const TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: white,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
             color: Colors.purple,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: const TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            title: '15%',
+            value: valueSection2,
+            title: titleSection2,
             radius: radius,
             titleStyle: const TextStyle(
               fontSize: fontSize,
