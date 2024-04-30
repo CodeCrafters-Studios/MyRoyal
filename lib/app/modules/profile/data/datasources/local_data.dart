@@ -4,6 +4,7 @@ import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 abstract class ProfileLocalData {
   Future<bool> logout();
+  Future<bool> biometrics();
 }
 
 class ProfileLocalDataImpl implements ProfileLocalData {
@@ -18,6 +19,18 @@ class ProfileLocalDataImpl implements ProfileLocalData {
     if (confirm) {
       await appStorage.delete(CACHE_ACCESS_TOKEN);
       await appStorage.delete(CACHE_REFRESH_TOKEN);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> biometrics() async {
+    final confirm = await appDialog.showChoiceDialog(
+        description: 'Are you sure to allow app using biometrics?');
+    if (confirm) {
+      await appStorage.read('fingerprint-login');
       return true;
     } else {
       return false;

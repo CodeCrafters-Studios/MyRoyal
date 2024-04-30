@@ -5,6 +5,7 @@ import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 abstract class InitialRoute {
   Future<String> get route;
+  Future<bool> get isAllowedBiometricsFingerPrint;
 }
 
 class InitialRouteImpl implements InitialRoute {
@@ -45,6 +46,19 @@ class InitialRouteImpl implements InitialRoute {
       return now.compareTo(expiresIn) > 0;
     } else {
       AppUtils.logApp('ELSE :::::::');
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> get isAllowedBiometricsFingerPrint async {
+    final fingerprintLogin = await appStorage.read('fingerprint-login');
+
+    if (fingerprintLogin == 'false') {
+      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::NULL or FALSE');
+      return false;
+    } else {
+      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::TRUE');
       return true;
     }
   }

@@ -11,6 +11,7 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/initial_route.dart';
 
 enum FormLoginValue { username, password }
 
@@ -33,6 +34,7 @@ class LoginController extends GetxController {
   RxBool isValidForm = false.obs;
   RxBool isLoading = false.obs;
   RxBool isCacheuser = false.obs;
+  RxBool isAllowBiometrics = false.obs;
 
   final AppDialog appDialog;
   final GetLoginParams getLoginParams;
@@ -41,8 +43,17 @@ class LoginController extends GetxController {
   final AuthBiometricsLogin authBiometricsLogin;
 
   @override
-  void onInit() {
-    getCacheUser();
+  void onInit() async {
+    await getCacheUser();
+    await checkBiometricAuthentication();
+    if (isAllowBiometrics.value == true) {
+      AppUtils.logApp('BIO :::::::::TRUE');
+      AppUtils.logApp('${isAllowBiometrics.value}');
+      biometricAuthentication();
+    } else {
+      AppUtils.logApp('BIO :::::::::FALSE');
+      null;
+    }
     super.onInit();
   }
 
@@ -152,6 +163,17 @@ class LoginController extends GetxController {
       validateForm();
       getParams();
     });
+  }
+
+  Future<void> checkBiometricAuthentication() async {
+    final isAllowedBiometrics =
+        await Get.find<InitialRouteImpl>().isAllowedBiometricsFingerPrint;
+    AppUtils.logApp('IS ALLOW BIO VALUE :::::::$isAllowedBiometrics');
+    if (isAllowedBiometrics == true) {
+      isAllowBiometrics.value = isAllowedBiometrics;
+    } else {
+      isAllowBiometrics.value = isAllowedBiometrics;
+    }
   }
 
   //Navigation

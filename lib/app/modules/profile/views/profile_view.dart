@@ -7,7 +7,6 @@ import 'package:iroyal/app/modules/profile/views/components/item_menu_profile.da
 import 'package:iroyal/app/modules/profile/views/components/switch_menu_profile.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/profile_controller.dart';
@@ -113,7 +112,7 @@ class ProfileViewImpl extends StatelessWidget {
                                       .copyWith(color: Colors.white),
                                 ),
                                 Text(
-                                  controller.userData().email,
+                                  controller.userData().job.company,
                                   style: TS.bodyMedium
                                       .copyWith(color: Colors.white),
                                 ),
@@ -138,14 +137,19 @@ class ProfileViewImpl extends StatelessWidget {
                     style: TS.titleMedium,
                   ),
                   16.verticalSpace,
+                  ItemMenuProfile(
+                    assetSvg: 'assets/icons/ic_tab_profile.svg',
+                    text: 'Profile',
+                    withTrailing: true,
+                    onTap: () {},
+                  ),
                   Obx(
                     () => SwitchMenuProfile(
                       assetSvg: 'assets/icons/ic_fingerprint.svg',
                       text: 'Fingerprint Login',
-                      value: controller.isSwitched.value,
+                      value: controller.bioValue.value == true ? true : false,
                       onChanged: (value) {
-                        controller.isSwitched.value = value;
-                        AppUtils.logApp('${controller.isSwitched.value}');
+                        controller.iBiometrics(value);
                       },
                     ),
                   ),
@@ -162,7 +166,7 @@ class ProfileViewImpl extends StatelessWidget {
                   16.verticalSpace,
                   ItemMenuProfile(
                     assetSvg: 'assets/icons/ic_log_out.svg',
-                    text: 'logout'.tr,
+                    text: 'Logout',
                     onTap: controller.iLogout,
                   ),
                 ],

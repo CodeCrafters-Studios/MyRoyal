@@ -11,8 +11,10 @@ import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_co
 import 'package:iroyal/app/modules/profile/controllers/profile_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
+import 'package:iroyal/app/modules/profile/domain/usecases/biometrics_app.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/logout_app.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 import '../controllers/bottomnavbar_controller.dart';
 
@@ -64,12 +66,15 @@ class BottomnavbarBinding extends Bindings {
             ProfileRepositoryImpl(localData: Get.find<ProfileLocalDataImpl>()),
       )
       ..lazyPut(() => LogoutApp(Get.find<ProfileRepositoryImpl>()))
+      ..lazyPut(() => BiometricsApp(
+          Get.find<ProfileRepositoryImpl>(), Get.find<AppStorage>()))
       ..lazyPut(
         () => ProfileController(
-          getUser: Get.find(),
-          // getCacheLogin: Get.find(),
-          logoutApp: Get.find(),
-        ),
+            getUser: Get.find(),
+            // getCacheLogin: Get.find(),
+            logoutApp: Get.find(),
+            appStorage: Get.find(),
+            biometricsApp: Get.find()),
       )
 
       // My Teams
