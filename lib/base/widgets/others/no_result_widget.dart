@@ -10,39 +10,30 @@ class NoResultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 250.h,
-          child: SizedBox(
-            height: 350.h,
-            width: 350.w,
-            child: Image.asset('assets/images/img_no-result.gif'),
+        SizedBox(
+          height: 120.h,
+          width: 350.w,
+          child: Image.asset('assets/images/img_no-result.gif'),
+        ),
+        EPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: Column(
+            children: [
+              Text("Sorry! No Result Found :(",
+                  style: TS.bodyMini.copyWith(fontSize: 12)),
+              8.verticalSpace,
+              Text(
+                "We'are sorry what you were looking for.\nPlease try another keys.",
+                style: TS.labelSmall,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
-        Positioned(
-          top: 300.h,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: EPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Column(
-              children: [
-                Text("Sorry! No Result Found :(", style: TS.bodyMini),
-                Text(
-                  "We'are sorry what you were looking for. Please try another keys.",
-                  style: TS.labelSmall,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        )
       ],
     );
   }

@@ -13,6 +13,7 @@ import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../controllers/my_teams_controller.dart';
 
@@ -29,252 +30,419 @@ class MyTeamsView extends GetView<MyTeamsController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const AppbarSpacer(),
-              EPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 162.w,
-                            height: 118.h,
-                            margin: EdgeInsets.only(top: 5.h),
-                            decoration: const ShapeDecoration(
-                              color: primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Average Age',
-                                  style: TS.bodySmall.copyWith(
-                                    color: white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                10.verticalSpace,
-                                Text(
-                                  controller.myTeamsData().averageAge == 0.0
-                                      ? '0'
-                                      : controller
-                                          .myTeamsData()
-                                          .averageAge
-                                          .ceilToDouble()
-                                          .toString()
-                                          .substring(0, 2),
-                                  style: TS.bodySmall.copyWith(color: white),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                          5.verticalSpace,
-                          Material(
-                            color: white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                              side: BorderSide(
-                                color: primary,
-                              ),
-                            ),
-                            child: EPadding(
-                              padding: const EdgeInsets.only(
-                                top: 8,
-                                bottom: 16,
-                                left: 8,
-                                right: 8,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Task Compliance Ratio',
-                                    style: TS.bodySmall.copyWith(
-                                      color: primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  15.verticalSpace,
-                                  const SizedBox(
-                                    height: 125,
-                                    width: 100,
-                                    child: PieChartSample2(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    4.horizontalSpace,
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Material(
-                            color: white,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                              side: BorderSide(
-                                color: primary,
-                              ),
-                            ),
-                            child: EPadding(
-                              padding: const EdgeInsets.only(
-                                bottom: 8,
-                                top: 4,
-                                left: 10,
-                                right: 10,
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Male-Female Comparison',
-                                    style: TS.bodySmall.copyWith(
-                                      color: primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  15.verticalSpace,
-                                  SizedBox(
-                                    height: 125,
-                                    width: 90,
-                                    child: PieChartSample1(
-                                      titleSection1:
-                                          '${controller.myTeamsData().genderDistribution.male.round()}%',
-                                      titleSection2:
-                                          '${controller.myTeamsData().genderDistribution.female.round()}%',
-                                      valueSection1: controller
-                                          .myTeamsData()
-                                          .genderDistribution
-                                          .male,
-                                      valueSection2: controller
-                                          .myTeamsData()
-                                          .genderDistribution
-                                          .female,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          5.verticalSpace,
-                          Container(
-                            width: 175.w,
-                            height: 114.h,
-                            decoration: const ShapeDecoration(
-                              color: primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Immediate Action Required Task',
-                                  style: TS.bodySmall.copyWith(
-                                    color: white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                10.verticalSpace,
-                                Text(
-                                  '31.00',
-                                  style: TS.bodySmall.copyWith(color: white),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              EPadding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  right: 12,
-                  top: 20,
-                  bottom: 8,
-                ),
-                child: InputPrimary(
-                  controller: controller.searchE,
-                  key: const Key('searchUser'),
-                  label: '',
-                  hint: 'Search',
-                  onChanged: controller.onChanged,
-                  prefixIcon: Padding(
-                    padding: REdgeInsets.symmetric(horizontal: 12),
-                    child: SvgPicture.asset(
-                      'assets/icons/ic_search.svg',
-                      width: 20.w,
-                      height: 20.w,
-                    ),
-                  ),
-                ),
-              ),
-              controller.filteredList.isNotEmpty
-                  ? SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: controller.myTeamsData().children.length,
-                        itemBuilder: (context, index) {
-                          final String name =
-                              controller.myTeamsData().children[index].fullName;
-                          final split = name.split(' ');
-                          final firstChar =
-                              split.first.substring(0, 1).toUpperCase();
-                          final secondChar =
-                              split.last.substring(0, 1).toUpperCase();
-                          return ExpansionTileControllerApp(
-                            imgAvatar: firstChar + secondChar,
-                            username: controller
-                                .myTeamsData()
-                                .children[index]
-                                .fullName,
-                            departement: controller
-                                .myTeamsData()
-                                .children[index]
-                                .job
-                                .department,
-                            email: controller
-                                .myTeamsData()
-                                .children[index]
-                                .job
-                                .workEmail,
-                            children: controller
-                                .myTeamsData()
-                                .children[index]
-                                .children,
-                          );
-                        },
-                      ),
-                    )
-                  : SizedBox(height: 400.h, child: const NoResultWidget())
+              controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
+              _buildSearchInput(),
+              controller.isLoading.value
+                  ? _buildLoadingList()
+                  : controller.filteredList.isNotEmpty
+                      ? _buildFilteredList()
+                      : SizedBox(
+                          height: 250.h,
+                          child: const NoResultWidget(),
+                        ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Shimmer _buildLoadingUI() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: EPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    width: 162.w,
+                    height: 118.h,
+                    margin: EdgeInsets.only(top: 5.h),
+                    decoration: const ShapeDecoration(
+                      color: primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Average Age',
+                          style: TS.bodySmall.copyWith(
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  5.verticalSpace,
+                  Material(
+                    color: white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                      side: BorderSide(
+                        color: primary,
+                      ),
+                    ),
+                    child: EPadding(
+                      padding: const EdgeInsets.only(
+                        top: 8,
+                        bottom: 16,
+                        left: 8,
+                        right: 8,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Task Compliance Ratio',
+                            style: TS.bodySmall.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          15.verticalSpace,
+                          const SizedBox(
+                            height: 125,
+                            width: 100,
+                            child: PieChartSample2(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            4.horizontalSpace,
+            Expanded(
+              child: Column(
+                children: [
+                  Material(
+                    color: white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
+                      side: BorderSide(
+                        color: primary,
+                      ),
+                    ),
+                    child: EPadding(
+                      padding: const EdgeInsets.only(
+                        bottom: 8,
+                        top: 4,
+                        left: 10,
+                        right: 10,
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Male-Female Comparison',
+                            style: TS.bodySmall.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          15.verticalSpace,
+                          const SizedBox(
+                            height: 125,
+                            width: 90,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  5.verticalSpace,
+                  Container(
+                    width: 175.w,
+                    height: 114.h,
+                    decoration: const ShapeDecoration(
+                      color: primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  EPadding _buildLoadedUI() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                Container(
+                  width: 162.w,
+                  height: 118.h,
+                  margin: EdgeInsets.only(top: 5.h),
+                  decoration: const ShapeDecoration(
+                    color: primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Average Age',
+                        style: TS.bodySmall.copyWith(
+                          color: white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      10.verticalSpace,
+                      Text(
+                        controller.myTeamsData().averageAge == 0.0
+                            ? '0'
+                            : controller
+                                .myTeamsData()
+                                .averageAge
+                                .round()
+                                .toString()
+                                .substring(0, 2),
+                        style: TS.bodySmall.copyWith(color: white),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                5.verticalSpace,
+                Material(
+                  color: white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    side: BorderSide(
+                      color: primary,
+                    ),
+                  ),
+                  child: EPadding(
+                    padding: const EdgeInsets.only(
+                      top: 8,
+                      bottom: 16,
+                      left: 8,
+                      right: 8,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Task Compliance Ratio',
+                          style: TS.bodySmall.copyWith(
+                            color: primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        15.verticalSpace,
+                        const SizedBox(
+                          height: 125,
+                          width: 100,
+                          child: PieChartSample2(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          4.horizontalSpace,
+          Expanded(
+            child: Column(
+              children: [
+                Material(
+                  color: white,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8),
+                    ),
+                    side: BorderSide(
+                      color: primary,
+                    ),
+                  ),
+                  child: EPadding(
+                    padding: const EdgeInsets.only(
+                      bottom: 8,
+                      top: 4,
+                      left: 10,
+                      right: 10,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Male-Female Comparison',
+                          style: TS.bodySmall.copyWith(
+                            color: primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        15.verticalSpace,
+                        SizedBox(
+                          height: 125,
+                          width: 90,
+                          child: PieChartSample1(
+                            titleSection1:
+                                '${controller.myTeamsData().genderDistribution.male.round()}%',
+                            titleSection2:
+                                '${controller.myTeamsData().genderDistribution.female.round()}%',
+                            valueSection1: controller
+                                .myTeamsData()
+                                .genderDistribution
+                                .male,
+                            valueSection2: controller
+                                .myTeamsData()
+                                .genderDistribution
+                                .female,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                5.verticalSpace,
+                Container(
+                  width: 175.w,
+                  height: 114.h,
+                  decoration: const ShapeDecoration(
+                    color: primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Immediate Action Required Task',
+                        style: TS.bodySmall.copyWith(
+                          color: white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      10.verticalSpace,
+                      Text(
+                        '31.00',
+                        style: TS.bodySmall.copyWith(color: white),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  EPadding _buildSearchInput() {
+    return EPadding(
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 12,
+        top: 20,
+        bottom: 8,
+      ),
+      child: InputPrimary(
+        controller: controller.searchE,
+        key: const Key('searchUser'),
+        label: '',
+        hint: 'Search',
+        onChanged: controller.onChanged,
+        color: white,
+        outlineColor: primary,
+        prefixIcon: Padding(
+          padding: REdgeInsets.symmetric(horizontal: 12),
+          child: SvgPicture.asset(
+            'assets/icons/ic_search.svg',
+            width: 20.w,
+            height: 20.w,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Shimmer _buildLoadingList() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: SizedBox(
+        height: 400,
+        child: ListView.builder(
+          padding: REdgeInsets.symmetric(horizontal: 18),
+          itemCount: controller.myTeamsData().children.length,
+          itemBuilder: (context, index) {
+            return const ExpansionTileControllerApp(
+              imgAvatar: '',
+              username: '',
+              departement: '',
+              email: '',
+              children: [],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  SizedBox _buildFilteredList() {
+    return SizedBox(
+      height: 400,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: controller.filteredList.length,
+        itemBuilder: (context, index) {
+          final String name = controller.filteredList[index].fullName;
+          final split = name.split(' ');
+          final firstChar = split.first.substring(0, 1).toUpperCase();
+          final secondChar = split.last.substring(0, 1).toUpperCase();
+          return ExpansionTileControllerApp(
+            imgAvatar: firstChar + secondChar,
+            username: controller.filteredList[index].fullName,
+            departement: controller.filteredList[index].job.position,
+            email: controller.filteredList[index].job.workEmail,
+            children: controller.filteredList[index].children,
+          );
+        },
       ),
     );
   }
