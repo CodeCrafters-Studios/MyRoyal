@@ -55,8 +55,8 @@ class PieChart1State extends State<PieChartSample1> {
   List<PieChartSectionData> showingSections(String titleSection1,
       String titleSection2, double valueSection1, double valueSection2) {
     return List.generate(2, (i) {
-      const fontSize = 12.0;
-      const radius = 25.0;
+      const fontSize = 14.0;
+      const radius = 15.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
       switch (i) {
         case 0:
@@ -68,7 +68,7 @@ class PieChart1State extends State<PieChartSample1> {
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: white,
+              color: black,
               shadows: shadows,
             ),
           );
@@ -81,7 +81,7 @@ class PieChart1State extends State<PieChartSample1> {
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: white,
+              color: black,
               shadows: shadows,
             ),
           );

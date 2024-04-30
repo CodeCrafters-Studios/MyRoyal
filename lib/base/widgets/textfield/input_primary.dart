@@ -145,7 +145,7 @@ class InputPrimary extends StatelessWidget {
                     )
                   : null,
               contentPadding: contentPadding ??
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               enabled: enable,
               fillColor: color ?? inputColor,
               filled: true,

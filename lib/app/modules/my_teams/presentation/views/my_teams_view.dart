@@ -96,7 +96,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
                           .toString()
                           .substring(0, 2),
                   175,
-                  114,
+                  80,
                 ),
                 5.verticalSpace,
                 _buildTaskComplianceRatio(),
@@ -225,14 +225,14 @@ class MyTeamsView extends GetView<MyTeamsController> {
         child: Column(
           children: [
             Text(
-              'Male-Female Comparison',
+              'Gender Comparison',
               style: TS.bodySmall
                   .copyWith(color: primary, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            15.verticalSpace,
+            5.verticalSpace,
             SizedBox(
-              height: 125.h,
+              height: 128.h,
               width: 100.w,
               child: PieChartSample1(
                 titleSection1:
@@ -244,7 +244,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
                     controller.myTeamsData().genderDistribution.female,
               ),
             ),
-            18.verticalSpace,
+            10.verticalSpace,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

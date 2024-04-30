@@ -29,12 +29,12 @@ class HomeUserMenu extends GetView<HomeController> {
                     crossAxisCount: 4,
                     shrinkWrap: true,
                     children: const [
-                      HomeIconMenu(
-                        menu: Menu(
-                          code: 'ic_dashboard',
-                          name: 'Dashboard',
-                        ),
-                      ),
+                      // HomeIconMenu(
+                      //   menu: Menu(
+                      //     code: 'ic_dashboard',
+                      //     name: 'Dashboard',
+                      //   ),
+                      // ),
                       HomeIconMenu(
                         menu: Menu(
                           code: 'ic_task',
@@ -71,12 +71,12 @@ class HomeUserMenu extends GetView<HomeController> {
                   crossAxisCount: 4,
                   shrinkWrap: true,
                   children: const [
-                    HomeIconMenu(
-                      menu: Menu(
-                        code: 'ic_dashboard',
-                        name: 'Dashboard',
-                      ),
-                    ),
+                    // HomeIconMenu(
+                    //   menu: Menu(
+                    //     code: 'ic_dashboard',
+                    //     name: 'Dashboard',
+                    //   ),
+                    // ),
                     HomeIconMenu(
                       menu: Menu(
                         code: 'ic_task',

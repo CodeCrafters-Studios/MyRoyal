@@ -4,6 +4,7 @@ import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
 import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 
 class MyTeamsController extends GetxController {
   MyTeamsController({required this.getMyTeams});
@@ -53,6 +54,7 @@ class MyTeamsController extends GetxController {
   }
 
   void onChanged(String value) {
+    AppUtils.logApp(value);
     if (value.isEmpty) {
       filteredList.value = myTeamsData().children;
     } else {
@@ -60,6 +62,11 @@ class MyTeamsController extends GetxController {
           .children
           .where((e) => e.fullName.toLowerCase().contains(value.toLowerCase()))
           .toList();
+      filteredList.value = myTeamsData.value.children
+          .where((e) => e.children.any(
+              (f) => f.fullName.toLowerCase().contains(value.toLowerCase())))
+          .toList();
+      AppUtils.logApp('${filteredList.length}');
     }
   }
 }

@@ -16,7 +16,7 @@ class SplashController extends GetxController {
   }
 
   Future<void> checkRoutes() async {
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 200));
     final route = await Get.find<InitialRouteImpl>().route;
     if (route != Routes.SPLASH) {
       unawaited(Get.offNamed(route));
