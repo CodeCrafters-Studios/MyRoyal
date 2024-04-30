@@ -308,8 +308,8 @@ class MyTeamsView extends GetView<MyTeamsController> {
       child: SizedBox(
         height: 400.h,
         child: ListView.builder(
-          padding: REdgeInsets.symmetric(horizontal: 18),
-          itemCount: controller.myTeamsData().children.length,
+          padding: REdgeInsets.symmetric(horizontal: 4),
+          itemCount: 10,
           itemBuilder: (context, index) {
             return const ExpansionTileControllerApp(
               imgAvatar: '',
