@@ -30,6 +30,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const AppbarSpacer(),
+              5.verticalSpace,
               controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
               _buildSearchInput(),
               controller.isLoading.value
@@ -200,9 +201,8 @@ class MyTeamsView extends GetView<MyTeamsController> {
             child: Column(
               children: [
                 Container(
-                  width: 162.w,
-                  height: 118.h,
-                  margin: EdgeInsets.only(top: 5.h),
+                  width: 175.w,
+                  height: 114.h,
                   decoration: const ShapeDecoration(
                     color: primary,
                     shape: RoundedRectangleBorder(
@@ -251,26 +251,60 @@ class MyTeamsView extends GetView<MyTeamsController> {
                   ),
                   child: EPadding(
                     padding: const EdgeInsets.only(
-                      top: 8,
-                      bottom: 16,
-                      left: 8,
-                      right: 8,
+                      bottom: 8,
+                      top: 4,
+                      left: 10,
+                      right: 10,
                     ),
                     child: Column(
                       children: [
                         Text(
-                          'Task Compliance Ratio',
+                          'Task Compliance\nRatio',
                           style: TS.bodySmall.copyWith(
                             color: primary,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        15.verticalSpace,
-                        const SizedBox(
-                          height: 125,
-                          width: 100,
-                          child: PieChartSample2(),
+                        5.verticalSpace,
+                        SizedBox(
+                          height: 135.h,
+                          width: 90,
+                          child: const PieChartSample2(),
+                        ),
+                        10.verticalSpace,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Indicator(
+                              color: Colors.blue,
+                              text: 'Task 1',
+                              isSquare: true,
+                            ),
+                            12.horizontalSpace,
+                            const Indicator(
+                              color: Colors.purple,
+                              text: 'Task 2',
+                              isSquare: true,
+                            ),
+                          ],
+                        ),
+                        10.verticalSpace,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Indicator(
+                              color: Colors.red,
+                              text: 'Task 3',
+                              isSquare: true,
+                            ),
+                            10.horizontalSpace,
+                            const Indicator(
+                              color: Colors.green,
+                              text: 'Task 4',
+                              isSquare: true,
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -310,9 +344,9 @@ class MyTeamsView extends GetView<MyTeamsController> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        15.verticalSpace,
+                        5.verticalSpace,
                         SizedBox(
-                          height: 125,
+                          height: 135.h,
                           width: 90,
                           child: PieChartSample1(
                             titleSection1:
@@ -329,6 +363,23 @@ class MyTeamsView extends GetView<MyTeamsController> {
                                 .female,
                           ),
                         ),
+                        10.verticalSpace,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Indicator(
+                              color: Colors.blue,
+                              text: 'Male',
+                              isSquare: true,
+                            ),
+                            10.horizontalSpace,
+                            const Indicator(
+                              color: Colors.purple,
+                              text: 'Female',
+                              isSquare: true,
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -336,7 +387,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
                 5.verticalSpace,
                 Container(
                   width: 175.w,
-                  height: 114.h,
+                  height: 139.h,
                   decoration: const ShapeDecoration(
                     color: primary,
                     shape: RoundedRectangleBorder(
@@ -358,7 +409,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
                       ),
                       10.verticalSpace,
                       Text(
-                        '31.00',
+                        '20',
                         style: TS.bodySmall.copyWith(color: white),
                         textAlign: TextAlign.center,
                       ),
@@ -444,6 +495,43 @@ class MyTeamsView extends GetView<MyTeamsController> {
           );
         },
       ),
+    );
+  }
+}
+
+class Indicator extends StatelessWidget {
+  const Indicator({
+    super.key,
+    required this.color,
+    required this.text,
+    required this.isSquare,
+    this.size = 16,
+    this.textColor,
+  });
+  final Color color;
+  final String text;
+  final bool isSquare;
+  final double size;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+            color: color,
+          ),
+        ),
+        4.horizontalSpace,
+        Text(
+          text,
+          style: TS.caption,
+        )
+      ],
     );
   }
 }

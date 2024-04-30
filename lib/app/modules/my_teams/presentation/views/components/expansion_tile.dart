@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 class ExpansionTileControllerApp extends StatefulWidget {
   const ExpansionTileControllerApp({
@@ -49,7 +50,7 @@ class _ExpansionTileControllerAppState
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              leading: Padding(
+              leading: EPadding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: CircleAvatar(
                   backgroundColor: Colors.white,

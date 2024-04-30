@@ -23,13 +23,11 @@ class PieChartSample1 extends StatefulWidget {
 class PieChart1State extends State<PieChartSample1> {
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(
-            height: 18,
-          ),
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
           Expanded(
             child: AspectRatio(
               aspectRatio: 1,
@@ -51,9 +49,7 @@ class PieChart1State extends State<PieChartSample1> {
               ),
             ),
           ),
-        ],
-      ),
-    );
+        ]);
   }
 
   List<PieChartSectionData> showingSections(String titleSection1,
@@ -93,48 +89,5 @@ class PieChart1State extends State<PieChartSample1> {
           throw Error();
       }
     });
-  }
-}
-
-class Indicator extends StatelessWidget {
-  const Indicator({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.isSquare,
-    this.size = 16,
-    this.textColor,
-  });
-  final Color color;
-  final String text;
-  final bool isSquare;
-  final double size;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(
-          width: 4,
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        )
-      ],
-    );
   }
 }
