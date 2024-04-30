@@ -50,8 +50,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             },
           ),
           IconTab(
-            icon: 'assets/icons/ic_tab_profile.svg',
-            name: 'profile',
+            icon: 'assets/icons/ic_settings.svg',
+            name: 'Settings',
             isSelected: index == 1,
             onTap: () {
               setState(() {
