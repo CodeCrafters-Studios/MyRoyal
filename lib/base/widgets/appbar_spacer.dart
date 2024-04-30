@@ -10,7 +10,7 @@ class AppbarSpacer extends StatelessWidget {
     return SizedBox(
       height: AppConfig.iAppBarHeight +
           MediaQuery.of(context).viewPadding.top +
-          8.h,
+          10.h,
     );
   }
 }

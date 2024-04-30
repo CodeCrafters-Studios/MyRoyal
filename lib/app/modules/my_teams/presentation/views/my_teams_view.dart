@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/views/components/customize_pie_chart1.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/views/components/customize_pie_chart2.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/views/components/expansion_tile.dart';
+import 'package:iroyal/app/modules/my_teams/presentation/views/components/indicator.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/my_teams_controller.dart';
 
 class MyTeamsView extends GetView<MyTeamsController> {
   const MyTeamsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PageBase(
@@ -30,17 +31,9 @@ class MyTeamsView extends GetView<MyTeamsController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const AppbarSpacer(),
-              5.verticalSpace,
               controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
               _buildSearchInput(),
-              controller.isLoading.value
-                  ? _buildLoadingList()
-                  : controller.filteredList.isNotEmpty
-                      ? _buildFilteredList()
-                      : SizedBox(
-                          height: 250.h,
-                          child: const NoResultWidget(),
-                        ),
+              _buildListView(),
             ],
           ),
         ),
@@ -48,7 +41,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
     );
   }
 
-  Shimmer _buildLoadingUI() {
+  Widget _buildLoadingUI() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
@@ -56,75 +49,13 @@ class MyTeamsView extends GetView<MyTeamsController> {
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
               child: Column(
                 children: [
-                  Container(
-                    width: 162.w,
-                    height: 118.h,
-                    margin: EdgeInsets.only(top: 5.h),
-                    decoration: const ShapeDecoration(
-                      color: primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Average Age',
-                          style: TS.bodySmall.copyWith(
-                            color: white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                  5.verticalSpace,
-                  Material(
-                    color: white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      side: BorderSide(
-                        color: primary,
-                      ),
-                    ),
-                    child: EPadding(
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 16,
-                        left: 8,
-                        right: 8,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Task Compliance Ratio',
-                            style: TS.bodySmall.copyWith(
-                              color: primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          15.verticalSpace,
-                          const SizedBox(
-                            height: 125,
-                            width: 100,
-                            child: PieChartSample2(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildContainer('Average Age', '0', 175, 114),
+                  const SizedBox(height: 5),
+                  _buildTaskComplianceRatio(),
                 ],
               ),
             ),
@@ -132,184 +63,43 @@ class MyTeamsView extends GetView<MyTeamsController> {
             Expanded(
               child: Column(
                 children: [
-                  Material(
-                    color: white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
-                      ),
-                      side: BorderSide(
-                        color: primary,
-                      ),
-                    ),
-                    child: EPadding(
-                      padding: const EdgeInsets.only(
-                        bottom: 8,
-                        top: 4,
-                        left: 10,
-                        right: 10,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            'Male-Female Comparison',
-                            style: TS.bodySmall.copyWith(
-                              color: primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          15.verticalSpace,
-                          const SizedBox(
-                            height: 125,
-                            width: 90,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  5.verticalSpace,
-                  Container(
-                    width: 175.w,
-                    height: 114.h,
-                    decoration: const ShapeDecoration(
-                      color: primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
-                  ),
+                  _buildTaskComplianceRatio(),
+                  const SizedBox(height: 5),
+                  _buildContainer(
+                      'Immediate Action Required Task', '', 175, 114),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  EPadding _buildLoadedUI() {
+  Widget _buildLoadedUI() {
     return EPadding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
             child: Column(
               children: [
-                Container(
-                  width: 175.w,
-                  height: 114.h,
-                  decoration: const ShapeDecoration(
-                    color: primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Average Age',
-                        style: TS.bodySmall.copyWith(
-                          color: white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      10.verticalSpace,
-                      Text(
-                        controller.myTeamsData().averageAge == 0.0
-                            ? '0'
-                            : controller
-                                .myTeamsData()
-                                .averageAge
-                                .round()
-                                .toString()
-                                .substring(0, 2),
-                        style: TS.bodySmall.copyWith(color: white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                _buildContainer(
+                  'Average Age',
+                  controller.myTeamsData().averageAge == 0.0
+                      ? '0'
+                      : controller
+                          .myTeamsData()
+                          .averageAge
+                          .round()
+                          .toString()
+                          .substring(0, 2),
+                  175,
+                  114,
                 ),
                 5.verticalSpace,
-                Material(
-                  color: white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    side: BorderSide(
-                      color: primary,
-                    ),
-                  ),
-                  child: EPadding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8,
-                      top: 4,
-                      left: 10,
-                      right: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Task Compliance\nRatio',
-                          style: TS.bodySmall.copyWith(
-                            color: primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        5.verticalSpace,
-                        SizedBox(
-                          height: 135.h,
-                          width: 90,
-                          child: const PieChartSample2(),
-                        ),
-                        10.verticalSpace,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Indicator(
-                              color: Colors.blue,
-                              text: 'Task 1',
-                              isSquare: true,
-                            ),
-                            12.horizontalSpace,
-                            const Indicator(
-                              color: Colors.purple,
-                              text: 'Task 2',
-                              isSquare: true,
-                            ),
-                          ],
-                        ),
-                        10.verticalSpace,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Indicator(
-                              color: Colors.red,
-                              text: 'Task 3',
-                              isSquare: true,
-                            ),
-                            10.horizontalSpace,
-                            const Indicator(
-                              color: Colors.green,
-                              text: 'Task 4',
-                              isSquare: true,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildTaskComplianceRatio(),
               ],
             ),
           ),
@@ -317,121 +107,169 @@ class MyTeamsView extends GetView<MyTeamsController> {
           Expanded(
             child: Column(
               children: [
-                Material(
-                  color: white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(8),
-                    ),
-                    side: BorderSide(
-                      color: primary,
-                    ),
-                  ),
-                  child: EPadding(
-                    padding: const EdgeInsets.only(
-                      bottom: 8,
-                      top: 4,
-                      left: 10,
-                      right: 10,
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Male-Female Comparison',
-                          style: TS.bodySmall.copyWith(
-                            color: primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        5.verticalSpace,
-                        SizedBox(
-                          height: 135.h,
-                          width: 90,
-                          child: PieChartSample1(
-                            titleSection1:
-                                '${controller.myTeamsData().genderDistribution.male.round()}%',
-                            titleSection2:
-                                '${controller.myTeamsData().genderDistribution.female.round()}%',
-                            valueSection1: controller
-                                .myTeamsData()
-                                .genderDistribution
-                                .male,
-                            valueSection2: controller
-                                .myTeamsData()
-                                .genderDistribution
-                                .female,
-                          ),
-                        ),
-                        10.verticalSpace,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Indicator(
-                              color: Colors.blue,
-                              text: 'Male',
-                              isSquare: true,
-                            ),
-                            10.horizontalSpace,
-                            const Indicator(
-                              color: Colors.purple,
-                              text: 'Female',
-                              isSquare: true,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildMaleFemaleRatio(),
                 5.verticalSpace,
-                Container(
-                  width: 175.w,
-                  height: 139.h,
-                  decoration: const ShapeDecoration(
-                    color: primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Immediate Action Required Task',
-                        style: TS.bodySmall.copyWith(
-                          color: white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      10.verticalSpace,
-                      Text(
-                        '20',
-                        style: TS.bodySmall.copyWith(color: white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
+                _buildContainer(
+                    'Immediate Action\nRequired Task', '20', 175, 114),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  EPadding _buildSearchInput() {
-    return EPadding(
-      padding: const EdgeInsets.only(
-        left: 16,
-        right: 12,
-        top: 20,
-        bottom: 8,
+  Widget _buildContainer(
+      String title, String value, double width, double height) {
+    return Container(
+      width: width.w,
+      height: height.h,
+      decoration: BoxDecoration(
+        color: primary,
+        borderRadius: BorderRadius.circular(10),
       ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: TS.bodySmall
+                  .copyWith(color: white, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            10.verticalSpace,
+            Text(
+              value,
+              style: TS.bodySmall.copyWith(color: white),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTaskComplianceRatio() {
+    return Material(
+      color: white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        side: BorderSide(color: primary),
+      ),
+      child: EPadding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: Column(
+          children: [
+            Text(
+              'Task Compliance Ratio',
+              style: TS.bodySmall
+                  .copyWith(color: primary, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            15.verticalSpace,
+            SizedBox(
+              height: 125.h,
+              width: 100.w,
+              child: const PieChartSample2(),
+            ),
+            15.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Indicator(
+                  color: Colors.blue,
+                  text: 'Task 1',
+                  isSquare: true,
+                ),
+                12.horizontalSpace,
+                const Indicator(
+                  color: Colors.purple,
+                  text: 'Task 2',
+                  isSquare: true,
+                ),
+              ],
+            ),
+            5.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Indicator(
+                  color: Colors.red,
+                  text: 'Task 3',
+                  isSquare: true,
+                ),
+                10.horizontalSpace,
+                const Indicator(
+                  color: Colors.green,
+                  text: 'Task 4',
+                  isSquare: true,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMaleFemaleRatio() {
+    return Material(
+      color: white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        side: BorderSide(color: primary),
+      ),
+      child: EPadding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: Column(
+          children: [
+            Text(
+              'Male-Female Comparison',
+              style: TS.bodySmall
+                  .copyWith(color: primary, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            15.verticalSpace,
+            SizedBox(
+              height: 125.h,
+              width: 100.w,
+              child: PieChartSample1(
+                titleSection1:
+                    '${controller.myTeamsData().genderDistribution.male.round()}%',
+                titleSection2:
+                    '${controller.myTeamsData().genderDistribution.female.round()}%',
+                valueSection1: controller.myTeamsData().genderDistribution.male,
+                valueSection2:
+                    controller.myTeamsData().genderDistribution.female,
+              ),
+            ),
+            18.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Indicator(
+                  color: Colors.blue,
+                  text: 'Male',
+                  isSquare: true,
+                ),
+                10.horizontalSpace,
+                const Indicator(
+                  color: Colors.purple,
+                  text: 'Female',
+                  isSquare: true,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchInput() {
+    return EPadding(
+      padding: const EdgeInsets.only(left: 16, top: 15, right: 16),
       child: InputPrimary(
         controller: controller.searchE,
         key: const Key('searchUser'),
@@ -440,8 +278,8 @@ class MyTeamsView extends GetView<MyTeamsController> {
         onChanged: controller.onChanged,
         color: white,
         outlineColor: primary,
-        prefixIcon: Padding(
-          padding: REdgeInsets.symmetric(horizontal: 12),
+        prefixIcon: EPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: SvgPicture.asset(
             'assets/icons/ic_search.svg',
             width: 20.w,
@@ -452,12 +290,23 @@ class MyTeamsView extends GetView<MyTeamsController> {
     );
   }
 
-  Shimmer _buildLoadingList() {
+  Widget _buildListView() {
+    return controller.isLoading.value
+        ? _buildLoadingList()
+        : controller.filteredList.isNotEmpty
+            ? _buildFilteredList()
+            : SizedBox(
+                height: 250.h,
+                child: const NoResultWidget(),
+              );
+  }
+
+  Widget _buildLoadingList() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: SizedBox(
-        height: 400,
+        height: 400.h,
         child: ListView.builder(
           padding: REdgeInsets.symmetric(horizontal: 18),
           itemCount: controller.myTeamsData().children.length,
@@ -475,9 +324,9 @@ class MyTeamsView extends GetView<MyTeamsController> {
     );
   }
 
-  SizedBox _buildFilteredList() {
+  Widget _buildFilteredList() {
     return SizedBox(
-      height: 400,
+      height: 400.h,
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: controller.filteredList.length,
@@ -495,43 +344,6 @@ class MyTeamsView extends GetView<MyTeamsController> {
           );
         },
       ),
-    );
-  }
-}
-
-class Indicator extends StatelessWidget {
-  const Indicator({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.isSquare,
-    this.size = 16,
-    this.textColor,
-  });
-  final Color color;
-  final String text;
-  final bool isSquare;
-  final double size;
-  final Color? textColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        4.horizontalSpace,
-        Text(
-          text,
-          style: TS.caption,
-        )
-      ],
     );
   }
 }
