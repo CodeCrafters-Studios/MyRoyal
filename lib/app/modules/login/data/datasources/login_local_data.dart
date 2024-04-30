@@ -7,6 +7,7 @@ import 'package:iroyal/app/modules/login/data/models/login_response.dart';
 import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/location/app_location.dart';
@@ -25,7 +26,11 @@ abstract class LoginLocalDataSource {
     required String clientSecret,
   });
   Future<bool> authBiometrics();
-  Future<void> saveLoginToken(String token, String refreshToken);
+  Future<void> saveLoginToken(
+    String token,
+    String refreshToken,
+    int expiresin,
+  );
 }
 
 class LoginLocalDataSourceImpl implements LoginLocalDataSource {
@@ -165,9 +170,21 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }
 
   @override
-  Future<void> saveLoginToken(String token, String refreshToken) async {
+  Future<void> saveLoginToken(
+      String token, String refreshToken, int expiresToken) async {
     await appStorage.write('ever-login', 'true');
     await appStorage.write(CACHE_ACCESS_TOKEN, token);
     await appStorage.write(CACHE_REFRESH_TOKEN, refreshToken);
+    await appStorage.write(CACHE_EXPIRES_TOKEN, expiresToken.toString());
+    final now = DateTime.now();
+    // final expiresIn = appStorage.read(CACHE_EXPIRES_TOKEN);
+    // final convertExp = int.tryParse(expiresIn.toString());
+
+    final later = now.add(const Duration(milliseconds: 60000));
+    // final later = now.add( Duration(milliseconds: convertExp ?? 0));
+    AppUtils.logApp('FIRST DATE TIME NOW :::::::$now');
+    AppUtils.logApp('FIRST GET TOKEN :::::::$later');
+
+    await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
   }
 }

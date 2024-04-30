@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,36 +31,41 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return CardApp(
-      width: 375,
-      height: 70,
+      width: 380.w,
+      height: 75.h,
       radius: 0,
       isShadow: true,
       shadows: Shadows.up,
-      padding: REdgeInsets.symmetric(vertical: 12, horizontal: 34),
+      padding: REdgeInsets.symmetric(vertical: 12, horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          IconTab(
-            icon: 'assets/icons/ic_tab_home.svg',
-            name: 'Home',
-            isSelected: index == 0,
-            onTap: () {
-              setState(() {
-                index = 0;
-              });
-              widget.index.call(index);
-            },
+          Expanded(
+            child: IconTab(
+              icon: 'assets/icons/ic_tab_home.svg',
+              name: 'Home',
+              isSelected: index == 0,
+              onTap: () {
+                setState(() {
+                  index = 0;
+                });
+                widget.index.call(index);
+              },
+            ),
           ),
-          IconTab(
-            icon: 'assets/icons/ic_settings.svg',
-            name: 'Settings',
-            isSelected: index == 1,
-            onTap: () {
-              setState(() {
-                index = 1;
-              });
-              widget.index.call(index);
-            },
+          Expanded(
+            child: IconTab(
+              icon: 'assets/icons/ic_settings.svg',
+              name: 'Settings',
+              isSelected: index == 1,
+              onTap: () {
+                setState(() {
+                  index = 1;
+                });
+                widget.index.call(index);
+              },
+            ),
           ),
         ],
       ),
@@ -87,7 +94,6 @@ class IconTab extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         opacity: isSelected ? 1 : .25,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               icon,
