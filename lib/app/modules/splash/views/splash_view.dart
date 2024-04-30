@@ -7,6 +7,7 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/image.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/splash_controller.dart';
@@ -51,7 +52,7 @@ class SplashView extends GetView<SplashController> {
             bottom: .1.sh,
             right: 0,
             left: 0,
-            child: Padding(
+            child: EPadding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: ButtonPrimary(
                 color: primary,
