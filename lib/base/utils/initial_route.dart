@@ -1,9 +1,11 @@
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 abstract class InitialRoute {
   Future<String> get route;
+  Future<bool> get isAllowedBiometricsFingerPrint;
 }
 
 class InitialRouteImpl implements InitialRoute {
@@ -24,11 +26,11 @@ class InitialRouteImpl implements InitialRoute {
       return Routes.LOGIN;
     } else {
       final isExpired = await isTokenExpired(token);
-      print('EXPIRED ::::::::: $isExpired');
+      AppUtils.logApp('EXPIRED ::::::::: $isExpired');
       if (!isExpired) {
         return Routes.BOTTOMNAVBAR;
       } else {
-        print("TOKEN IS EXPIRED");
+        AppUtils.logApp("TOKEN IS EXPIRED");
         return Routes.LOGIN;
       }
     }
@@ -39,11 +41,24 @@ class InitialRouteImpl implements InitialRoute {
     if (expiresInString != null) {
       final expiresIn = DateTime.parse(expiresInString);
       final now = DateTime.now();
-      print('EXPIRE IN :::::::$expiresIn');
-      print('DATETIME NOW :::::::$now');
+      AppUtils.logApp('EXPIRE IN :::::::$expiresIn');
+      AppUtils.logApp('DATETIME NOW :::::::$now');
       return now.compareTo(expiresIn) > 0;
     } else {
-      print('ELSE :::::::');
+      AppUtils.logApp('ELSE :::::::');
+      return true;
+    }
+  }
+
+  @override
+  Future<bool> get isAllowedBiometricsFingerPrint async {
+    final fingerprintLogin = await appStorage.read('fingerprint-login');
+
+    if (fingerprintLogin == 'false') {
+      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::NULL or FALSE');
+      return false;
+    } else {
+      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::TRUE');
       return true;
     }
   }

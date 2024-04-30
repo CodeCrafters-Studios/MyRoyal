@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 
-class LoadingShimmerText extends StatelessWidget {
-  const LoadingShimmerText({
+class ShimmerText extends StatelessWidget {
+  const ShimmerText({
     super.key,
     required this.width,
     this.padding,

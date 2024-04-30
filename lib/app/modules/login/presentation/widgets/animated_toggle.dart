@@ -28,9 +28,9 @@ class AnimatedToggleState extends State<AnimatedToggle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 40.h),
+      padding: REdgeInsets.only(top: 40),
       width: Get.width * 0.6,
-      margin: const EdgeInsets.all(20),
+      margin: REdgeInsets.all(20),
       child: Stack(
         children: <Widget>[
           GestureDetector(

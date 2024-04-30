@@ -7,6 +7,7 @@ import 'package:iroyal/app/modules/login/data/models/login_response.dart';
 import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/location/app_location.dart';
@@ -181,8 +182,8 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
 
     final later = now.add(const Duration(milliseconds: 60000));
     // final later = now.add( Duration(milliseconds: convertExp ?? 0));
-    print('FIRST DATE TIME NOW :::::::$now');
-    print('FIRST GET TOKEN :::::::$later');
+    AppUtils.logApp('FIRST DATE TIME NOW :::::::$now');
+    AppUtils.logApp('FIRST GET TOKEN :::::::$later');
 
     await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
   }

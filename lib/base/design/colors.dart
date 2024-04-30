@@ -56,6 +56,10 @@ const cardColor = Color.fromARGB(255, 255, 255, 255);
 const favoriteColor = Color.fromARGB(255, 250, 200, 38);
 const tabbarColor = Color(0xFFFAFAFA);
 
+// Switch Color
+const inactiveThumbColor = Color.fromRGBO(84, 110, 122, 1);
+const inactiveTrackColor = Color.fromRGBO(189, 189, 189, 1);
+
 const Map<int, Color> materialColor = {
   50: Color.fromRGBO(136, 14, 79, .1),
   100: Color.fromRGBO(136, 14, 79, .2),

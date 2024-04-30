@@ -27,7 +27,7 @@ class PieChartSample2State extends State {
   List<PieChartSectionData> showingSections() {
     return List.generate(4, (i) {
       const fontSize = 12.0;
-      const radius = 70.0;
+      const radius = 65.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
 
       switch (i) {
@@ -60,8 +60,8 @@ class PieChartSample2State extends State {
         case 2:
           return PieChartSectionData(
             color: Colors.purple,
-            value: 16,
-            title: '16%',
+            value: 15,
+            title: '15%',
             radius: radius,
             titleStyle: const TextStyle(
               fontSize: fontSize,

@@ -16,4 +16,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return Left(CacheFailure(properties: [e]));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> biometricsApp() async {
+    try {
+      final result = await localData.biometrics();
+      return Right(result);
+    } catch (e) {
+      return Left(CacheFailure(properties: [e]));
+    }
+  }
 }

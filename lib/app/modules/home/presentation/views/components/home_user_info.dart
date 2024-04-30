@@ -27,7 +27,7 @@ class HomeUserInfo extends GetView<HomeController> {
                     isShadow: true,
                     shadows: Shadows.small,
                     padding: REdgeInsets.all(8),
-                    margin: const EdgeInsets.all(16),
+                    margin: REdgeInsets.all(16),
                     child: const Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -48,7 +48,7 @@ class HomeUserInfo extends GetView<HomeController> {
                   isShadow: true,
                   shadows: Shadows.small,
                   padding: REdgeInsets.all(8),
-                  margin: const EdgeInsets.all(16),
+                  margin: REdgeInsets.all(16),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

@@ -34,7 +34,7 @@ class LoginView extends GetView<LoginController> {
               isShadow: true,
               shadows: Shadows.small,
               padding: REdgeInsets.all(8),
-              margin: const EdgeInsets.all(16),
+              margin: REdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [

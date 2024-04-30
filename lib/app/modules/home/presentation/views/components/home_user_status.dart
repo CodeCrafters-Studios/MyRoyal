@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/loading_shimmer_text.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
@@ -31,7 +31,7 @@ class HomeUserStatus extends GetView<HomeController> {
                         alignment: Alignment.topLeft,
                         child: EPadding(
                           padding: EdgeInsets.symmetric(horizontal: 18),
-                          child: LoadingShimmerText(
+                          child: ShimmerText(
                             width: 150,
                           ),
                         ),
@@ -55,33 +55,34 @@ class HomeUserStatus extends GetView<HomeController> {
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CardApp(
                             color: primary.withOpacity(0.8),
                             outlineColor: black,
-                            child: const SizedBox(
-                              width: 150,
-                              child: HomeUserCard(
+                            child: SizedBox(
+                              width: 155.w,
+                              child: const HomeUserCard(
                                 shapeBorder: true,
                                 isAvatarPicture: false,
-                                title: '',
-                                subtitle: '',
+                                title: 'Today In',
+                                subtitle: '00:00:00',
                                 isThridLine: false,
                                 suffixIcon: false,
                               ),
                             ),
                           ),
+                          20.horizontalSpace,
                           CardApp(
-                            color: primary.withOpacity(0.8),
+                            color: grey,
                             outlineColor: black,
-                            child: const SizedBox(
-                              width: 150,
-                              child: HomeUserCard(
+                            child: SizedBox(
+                              width: 155.w,
+                              child: const HomeUserCard(
                                 shapeBorder: true,
                                 isAvatarPicture: false,
-                                title: '',
-                                subtitle: '',
+                                title: 'Yesterday Out',
+                                subtitle: '00:00:00',
                                 isThridLine: false,
                                 suffixIcon: false,
                               ),
@@ -91,13 +92,13 @@ class HomeUserStatus extends GetView<HomeController> {
                       ),
                     )
                   : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CardApp(
                           color: primary.withOpacity(0.8),
                           outlineColor: black,
                           child: SizedBox(
-                            width: 150,
+                            width: 155.w,
                             child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
@@ -117,11 +118,12 @@ class HomeUserStatus extends GetView<HomeController> {
                             ),
                           ),
                         ),
+                        20.horizontalSpace,
                         CardApp(
                           color: grey,
                           outlineColor: black,
                           child: SizedBox(
-                            width: 150,
+                            width: 155.w,
                             child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
