@@ -13,6 +13,7 @@ class MyTeamsController extends GetxController {
   final GetMyTeams getMyTeams;
 
   final RxBool isLoading = false.obs;
+  final RxBool isExpand = false.obs;
   final Rx<MyTeams> myTeamsData = const MyTeams(
     hasChildren: false,
     averageAge: 0.0,
@@ -57,6 +58,7 @@ class MyTeamsController extends GetxController {
     AppUtils.logApp(value);
     if (value.isEmpty) {
       filteredList.value = myTeamsData().children;
+      isExpand.value = false;
     } else {
       filteredList.value = myTeamsData()
           .children
@@ -66,6 +68,7 @@ class MyTeamsController extends GetxController {
           .where((e) => e.children.any(
               (f) => f.fullName.toLowerCase().contains(value.toLowerCase())))
           .toList();
+      isExpand.value = true;
       AppUtils.logApp('${filteredList.length}');
     }
   }

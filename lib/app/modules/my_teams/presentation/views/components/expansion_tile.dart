@@ -13,6 +13,7 @@ class ExpansionTileControllerApp extends StatefulWidget {
     required this.departement,
     required this.email,
     required this.children,
+    required this.isExpand,
   });
 
   final String imgAvatar;
@@ -20,6 +21,7 @@ class ExpansionTileControllerApp extends StatefulWidget {
   final String departement;
   final String email;
   final List<ChildModel> children;
+  final bool isExpand;
 
   @override
   State<ExpansionTileControllerApp> createState() =>
@@ -46,6 +48,7 @@ class _ExpansionTileControllerAppState
             ),
             clipBehavior: Clip.antiAlias,
             child: ExpansionTile(
+              initiallyExpanded: widget.isExpand,
               backgroundColor: white,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
