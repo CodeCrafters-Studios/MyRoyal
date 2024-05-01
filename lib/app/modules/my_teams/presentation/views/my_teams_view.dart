@@ -317,7 +317,6 @@ class MyTeamsView extends GetView<MyTeamsController> {
               departement: '',
               email: '',
               children: [],
-              isExpand: false,
             );
           },
         ),
@@ -342,7 +341,6 @@ class MyTeamsView extends GetView<MyTeamsController> {
             departement: controller.filteredList[index].job.position,
             email: controller.filteredList[index].job.workEmail,
             children: controller.filteredList[index].children,
-            isExpand: controller.isExpand.value,
           );
         },
       ),

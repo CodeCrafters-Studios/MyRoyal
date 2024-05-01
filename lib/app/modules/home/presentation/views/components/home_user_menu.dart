@@ -33,30 +33,35 @@ class HomeUserMenu extends GetView<HomeController> {
                       //   menu: Menu(
                       //     code: 'ic_dashboard',
                       //     name: 'Dashboard',
+                      //     isVisible: false,
                       //   ),
                       // ),
                       HomeIconMenu(
                         menu: Menu(
                           code: 'ic_task',
                           name: 'Tasks',
+                          isVisible: true,
                         ),
                       ),
                       HomeIconMenu(
                         menu: Menu(
                           code: 'ic_tracking_documents',
                           name: 'Tracking Documents',
+                          isVisible: true,
                         ),
                       ),
                       HomeIconMenu(
                         menu: Menu(
                           code: 'ic_visit',
                           name: 'Visit',
+                          isVisible: true,
                         ),
                       ),
                       HomeIconMenu(
                         menu: Menu(
                           code: 'ic_teams',
                           name: 'My Teams',
+                          isVisible: true,
                         ),
                       ),
                     ],
@@ -75,30 +80,35 @@ class HomeUserMenu extends GetView<HomeController> {
                     //   menu: Menu(
                     //     code: 'ic_dashboard',
                     //     name: 'Dashboard',
+                    //     isVisible: false,
                     //   ),
                     // ),
                     HomeIconMenu(
                       menu: Menu(
                         code: 'ic_task',
                         name: 'Tasks',
+                        isVisible: true,
                       ),
                     ),
                     HomeIconMenu(
                       menu: Menu(
                         code: 'ic_tracking_documents',
                         name: 'Tracking Documents',
+                        isVisible: true,
                       ),
                     ),
                     HomeIconMenu(
                       menu: Menu(
                         code: 'ic_visit',
                         name: 'Visit',
+                        isVisible: true,
                       ),
                     ),
                     HomeIconMenu(
                       menu: Menu(
                         code: 'ic_teams',
                         name: 'My Teams',
+                        isVisible: true,
                       ),
                     ),
                   ],

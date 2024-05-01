@@ -147,7 +147,7 @@ class ProfileViewImpl extends StatelessWidget {
                     () => SwitchMenuProfile(
                       assetSvg: 'assets/icons/ic_fingerprint.svg',
                       text: 'Fingerprint Login',
-                      value: controller.bioValue.value == true ? true : false,
+                      value: controller.biometricsValue.value ? true : false,
                       onChanged: (value) {
                         controller.iBiometrics(value);
                       },

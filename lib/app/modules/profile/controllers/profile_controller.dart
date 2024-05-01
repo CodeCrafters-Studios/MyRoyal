@@ -24,8 +24,7 @@ class ProfileController extends GetxController {
   final AppStorage appStorage;
 
   RxBool isLoading = false.obs;
-  RxBool isSwitched = false.obs;
-  RxBool bioValue = false.obs;
+  RxBool biometricsValue = false.obs;
 
   final iUser = const User(
     id: 0,
@@ -81,9 +80,13 @@ class ProfileController extends GetxController {
 
   @override
   void onInit() {
-    iGetCacheUser();
-    setValue();
+    _initial();
     super.onInit();
+  }
+
+  void _initial() {
+    iGetCacheUser();
+    setBiometricsValue();
   }
 
   Future<void> iGetCacheUser() async {
@@ -128,8 +131,7 @@ class ProfileController extends GetxController {
       (l) => null,
       (r) {
         if (r) {
-          isSwitched.value = value;
-          bioValue.value = value;
+          biometricsValue.value = value;
           appStorage.write('fingerprint-login', value.toString());
           AppUtils.logApp('FINGERPRINT VALUE iBiometrics:::::: $value');
         }
@@ -137,15 +139,14 @@ class ProfileController extends GetxController {
     );
   }
 
-  void setValue() async {
+  void setBiometricsValue() async {
     final fingerprintLogin = await appStorage.read('fingerprint-login');
     if (fingerprintLogin == 'true') {
-      bioValue.value = true;
-      AppUtils.logApp('BIO VALUE :::::::::: ${bioValue.value}');
-    } else if (fingerprintLogin == null || fingerprintLogin == '') {
-      bioValue.value = false;
+      biometricsValue.value = true;
+      AppUtils.logApp('BIO VALUE :::::::::: ${biometricsValue.value}');
     } else {
-      bioValue.value = false;
+      biometricsValue.value = false;
+      AppUtils.logApp('BIO VALUE :::::::::: ${biometricsValue.value}');
     }
   }
 }
