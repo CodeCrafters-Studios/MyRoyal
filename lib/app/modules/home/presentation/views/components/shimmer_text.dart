@@ -26,7 +26,6 @@ class ShimmerText extends StatelessWidget {
           Radius.circular(8),
         ),
         border: Border.all(color: grey, width: 0),
-        color: primary,
         boxShadow: Shadows.small,
       ),
     );

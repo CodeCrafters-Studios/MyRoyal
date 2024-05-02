@@ -23,7 +23,7 @@ class HomeUserStatus extends GetView<HomeController> {
         child: Obx(
           () => Column(
             children: [
-              controller.isLoading.value == true
+              controller.isLoading.value
                   ? Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
@@ -50,7 +50,7 @@ class HomeUserStatus extends GetView<HomeController> {
                       ],
                     ),
               20.verticalSpace,
-              controller.isLoading.value == true
+              controller.isLoading.value
                   ? Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,

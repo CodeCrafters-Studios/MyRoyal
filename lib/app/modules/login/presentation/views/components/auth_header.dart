@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/app/modules/login/presentation/widgets/animated_toggle.dart';
+import 'package:iroyal/app/modules/login/presentation/views/components/animated_toggle.dart';
 
 class AuthHeader extends StatefulWidget {
   const AuthHeader({super.key});
@@ -28,13 +28,6 @@ class _AuthHeaderState extends State<AuthHeader> {
             ? const Text('baseUrl : http://staging.hrms.ras.co.id')
             : const Text('baseUrl : http://api.ras.co.id/'),
         300.verticalSpace,
-        // const EImages(
-        //   name: imgLogo,
-        //   width: 150,
-        // ),
-        // const ESizedBox(
-        //   height: 55,
-        // )
       ],
     );
   }

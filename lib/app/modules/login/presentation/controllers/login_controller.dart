@@ -79,7 +79,7 @@ class LoginController extends GetxController {
     AppUtils.logApp(password());
     if (!isValidForm()) {
       unawaited(appDialog.showErrorSnackBar(
-          description: 'Info yang kamu masukan tidak sesuai.'));
+          description: 'Please input Username and Password'));
       loginState = 'getParamsRejected';
       return;
     }

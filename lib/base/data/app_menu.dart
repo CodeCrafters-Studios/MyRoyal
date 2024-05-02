@@ -1,9 +1,9 @@
 class AppMenu {
   static List<String> homeMenu = [
-    'dashboard',
-    'tasks',
-    'tracking-documents',
-    'visit',
-    'my-teams',
+    'ic_dashboard',
+    'ic_task',
+    'ic_tracking_documents',
+    'ic_visit',
+    'ic_teams',
   ];
 }

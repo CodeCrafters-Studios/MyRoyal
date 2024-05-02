@@ -8,25 +8,13 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
-class CustomBottomNavBar extends StatefulWidget {
-  const CustomBottomNavBar(
-      {super.key, required this.index, this.initialIndex = 0});
+class CustomButtomBar extends StatelessWidget {
+  const CustomButtomBar({
+    super.key,
+    required this.listBottomNav,
+  });
 
-  final ValueChanged<int> index;
-  final int initialIndex;
-
-  @override
-  State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
-}
-
-class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
-  int index = 0;
-
-  @override
-  void initState() {
-    index = widget.initialIndex;
-    super.initState();
-  }
+  final List<Widget> listBottomNav;
 
   @override
   Widget build(BuildContext context) {
@@ -40,34 +28,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: IconTab(
-              icon: 'assets/icons/ic_tab_home.svg',
-              name: 'Home',
-              isSelected: index == 0,
-              onTap: () {
-                setState(() {
-                  index = 0;
-                });
-                widget.index.call(index);
-              },
-            ),
-          ),
-          Expanded(
-            child: IconTab(
-              icon: 'assets/icons/ic_settings.svg',
-              name: 'Settings',
-              isSelected: index == 1,
-              onTap: () {
-                setState(() {
-                  index = 1;
-                });
-                widget.index.call(index);
-              },
-            ),
-          ),
-        ],
+        children: listBottomNav,
       ),
     );
   }

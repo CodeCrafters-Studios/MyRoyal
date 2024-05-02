@@ -26,42 +26,9 @@ class HomeView extends GetView<HomeController> {
         backgroundColor: white,
         automaticallyImplyLeading: false,
         toolbarHeight: 70.h,
-        title: EPadding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Welcome Back!👋",
-                style: TS.labelLarge,
-              ),
-              Obx(
-                () => controller.isLoading.value == true
-                    ? Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: ShimmerText(
-                          padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-                          margin: REdgeInsets.only(top: 5),
-                          width: 80,
-                        ),
-                      )
-                    : Text(
-                        '${controller.userData.value.employee.firstName.toUpperCase()} ${controller.userData.value.employee.lastName.toUpperCase()}',
-                        style: TS.labelMedium,
-                      ),
-              ),
-            ],
-          ),
-        ),
+        title: _buildTitle(),
         actions: [
-          EPadding(
-            padding: const EdgeInsets.only(right: 20),
-            child: EImages(
-              name: "assets/images/img_logo.png",
-              height: 55.h,
-            ),
-          )
+          _buildLogo(),
         ],
       ),
       body: const CustomScrollView(
@@ -70,9 +37,57 @@ class HomeView extends GetView<HomeController> {
           HomeUserInfo(),
           HomeUserStatus(),
           HomeUserMenu(),
-          // HomeListNews(),
         ],
       ),
+    );
+  }
+
+  Widget _buildTitle() {
+    return EPadding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Welcome Back!👋",
+            style: TS.labelLarge,
+          ),
+          Obx(
+            () => controller.isLoading.value
+                ? _buildLoadingText()
+                : _buildLoadedText(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return EPadding(
+      padding: const EdgeInsets.only(right: 20),
+      child: EImages(
+        name: "assets/images/img_logo.png",
+        height: 55.h,
+      ),
+    );
+  }
+
+  Widget _buildLoadingText() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: ShimmerText(
+        padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
+        margin: REdgeInsets.only(top: 5),
+        width: 80,
+      ),
+    );
+  }
+
+  Widget _buildLoadedText() {
+    return Text(
+      '${controller.userData.value.employee.firstName.toUpperCase()} ${controller.userData.value.employee.lastName.toUpperCase()}',
+      style: TS.labelMedium,
     );
   }
 }

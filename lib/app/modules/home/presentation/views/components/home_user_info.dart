@@ -18,7 +18,7 @@ class HomeUserInfo extends GetView<HomeController> {
       child: Obx(
         () => EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
-          child: controller.isLoading.value == true
+          child: controller.isLoading.value
               ? Shimmer.fromColors(
                   baseColor: Colors.grey.shade300,
                   highlightColor: Colors.grey.shade100,

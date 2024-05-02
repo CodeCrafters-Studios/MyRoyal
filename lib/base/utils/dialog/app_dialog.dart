@@ -326,7 +326,7 @@ class AppDialogImpl implements AppDialog {
       borderRadius: 10,
       colorText: Colors.white,
       duration: const Duration(milliseconds: 1500),
-      margin: REdgeInsets.only(top: 40, left: 20, right: 20),
+      margin: REdgeInsets.only(top: 20, left: 20, right: 20),
       maxWidth: Get.width * .8,
       animationDuration: const Duration(milliseconds: 500),
       snackStyle: SnackStyle.FLOATING,

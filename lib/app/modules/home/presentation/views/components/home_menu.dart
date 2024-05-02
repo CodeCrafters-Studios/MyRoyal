@@ -7,8 +7,8 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
-class HomeIconMenu extends StatelessWidget {
-  const HomeIconMenu({
+class HomeMenu extends StatelessWidget {
+  const HomeMenu({
     super.key,
     required this.menu,
   });
