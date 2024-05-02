@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
 import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
@@ -7,13 +8,22 @@ import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 class MyTeamsController extends GetxController {
-  MyTeamsController({required this.getMyTeams});
+  MyTeamsController({
+    required this.getMyTeams,
+    required this.getUser,
+  });
 
   final TextEditingController searchE = TextEditingController();
   final GetMyTeams getMyTeams;
+  final GetUser getUser;
 
   final RxBool isLoading = false.obs;
   final RxBool isExpand = false.obs;
+
+  RxString id = ''.obs;
+
+  String getIdState = '';
+
   final Rx<MyTeams> myTeamsData = const MyTeams(
     hasChildren: false,
     averageAge: 0.0,
@@ -24,15 +34,32 @@ class MyTeamsController extends GetxController {
 
   String myTeamsState = '';
 
+  get appStorage => null;
+
   @override
   void onInit() async {
-    await getMyTeamsData();
+    await _getIdCacheUser();
+    await _getMyTeamsData();
     super.onInit();
   }
 
-  Future<void> getMyTeamsData() async {
+  Future<void> _getIdCacheUser() async {
+    final r = await getUser();
+    r.fold(
+      (l) => getIdState = 'getIdRejected',
+      (r) {
+        getIdState = 'getIdSuccess';
+        id(r.employee.id.toString());
+        AppUtils.logApp('USER ID ::::::$id');
+      },
+    );
+  }
+
+  Future<void> _getMyTeamsData() async {
     isLoading.value = true;
-    final result = await getMyTeams();
+
+    final result = await getMyTeams(id.value);
+
     result.fold(
       (l) {
         isLoading.value = false;

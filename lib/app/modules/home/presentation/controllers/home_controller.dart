@@ -12,14 +12,17 @@ class HomeController extends GetxController {
   HomeController({required this.getUser});
 
   String userState = '';
+
   RxBool isLoading = false.obs;
+  RxBool isVisible = false.obs;
+
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
       code: 'ic_dashboard',
       name: 'Dashboard',
-      isVisible: false,
+      isVisible: true,
     ),
     const Menu(
       code: 'ic_task',
@@ -47,6 +50,7 @@ class HomeController extends GetxController {
     id: 0,
     username: '',
     email: '',
+    children: false,
     employee: EmployeeModel(
       id: 0,
       firstName: '',
@@ -77,8 +81,8 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  void _initial() {
-    _getUserData();
+  void _initial() async {
+    await _getUserData();
     _getAllMenu();
   }
 
@@ -111,9 +115,19 @@ class HomeController extends GetxController {
 
   List<HomeMenu> generateMenu(List<Menu> getAllMenu) {
     final homeMenu = <HomeMenu>[];
+
     getAllMenu.where((menu) => menu.isVisible).forEach((menu) {
-      homeMenu.add(HomeMenu(menu: menu));
+      if (menu.code == 'ic_teams') {
+        if (isVisible.value == true) {
+          AppUtils.logApp('ISVISIBLE MENU :::::$menu');
+          homeMenu.add(HomeMenu(menu: menu));
+        }
+      } else {
+        AppUtils.logApp('ISVISIBLE MENU :::::$menu');
+        homeMenu.add(HomeMenu(menu: menu));
+      }
     });
+    AppUtils.logApp('ISVISIBLE :::::${isVisible.value}');
     AppUtils.logApp(
         'MENU VISIBLE :::::${getAllMenu.where((menu) => menu.isVisible)}');
     return homeMenu;
@@ -131,6 +145,7 @@ class HomeController extends GetxController {
         userState = 'getUserSuccess';
         isLoading.value = false;
         userData.value = r;
+        isVisible.value = r.children;
       },
     );
   }

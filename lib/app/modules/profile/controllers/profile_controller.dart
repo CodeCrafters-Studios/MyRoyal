@@ -30,6 +30,7 @@ class ProfileController extends GetxController {
     id: 0,
     username: '',
     email: '',
+    children: false,
     employee: EmployeeModel(
       id: 0,
       firstName: '',
@@ -56,6 +57,7 @@ class ProfileController extends GetxController {
     id: 0,
     username: '',
     email: '',
+    children: false,
     employee: EmployeeModel(
       id: 0,
       firstName: '',

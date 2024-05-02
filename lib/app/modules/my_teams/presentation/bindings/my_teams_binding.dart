@@ -10,7 +10,10 @@ class MyTeamsBinding extends Bindings {
   void dependencies() {
     Get
       ..lazyPut<MyTeamsController>(
-        () => MyTeamsController(getMyTeams: Get.find()),
+        () => MyTeamsController(
+          getMyTeams: Get.find(),
+          getUser: Get.find(),
+        ),
       )
       ..lazyPut<MyTeamsRemoteDataSourcesImpl>(
         () => MyTeamsRemoteDataSourcesImpl(
@@ -23,7 +26,9 @@ class MyTeamsBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () => GetMyTeams(Get.find<MyTeamsRepositoryImpl>()),
+        () => GetMyTeams(
+          Get.find<MyTeamsRepositoryImpl>(),
+        ),
       );
   }
 }

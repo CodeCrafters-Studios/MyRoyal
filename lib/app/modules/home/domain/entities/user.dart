@@ -8,6 +8,7 @@ class User extends Equatable {
     required this.id,
     required this.username,
     required this.email,
+    required this.children,
     required this.employee,
     required this.job,
     required this.attendance,
@@ -16,6 +17,7 @@ class User extends Equatable {
   final int id;
   final String username;
   final String email;
+  final bool children;
   final EmployeeModel employee;
   final JobModel job;
   final AttendanceModel attendance;
@@ -25,6 +27,7 @@ class User extends Equatable {
         id,
         username,
         email,
+        children,
         employee,
         job,
         attendance,

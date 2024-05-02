@@ -9,10 +9,11 @@ class MyTeamsRepositoryImpl extends MyTeamsRepository {
   MyTeamsRepositoryImpl({required this.remoteData});
 
   final MyTeamsRemoteDataSources remoteData;
+
   @override
-  Future<Either<Failure, MyTeams>> getMyTeams() async {
+  Future<Either<Failure, MyTeams>> getMyTeams(String id) async {
     try {
-      final r = await remoteData.getMyTeams();
+      final r = await remoteData.getMyTeams(id);
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());

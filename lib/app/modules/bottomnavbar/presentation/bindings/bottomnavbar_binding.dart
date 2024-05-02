@@ -62,24 +62,37 @@ class BottomnavbarBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () =>
-            ProfileRepositoryImpl(localData: Get.find<ProfileLocalDataImpl>()),
+        () => ProfileRepositoryImpl(
+          localData: Get.find<ProfileLocalDataImpl>(),
+        ),
       )
-      ..lazyPut(() => LogoutApp(Get.find<ProfileRepositoryImpl>()))
-      ..lazyPut(() => BiometricsApp(
-          Get.find<ProfileRepositoryImpl>(), Get.find<AppStorage>()))
+      ..lazyPut(
+        () => LogoutApp(
+          Get.find<ProfileRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => BiometricsApp(
+          Get.find<ProfileRepositoryImpl>(),
+          Get.find<AppStorage>(),
+        ),
+      )
       ..lazyPut(
         () => ProfileController(
-            getUser: Get.find(),
-            // getCacheLogin: Get.find(),
-            logoutApp: Get.find(),
-            appStorage: Get.find(),
-            biometricsApp: Get.find()),
+          getUser: Get.find(),
+          // getCacheLogin: Get.find(),
+          logoutApp: Get.find(),
+          appStorage: Get.find(),
+          biometricsApp: Get.find(),
+        ),
       )
 
       // My Teams
       ..lazyPut<MyTeamsController>(
-        () => MyTeamsController(getMyTeams: Get.find()),
+        () => MyTeamsController(
+          getMyTeams: Get.find(),
+          getUser: Get.find(),
+        ),
       )
       ..lazyPut<MyTeamsRemoteDataSourcesImpl>(
         () => MyTeamsRemoteDataSourcesImpl(
@@ -92,7 +105,9 @@ class BottomnavbarBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () => GetMyTeams(Get.find<MyTeamsRepositoryImpl>()),
+        () => GetMyTeams(
+          Get.find<MyTeamsRepositoryImpl>(),
+        ),
       );
   }
 }
