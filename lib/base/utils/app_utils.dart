@@ -8,7 +8,6 @@ import 'package:dog/dog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppUtils {
@@ -33,14 +32,14 @@ class AppUtils {
     return false;
   }
 
-  static bool checkTokenValidity(String token) {
-    try {
-      return !JwtDecoder.isExpired(token);
-    } catch (e) {
-      logApp(e.toString());
-      return false;
-    }
-  }
+  // static bool checkTokenValidity(String token) {
+  //   try {
+  //     return !JwtDecoder.isExpired(token);
+  //   } catch (e) {
+  //     logApp(e.toString());
+  //     return false;
+  //   }
+  // }
 
   static getMeccaBearing(double lat, double long) {
     var startLat = lat;

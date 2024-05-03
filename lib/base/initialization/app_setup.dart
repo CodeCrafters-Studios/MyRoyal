@@ -1,7 +1,6 @@
 import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_api0v2_storage/flutter_api0v2_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -12,7 +11,6 @@ import 'package:iroyal/base/data/app_encryption.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/gallery_saver/app_galery_saver.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
 import 'package:iroyal/base/utils/location/app_location.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
@@ -57,14 +55,12 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final internetConnectionChecker = InternetConnectionChecker();
   Get
     ..put(alice)
-    ..put(FlutterApi0v2Storage())
-    ..put(AppStorage(box: box, api0: Get.find<FlutterApi0v2Storage>()))
+    ..put(AppStorage(box: box))
     ..put(NetworkInfoImpl(internetConnectionChecker))
     ..put(AppLocationImpl())
     ..put(AppDialogImpl())
     ..put(AppPermissionImpl())
     ..put(AppShareImpl())
-    ..put(AppGallerySaverImpl())
     ..put(AuthBiometricsImpl(auth: auth))
     ..put(InitialRouteImpl(appStorage: Get.find()))
     ..put(AppEncryptImpl())
