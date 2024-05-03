@@ -22,7 +22,7 @@ class HomeController extends GetxController {
     const Menu(
       code: 'ic_dashboard',
       name: 'Dashboard',
-      isVisible: true,
+      isVisible: false,
     ),
     const Menu(
       code: 'ic_task',
