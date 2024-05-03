@@ -8,8 +8,8 @@ import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
-import '../modules/profile/bindings/profile_binding.dart';
-import '../modules/profile/views/profile_view.dart';
+import '../modules/settings/presentation/bindings/settings_binding.dart';
+import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -44,9 +44,9 @@ class AppPages {
       binding: BottomnavbarBinding(),
     ),
     GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
-      binding: ProfileBinding(),
+      name: _Paths.SETTINGS,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
     ),
     GetPage(
       name: _Paths.MY_TEAMS,

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class ProfileBinding extends Bindings {
+class SettingsBinding extends Bindings {
   @override
   void dependencies() {}
 }

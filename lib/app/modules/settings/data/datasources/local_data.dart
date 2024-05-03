@@ -2,13 +2,13 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
-abstract class ProfileLocalData {
+abstract class SettingsLocalData {
   Future<bool> logout();
   Future<bool> biometrics();
 }
 
-class ProfileLocalDataImpl implements ProfileLocalData {
-  ProfileLocalDataImpl({required this.appStorage, required this.appDialog});
+class SettingsLocalDataImpl implements SettingsLocalData {
+  SettingsLocalDataImpl({required this.appStorage, required this.appDialog});
 
   final AppStorage appStorage;
   final AppDialog appDialog;

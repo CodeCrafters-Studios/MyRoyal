@@ -4,14 +4,14 @@ import 'package:iroyal/app/modules/home/data/models/employee.dart';
 import 'package:iroyal/app/modules/home/data/models/job.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/biometrics_app.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/logout_app.dart';
+import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
+import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
-class ProfileController extends GetxController {
-  ProfileController({
+class SettingsController extends GetxController {
+  SettingsController({
     required this.logoutApp,
     required this.biometricsApp,
     required this.getUser,

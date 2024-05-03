@@ -9,7 +9,7 @@ abstract class Routes {
   static const SPLASH = _Paths.SPLASH;
   static const LOGIN = _Paths.LOGIN;
   static const BOTTOMNAVBAR = _Paths.BOTTOMNAVBAR;
-  static const PROFILE = _Paths.PROFILE;
+  static const SETTINGS = _Paths.SETTINGS;
   static const MY_TEAMS = _Paths.MY_TEAMS;
 }
 
@@ -19,6 +19,6 @@ abstract class _Paths {
   static const SPLASH = '/splash';
   static const LOGIN = '/login';
   static const BOTTOMNAVBAR = '/bottomnavbar';
-  static const PROFILE = '/profile';
+  static const SETTINGS = '/settings';
   static const MY_TEAMS = '/my-teams';
 }

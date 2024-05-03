@@ -6,8 +6,8 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
-class ItemMenuProfile extends StatelessWidget {
-  const ItemMenuProfile({
+class ItemMenuSettings extends StatelessWidget {
+  const ItemMenuSettings({
     super.key,
     required this.assetSvg,
     required this.text,

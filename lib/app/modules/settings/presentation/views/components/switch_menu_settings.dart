@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 
-class SwitchMenuProfile extends StatelessWidget {
-  const SwitchMenuProfile({
+class SwitchMenuSettings extends StatelessWidget {
+  const SwitchMenuSettings({
     super.key,
     required this.assetSvg,
     required this.text,

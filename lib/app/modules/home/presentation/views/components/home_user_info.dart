@@ -53,12 +53,16 @@ class HomeUserInfo extends GetView<HomeController> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       HomeUserCard(
-                        title: controller.userData.value.email,
+                        title: controller.userData.value.email.isEmpty
+                            ? '-'
+                            : controller.userData.value.email,
                         subtitle:
                             '${controller.userData.value.job.employeeNumber} | ${controller.userData.value.job.position} | ${controller.userData.value.job.department}',
                         isThridLine: true,
-                        thridLineTitle:
-                            'Join date: ${controller.userData.value.job.joinDate}',
+                        thridLineTitle: controller
+                                .userData.value.job.joinDate.isEmpty
+                            ? '-'
+                            : 'Join date: ${controller.userData.value.job.joinDate}',
                         isAvatarPicture: true,
                         suffixIcon: false,
                       ),

@@ -2,39 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/modules/profile/views/components/item_menu_profile.dart';
-import 'package:iroyal/app/modules/profile/views/components/switch_menu_profile.dart';
+import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
+import 'package:iroyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../controllers/profile_controller.dart';
+import '../controllers/settings_controller.dart';
 
-class ProfileView extends GetView<ProfileController> {
-  const ProfileView({super.key});
+class SettingsView extends GetView<SettingsController> {
+  const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ProfileViewImpl(controller: controller),
+      body: SettingsViewImpl(controller: controller),
     );
   }
 }
 
-class ProfileViewImpl extends StatelessWidget {
-  const ProfileViewImpl({
+class SettingsViewImpl extends StatelessWidget {
+  const SettingsViewImpl({
     super.key,
     required this.controller,
   });
 
-  final ProfileController controller;
+  final SettingsController controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildProfileHeader(),
+        _buildSettingsHeader(),
         Expanded(
           child: ListView(
             padding: REdgeInsets.symmetric(horizontal: 21, vertical: 10),
@@ -49,7 +49,7 @@ class ProfileViewImpl extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildSettingsHeader() {
     return Stack(
       alignment: Alignment.bottomLeft,
       children: [
@@ -69,15 +69,15 @@ class ProfileViewImpl extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Obx(
             () => controller.isLoading.value
-                ? _buildLoadingProfile()
-                : _buildLoadedProfile(),
+                ? _buildLoadingSettings()
+                : _buildLoadedSettings(),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoadingProfile() {
+  Widget _buildLoadingSettings() {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
@@ -107,7 +107,7 @@ class ProfileViewImpl extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadedProfile() {
+  Widget _buildLoadedSettings() {
     final userData = controller.userData();
     return Row(
       children: [
@@ -149,14 +149,14 @@ class ProfileViewImpl extends StatelessWidget {
           style: TS.titleMedium,
         ),
         16.verticalSpace,
-        ItemMenuProfile(
+        ItemMenuSettings(
           assetSvg: 'assets/icons/ic_tab_profile.svg',
           text: 'Profile',
           withTrailing: true,
           onTap: () {},
         ),
         Obx(
-          () => SwitchMenuProfile(
+          () => SwitchMenuSettings(
             assetSvg: 'assets/icons/ic_fingerprint.svg',
             text: 'Fingerprint Login',
             value: controller.biometricsValue.value,
@@ -176,7 +176,7 @@ class ProfileViewImpl extends StatelessWidget {
           style: TS.titleMedium,
         ),
         16.verticalSpace,
-        ItemMenuProfile(
+        ItemMenuSettings(
           assetSvg: 'assets/icons/ic_log_out.svg',
           text: 'Logout',
           onTap: controller.iLogout,

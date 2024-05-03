@@ -8,11 +8,11 @@ import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
-import 'package:iroyal/app/modules/profile/controllers/profile_controller.dart';
-import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
-import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/biometrics_app.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/logout_app.dart';
+import 'package:iroyal/app/modules/settings/presentation/controllers/settings_controller.dart';
+import 'package:iroyal/app/modules/settings/data/datasources/local_data.dart';
+import 'package:iroyal/app/modules/settings/data/repositories/settings_repository_impl.dart';
+import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
+import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
@@ -54,31 +54,31 @@ class BottomnavbarBinding extends Bindings {
         ),
       )
 
-      // Profile
+      // Settings
       ..lazyPut(
-        () => ProfileLocalDataImpl(
+        () => SettingsLocalDataImpl(
           appStorage: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
         ),
       )
       ..lazyPut(
-        () => ProfileRepositoryImpl(
-          localData: Get.find<ProfileLocalDataImpl>(),
+        () => SettingsRepositoryImpl(
+          localData: Get.find<SettingsLocalDataImpl>(),
         ),
       )
       ..lazyPut(
         () => LogoutApp(
-          Get.find<ProfileRepositoryImpl>(),
+          Get.find<SettingsRepositoryImpl>(),
         ),
       )
       ..lazyPut(
         () => BiometricsApp(
-          Get.find<ProfileRepositoryImpl>(),
+          Get.find<SettingsRepositoryImpl>(),
           Get.find<AppStorage>(),
         ),
       )
       ..lazyPut(
-        () => ProfileController(
+        () => SettingsController(
           getUser: Get.find(),
           // getCacheLogin: Get.find(),
           logoutApp: Get.find(),
