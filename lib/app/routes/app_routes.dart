@@ -11,6 +11,7 @@ abstract class Routes {
   static const BOTTOMNAVBAR = _Paths.BOTTOMNAVBAR;
   static const SETTINGS = _Paths.SETTINGS;
   static const MY_TEAMS = _Paths.MY_TEAMS;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const BOTTOMNAVBAR = '/bottomnavbar';
   static const SETTINGS = '/settings';
   static const MY_TEAMS = '/my-teams';
+  static const PROFILE = '/profile';
 }
