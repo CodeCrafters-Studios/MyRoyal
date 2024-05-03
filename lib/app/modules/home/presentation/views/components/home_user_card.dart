@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -40,6 +41,7 @@ class HomeUserCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           isAvatarPicture == true
               ? ClipRRect(
@@ -55,31 +57,33 @@ class HomeUserCard extends StatelessWidget {
                 )
               : const SizedBox(),
           isAvatarPicture == true ? 12.horizontalSpace : const SizedBox(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TS.labelLarge.copyWith(
-                  color: textColor ?? white,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TS.labelLarge.copyWith(
+                    color: textColor ?? white,
+                  ),
                 ),
-              ),
-              Text(
-                subtitle,
-                style: TS.labelMedium.copyWith(
-                  color: textColor ?? white,
-                  height: 2,
+                Text(
+                  subtitle,
+                  style: TS.labelMedium.copyWith(
+                    color: textColor ?? white,
+                    height: 2,
+                  ),
                 ),
-              ),
-              isThridLine == true
-                  ? Text(
-                      thridLineTitle ?? "No. Badge | Jabatan",
-                      style: TS.labelMedium.copyWith(
-                        color: textColor ?? white,
-                      ),
-                    )
-                  : const SizedBox(),
-            ],
+                isThridLine == true
+                    ? Text(
+                        thridLineTitle ?? "No. Badge | Jabatan",
+                        style: TS.labelMedium.copyWith(
+                          color: textColor ?? white,
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
+            ),
           ),
           suffixIcon == true
               ? const EPadding(

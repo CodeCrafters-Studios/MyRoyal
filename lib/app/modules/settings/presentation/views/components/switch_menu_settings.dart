@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/app_divider.dart';
 
 class SwitchMenuSettings extends StatelessWidget {
   const SwitchMenuSettings({
@@ -20,28 +21,33 @@ class SwitchMenuSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        SvgPicture.asset(assetSvg),
-        12.horizontalSpace,
-        Expanded(
-          child: Text(text, style: TS.labelLarge),
-        ),
-        SizedBox(
-          width: 50,
-          height: 40,
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: Switch(
-              value: value,
-              onChanged: onChanged,
-              activeColor: white,
-              activeTrackColor: primary,
-              inactiveThumbColor: inactiveThumbColor,
-              inactiveTrackColor: inactiveTrackColor,
+        Row(
+          children: [
+            SvgPicture.asset(assetSvg),
+            12.horizontalSpace,
+            Expanded(
+              child: Text(text, style: TS.labelLarge),
             ),
-          ),
+            SizedBox(
+              width: 50,
+              height: 40,
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Switch(
+                  value: value,
+                  onChanged: onChanged,
+                  activeColor: white,
+                  activeTrackColor: primary,
+                  inactiveThumbColor: inactiveThumbColor,
+                  inactiveTrackColor: inactiveTrackColor,
+                ),
+              ),
+            ),
+          ],
         ),
+        const AppDivider(),
       ],
     );
   }

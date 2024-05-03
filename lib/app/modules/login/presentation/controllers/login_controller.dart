@@ -77,55 +77,57 @@ class LoginController extends GetxController {
   Future<void> getParams() async {
     AppUtils.logApp(username());
     AppUtils.logApp(password());
-    if (!isValidForm()) {
-      unawaited(appDialog.showErrorSnackBar(
-          description: 'Please input Username and Password'));
-      loginState = 'getParamsRejected';
-      return;
-    }
-    isLoading(true);
-    final r = await getLoginParams(
-      ParamsLogin(
-        grantType: "password",
-        username: username(),
-        password: password(),
-        clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
-        clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
-      ),
-    );
-    r.fold((l) {
-      isLoading(false);
-      loginState = 'getParamsFailed';
-      appDialog.showErrorDialog();
-    }, (r) {
-      loginState = 'getParamsSuccess';
-      loginParams(
-        LoginParamsModel(
-          grantType: r.grantType,
-          username: r.username,
-          password: r.password,
-          clientId: r.clientId,
-          clientSecret: r.clientSecret,
-        ),
-      );
-      login();
-    });
+    // if (!isValidForm()) {
+    //   unawaited(appDialog.showErrorSnackBar(
+    //       description: 'Please input Username and Password'));
+    //   loginState = 'getParamsRejected';
+    //   return;
+    // }
+    // isLoading(true);
+    // final r = await getLoginParams(
+    //   ParamsLogin(
+    //     grantType: "password",
+    //     username: username(),
+    //     password: password(),
+    //     clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
+    //     clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
+    //   ),
+    // );
+    // r.fold((l) {
+    //   isLoading(false);
+    //   loginState = 'getParamsFailed';
+    //   appDialog.showErrorDialog();
+    // }, (r) {
+    //   loginState = 'getParamsSuccess';
+    //   loginParams(
+    //     LoginParamsModel(
+    //       grantType: r.grantType,
+    //       username: r.username,
+    //       password: r.password,
+    //       clientId: r.clientId,
+    //       clientSecret: r.clientSecret,
+    //     ),
+    //   );
+    //   login();
+    // });
+    login();
   }
 
   Future<void> login() async {
-    final r = await loginApp(loginParams().toJson());
-    isLoading(false);
-    r.fold(
-      (l) {
-        loginState = 'loginFailed';
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
-      },
-      (r) {
-        loginState = 'loginSuccess';
-        Get.offAllNamed(Routes.BOTTOMNAVBAR);
-      },
-    );
+    // final r = await loginApp(loginParams().toJson());
+    // isLoading(false);
+    // r.fold(
+    //   (l) {
+    //     loginState = 'loginFailed';
+    //     final m = l.properties[0] as ApiException;
+    //     appDialog.showErrorDialog(description: m.message);
+    //   },
+    //   (r) {
+    //     loginState = 'loginSuccess';
+    //     Get.offAllNamed(Routes.BOTTOMNAVBAR);
+    //   },
+    // );
+    Get.offAllNamed(Routes.BOTTOMNAVBAR);
   }
 
   Future<void> getCacheUser() async {

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
 import 'package:iroyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
-import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -41,7 +39,9 @@ class SettingsViewImpl extends StatelessWidget {
             children: [
               _buildPersonalInformationSection(),
               10.verticalSpace,
-              _buildInformationSection(),
+              _buildSupportAndAboutSection(),
+              10.verticalSpace,
+              _buildActionsSection(),
             ],
           ),
         ),
@@ -50,93 +50,14 @@ class SettingsViewImpl extends StatelessWidget {
   }
 
   Widget _buildSettingsHeader() {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-          child: Image.asset(
-            'assets/images/bg_profile.png',
-            width: Get.width,
-            height: .15.sh,
-            fit: BoxFit.cover,
-          ),
+    return Center(
+      child: EPadding(
+        padding: const EdgeInsets.only(top: 50, bottom: 20),
+        child: Text(
+          'Settings',
+          style: TS.headlineSmall,
         ),
-        EPadding(
-          padding: const EdgeInsets.all(16),
-          child: Obx(
-            () => controller.isLoading.value
-                ? _buildLoadingSettings()
-                : _buildLoadedSettings(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingSettings() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
-      child: Row(
-        children: [
-          const CircleAvatar(),
-          12.horizontalSpace,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShimmerText(
-                  padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-                  margin: REdgeInsets.only(top: 5),
-                  width: 80.w,
-                ),
-                ShimmerText(
-                  padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-                  margin: REdgeInsets.only(top: 5),
-                  width: 120.w,
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
-    );
-  }
-
-  Widget _buildLoadedSettings() {
-    final userData = controller.userData();
-    return Row(
-      children: [
-        CircleAvatar(
-          backgroundColor: white,
-          child: Text(
-            userData.employee.firstName.isNotEmpty
-                ? controller.getImageName()
-                : '',
-            style: TS.titleMedium.copyWith(color: primaryColor),
-          ),
-        ),
-        12.horizontalSpace,
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${userData.employee.firstName.toUpperCase()} ${userData.employee.lastName.toUpperCase()}',
-                style: TS.labelLarge.copyWith(color: white),
-              ),
-              Text(
-                userData.job.company,
-                style: TS.bodyMedium.copyWith(color: white),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -153,8 +74,48 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_tab_profile.svg',
           text: 'Profile',
           withTrailing: true,
+          onTap: () {
+            Get.toNamed(Routes.PROFILE);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSupportAndAboutSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Support & About',
+          style: TS.titleMedium,
+        ),
+        16.verticalSpace,
+        ItemMenuSettings(
+          assetSvg: 'assets/icons/ic_help&support.svg',
+          text: 'Help & Support',
+          withTrailing: true,
           onTap: () {},
         ),
+        ItemMenuSettings(
+          assetSvg: 'assets/icons/ic_terms&polcies.svg',
+          text: 'Terms & Policies',
+          withTrailing: true,
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Actions',
+          style: TS.titleMedium,
+        ),
+        16.verticalSpace,
         Obx(
           () => SwitchMenuSettings(
             assetSvg: 'assets/icons/ic_fingerprint.svg',
@@ -163,19 +124,6 @@ class SettingsViewImpl extends StatelessWidget {
             onChanged: (value) => controller.iBiometrics(value),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildInformationSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Information',
-          style: TS.titleMedium,
-        ),
-        16.verticalSpace,
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_log_out.svg',
           text: 'Logout',
