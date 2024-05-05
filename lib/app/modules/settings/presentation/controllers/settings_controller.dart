@@ -87,17 +87,7 @@ class SettingsController extends GetxController {
   }
 
   void _initial() {
-    iGetCacheUser();
     setBiometricsValue();
-  }
-
-  Future<void> iGetCacheUser() async {
-    isLoading.value = true;
-    final data = await getUser();
-    userData.value = data.getOrElse(() => iUser);
-    isLoading.value = false;
-    AppUtils.logApp(
-        '${userData().employee.firstName} ${userData().employee.lastName}');
   }
 
   String getImageName() {

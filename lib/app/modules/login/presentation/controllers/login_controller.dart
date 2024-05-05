@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/login/data/models/login_params.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/auth_biometrics_login.dart';
@@ -24,6 +25,10 @@ class LoginController extends GetxController {
     required this.authBiometricsLogin,
   });
 
+  final FocusNode focusNodeUsername = FocusNode();
+
+  TextEditingController usernameController = TextEditingController();
+
   String loginState = '';
 
   Rx<LoginParamsModel> loginParams = const LoginParamsModel().obs;
@@ -35,6 +40,7 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isCacheuser = false.obs;
   RxBool isAllowBiometrics = false.obs;
+  RxBool isFocus = false.obs;
 
   final AppDialog appDialog;
   final GetLoginParams getLoginParams;
@@ -44,6 +50,9 @@ class LoginController extends GetxController {
 
   @override
   void onInit() async {
+    focusNodeUsername.addListener(_onFocusChange);
+    AppUtils.logApp(
+        'FOCUS :::::::::$focusNodeUsername.addListener(_onFocusChange);');
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
@@ -57,8 +66,27 @@ class LoginController extends GetxController {
     super.onInit();
   }
 
+  @override
+  void dispose() {
+    focusNodeUsername.removeListener(_onFocusChange);
+    focusNodeUsername.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (focusNodeUsername.hasFocus == false) {
+      isFocus(false);
+    } else {
+      isFocus(true);
+    }
+  }
+
   void validateForm() {
     isValidForm(username.isNotEmpty && password.isNotEmpty);
+  }
+
+  void clear() {
+    usernameController.clear();
   }
 
   void setLoginValue(FormLoginValue key, String value) {
@@ -77,57 +105,55 @@ class LoginController extends GetxController {
   Future<void> getParams() async {
     AppUtils.logApp(username());
     AppUtils.logApp(password());
-    // if (!isValidForm()) {
-    //   unawaited(appDialog.showErrorSnackBar(
-    //       description: 'Please input Username and Password'));
-    //   loginState = 'getParamsRejected';
-    //   return;
-    // }
-    // isLoading(true);
-    // final r = await getLoginParams(
-    //   ParamsLogin(
-    //     grantType: "password",
-    //     username: username(),
-    //     password: password(),
-    //     clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
-    //     clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
-    //   ),
-    // );
-    // r.fold((l) {
-    //   isLoading(false);
-    //   loginState = 'getParamsFailed';
-    //   appDialog.showErrorDialog();
-    // }, (r) {
-    //   loginState = 'getParamsSuccess';
-    //   loginParams(
-    //     LoginParamsModel(
-    //       grantType: r.grantType,
-    //       username: r.username,
-    //       password: r.password,
-    //       clientId: r.clientId,
-    //       clientSecret: r.clientSecret,
-    //     ),
-    //   );
-    //   login();
-    // });
-    login();
+    if (!isValidForm()) {
+      unawaited(appDialog.showErrorSnackBar(
+          description: 'Please input Username and Password'));
+      loginState = 'getParamsRejected';
+      return;
+    }
+    isLoading(true);
+    final r = await getLoginParams(
+      ParamsLogin(
+        grantType: "password",
+        username: username(),
+        password: password(),
+        clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
+        clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
+      ),
+    );
+    r.fold((l) {
+      isLoading(false);
+      loginState = 'getParamsFailed';
+      appDialog.showErrorDialog();
+    }, (r) {
+      loginState = 'getParamsSuccess';
+      loginParams(
+        LoginParamsModel(
+          grantType: r.grantType,
+          username: r.username,
+          password: r.password,
+          clientId: r.clientId,
+          clientSecret: r.clientSecret,
+        ),
+      );
+      login();
+    });
   }
 
   Future<void> login() async {
-    // final r = await loginApp(loginParams().toJson());
-    // isLoading(false);
-    // r.fold(
-    //   (l) {
-    //     loginState = 'loginFailed';
-    //     final m = l.properties[0] as ApiException;
-    //     appDialog.showErrorDialog(description: m.message);
-    //   },
-    //   (r) {
-    //     loginState = 'loginSuccess';
-    //     Get.offAllNamed(Routes.BOTTOMNAVBAR);
-    //   },
-    // );
-    Get.offAllNamed(Routes.BOTTOMNAVBAR);
+    final r = await loginApp(loginParams().toJson());
+    isLoading(false);
+    r.fold(
+      (l) {
+        loginState = 'loginFailed';
+        final m = l.properties[0] as ApiException;
+        appDialog.showErrorDialog(description: m.message);
+      },
+      (r) {
+        loginState = 'loginSuccess';
+        Get.offAllNamed(Routes.BOTTOMNAVBAR);
+      },
+    );
   }
 
   Future<void> getCacheUser() async {
@@ -178,6 +204,16 @@ class LoginController extends GetxController {
     }
   }
 
-  //Navigation
+  // Navigation
   void gotoForgotPassword() {}
+
+  // Dont have an Account
+  void dontHaveAnAccount() {
+    appDialog.showInfoDialog(
+      imagePath: 'assets/icons/ic_information.svg',
+      description:
+          'Please contact the IT Department\nfor further assistance.\n\nCall 021-XXXX XXXX',
+      textButton: 'Continue',
+    );
+  }
 }

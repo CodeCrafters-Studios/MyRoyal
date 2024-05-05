@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -48,6 +49,14 @@ abstract class AppDialog {
     String? assetIcon,
     Function()? onClose,
   });
+
+  Future<void> showInfoDialog({
+    String? imagePath,
+    String title,
+    String? description,
+    String textButton,
+    Function()? onPress,
+  });
 }
 
 class AppDialogImpl implements AppDialog {
@@ -65,9 +74,9 @@ class AppDialogImpl implements AppDialog {
         insetPadding: REdgeInsets.symmetric(horizontal: 40),
         child: Container(
           padding: EdgeInsets.fromLTRB(
-            Insets.med,
             Insets.xl,
-            Insets.med,
+            Insets.xl,
+            Insets.xl,
             Insets.xs,
           ),
           decoration: BoxDecoration(
@@ -406,6 +415,66 @@ class AppDialogImpl implements AppDialog {
       titleText: const SizedBox(),
       padding: const EdgeInsets.all(12),
       dismissDirection: DismissDirection.vertical,
+    );
+  }
+
+  @override
+  Future<void> showInfoDialog({
+    String? imagePath,
+    String? title,
+    String? description,
+    String? textButton,
+    Function()? onPress,
+  }) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 40),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            Insets.med,
+            Insets.xl,
+            Insets.med,
+            Insets.xs,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (imagePath != null)
+                SvgPicture.asset(
+                  imagePath,
+                  height: 40.w,
+                  width: 40.w,
+                ),
+              5.verticalSpace,
+              Text(
+                title ?? 'Information',
+                style: TS.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              12.verticalSpace,
+              if (description != null)
+                Text(
+                  description,
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              28.verticalSpace,
+              ButtonPrimary(
+                onPressed: onPress ?? Get.back,
+                text: textButton ?? 'Okay',
+                fullWidth: true,
+              ),
+              16.verticalSpace,
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
     );
   }
 }

@@ -10,8 +10,6 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
 import 'package:iroyal/base/widgets/padding.dart';
-import 'package:shimmer/shimmer.dart';
-
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -73,14 +71,10 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildLoadingText() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
-      child: ShimmerText(
-        padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-        margin: REdgeInsets.only(top: 5),
-        width: 80,
-      ),
+    return ShimmerText(
+      padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
+      margin: REdgeInsets.only(top: 5),
+      width: 80,
     );
   }
 

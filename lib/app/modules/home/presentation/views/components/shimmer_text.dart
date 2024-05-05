@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ShimmerText extends StatelessWidget {
   const ShimmerText({
@@ -17,16 +18,21 @@ class ShimmerText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      padding: padding ?? REdgeInsets.only(left: 8, top: 8, bottom: 10),
-      margin: margin ?? REdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(8),
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        width: width,
+        padding: padding ?? REdgeInsets.only(left: 8, top: 8, bottom: 10),
+        margin: margin ?? REdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
+          ),
+          border: Border.all(color: grey, width: 0),
+          boxShadow: Shadows.small,
+          color: greyText,
         ),
-        border: Border.all(color: grey, width: 0),
-        boxShadow: Shadows.small,
       ),
     );
   }

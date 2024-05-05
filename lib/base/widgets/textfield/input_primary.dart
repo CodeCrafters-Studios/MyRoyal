@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +11,7 @@ enum TextFieldShape { box, line }
 
 enum TextFieldState { focus, error, disabled, none }
 
-class InputPrimary extends StatelessWidget {
+class InputPrimary extends StatefulWidget {
   const InputPrimary({
     super.key,
     this.label = '',
@@ -52,7 +54,10 @@ class InputPrimary extends StatelessWidget {
     this.readOnly = false,
     this.onTap,
     this.errorMessage,
+    this.focusNode,
+    this.autoFocus = false,
   });
+
   final String label;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -93,104 +98,130 @@ class InputPrimary extends StatelessWidget {
   final bool readOnly;
   final Function()? onTap;
   final String? errorMessage;
+  final FocusNode? focusNode;
+  final bool autoFocus;
+
+  @override
+  _InputPrimary createState() => _InputPrimary();
+}
+
+class _InputPrimary extends State<InputPrimary> {
+  late FocusNode _internalFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _internalFocusNode = widget.focusNode ?? FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _internalFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin,
+      margin: widget.margin,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (label.isNotEmpty || isRequired || isOptional) ...[
+          if (widget.label.isNotEmpty ||
+              widget.isRequired ||
+              widget.isOptional) ...[
             Row(
               children: [
-                if (label.isNotEmpty)
+                if (widget.label.isNotEmpty)
                   Text(
-                    label,
-                    style: labelTextStyle ?? TS.labelLarge,
+                    widget.label,
+                    style: widget.labelTextStyle ?? TS.labelLarge,
                   ),
-                if (isRequired)
+                if (widget.isRequired)
                   Text(
                     '*',
                     style: TS.bodyLarge.copyWith(color: Colors.red),
                   ),
                 const Spacer(),
-                if (showRequiredText)
+                if (widget.showRequiredText)
                   Text(
-                    requiredText,
-                    style: requiredTextStyle,
+                    widget.requiredText,
+                    style: widget.requiredTextStyle,
                   ),
-                if (isOptional)
+                if (widget.isOptional)
                   Text(
-                    optitonalText,
-                    style: optionalTextStyle,
+                    widget.optitonalText,
+                    style: widget.optionalTextStyle,
                   ),
               ],
             ),
             4.verticalSpace,
           ],
           TextFormField(
+            focusNode: _internalFocusNode,
             scrollPadding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4,
             ),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              border: inputShape == TextFieldShape.box
+              border: widget.inputShape == TextFieldShape.box
                   ? OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(borderRadius)),
-                      borderSide:
-                          BorderSide(color: outlineColor ?? Colors.transparent),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(widget.borderRadius)),
+                      borderSide: BorderSide(
+                          color: widget.outlineColor ?? Colors.transparent),
                     )
                   : null,
-              contentPadding: contentPadding ??
+              contentPadding: widget.contentPadding ??
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              enabled: enable,
-              fillColor: color ?? inputColor,
+              enabled: widget.enable,
+              fillColor: widget.color ?? inputColor,
               filled: true,
-              prefixIcon: prefixIcon,
-              suffixIcon: suffixIcon,
-              hoverColor: outlineColor,
+              prefixIcon: widget.prefixIcon,
+              suffixIcon: widget.suffixIcon,
+              hoverColor: widget.outlineColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: outlineColor ?? primary),
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+                borderSide: BorderSide(color: widget.outlineColor ?? primary),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(widget.borderRadius)),
               ),
-              enabledBorder: inputShape == TextFieldShape.box
+              enabledBorder: widget.inputShape == TextFieldShape.box
                   ? OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: outlineColor ?? Colors.transparent),
-                      borderRadius:
-                          BorderRadius.all(Radius.circular(borderRadius)),
+                      borderSide: BorderSide(
+                          color: widget.outlineColor ?? Colors.transparent),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(widget.borderRadius)),
                     )
                   : null,
-              hintText: hint,
-              hintStyle: hintStyle ?? TS.bodyLarge.copyWith(color: hintColor),
+              hintText: widget.hint,
+              hintStyle: widget.hintStyle ??
+                  TS.bodyLarge.copyWith(color: widget.hintColor),
               errorMaxLines: 2,
-              errorStyle: errorTextStyle,
-              errorText: errorMessage,
+              errorStyle: widget.errorTextStyle,
+              errorText: widget.errorMessage,
               prefixIconConstraints:
                   const BoxConstraints(maxHeight: 42, maxWidth: 56),
             ),
-            onChanged: onChanged,
-            controller: controller,
-            enabled: enable,
-            cursorColor: cursorColor,
+            onChanged: widget.onChanged,
+            controller: widget.controller,
+            enabled: widget.enable,
+            cursorColor: widget.cursorColor,
             inputFormatters: [
-              LengthLimitingTextInputFormatter(maxLength),
-              if (inputFormatters != null) ...inputFormatters!,
+              LengthLimitingTextInputFormatter(widget.maxLength),
+              if (widget.inputFormatters != null) ...widget.inputFormatters!,
             ],
-            maxLines: maxLines,
-            keyboardType: keyboardType,
-            obscureText: obsecureText,
+            maxLines: widget.maxLines,
+            keyboardType: widget.keyboardType,
+            obscureText: widget.obsecureText,
             onTapOutside: (event) => AppUtils.dismissKeyboard(),
-            readOnly: readOnly,
-            style: textStyle ?? TS.labelLarge,
-            textAlign: textAlign,
-            textInputAction: action,
-            validator: validation,
-            textCapitalization: textCapitalization,
-            onTap: onTap,
+            readOnly: widget.readOnly,
+            style: widget.textStyle ?? TS.labelLarge,
+            textAlign: widget.textAlign,
+            textInputAction: widget.action,
+            validator: widget.validation,
+            textCapitalization: widget.textCapitalization,
+            onTap: widget.onTap,
           ),
         ],
       ),

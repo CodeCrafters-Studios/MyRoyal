@@ -5,6 +5,7 @@ import 'package:iroyal/app/modules/settings/presentation/views/components/item_m
 import 'package:iroyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 import '../controllers/settings_controller.dart';
@@ -95,13 +96,17 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_help&support.svg',
           text: 'Help & Support',
           withTrailing: true,
-          onTap: () {},
+          onTap: () => Get.to(
+            () => const ComingSoonScreen(),
+          ),
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_terms&polcies.svg',
           text: 'Terms & Policies',
           withTrailing: true,
-          onTap: () {},
+          onTap: () => Get.to(
+            () => const ComingSoonScreen(),
+          ),
         ),
       ],
     );

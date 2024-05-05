@@ -8,6 +8,10 @@ import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
+import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
+import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
+import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
 import 'package:iroyal/app/modules/settings/presentation/controllers/settings_controller.dart';
 import 'package:iroyal/app/modules/settings/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/settings/data/repositories/settings_repository_impl.dart';
@@ -107,6 +111,29 @@ class BottomnavbarBinding extends Bindings {
       ..lazyPut(
         () => GetMyTeams(
           Get.find<MyTeamsRepositoryImpl>(),
+        ),
+      )
+
+      //Profile
+      ..lazyPut<ProfileController>(
+        () => ProfileController(
+          getProfile: Get.find(),
+          getUser: Get.find(),
+        ),
+      )
+      ..lazyPut<ProfileRemoteDataSourcesImpl>(
+        () => ProfileRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<ProfileRepositoryImpl>(
+        () => ProfileRepositoryImpl(
+          remoteData: Get.find<ProfileRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetProfile(
+          Get.find<ProfileRepositoryImpl>(),
         ),
       );
   }

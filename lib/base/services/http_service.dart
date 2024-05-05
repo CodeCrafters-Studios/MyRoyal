@@ -62,7 +62,7 @@ class HttpService extends getx.GetxService {
           return handler.next(response);
         },
         onError: (err, handler) {
-          AppUtils.logApp('Error[${err.response?.statusCode}]');
+          AppUtils.logApp('Error Status Code[${err.response?.statusCode}]');
           return handler.next(err);
         },
       ),
@@ -194,7 +194,11 @@ class HttpService extends getx.GetxService {
         catchError('Request timeout', showPopUp: showPopUp);
       } else if (e.error is SocketException) {
         catchError('No Internet Connection!', showPopUp: showPopUp);
+      } else if (e.response?.statusCode == 400) {
+        AppUtils.logApp('LOGIN ERROR HERE');
+        catchError(errorLogin, showPopUp: showPopUp);
       } else {
+        AppUtils.logApp('ANY ERROR HERE');
         catchError(errorSystem, showPopUp: showPopUp);
       }
     } catch (e) {
@@ -217,5 +221,7 @@ class HttpService extends getx.GetxService {
     throw ApiException(message);
   }
 
+  static String errorLogin =
+      "Incorrect username or password. Please try again.";
   static String errorSystem = "We'll be back soon";
 }

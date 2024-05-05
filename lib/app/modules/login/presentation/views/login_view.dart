@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -38,23 +40,33 @@ class LoginView extends GetView<LoginController> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  InputPrimary(
-                    key: const Key('inputUsername'),
-                    label: 'Username',
-                    hint: 'Username',
-                    onChanged: (value) => controller.setLoginValue(
-                      FormLoginValue.username,
-                      value,
-                    ),
-                    validation: (value) =>
-                        value?.isEmpty ?? false ? 'Cannot be empty' : null,
-                    prefixIcon: const EPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
-                      child: ImageIcon(
-                        AssetImage('assets/icons/ic_user.png'),
-                        size: 20,
-                        color: greyIcon,
+                  Obx(
+                    () => InputPrimary(
+                      focusNode: controller.focusNodeUsername,
+                      controller: controller.usernameController,
+                      key: const Key('inputUsername'),
+                      label: 'Username',
+                      hint: 'Username',
+                      onChanged: (value) => controller.setLoginValue(
+                        FormLoginValue.username,
+                        value,
                       ),
+                      validation: (value) =>
+                          value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                      prefixIcon: const EPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: ImageIcon(
+                          AssetImage('assets/icons/ic_user.png'),
+                          size: 20,
+                          color: greyIcon,
+                        ),
+                      ),
+                      suffixIcon: controller.isFocus.value
+                          ? IconButton(
+                              onPressed: controller.clear,
+                              icon: const Icon(Icons.clear),
+                            )
+                          : null,
                     ),
                   ),
                   10.verticalSpace,
@@ -65,8 +77,14 @@ class LoginView extends GetView<LoginController> {
                       FormLoginValue.password,
                       value,
                     ),
-                    validation: (value) =>
-                        value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                    validation: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password cannot be empty';
+                      } else if (value.length < 6) {
+                        return 'Password must be at least 6 characters long';
+                      }
+                      return null;
+                    },
                     prefixIcon: const EPadding(
                       padding: EdgeInsets.symmetric(horizontal: 12),
                       child: ImageIcon(
@@ -117,6 +135,11 @@ class LoginView extends GetView<LoginController> {
             BiometricsLogin(
               key: const Key('loginBiometrics'),
               onTap: controller.biometricAuthentication,
+            ),
+            20.verticalSpace,
+            HaveNoAccount(
+              key: const Key('loginNoAccount'),
+              onTap: controller.dontHaveAnAccount,
             ),
           ],
         ),
@@ -185,6 +208,36 @@ class BiometricsLogin extends StatelessWidget {
             height: 42,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class HaveNoAccount extends StatelessWidget {
+  const HaveNoAccount({super.key, this.onTap});
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final stringArray = 'Dont have an Account? ^Click^ here'.split('^');
+    return RichText(
+      text: TextSpan(
+        children: stringArray.mapIndexed(
+          (index, element) {
+            if (index.isEven) {
+              return TextSpan(
+                text: element,
+                style: TS.bodySmall.copyWith(color: appTextColor),
+              );
+            } else {
+              return TextSpan(
+                text: element,
+                style: TS.bodySmall.copyWith(color: primaryColor),
+                recognizer: TapGestureRecognizer()..onTap = onTap,
+              );
+            }
+          },
+        ).toList(),
       ),
     );
   }

@@ -24,16 +24,12 @@ class HomeUserStatus extends GetView<HomeController> {
           () => Column(
             children: [
               controller.isLoading.value
-                  ? Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: const Align(
-                        alignment: Alignment.topLeft,
-                        child: EPadding(
-                          padding: EdgeInsets.symmetric(horizontal: 18),
-                          child: ShimmerText(
-                            width: 150,
-                          ),
+                  ? const Align(
+                      alignment: Alignment.topLeft,
+                      child: EPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        child: ShimmerText(
+                          width: 150,
                         ),
                       ),
                     )
@@ -65,8 +61,8 @@ class HomeUserStatus extends GetView<HomeController> {
                               child: const HomeUserCard(
                                 shapeBorder: true,
                                 isAvatarPicture: false,
-                                title: 'Today In',
-                                subtitle: '00:00:00',
+                                title: '',
+                                subtitle: '',
                                 isThridLine: false,
                                 suffixIcon: false,
                               ),
@@ -81,8 +77,8 @@ class HomeUserStatus extends GetView<HomeController> {
                               child: const HomeUserCard(
                                 shapeBorder: true,
                                 isAvatarPicture: false,
-                                title: 'Yesterday Out',
-                                subtitle: '00:00:00',
+                                title: '',
+                                subtitle: '',
                                 isThridLine: false,
                                 suffixIcon: false,
                               ),

@@ -53,13 +53,13 @@ class InitialRouteImpl implements InitialRoute {
   @override
   Future<bool> get isAllowedBiometricsFingerPrint async {
     final fingerprintLogin = await appStorage.read('fingerprint-login');
-
-    if (fingerprintLogin == 'false') {
-      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::NULL or FALSE');
-      return false;
-    } else {
+    AppUtils.logApp('FINGERPRINTLOGIN VALUE INITIAL ::::::: $fingerprintLogin');
+    if (fingerprintLogin == 'true') {
       AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::TRUE');
       return true;
+    } else {
+      AppUtils.logApp('FINGERPRINT VALUE INITIAL :::::::FALSE OR NULL');
+      return false;
     }
   }
 }
