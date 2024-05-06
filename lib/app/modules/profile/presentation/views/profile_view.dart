@@ -197,7 +197,7 @@ class ProfileView extends GetView<ProfileController> {
               child: Image.asset(
                 'assets/images/bg_profile.png',
                 width: Get.width,
-                height: .48.sh,
+                height: .46.sh,
                 fit: BoxFit.cover,
               ),
             ),
@@ -257,17 +257,18 @@ class ProfileView extends GetView<ProfileController> {
                       const VerticalDivider(color: Colors.black),
                       Expanded(
                         child: _buildInfoColumn(
-                            'Cuti tersedia',
-                            controller
-                                    .profileData()
-                                    .remainingLeave
-                                    .toString()
-                                    .isNotEmpty
-                                ? controller
-                                    .profileData()
-                                    .remainingLeave
-                                    .toString()
-                                : '0'),
+                          'Cuti tersedia',
+                          controller
+                                  .profileData()
+                                  .remainingLeave
+                                  .toString()
+                                  .isNotEmpty
+                              ? controller
+                                  .profileData()
+                                  .remainingLeave
+                                  .toString()
+                              : '0',
+                        ),
                       ),
                       VerticalDivider(
                         color: Colors.black.withOpacity(0.8),
@@ -279,7 +280,7 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                 ),
               ),
-              40.verticalSpace,
+              35.verticalSpace,
               EPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 21),
                 child: Column(

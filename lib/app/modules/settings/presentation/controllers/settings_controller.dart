@@ -25,6 +25,7 @@ class SettingsController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool biometricsValue = false.obs;
+  RxBool biometricsStatus = false.obs;
 
   final iUser = const User(
     id: 0,
@@ -133,6 +134,16 @@ class SettingsController extends GetxController {
 
   void setBiometricsValue() async {
     final fingerprintLogin = await appStorage.read('fingerprint-login');
+    final fingerprintStatus = await appStorage.read('fingerprint-status');
+
+    if (fingerprintStatus == 'true') {
+      biometricsStatus.value = true;
+      AppUtils.logApp('BIO STATUS :::::::::: ${biometricsStatus.value}');
+    } else {
+      biometricsStatus.value = false;
+      AppUtils.logApp('BIO STATUS :::::::::: ${biometricsStatus.value}');
+    }
+
     if (fingerprintLogin == 'true') {
       biometricsValue.value = true;
       AppUtils.logApp('BIO VALUE :::::::::: ${biometricsValue.value}');

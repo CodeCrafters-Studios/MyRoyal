@@ -43,10 +43,15 @@ class ProfileController extends GetxController {
   }
 
   Future<void> _getIdCacheUser() async {
+    isLoading.value = true;
     final r = await getUser();
     r.fold(
-      (l) => getIdState = 'getIdRejected',
+      (l) {
+        isLoading.value = false;
+        getIdState = 'getIdRejected';
+      },
       (r) {
+        isLoading.value = false;
         getIdState = 'getIdSuccess';
         id(r.employee.id.toString());
         AppUtils.logApp('USER ID ::::::$id');

@@ -44,6 +44,11 @@ class HomeController extends GetxController {
       name: 'My Teams',
       isVisible: true,
     ),
+    const Menu(
+      code: 'ic_webtel',
+      name: 'Webtel',
+      isVisible: true,
+    ),
   ];
 
   Rx<User> userData = const User(

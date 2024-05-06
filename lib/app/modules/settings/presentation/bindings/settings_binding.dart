@@ -8,6 +8,7 @@ class SettingsBinding extends Bindings {
   @override
   void dependencies() {
     Get
+      //Profile
       ..lazyPut<ProfileController>(
         () => ProfileController(
           getProfile: Get.find(),
@@ -21,7 +22,7 @@ class SettingsBinding extends Bindings {
       )
       ..lazyPut<ProfileRepositoryImpl>(
         () => ProfileRepositoryImpl(
-          remoteData: Get.find<ProfileRemoteDataSources>(),
+          remoteData: Get.find<ProfileRemoteDataSourcesImpl>(),
         ),
       )
       ..lazyPut(

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/services.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
@@ -30,10 +31,13 @@ class AuthBiometricsImpl implements AuthBiometrics {
       } on PlatformException catch (e) {
         if (e.code == auth_error.notAvailable) {
           // Add handling of no hardware here.
+          AppUtils.logApp('x');
         } else if (e.code == auth_error.notEnrolled) {
           // ...
+          AppUtils.logApp('c');
         } else {
           // ...
+          AppUtils.logApp('v');
         }
 
         return AuthReason(isAuthenticated: false, reason: e.toString());

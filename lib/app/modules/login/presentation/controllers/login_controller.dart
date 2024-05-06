@@ -13,6 +13,7 @@ import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 enum FormLoginValue { username, password }
 
@@ -23,6 +24,7 @@ class LoginController extends GetxController {
     required this.loginApp,
     required this.getCacheUserLogin,
     required this.authBiometricsLogin,
+    required this.appStorage,
   });
 
   final FocusNode focusNodeUsername = FocusNode();
@@ -41,12 +43,14 @@ class LoginController extends GetxController {
   RxBool isCacheuser = false.obs;
   RxBool isAllowBiometrics = false.obs;
   RxBool isFocus = false.obs;
+  RxBool fingerPrintStatus = false.obs;
 
   final AppDialog appDialog;
   final GetLoginParams getLoginParams;
   final LoginApp loginApp;
   final GetCacheUserLogin getCacheUserLogin;
   final AuthBiometricsLogin authBiometricsLogin;
+  final AppStorage appStorage;
 
   @override
   void onInit() async {
@@ -169,17 +173,41 @@ class LoginController extends GetxController {
   Future<void> biometricAuthentication() async {
     if (!isCacheuser()) {
       loginState = 'biometricsRejected';
+      appDialog.showInfoDialog(
+        imagePath: 'assets/icons/ic_information.svg',
+        description: 'Please login first',
+        textButton: 'Continue',
+      );
+      AppUtils.logApp('ERROR');
       return;
     }
     final r = await authBiometricsLogin(NoParams());
-    r.fold((l) => loginState = 'biometricsFailed', (r) {
-      if (r) {
-        loginState = 'biometricsSuccess';
-        loginWithCacheUser();
-      } else {
+    r.fold(
+      (l) {
         loginState = 'biometricsFailed';
-      }
-    });
+        fingerPrintStatus.value = false;
+        appStorage.write(
+            'fingerprint-status', fingerPrintStatus.value.toString());
+        appDialog.showInfoDialog(
+          imagePath: 'assets/icons/ic_information.svg',
+          description:
+              'Biometrics is not set, please configure biometrics security on your phone.',
+          textButton: 'Continue',
+        );
+        AppUtils.logApp('ERROR NOT SET');
+      },
+      (r) {
+        if (r) {
+          loginState = 'biometricsSuccess';
+          fingerPrintStatus.value = true;
+          appStorage.write(
+              'fingerprint-status', fingerPrintStatus.value.toString());
+          loginWithCacheUser();
+        } else {
+          loginState = 'biometricsFailed';
+        }
+      },
+    );
   }
 
   Future<void> loginWithCacheUser() async {

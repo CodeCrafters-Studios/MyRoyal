@@ -44,6 +44,7 @@ class LoginBinding extends Bindings {
           getCacheUserLogin: Get.find(),
           authBiometricsLogin: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
+          appStorage: Get.find(),
         ),
       );
   }

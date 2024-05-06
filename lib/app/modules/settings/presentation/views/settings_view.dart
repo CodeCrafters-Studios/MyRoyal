@@ -122,12 +122,14 @@ class SettingsViewImpl extends StatelessWidget {
         ),
         16.verticalSpace,
         Obx(
-          () => SwitchMenuSettings(
-            assetSvg: 'assets/icons/ic_fingerprint.svg',
-            text: 'Fingerprint Login',
-            value: controller.biometricsValue.value,
-            onChanged: (value) => controller.iBiometrics(value),
-          ),
+          () => controller.biometricsStatus.value
+              ? SwitchMenuSettings(
+                  assetSvg: 'assets/icons/ic_fingerprint.svg',
+                  text: 'Fingerprint Login',
+                  value: controller.biometricsValue.value,
+                  onChanged: (value) => controller.iBiometrics(value),
+                )
+              : const SizedBox(),
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_log_out.svg',
