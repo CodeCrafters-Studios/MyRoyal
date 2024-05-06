@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/services.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
@@ -11,8 +12,10 @@ abstract class AuthBiometrics {
 
 class AuthBiometricsImpl implements AuthBiometrics {
   final LocalAuthentication auth;
+  final AppDialog appDialog;
   AuthBiometricsImpl({
     required this.auth,
+    required this.appDialog,
   });
   @override
   Future<AuthReason> authenticate({String? description}) async {
@@ -29,20 +32,28 @@ class AuthBiometricsImpl implements AuthBiometrics {
         );
         return AuthReason(isAuthenticated: didAuthenticate);
       } on PlatformException catch (e) {
+        AppUtils.logApp('PLATFORMEXCEPTION :::: v');
         if (e.code == auth_error.notAvailable) {
           // Add handling of no hardware here.
-          AppUtils.logApp('x');
+          AppUtils.logApp('BIO AUTH ERROR :::: x');
         } else if (e.code == auth_error.notEnrolled) {
           // ...
-          AppUtils.logApp('c');
+          AppUtils.logApp('BIO AUTH ERROR NOT ENROLLED :::: c');
         } else {
           // ...
-          AppUtils.logApp('v');
+          AppUtils.logApp('BIO AUTH ERROR ELSE :::: v');
         }
 
         return AuthReason(isAuthenticated: false, reason: e.toString());
       }
     } else {
+      AppUtils.logApp('ELSE BIOMETRICS :::: v');
+      appDialog.showInfoDialog(
+        imagePath: 'assets/icons/ic_information.svg',
+        description:
+            'Biometrics is not set, please configure biometrics security on your phone.',
+        textButton: 'Continue',
+      );
       return AuthReason(
         isAuthenticated: false,
         reason: 'Biometrics not available',

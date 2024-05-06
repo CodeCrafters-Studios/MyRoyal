@@ -53,15 +53,16 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final dio = Dio();
   final alice = Alice(showNotification: false);
   final internetConnectionChecker = InternetConnectionChecker();
+  final appDialogImpl = AppDialogImpl();
   Get
     ..put(alice)
     ..put(AppStorage(box: box))
     ..put(NetworkInfoImpl(internetConnectionChecker))
     ..put(AppLocationImpl())
-    ..put(AppDialogImpl())
+    ..put(appDialogImpl)
     ..put(AppPermissionImpl())
     ..put(AppShareImpl())
-    ..put(AuthBiometricsImpl(auth: auth))
+    ..put(AuthBiometricsImpl(auth: auth, appDialog: appDialogImpl))
     ..put(InitialRouteImpl(appStorage: Get.find()))
     ..put(AppEncryptImpl())
     ..put(

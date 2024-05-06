@@ -185,15 +185,20 @@ class LoginController extends GetxController {
     r.fold(
       (l) {
         loginState = 'biometricsFailed';
-        fingerPrintStatus.value = false;
-        appStorage.write(
-            'fingerprint-status', fingerPrintStatus.value.toString());
-        appDialog.showInfoDialog(
-          imagePath: 'assets/icons/ic_information.svg',
-          description:
-              'Biometrics is not set, please configure biometrics security on your phone.',
-          textButton: 'Continue',
-        );
+        if (l.properties.isEmpty) {
+          AppUtils.logApp('CANCEL BIO:::::::');
+        } else {
+          fingerPrintStatus.value = false;
+          appStorage.write(
+              'fingerprint-status', fingerPrintStatus.value.toString());
+          appDialog.showInfoDialog(
+            imagePath: 'assets/icons/ic_information.svg',
+            description:
+                'Biometrics is not set, please configure biometrics security on your phone.',
+            textButton: 'Continue',
+          );
+          AppUtils.logApp('FAILURE::::::: ${l.properties.length}');
+        }
         AppUtils.logApp('ERROR NOT SET');
       },
       (r) {

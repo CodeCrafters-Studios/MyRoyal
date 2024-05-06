@@ -14,8 +14,8 @@ import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
-import '../modules/webtel/bindings/webtel_binding.dart';
-import '../modules/webtel/views/webtel_view.dart';
+import '../modules/webtel/presentation/bindings/webtel_binding.dart';
+import '../modules/webtel/presentation/views/webtel_view.dart';
 
 // ignore_for_file: constant_identifier_names
 

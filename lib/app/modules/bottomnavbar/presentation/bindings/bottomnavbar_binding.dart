@@ -17,6 +17,10 @@ import 'package:iroyal/app/modules/settings/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/settings/data/repositories/settings_repository_impl.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
+import 'package:iroyal/app/modules/webtel/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
+import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
+import 'package:iroyal/app/modules/webtel/presentation/controllers/webtel_controller.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
@@ -134,6 +138,28 @@ class BottomnavbarBinding extends Bindings {
       ..lazyPut(
         () => GetProfile(
           Get.find<ProfileRepositoryImpl>(),
+        ),
+      )
+
+      //Webtel
+      ..lazyPut<WebtelController>(
+        () => WebtelController(
+          getWebtel: Get.find(),
+        ),
+      )
+      ..lazyPut<WebtelRemoteDataSourcesImpl>(
+        () => WebtelRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<WebtelRepositoryImpl>(
+        () => WebtelRepositoryImpl(
+          remoteData: Get.find<WebtelRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetWebtel(
+          Get.find<WebtelRepositoryImpl>(),
         ),
       );
   }

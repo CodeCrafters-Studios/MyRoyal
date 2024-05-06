@@ -197,7 +197,7 @@ class ProfileView extends GetView<ProfileController> {
               child: Image.asset(
                 'assets/images/bg_profile.png',
                 width: Get.width,
-                height: .46.sh,
+                height: 360.h,
                 fit: BoxFit.cover,
               ),
             ),
@@ -206,7 +206,7 @@ class ProfileView extends GetView<ProfileController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const AppbarSpacer(),
-              20.verticalSpace,
+              10.verticalSpace,
               Center(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(

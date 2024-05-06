@@ -142,9 +142,11 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
       if (authReason.isAuthenticated) {
         return true;
       } else {
+        AppUtils.logApp('ERROR CANCEL BIO HERE');
         throw BiometricsException(authReason.reason);
       }
     } else {
+      AppUtils.logApp('ERROR HERE NOT AVAILABLE');
       throw BiometricsException('Biometrics not available');
     }
   }
