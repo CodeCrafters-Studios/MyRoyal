@@ -14,8 +14,9 @@ class PageBase extends StatelessWidget {
     this.onBack,
     this.showIconBack = true,
     this.title = 'Appbar Title',
-    this.centeredTitle = false,
     this.actions,
+    this.centeredTitle = false,
+    this.textStyle,
     this.bottomBar,
     this.bottomBarHeight,
     this.isShowLogoAppbar = true,
@@ -23,6 +24,7 @@ class PageBase extends StatelessWidget {
     this.useTopPadding = false,
     this.appbarColor,
     this.bgColors,
+    this.iconColor,
     this.showBackground = true,
     this.bottomBarDecoration,
     this.showBackgroundLogin = false,
@@ -34,6 +36,7 @@ class PageBase extends StatelessWidget {
   final Function()? onBack;
   final bool showIconBack;
   final String title;
+  final TextStyle? textStyle;
   final bool centeredTitle;
   final List<Widget>? actions;
   final Widget? bottomBar;
@@ -43,6 +46,7 @@ class PageBase extends StatelessWidget {
   final bool useTopPadding;
   final Color? appbarColor;
   final Color? bgColors;
+  final Color? iconColor;
   final bool showBackground;
   final bool showBackgroundLogin;
   final BoxDecoration? bottomBarDecoration;
@@ -93,6 +97,8 @@ class PageBase extends StatelessWidget {
                   centeredTitle: centeredTitle,
                   actions: actions,
                   color: appbarColor,
+                  iconColor: iconColor,
+                  textStyle: textStyle,
                 ),
             if (bottomBar != null)
               Positioned(

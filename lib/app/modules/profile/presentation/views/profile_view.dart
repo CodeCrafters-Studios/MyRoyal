@@ -252,12 +252,12 @@ class ProfileView extends GetView<ProfileController> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: _buildInfoColumn('Izin', '0'),
+                        child: _buildInfoColumn('Permit', '0'),
                       ),
                       const VerticalDivider(color: Colors.black),
                       Expanded(
                         child: _buildInfoColumn(
-                          'Cuti tersedia',
+                          'Leave',
                           controller
                                   .profileData()
                                   .remainingLeave
@@ -274,7 +274,7 @@ class ProfileView extends GetView<ProfileController> {
                         color: Colors.black.withOpacity(0.8),
                       ),
                       Expanded(
-                        child: _buildInfoColumn('Masa Kerja', '0'),
+                        child: _buildInfoColumn('Work Period', '0'),
                       )
                     ],
                   ),
@@ -286,6 +286,7 @@ class ProfileView extends GetView<ProfileController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    5.verticalSpace,
                     _titleMyInfo(),
                     _buildInfoRow(
                         Icons.email_outlined,

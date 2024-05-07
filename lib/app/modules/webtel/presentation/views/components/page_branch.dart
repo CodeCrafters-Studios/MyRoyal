@@ -1,0 +1,186 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/webtel/presentation/controllers/webtel_controller.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/appbar_spacer.dart';
+import 'package:iroyal/base/widgets/others/no_result_widget.dart';
+import 'package:iroyal/base/widgets/padding.dart';
+import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+
+class BranchPage extends StatelessWidget {
+  const BranchPage({
+    super.key,
+    required this.title,
+    required this.controller,
+    required this.data,
+  });
+
+  final String title;
+  final List data;
+  final WebtelController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return PageBase(
+      appbarColor: _getAppbarColor(),
+      showBackground: true,
+      title: title,
+      textStyle: TS.titleSmall.copyWith(color: white),
+      iconColor: white,
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const AppbarSpacer(),
+            EPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildInputPrimary(),
+            ),
+            Obx(
+              () => data.isNotEmpty
+                  ? SizedBox(
+                      height: Get.height,
+                      child: _buildListView(data),
+                    )
+                  : SizedBox(
+                      height: 500.h,
+                      child: const NoResultWidget(),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getAppbarColor() {
+    switch (title) {
+      case 'PT Royal Abadi Sejahtera':
+        return primaryAccent.withOpacity(0.3);
+      case 'PT Bestari Mulia':
+        return primaryColor.withOpacity(0.3);
+      default:
+        return Colors.pink.withOpacity(0.3);
+    }
+  }
+
+  Widget _buildInputPrimary() {
+    return Obx(
+      () => InputPrimary(
+        controller: _getSearchController(),
+        key: _getSearchKey(),
+        label: '',
+        hint: 'Search',
+        onChanged: _getOnChangedCallback(),
+        color: white,
+        outlineColor: primary,
+        prefixIcon: _buildPrefixIcon(),
+        suffixIcon: _buildSuffixIcon(),
+      ),
+    );
+  }
+
+  Widget _buildListView(List data) {
+    return Obx(
+      () => data.isNotEmpty
+          ? SizedBox(
+              height: Get.height,
+              child: ListView.separated(
+                separatorBuilder: (context, index) => const IntrinsicHeight(
+                  child: EPadding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Divider(
+                      color: black,
+                    ),
+                  ),
+                ),
+                padding: REdgeInsets.only(top: 5, bottom: 20),
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final d = data[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListTile(
+                      title: Text(
+                        d.fullname,
+                        softWrap: true,
+                        style: TS.labelLarge,
+                      ),
+                      subtitle: Text(
+                        d.departmentName,
+                        softWrap: true,
+                        style: TS.bodySmall,
+                      ),
+                      trailing: Text(
+                        d.ext.toString(),
+                        softWrap: true,
+                        style: TS.titleMedium,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          : SizedBox(
+              height: 500.h,
+              child: const NoResultWidget(),
+            ),
+    );
+  }
+
+  TextEditingController _getSearchController() {
+    if (title == 'PT Royal Abadi Sejahtera') {
+      return controller.searchR;
+    } else if (title == 'PT Bestari Mulia') {
+      return controller.searchB;
+    } else {
+      return controller.searchA;
+    }
+  }
+
+  Key _getSearchKey() {
+    if (title == 'PT Royal Abadi Sejahtera') {
+      return const Key('search-RasBranch');
+    } else if (title == 'PT Bestari Mulia') {
+      return const Key('search-BmBranch');
+    } else {
+      return const Key('search-AcaBranch');
+    }
+  }
+
+  Function(String) _getOnChangedCallback() {
+    if (title == 'PT Royal Abadi Sejahtera') {
+      return controller.onChangedR;
+    } else if (title == 'PT Bestari Mulia') {
+      return controller.onChangedB;
+    } else {
+      return controller.onChangedA;
+    }
+  }
+
+  Widget _buildPrefixIcon() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: SvgPicture.asset(
+        'assets/icons/ic_search.svg',
+        width: 20.w,
+        height: 20.w,
+      ),
+    );
+  }
+
+  Widget? _buildSuffixIcon() {
+    final valueListener = controller.valueListener.value;
+    return valueListener.isNotEmpty
+        ? IconButton(
+            onPressed: controller.clear,
+            icon: const Icon(Icons.clear),
+          )
+        : null;
+  }
+}

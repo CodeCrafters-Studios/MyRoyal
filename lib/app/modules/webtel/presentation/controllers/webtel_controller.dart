@@ -1,51 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/webtel/data/models/webtel_model.dart';
+import 'package:iroyal/app/modules/webtel/domain/entities/branch.dart';
 import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 class WebtelController extends GetxController {
   WebtelController({required this.getWebtel});
 
-  final GetWebtel getWebtel;
-  late ScrollController scrollController;
+  TextEditingController searchR = TextEditingController();
+  TextEditingController searchB = TextEditingController();
+  TextEditingController searchA = TextEditingController();
 
-  RxBool isLoading = false.obs;
+  final GetWebtel getWebtel;
 
   String webtelState = '';
 
-  List<Webtel> listData = <Webtel>[
-    const Webtel(
-        ext: 162,
-        fullname: 'Dhian Artanto Nugroho',
-        departmentName: 'Marketing Design',
-        branchName: 'ACA',
-        id: ''),
-    const Webtel(
-        ext: 146,
-        fullname: 'Yosua Putera Elia Supardi Bunawan',
-        departmentName: 'Scan In LowEnd dan HighEnd',
-        branchName: 'LDAP',
-        id: ''),
-    const Webtel(
-        ext: 001,
-        fullname: 'Alghany Kennedy Adam',
-        departmentName: 'IT',
-        branchName: 'Vendor',
-        id: ''),
-    const Webtel(
-        ext: 001,
-        fullname: 'Alghany Kennedy Adam',
-        departmentName: 'IT',
-        branchName: 'Vendor',
-        id: ''),
-    const Webtel(
-        ext: 001,
-        fullname: 'Alghany Kennedy Adam',
-        departmentName: 'IT',
-        branchName: 'Vendor',
-        id: ''),
+  RxBool isLoading = false.obs;
+  RxString valueListener = ''.obs;
+
+  List<Branch> branchData = [
+    Branch(
+      branchName: 'PT Royal Abadi Sejahtera',
+      code: 'RAS',
+      color: primaryAccent,
+      logo: 'assets/images/img_logo.png',
+    ),
+    Branch(
+      branchName: 'PT BM',
+      code: 'BM',
+      color: primaryColor,
+      logo: 'assets/images/img_logo_bm.png',
+    ),
+    Branch(
+      branchName: 'PT ACA',
+      code: 'ACA',
+      color: Colors.pink,
+      logo: 'assets/images/img_logo_cam.png',
+    ),
   ];
 
   RxList<Webtel> webtelData = <WebtelModel>[].obs;
@@ -53,20 +47,24 @@ class WebtelController extends GetxController {
   RxList<Webtel> bmData = <Webtel>[].obs;
   RxList<Webtel> acaData = <Webtel>[].obs;
 
+  RxList<Webtel> filterRasData = <Webtel>[].obs;
+  RxList<Webtel> filterBmData = <Webtel>[].obs;
+  RxList<Webtel> filterAcaData = <Webtel>[].obs;
+
   @override
   void onInit() {
     _getDataWebtel();
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      update();
-    });
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    scrollController.dispose();
-    super.onClose();
+  void clear() {
+    searchR.clear();
+    searchB.clear();
+    searchA.clear();
+    filterRasData(rasData);
+    filterBmData(bmData);
+    filterAcaData(acaData);
+    valueListener.value = '';
   }
 
   Future<void> _getDataWebtel() async {
@@ -79,19 +77,23 @@ class WebtelController extends GetxController {
       (r) {
         webtelState = 'getPromSuccess';
         webtelData(r);
-        rasData(_generateBranchRAS(r));
-        bmData(_generateBranchBM(r));
-        acaData(_generateBranchACA(r));
+        rasData(_generateBranch('PT RAS', r));
+        bmData(_generateBranch('PT BM', r));
+        acaData(_generateBranch('PT ACA', r));
+        filterRasData(rasData);
+        filterBmData(bmData);
+        filterAcaData(acaData);
         AppUtils.logApp('RAS :::::${rasData.length}');
+        AppUtils.logApp('FILTER RAS :::::${rasData.length}');
       },
     );
   }
 
-  List<Webtel> _generateBranchRAS(List<Webtel> getBranch) {
-    final branchRAS = <Webtel>[];
+  List<Webtel> _generateBranch(String branchName, List<Webtel> getBranch) {
+    final branchList = <Webtel>[];
 
-    getBranch.where((x) => x.branchName == 'PT RAS').forEach((x) {
-      branchRAS.add(
+    getBranch.where((x) => x.branchName == branchName).forEach((x) {
+      branchList.add(
         Webtel(
           fullname: x.fullname,
           departmentName: x.departmentName,
@@ -101,46 +103,38 @@ class WebtelController extends GetxController {
         ),
       );
     });
-    AppUtils.logApp('PT RAS :::::$branchRAS');
+    AppUtils.logApp('$branchName :::::$branchList');
 
-    return branchRAS;
+    return branchList;
   }
 
-  List<Webtel> _generateBranchBM(List<Webtel> getBranch) {
-    final branchBM = <Webtel>[];
-
-    getBranch.where((x) => x.branchName == 'PT BM').forEach((x) {
-      branchBM.add(
-        Webtel(
-          fullname: x.fullname,
-          departmentName: x.departmentName,
-          ext: x.ext,
-          branchName: x.branchName,
-          id: x.id,
-        ),
-      );
-    });
-    AppUtils.logApp('PT BM :::::$branchBM');
-
-    return branchBM;
+  void onChangedR(String value) {
+    valueListener.value = value;
+    _filterData(value, rasData, filterRasData);
   }
 
-  List<Webtel> _generateBranchACA(List<Webtel> getBranch) {
-    final branchACA = <Webtel>[];
+  void onChangedB(String value) {
+    valueListener.value = value;
+    _filterData(value, bmData, filterBmData);
+  }
 
-    getBranch.where((x) => x.branchName == 'PT ACA').forEach((x) {
-      branchACA.add(
-        Webtel(
-          fullname: x.fullname,
-          departmentName: x.departmentName,
-          ext: x.ext,
-          branchName: x.branchName,
-          id: x.id,
-        ),
-      );
-    });
-    AppUtils.logApp('PT ACA :::::$branchACA');
+  void onChangedA(String value) {
+    valueListener.value = value;
+    _filterData(value, acaData, filterAcaData);
+  }
 
-    return branchACA;
+  void _filterData(
+      String value, RxList<Webtel> data, RxList<Webtel> filterData) {
+    if (value.isEmpty) {
+      filterData.value = data;
+      AppUtils.logApp('${filterData.length}');
+    } else {
+      filterData.value = data
+          .where((e) =>
+              e.fullname.toLowerCase().contains(value.toLowerCase()) ||
+              e.ext.toString().toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterData.length}');
+    }
   }
 }
