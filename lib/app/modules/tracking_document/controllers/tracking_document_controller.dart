@@ -1,23 +1,119 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/approval_document.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/status_approval_entities.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 
 class TrackingDocumentController extends GetxController {
-  //TODO: Implement TrackingDocumentController
+  RxList<ApprovalDocument> statusOverdue = <ApprovalDocument>[].obs;
+  RxList<ApprovalDocument> statusUrgent = <ApprovalDocument>[].obs;
 
-  final count = 0.obs;
+  List<ApprovalDocument> listApproval = <ApprovalDocument>[
+    ApprovalDocument(
+      title: 'Request for man power replacement',
+      body: 'body',
+      status: [
+        StatusApprovalEntity(
+          borderColor: primary50,
+          decorationColor: primary50,
+          icon: '!',
+          iconColor: primary50,
+          isIcon: false,
+          status: 'OVERDUE',
+          statusColor: primary50,
+        ),
+        StatusApprovalEntity(
+          borderColor: secondary,
+          decorationColor: secondary,
+          icon: '',
+          iconColor: secondary,
+          isIcon: true,
+          status: 'URGENT',
+          statusColor: secondary,
+        ),
+      ],
+      date: '08.05.2021',
+      attachment: 2,
+    ),
+    ApprovalDocument(
+      title: 'Request for man power replacement',
+      body: 'body',
+      status: [
+        StatusApprovalEntity(
+          borderColor: primary50,
+          decorationColor: primary50,
+          icon: '!',
+          iconColor: primary50,
+          isIcon: false,
+          status: 'OVERDUE',
+          statusColor: primary50,
+        ),
+      ],
+      date: '08.05.2021',
+      attachment: 2,
+    ),
+    ApprovalDocument(
+      title: 'Request for man power replacement',
+      body: 'body',
+      status: [
+        StatusApprovalEntity(
+          borderColor: secondary,
+          decorationColor: secondary,
+          icon: '',
+          iconColor: secondary,
+          isIcon: true,
+          status: 'URGENT',
+          statusColor: secondary,
+        ),
+      ],
+      date: '08.05.2021',
+      attachment: 2,
+    ),
+    ApprovalDocument(
+      title: 'Request for man power replacement',
+      body: 'body',
+      status: [],
+      date: '08.05.2021',
+      attachment: 2,
+    ),
+  ];
+
   @override
   void onInit() {
+    _filterStatusApproval();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void _filterStatusApproval() {
+    statusOverdue.value = generateOverdue();
+    statusUrgent.value = generateUrgent();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  List<ApprovalDocument> generateOverdue() {
+    final urgent = <ApprovalDocument>[];
+
+    for (var menu in listApproval) {
+      if (menu.status.any((status) => status.status == 'OVERDUE')) {
+        AppUtils.logApp('OVERDUE ::::${menu.status.length}');
+        urgent.add(menu);
+      }
+    }
+
+    AppUtils.logApp('${urgent.length}');
+    return urgent;
   }
 
-  void increment() => count.value++;
+  List<ApprovalDocument> generateUrgent() {
+    final urgent = <ApprovalDocument>[];
+
+    for (var menu in listApproval) {
+      if (menu.status.any((status) => status.status == 'URGENT')) {
+        AppUtils.logApp('URGENT ::::${menu.status.length}');
+        urgent.add(menu);
+      }
+    }
+
+    AppUtils.logApp('${urgent.length}');
+    return urgent;
+  }
 }

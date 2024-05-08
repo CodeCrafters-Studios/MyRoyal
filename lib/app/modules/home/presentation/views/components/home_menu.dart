@@ -25,6 +25,9 @@ class HomeMenu extends StatelessWidget {
           case 'Webtel':
             Get.toNamed(Routes.WEBTEL);
             break;
+          case 'Tracking Documents':
+            Get.toNamed(Routes.TRACKING_DOCUMENT);
+            break;
           default:
             Get.to(() => const ComingSoonScreen());
             break;

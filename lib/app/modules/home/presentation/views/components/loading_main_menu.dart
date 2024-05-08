@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:shimmer/shimmer.dart';
@@ -13,8 +14,10 @@ class LoadingMainMenu extends StatelessWidget {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
-      child: Padding(
-        padding: REdgeInsets.symmetric(horizontal: 14),
+      child: CardApp(
+        width: Get.width,
+        height: 200.h,
+        padding: REdgeInsets.all(14),
         child: GridView.count(
           padding: EdgeInsets.zero,
           mainAxisSpacing: 15.w,
