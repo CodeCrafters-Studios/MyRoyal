@@ -13,6 +13,7 @@ abstract class Routes {
   static const MY_TEAMS = _Paths.MY_TEAMS;
   static const PROFILE = _Paths.PROFILE;
   static const WEBTEL = _Paths.WEBTEL;
+  static const TRACKING_DOCUMENT = _Paths.TRACKING_DOCUMENT;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const MY_TEAMS = '/my-teams';
   static const PROFILE = '/profile';
   static const WEBTEL = '/webtel';
+  static const TRACKING_DOCUMENT = '/tracking-document';
 }
