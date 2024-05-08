@@ -25,7 +25,7 @@ class HomeController extends GetxController {
     const Menu(
       code: 'ic_dashboard',
       name: 'Dashboard',
-      isVisible: false,
+      isVisible: true,
     ),
     const Menu(
       code: 'ic_task',
@@ -50,6 +50,11 @@ class HomeController extends GetxController {
     const Menu(
       code: 'ic_webtel',
       name: 'Webtel',
+      isVisible: true,
+    ),
+    const Menu(
+      code: 'ic_others',
+      name: 'Others',
       isVisible: true,
     ),
   ];

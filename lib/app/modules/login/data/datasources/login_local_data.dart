@@ -155,6 +155,11 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
       }
     } else {
       AppUtils.logApp('ERROR HERE NOT AVAILABLE');
+      appDialog.showInfoDialog(
+        imagePath: 'assets/icons/ic_information.svg',
+        description: 'Biometrics is not available or unsupported.',
+        textButton: 'Continue',
+      );
       throw BiometricsException('Biometrics not available');
     }
   }

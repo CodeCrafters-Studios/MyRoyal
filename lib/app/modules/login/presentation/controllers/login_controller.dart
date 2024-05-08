@@ -155,6 +155,9 @@ class LoginController extends GetxController {
       },
       (r) {
         loginState = 'loginSuccess';
+        fingerPrintStatus.value = true;
+        appStorage.write(
+            'fingerprint-status', fingerPrintStatus.value.toString());
         Get.offAllNamed(Routes.BOTTOMNAVBAR);
       },
     );
@@ -199,7 +202,7 @@ class LoginController extends GetxController {
           );
           AppUtils.logApp('FAILURE::::::: ${l.properties.length}');
         }
-        AppUtils.logApp('ERROR NOT SET');
+        AppUtils.logApp('ERROR NOT SET / CANCEL');
       },
       (r) {
         if (r) {

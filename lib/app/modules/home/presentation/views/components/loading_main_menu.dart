@@ -9,7 +9,7 @@ class LoadingMainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final list = List<int>.generate(12, (index) => 1);
+    final list = List<int>.generate(8, (index) => 1);
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
