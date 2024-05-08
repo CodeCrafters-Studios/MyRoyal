@@ -16,7 +16,11 @@ class HomeUserMenu extends GetView<HomeController> {
       child: Obx(
         () => CardApp(
           width: Get.width,
-          height: 280.h,
+          height: controller.mainMenu.length <= 4
+              ? 150.h
+              : controller.mainMenu.length > 4
+                  ? 200.h
+                  : 300.h,
           padding: REdgeInsets.all(14),
           child: controller.isLoading.value
               ? const LoadingMainMenu()

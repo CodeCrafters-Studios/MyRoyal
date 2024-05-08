@@ -38,7 +38,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     // required this.deviceInfo,
     required this.biometrics,
     required this.appStorage,
-    required this.appLocation,
+    // required this.appLocation,
     // required this.commonParam,
     required this.appDialog,
   });
@@ -46,7 +46,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   final AuthBiometrics biometrics;
   final AppStorage appStorage;
   // final DeviceInfo deviceInfo;
-  final AppLocation appLocation;
+  // final AppLocation appLocation;
   // final CommonParam commonParam;
   final AppDialog appDialog;
 
@@ -95,44 +95,52 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     if (username.isEmpty || password.isEmpty) {
       throw LocalDataException('Username or Password cannot be empty');
     }
-    final permissionStatus = await appLocation.permission;
-    if (permissionStatus == LocationPermission.denied ||
-        permissionStatus == LocationPermission.unableToDetermine) {
-      final showDialogPermission = await appDialog.showPermissionDialog(
-        description: 'App request to access device Location',
-      );
 
-      if (showDialogPermission) {
-        final result = await appLocation.requestPermission();
-        if (result == LocationPermission.whileInUse ||
-            result == LocationPermission.always) {
-          return loginParam(
-            grantType,
-            username,
-            password,
-            clientId,
-            clientSecret,
-          );
-        } else {
-          throw LocalDataException('Permission Denied');
-        }
-      } else {
-        throw LocalDataException('Permission Denied');
-      }
-    } else if (permissionStatus == LocationPermission.deniedForever) {
-      throw LocalDataException('Permission Denied');
-    } else if (permissionStatus == LocationPermission.always ||
-        permissionStatus == LocationPermission.whileInUse) {
-      return loginParam(
-        grantType,
-        username,
-        password,
-        clientId,
-        clientSecret,
-      );
-    } else {
-      throw LocalDataException('Permission Denied');
-    }
+    return loginParam(
+      grantType,
+      username,
+      password,
+      clientId,
+      clientSecret,
+    );
+    // final permissionStatus = await appLocation.permission;
+    // if (permissionStatus == LocationPermission.denied ||
+    //     permissionStatus == LocationPermission.unableToDetermine) {
+    //   final showDialogPermission = await appDialog.showPermissionDialog(
+    //     description: 'App request to access device Location',
+    //   );
+
+    //   if (showDialogPermission) {
+    //     final result = await appLocation.requestPermission();
+    //     if (result == LocationPermission.whileInUse ||
+    //         result == LocationPermission.always) {
+    //       return loginParam(
+    //         grantType,
+    //         username,
+    //         password,
+    //         clientId,
+    //         clientSecret,
+    //       );
+    //     } else {
+    //       throw LocalDataException('Permission Denied');
+    //     }
+    //   } else {
+    //     throw LocalDataException('Permission Denied');
+    //   }
+    // } else if (permissionStatus == LocationPermission.deniedForever) {
+    //   throw LocalDataException('Permission Denied');
+    // } else if (permissionStatus == LocationPermission.always ||
+    //     permissionStatus == LocationPermission.whileInUse) {
+    //   return loginParam(
+    //     grantType,
+    //     username,
+    //     password,
+    //     clientId,
+    //     clientSecret,
+    //   );
+    // } else {
+    //   throw LocalDataException('Permission Denied');
+    // }
   }
 
   @override

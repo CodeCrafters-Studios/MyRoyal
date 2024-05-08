@@ -132,7 +132,11 @@ class WebtelController extends GetxController {
       filterData.value = data
           .where((e) =>
               e.fullname.toLowerCase().contains(value.toLowerCase()) ||
-              e.ext.toString().toLowerCase().contains(value.toLowerCase()))
+              e.ext.toString().toLowerCase().contains(value.toLowerCase()) ||
+              e.departmentName
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()))
           .toList();
       AppUtils.logApp('${filterData.length}');
     }

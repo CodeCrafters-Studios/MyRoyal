@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/home_slide.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_info.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_menu.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_status.dart';
@@ -29,12 +30,15 @@ class HomeView extends GetView<HomeController> {
           _buildLogo(),
         ],
       ),
-      body: const CustomScrollView(
+      body: CustomScrollView(
         scrollDirection: Axis.vertical,
         slivers: [
-          HomeUserInfo(),
-          HomeUserStatus(),
-          HomeUserMenu(),
+          const HomeUserInfo(),
+          const HomeUserStatus(),
+          const HomeUserMenu(),
+          HomeSlide(
+            controller: controller,
+          ),
         ],
       ),
     );

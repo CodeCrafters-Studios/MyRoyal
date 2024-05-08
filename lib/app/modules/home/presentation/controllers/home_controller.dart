@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/attendance.dart';
 import 'package:iroyal/app/modules/home/data/models/employee.dart';
 import 'package:iroyal/app/modules/home/data/models/job.dart';
+import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
@@ -15,6 +16,8 @@ class HomeController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;
+
+  RxInt indexSlider = 0.obs;
 
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
 
@@ -51,6 +54,17 @@ class HomeController extends GetxController {
     ),
   ];
 
+  List<HomeSlider> homeSLider = <HomeSlider>[
+    const HomeSlider(
+      link: '',
+    ),
+    const HomeSlider(
+      link: '',
+    ),
+    const HomeSlider(
+      link: '',
+    ),
+  ];
   Rx<User> userData = const User(
     id: 0,
     username: '',

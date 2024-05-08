@@ -10,6 +10,7 @@ import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:search_highlight_text/search_highlight_text.dart';
 
 class BranchPage extends StatelessWidget {
   const BranchPage({
@@ -43,9 +44,12 @@ class BranchPage extends StatelessWidget {
             ),
             Obx(
               () => data.isNotEmpty
-                  ? SizedBox(
-                      height: Get.height,
-                      child: _buildListView(data),
+                  ? SearchTextInheritedWidget(
+                      searchText: RegExp.escape(_getSearchController().text),
+                      child: SizedBox(
+                        height: Get.height,
+                        child: _buildListView(data),
+                      ),
                     )
                   : SizedBox(
                       height: 500.h,
@@ -106,20 +110,23 @@ class BranchPage extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListTile(
-                      title: Text(
+                      title: SearchHighlightText(
                         d.fullname,
                         softWrap: true,
-                        style: TS.labelLarge,
+                        style: TS.labelLarge.copyWith(color: black),
+                        highlightStyle: TS.labelLarge.copyWith(color: red),
                       ),
-                      subtitle: Text(
+                      subtitle: SearchHighlightText(
                         d.departmentName,
                         softWrap: true,
-                        style: TS.bodySmall,
+                        style: TS.bodySmall.copyWith(color: black),
+                        highlightStyle: TS.labelLarge.copyWith(color: red),
                       ),
-                      trailing: Text(
+                      trailing: SearchHighlightText(
                         d.ext.toString(),
                         softWrap: true,
-                        style: TS.titleMedium,
+                        style: TS.titleMedium.copyWith(color: black),
+                        highlightStyle: TS.titleMedium.copyWith(color: red),
                       ),
                     ),
                   );
