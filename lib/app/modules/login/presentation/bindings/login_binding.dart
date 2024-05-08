@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
 import 'package:iroyal/app/modules/login/data/datasources/login_remote.data.dart';

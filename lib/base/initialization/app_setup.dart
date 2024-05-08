@@ -12,9 +12,9 @@ import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
+// ignore: unused_import
 import 'package:iroyal/base/utils/location/app_location.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
-import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:iroyal/base/utils/share/app_share.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/utils/token/app_token.dart';

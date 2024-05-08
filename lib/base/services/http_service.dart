@@ -15,7 +15,6 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
-import 'package:iroyal/base/utils/token/app_token.dart';
 import 'package:iroyal/base/widgets/show_dialog.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }

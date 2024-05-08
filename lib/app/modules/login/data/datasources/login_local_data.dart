@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:geolocator/geolocator.dart';
 import 'package:iroyal/app/modules/login/data/models/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/data/models/login_params.dart';
 import 'package:iroyal/app/modules/login/data/models/login_response.dart';
@@ -10,7 +9,6 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/location/app_location.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 abstract class LoginLocalDataSource {
