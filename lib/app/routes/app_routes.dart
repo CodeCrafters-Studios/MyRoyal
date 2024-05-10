@@ -14,6 +14,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const WEBTEL = _Paths.WEBTEL;
   static const TRACKING_DOCUMENT = _Paths.TRACKING_DOCUMENT;
+  static const DETAIL_TRACKING_DOCUMENT = _Paths.DETAIL_TRACKING_DOCUMENT;
 }
 
 abstract class _Paths {
@@ -27,4 +28,5 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const WEBTEL = '/webtel';
   static const TRACKING_DOCUMENT = '/tracking-document';
+  static const DETAIL_TRACKING_DOCUMENT = '/detail-tracking-document';
 }
