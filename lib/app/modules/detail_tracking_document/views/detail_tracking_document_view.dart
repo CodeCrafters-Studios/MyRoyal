@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/coming_soon.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/status.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/header.dart';
-import 'package:iroyal/app/modules/tracking_document/views/tracking_document_view.dart';
+import 'package:iroyal/app/modules/tracking_document/presentation/views/tracking_document_view.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';

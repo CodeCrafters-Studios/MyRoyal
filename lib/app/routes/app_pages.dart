@@ -16,8 +16,8 @@ import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
-import '../modules/tracking_document/bindings/tracking_document_binding.dart';
-import '../modules/tracking_document/views/tracking_document_view.dart';
+import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
+import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
 import '../modules/webtel/presentation/bindings/webtel_binding.dart';
 import '../modules/webtel/presentation/views/webtel_view.dart';
 
