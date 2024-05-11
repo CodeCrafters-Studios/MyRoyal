@@ -3,78 +3,107 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
-class AnotherStepperView extends StatefulWidget {
-  const AnotherStepperView({super.key});
+class StatusView extends StatefulWidget {
+  const StatusView({super.key});
 
   @override
-  State<AnotherStepperView> createState() => _MyAppState();
+  State<StatusView> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<AnotherStepperView> {
+class _MyAppState extends State<StatusView> {
   List<StepperData> stepperData = [
     StepperData(
       title: StepperText(
         "Norma Purnama",
+        textStyle: TS.titleSmall,
       ),
       subtitle: StepperText(
         "REQUESTED",
-        textStyle: const TextStyle(color: Colors.brown),
+        textStyle: TS.bodySmall.copyWith(
+          color: Colors.brown,
+        ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.brown,
           borderRadius: BorderRadius.all(
             Radius.circular(30),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             'NP',
-            style: TextStyle(color: white),
+            style: TS.labelMedium.copyWith(
+              color: white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),
     ),
     StepperData(
-      title: StepperText("Daniel Wallington"),
+      title: StepperText(
+        "Daniel Wallington",
+        textStyle: TS.titleSmall,
+      ),
       subtitle: StepperText(
         "APPROVED",
-        textStyle: const TextStyle(color: primary),
+        textStyle: TS.bodySmall.copyWith(
+          color: green,
+        ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(
-          color: primary,
+          color: Colors.green,
           borderRadius: BorderRadius.all(
             Radius.circular(30),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             'DW',
-            style: TextStyle(color: white),
+            style: TS.labelMedium.copyWith(
+              color: white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),
     ),
     StepperData(
-      title: StepperText("Kitty Sarah"),
+      title: StepperText(
+        "Kitty Sarah",
+        textStyle: TS.titleSmall.copyWith(
+          color: greyText,
+        ),
+      ),
+      subtitle: StepperText(
+        "WAITING FOR APPROVAL",
+        textStyle: TS.bodySmall.copyWith(
+          color: greyText,
+        ),
+      ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.grey,
           borderRadius: BorderRadius.all(
             Radius.circular(30),
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Text(
             'KS',
-            style: TextStyle(color: white),
+            style: TS.labelMedium.copyWith(
+              color: white,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),
@@ -82,12 +111,14 @@ class _MyAppState extends State<AnotherStepperView> {
     StepperData(
       title: StepperText(
         "Done",
-        textStyle: const TextStyle(color: Colors.blue),
+        textStyle: TS.titleSmall.copyWith(
+          color: greyText,
+        ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(
-          color: Colors.blue,
+          color: Colors.grey,
           borderRadius: BorderRadius.all(
             Radius.circular(30),
           ),
@@ -111,27 +142,26 @@ class _MyAppState extends State<AnotherStepperView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: Get.height,
-          child: Column(
-            children: [
-              EPadding(
-                padding: const EdgeInsets.only(left: 20),
-                child: AnotherStepper(
-                  stepperList: stepperData,
-                  stepperDirection: Axis.vertical,
-                  iconWidth: 40,
-                  iconHeight: 40,
-                  activeBarColor: Colors.grey,
-                  inActiveBarColor: Colors.grey,
-                  verticalGap: 30,
-                  activeIndex: 1,
-                  barThickness: 1,
-                ),
+      body: SizedBox(
+        height: Get.height,
+        child: Column(
+          children: [
+            EPadding(
+              padding: const EdgeInsets.only(left: 20),
+              child: AnotherStepper(
+                scrollPhysics: const NeverScrollableScrollPhysics(),
+                stepperList: stepperData,
+                stepperDirection: Axis.vertical,
+                iconWidth: 40,
+                iconHeight: 40,
+                activeBarColor: Colors.grey,
+                inActiveBarColor: Colors.grey,
+                verticalGap: 35,
+                activeIndex: 1,
+                barThickness: 1,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       bottomSheet: Container(

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/views/components/another_stepper_view.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/views/components/header.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/coming_soon.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/status.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/header.dart';
 import 'package:iroyal/app/modules/tracking_document/views/tracking_document_view.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
@@ -114,47 +114,11 @@ class DetailTrackingDocumentView
               HeaderView(),
               ComingSoonView(),
               ComingSoonView(),
-              AnotherStepperView(),
+              StatusView(),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class ComingSoonView extends StatelessWidget {
-  const ComingSoonView({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 280.h,
-          width: 280.w,
-          child: Image.asset('assets/images/img_coming_soon.png'),
-        ),
-        Padding(
-          padding: REdgeInsets.symmetric(horizontal: 14),
-          child: Text(
-            "Great things Coming Soon.",
-            style: TS.titleLarge,
-          ),
-        ),
-        Padding(
-          padding: REdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            "We're working hard to bring you something amazing.\nStay tuned.",
-            style: TS.bodyLarge,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
     );
   }
 }
