@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -364,7 +365,7 @@ class ApprovalView extends StatelessWidget {
         itemBuilder: (context, index) {
           final d = data[index];
           return CardApp(
-            onTap: () {},
+            onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT),
             padding: REdgeInsets.symmetric(vertical: 10),
             width: 335.w,
             borderWidth: 1,
