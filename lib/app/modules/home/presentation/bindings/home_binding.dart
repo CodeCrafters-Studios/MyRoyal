@@ -3,10 +3,16 @@ import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
+import 'package:iroyal/app/modules/tracking_document/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/tracking_document/data/repositories/tracking_document_repositories_impl.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/repositories/tracking_document_repositories.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document.dart';
+import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
+    // My Teams
     Get
       ..lazyPut<MyTeamsController>(
         () => MyTeamsController(
@@ -27,6 +33,28 @@ class HomeBinding extends Bindings {
       ..lazyPut(
         () => GetMyTeams(
           Get.find<MyTeamsRepositoryImpl>(),
+        ),
+      )
+
+      // Tracking Document
+      ..lazyPut<TrackingDocumentController>(
+        () => TrackingDocumentController(
+          getTrackingDocument: Get.find(),
+        ),
+      )
+      ..lazyPut<TrackingDocumentRemoteDataSourcesImpl>(
+        () => TrackingDocumentRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<TrackingDocumentRepositoriesImpl>(
+        () => TrackingDocumentRepositoriesImpl(
+          remoteData: Get.find<TrackingDocumentRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetTrackingDocument(
+          Get.find<TrackingDocumentRepository>(),
         ),
       );
   }
