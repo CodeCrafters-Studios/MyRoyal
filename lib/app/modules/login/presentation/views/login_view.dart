@@ -99,9 +99,7 @@ class LoginView extends GetView<LoginController> {
                     children: [
                       TextButton(
                         key: const Key('loginForgotPassword'),
-                        onPressed: () {
-                          // Get.toNamed(Routes.ONBOARDING_REGISTER);
-                        },
+                        onPressed: controller.gotoForgotPassword,
                         child: const Text(
                           'Forgot Password?',
                           style: TextStyle(
