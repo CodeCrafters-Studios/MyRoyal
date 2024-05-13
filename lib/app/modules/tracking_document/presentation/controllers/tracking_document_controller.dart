@@ -187,16 +187,22 @@ class TrackingDocumentController extends GetxController {
       AppUtils.logApp('${filterData.length}');
     } else {
       filterData.value = data
-          .where((e) =>
-              e.title.toLowerCase().contains(value.toLowerCase()) ||
-              e.department
-                  .toString()
-                  .toLowerCase()
-                  .contains(value.toLowerCase()) ||
-              e.serialNumber
-                  .toString()
-                  .toLowerCase()
-                  .contains(value.toLowerCase()))
+          .where(
+            (e) =>
+                e.title.toLowerCase().contains(value.toLowerCase()) ||
+                e.department
+                    .toString()
+                    .toLowerCase()
+                    .contains(value.toLowerCase()) ||
+                e.serialNumber
+                    .toString()
+                    .toLowerCase()
+                    .contains(value.toLowerCase()) ||
+                e.company
+                    .toString()
+                    .toLowerCase()
+                    .contains(value.toLowerCase()),
+          )
           .toList();
       AppUtils.logApp('${filterData.length}');
     }

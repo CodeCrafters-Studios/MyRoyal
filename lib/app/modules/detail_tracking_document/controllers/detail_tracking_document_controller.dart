@@ -23,7 +23,7 @@ class DetailTrackingDocumentController extends GetxController with StateMixin {
     StatusApprovalEntity(
       borderColor: primary50,
       decorationColor: primary50,
-      icon: '!',
+      icon: '',
       iconColor: primary50,
       isIcon: false,
       status: 'OVERDUE',
