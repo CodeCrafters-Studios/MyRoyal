@@ -16,6 +16,8 @@ import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
+import '../modules/task/bindings/task_binding.dart';
+import '../modules/task/views/task_view.dart';
 import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
 import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
 import '../modules/webtel/presentation/bindings/webtel_binding.dart';
@@ -80,6 +82,11 @@ class AppPages {
       name: _Paths.DETAIL_TRACKING_DOCUMENT,
       page: () => const DetailTrackingDocumentView(),
       binding: DetailTrackingDocumentBinding(),
+    ),
+    GetPage(
+      name: _Paths.TASK,
+      page: () => const TaskView(),
+      binding: TaskBinding(),
     ),
   ];
 }
