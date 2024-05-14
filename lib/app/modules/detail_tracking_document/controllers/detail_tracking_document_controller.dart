@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/entities/status_approval_entities.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
-class DetailTrackingDocumentController extends GetxController with StateMixin {
+class DetailTrackingDocumentController extends GetxController {
   late final TabController tabController;
 
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 4, vsync: _TickerProvider());
+    tabController = TabController(length: 4, vsync: TicckerProvider());
   }
 
   @override
@@ -39,9 +39,4 @@ class DetailTrackingDocumentController extends GetxController with StateMixin {
       statusColor: secondary,
     ),
   ];
-}
-
-class _TickerProvider extends TickerProvider {
-  @override
-  Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
 }

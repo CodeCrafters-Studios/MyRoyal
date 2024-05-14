@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:iroyal/app/modules/tasks/controllers/tasks_controller.dart';
+import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_card.dart';
+import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_view_base.dart';
+
+class CompletedTasksView extends StatelessWidget {
+  const CompletedTasksView({super.key, required this.controller});
+
+  final TasksController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return TaskViewBase(
+      title: 'Completed Tasks',
+      searchHint: 'Search',
+      searchLabel: '',
+      onChanged: (value) {},
+      taskCount: controller.listCompletedTasksDummy.length,
+      taskCardBuilder: (ctx, index) {
+        final r = controller.listCompletedTasksDummy[index];
+        return TaskCard(
+          title: r.title,
+          status: r.status,
+          progress: r.progress,
+          progressColor: r.progressColor,
+          statusColor: r.taskStatusColor,
+          dueDate: r.date,
+          member: r.member,
+        );
+      },
+    );
+  }
+}
