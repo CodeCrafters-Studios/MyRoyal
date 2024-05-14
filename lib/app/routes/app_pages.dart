@@ -10,6 +10,8 @@ import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
 import '../modules/settings/presentation/bindings/settings_binding.dart';
@@ -87,6 +89,11 @@ class AppPages {
       name: _Paths.TASKS,
       page: () => const TasksView(),
       binding: TasksBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
     ),
   ];
 }
