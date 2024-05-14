@@ -1,9 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
-class TasksController extends GetxController {
-  //TODO: Implement TaskController
+class TasksController extends GetxController with StateMixin {
+  late final TabController tabController;
 
-  final count = 0.obs;
+  @override
+  void onInit() {
+    super.onInit();
+    tabController = TabController(length: 4, vsync: _TickerProvider());
+  }
 
-  void increment() => count.value++;
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
+  }
+}
+
+class _TickerProvider extends TickerProvider {
+  @override
+  Ticker createTicker(TickerCallback onTick) => Ticker(onTick);
 }

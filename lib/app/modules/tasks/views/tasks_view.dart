@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
@@ -8,6 +7,7 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
@@ -15,6 +15,20 @@ import '../controllers/tasks_controller.dart';
 
 class TasksView extends GetView<TasksController> {
   const TasksView({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return TaskViewImpl(controller: controller);
+  }
+}
+
+class TaskViewImpl extends StatelessWidget {
+  const TaskViewImpl({
+    super.key,
+    required this.controller,
+  });
+
+  final TasksController controller;
+
   @override
   Widget build(BuildContext context) {
     return PageBase(
@@ -42,26 +56,28 @@ class TasksView extends GetView<TasksController> {
                   ],
                 ),
                 ButtonPrimary(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    fullWidth: false,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.add,
-                          size: 20,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  color: primary.withOpacity(0.85),
+                  fullWidth: false,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.add,
+                        size: 20,
+                        color: white,
+                      ),
+                      5.horizontalSpace,
+                      Text(
+                        'Add Task',
+                        style: TS.bodyMedium.copyWith(
                           color: white,
+                          fontWeight: FontWeight.w600,
                         ),
-                        5.horizontalSpace,
-                        Text(
-                          'Add Task',
-                          style: TS.bodyMedium.copyWith(
-                            color: white,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    onPressed: () {}),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {},
+                ),
               ],
             ),
             SizedBox(
@@ -278,15 +294,24 @@ class TasksView extends GetView<TasksController> {
                   'My latest task report',
                   style: TS.titleLarge,
                 ),
-                Text(
-                  'View All',
-                  style: TS.bodyMedium,
+                InkWellTap(
+                  onTap: () {
+                    Get.to(() => AllTaskView(
+                          controller: controller,
+                        ));
+                  },
+                  child: Text(
+                    'View All',
+                    style: TS.bodyMedium,
+                  ),
                 ),
               ],
             ),
+            15.verticalSpace,
             SizedBox(
               height: 300.h,
               child: ListView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: 3,
                 itemBuilder: (_, __) {
                   return CardApp(
@@ -393,5 +418,44 @@ class TasksView extends GetView<TasksController> {
         ),
       ),
     );
+  }
+}
+
+class AllTaskView extends StatelessWidget {
+  const AllTaskView({super.key, required this.controller});
+
+  final TasksController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return PageBase(
+        child: Column(
+      children: [
+        const AppbarSpacer(),
+        TabBar(
+          controller: controller.tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: primary,
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+          unselectedLabelStyle: TS.caption.copyWith(color: primary),
+          tabs: const [
+            Tab(
+              text: 'All',
+            ),
+            Tab(
+              text: 'To-Do',
+            ),
+            Tab(
+              text: 'In-Progress',
+            ),
+            Tab(
+              text: 'Completed',
+            ),
+          ],
+        ),
+      ],
+    ));
   }
 }
