@@ -96,9 +96,7 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_help&support.svg',
           text: 'Help & Support',
           withTrailing: true,
-          onTap: () => Get.to(
-            () => const ComingSoonScreen(),
-          ),
+          onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_terms&polcies.svg',
