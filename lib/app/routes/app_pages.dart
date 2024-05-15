@@ -4,6 +4,8 @@ import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart'
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
 import '../modules/detail_tracking_document/views/detail_tracking_document_view.dart';
+import '../modules/help-and-support/bindings/help_and_support_binding.dart';
+import '../modules/help-and-support/views/help_and_support_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
@@ -94,6 +96,11 @@ class AppPages {
       name: _Paths.NOTIFICATIONS,
       page: () => const NotificationsView(),
       binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.HELP_AND_SUPPORT,
+      page: () => const HelpAndSupportView(),
+      binding: HelpAndSupportBinding(),
     ),
   ];
 }
