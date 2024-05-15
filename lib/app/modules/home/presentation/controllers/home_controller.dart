@@ -7,6 +7,7 @@ import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
+import 'package:iroyal/app/modules/notifications/domain/entities/notification_dummy.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 class HomeController extends GetxController {
@@ -20,6 +21,7 @@ class HomeController extends GetxController {
   RxInt indexSlider = 0.obs;
 
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
+  RxList<NotificationsDummy> filterNewNotif = <NotificationsDummy>[].obs;
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
@@ -70,6 +72,80 @@ class HomeController extends GetxController {
       link: '',
     ),
   ];
+
+  List<NotificationsDummy> notifDummy = <NotificationsDummy>[
+    NotificationsDummy(
+      title: "You've invited to new project",
+      description: "Hestia Rouge has invite you to Job Seeker Mobile App",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: true,
+    ),
+    NotificationsDummy(
+      title: "Mention in Dashboard Responsive",
+      description: "Patricia Makabe has mention you in comment",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: true,
+    ),
+    NotificationsDummy(
+      title: "You've invited to new project",
+      description: "Kevin Morgan has invite you to E-Commerce Mobile App",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: true,
+    ),
+    NotificationsDummy(
+      title: "Request edit in Tetrisly Design System",
+      description:
+          "Ralph Edward wants to edit page dashboard in Tetrisly Design System",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "New Attachment is uploaded",
+      description: "Robert Fox added file to Dark Mode",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "Task Assigmnment Notification",
+      description:
+          "Anna Polanski assigned task Improve Workflow in Flutter to Ryan F",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "You've invited to new project",
+      description: "Hestia Rouge has invite you to Job Seeker Mobile App",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "Mention in Dashboard Responsive",
+      description: "Patricia Makabe has mention you in comment",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "Request edit in Tetrisly Design System",
+      description:
+          "Ralph Edward wants to edit page dashboard in Tetrisly Design System",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "New Attachment is uploaded",
+      description: "Robert Fox added file to Dark Mode",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+    NotificationsDummy(
+      title: "Task Assigmnment Notification",
+      description:
+          "Anna Polanski assigned task Improve Workflow in Flutter to Ryan F",
+      date: "Jun 23, 2022 at 21:22 PM",
+      isNew: false,
+    ),
+  ];
+
   Rx<User> userData = const User(
     id: 0,
     username: '',
@@ -108,6 +184,7 @@ class HomeController extends GetxController {
   void _initial() async {
     await _getUserData();
     _getAllMenu();
+    _filterNewNotifications(notifDummy);
   }
 
   Future<void> _getAllMenu() async {
@@ -172,5 +249,10 @@ class HomeController extends GetxController {
         isVisible.value = r.children;
       },
     );
+  }
+
+  void _filterNewNotifications(List<NotificationsDummy> allNotif) {
+    filterNewNotif.assignAll(allNotif.where((e) => e.isNew).toList());
+    filterNewNotif.refresh();
   }
 }

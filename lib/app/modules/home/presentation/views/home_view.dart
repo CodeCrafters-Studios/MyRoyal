@@ -7,9 +7,11 @@ import 'package:iroyal/app/modules/home/presentation/views/components/home_user_
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_menu.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_status.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import '../controllers/home_controller.dart';
 
@@ -27,6 +29,8 @@ class HomeView extends GetView<HomeController> {
         toolbarHeight: 70.h,
         title: _buildTitle(),
         actions: [
+          _buildNotifications(),
+          15.horizontalSpace,
           _buildLogo(),
         ],
       ),
@@ -40,6 +44,28 @@ class HomeView extends GetView<HomeController> {
             controller: controller,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNotifications() {
+    return Obx(
+      () => Badge(
+        label: Text(controller.filterNewNotif.length.toString()),
+        child: InkWellTap(
+          onTap: () => Get.toNamed(
+            Routes.NOTIFICATIONS,
+            arguments: {
+              'filterNewNotif': controller.filterNewNotif,
+              'notifDummy': controller.notifDummy,
+            },
+          ),
+          child: const Icon(
+            Icons.notifications,
+            color: primary,
+            size: 32,
+          ),
+        ),
       ),
     );
   }

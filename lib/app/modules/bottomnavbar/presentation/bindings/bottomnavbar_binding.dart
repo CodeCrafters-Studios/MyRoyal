@@ -8,6 +8,7 @@ import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
+import 'package:iroyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
@@ -161,6 +162,11 @@ class BottomnavbarBinding extends Bindings {
         () => GetWebtel(
           Get.find<WebtelRepositoryImpl>(),
         ),
+      )
+
+      // Notifications
+      ..lazyPut<NotificationsController>(
+        () => NotificationsController(),
       );
   }
 }
