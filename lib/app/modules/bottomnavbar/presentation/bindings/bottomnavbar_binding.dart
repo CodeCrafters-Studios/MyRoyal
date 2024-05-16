@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.dart';
@@ -167,6 +168,11 @@ class BottomnavbarBinding extends Bindings {
       // Tasks
       ..lazyPut<TasksController>(
         () => TasksController(appDialog: Get.find<AppDialogImpl>()),
+      )
+
+      // Detail Tasks
+      ..lazyPut<DetailTasksController>(
+        () => DetailTasksController(),
       );
   }
 }

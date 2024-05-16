@@ -10,6 +10,7 @@ import 'package:iroyal/app/modules/tasks/presentation/views/components/type_task
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_category.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/todo_taks_view.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -163,6 +164,7 @@ class TaskViewImpl extends StatelessWidget {
         itemBuilder: (ctx, index) {
           final r = controller.listLastTasksDummy[index];
           return TaskCard(
+            onTap: () => Get.toNamed(Routes.DETAIL_TASKS),
             title: r.title,
             status: r.status,
             progress: r.progress,
