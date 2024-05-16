@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
+import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
+import '../modules/detail_tasks/views/detail_tasks_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
 import '../modules/detail_tracking_document/views/detail_tracking_document_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
@@ -87,6 +89,11 @@ class AppPages {
       name: _Paths.TASKS,
       page: () => const TasksView(),
       binding: TasksBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_TASKS,
+      page: () => const DetailTasksView(),
+      binding: DetailTasksBinding(),
     ),
   ];
 }

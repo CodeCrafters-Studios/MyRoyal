@@ -16,6 +16,7 @@ abstract class Routes {
   static const TRACKING_DOCUMENT = _Paths.TRACKING_DOCUMENT;
   static const DETAIL_TRACKING_DOCUMENT = _Paths.DETAIL_TRACKING_DOCUMENT;
   static const TASKS = _Paths.TASKS;
+  static const DETAIL_TASKS = _Paths.DETAIL_TASKS;
 }
 
 abstract class _Paths {
@@ -31,4 +32,5 @@ abstract class _Paths {
   static const TRACKING_DOCUMENT = '/tracking-document';
   static const DETAIL_TRACKING_DOCUMENT = '/detail-tracking-document';
   static const TASKS = '/task';
+  static const DETAIL_TASKS = '/detail-tasks';
 }
