@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/search_bar_custom.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_list_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/search_bar_custom.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_list_view.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 

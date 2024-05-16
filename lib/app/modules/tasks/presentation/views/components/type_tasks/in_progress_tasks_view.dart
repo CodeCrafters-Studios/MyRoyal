@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/app/modules/tasks/controllers/tasks_controller.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_card.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_view_base.dart';
+import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
 
 class InProgressTasksView extends StatelessWidget {
   const InProgressTasksView({super.key, required this.controller});

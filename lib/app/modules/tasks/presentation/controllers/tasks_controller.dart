@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/tasks/domain/entities/task_dummy_data.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/task_type_card.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
 class TasksController extends GetxController {
+  TasksController({required this.appDialog});
+
   late final TabController tabController;
+  final AppDialog appDialog;
 
-  @override
-  void onInit() {
-    _filterLastTasks();
-    tabController = TabController(length: 4, vsync: TicckerProvider());
-    super.onInit();
-  }
+  RxString selectedStartDate = 'Select date'.obs;
+  RxString selectedEndDate = 'Select date'.obs;
+  RxInt currentIndex = 0.obs;
 
-  @override
-  void onClose() {
-    tabController.dispose();
-    super.onClose();
-  }
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   List<TasksDummyData> listAllTasksDummy = <TasksDummyData>[
     TasksDummyData(
@@ -181,15 +182,80 @@ class TasksController extends GetxController {
     ),
   ];
 
+  List<TaskTypeCard> listTaskType = <TaskTypeCard>[
+    TaskTypeCard(
+      type: 'To-Do',
+      onTap: () {},
+      texColor: white,
+      backgroundColor: primary,
+      borderColor: primary,
+    ),
+    TaskTypeCard(
+      type: 'In-Progress',
+      onTap: () {},
+      texColor: primary,
+      backgroundColor: white,
+      borderColor: primary,
+    )
+  ];
+
+  @override
+  void onInit() {
+    _filterLastTasks();
+    tabController = TabController(length: 4, vsync: TicckerProvider());
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
+  }
+
   void _filterLastTasks() {
     if (listAllTasksDummy.length >= 3) {
-      // Get 3 latest data
-      // listLastTasksDummy =
-      //     listAllTasksDummy.sublist(listAllTasksDummy.length - 3);
-
       listLastTasksDummy = listAllTasksDummy.sublist(0, 3);
     } else {
       listLastTasksDummy = listAllTasksDummy;
     }
+  }
+
+  Future<void> selectStartDate(BuildContext context) async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate:
+          selectedStartDate.value == 'Select date' ? DateTime.now() : startDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
+    );
+    if (d != null) {
+      selectedStartDate.value = DateFormat.yMMMd("en_US").format(d);
+      startDate = d;
+      if (selectedEndDate.value != 'Select date' &&
+          startDate.isAfter(endDate)) {
+        selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
+        endDate = d;
+      }
+      AppUtils.logApp('Selected start date: $startDate');
+    }
+  }
+
+  Future<void> selectEndDate(BuildContext context) async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate: startDate,
+      firstDate: startDate,
+      lastDate: DateTime(2025),
+    );
+    if (d != null) {
+      selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
+      endDate = d;
+      AppUtils.logApp('Selected end date: $endDate');
+    }
+  }
+
+  void selectTaskType(int index) {
+    currentIndex.value = index;
+    AppUtils.logApp('Selected task type index: ${currentIndex.value}');
   }
 }

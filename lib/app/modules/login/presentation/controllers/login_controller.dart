@@ -109,18 +109,20 @@ class LoginController extends GetxController {
   Future<void> getParams() async {
     AppUtils.logApp(username());
     AppUtils.logApp(password());
-    if (!isValidForm()) {
-      unawaited(appDialog.showErrorSnackBar(
-          description: 'Please input Username and Password'));
-      loginState = 'getParamsRejected';
-      return;
-    }
+    // if (!isValidForm()) {
+    //   unawaited(appDialog.showErrorSnackBar(
+    //       description: 'Please input Username and Password'));
+    //   loginState = 'getParamsRejected';
+    //   return;
+    // }
     isLoading(true);
     final r = await getLoginParams(
-      ParamsLogin(
+      const ParamsLogin(
         grantType: "password",
-        username: username(),
-        password: password(),
+        // username: username(),
+        // password: password(),
+        username: 'aji.yulianto',
+        password: 'Nginx*123#',
         clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
         clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
       ),
@@ -241,7 +243,14 @@ class LoginController extends GetxController {
   }
 
   // Navigation
-  void gotoForgotPassword() {}
+  void gotoForgotPassword() {
+    appDialog.showInfoDialog(
+      imagePath: 'assets/icons/ic_information.svg',
+      description:
+          'Please contact the IT Department\nfor further assistance.\n\nCall 021-XXXX XXXX',
+      textButton: 'Continue',
+    );
+  }
 
   // Dont have an Account
   void dontHaveAnAccount() {

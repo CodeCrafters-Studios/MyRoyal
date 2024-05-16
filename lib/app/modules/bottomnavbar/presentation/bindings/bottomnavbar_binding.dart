@@ -17,6 +17,7 @@ import 'package:iroyal/app/modules/settings/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/settings/data/repositories/settings_repository_impl.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
+import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
 import 'package:iroyal/app/modules/webtel/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
@@ -161,6 +162,11 @@ class BottomnavbarBinding extends Bindings {
         () => GetWebtel(
           Get.find<WebtelRepositoryImpl>(),
         ),
+      )
+
+      // Tasks
+      ..lazyPut<TasksController>(
+        () => TasksController(appDialog: Get.find<AppDialogImpl>()),
       );
   }
 }

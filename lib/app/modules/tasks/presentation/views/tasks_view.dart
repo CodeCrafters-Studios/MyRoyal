@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/tasks/views/components/view_all_tasks_view.dart';
-import 'package:iroyal/app/modules/tasks/views/components/cancel_tasks_view.dart';
-import 'package:iroyal/app/modules/tasks/views/components/completed_taks_view.dart';
-import 'package:iroyal/app/modules/tasks/views/components/in_progress_tasks_view.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_card.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_category.dart';
-import 'package:iroyal/app/modules/tasks/views/components/todo_taks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/create_task_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/view_all_tasks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/cancel_tasks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/completed_taks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/in_progress_tasks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_category.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/todo_taks_view.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -73,7 +74,7 @@ class TaskViewImpl extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 20),
           color: primary.withOpacity(0.85),
           fullWidth: false,
-          onPressed: () {},
+          onPressed: () => Get.to(() => CreateTaskView(controller: controller)),
           child: Row(
             children: [
               const Icon(Icons.add, size: 20, color: white),
