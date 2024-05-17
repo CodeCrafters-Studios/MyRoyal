@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/app/modules/tasks/controllers/tasks_controller.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_card.dart';
-import 'package:iroyal/app/modules/tasks/views/components/shared/tasks_view_base.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/styles.dart';
 
 class CancelTasksView extends StatelessWidget {
@@ -20,6 +22,7 @@ class CancelTasksView extends StatelessWidget {
       taskCardBuilder: (ctx, index) {
         final r = controller.listCanceledTasksDummy[index];
         return TaskCard(
+          onTap: () => Get.toNamed(Routes.DETAIL_TASKS),
           title: r.title,
           status: r.status,
           progress: r.progress,

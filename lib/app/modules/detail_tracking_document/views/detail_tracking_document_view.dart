@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/coming_soon.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/status.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/header.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
 
@@ -112,8 +112,8 @@ class DetailTrackingDocumentView
             physics: const NeverScrollableScrollPhysics(),
             children: const [
               HeaderView(),
-              ComingSoonView(),
-              ComingSoonView(),
+              ComingSoonTabView(),
+              ComingSoonTabView(),
               StatusView(),
             ],
           ),
