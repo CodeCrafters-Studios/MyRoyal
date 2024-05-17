@@ -36,7 +36,6 @@ class DetailTasksViewImpl extends StatelessWidget {
     return PageBase(
       title: 'Detail Task',
       child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Column(
