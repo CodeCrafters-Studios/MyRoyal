@@ -22,7 +22,7 @@ class NotificationsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: REdgeInsets.symmetric(horizontal: 14),
-      color: isNew ? grey.withOpacity(0.3) : white,
+      color: isNew ? greySecond.withOpacity(0.2) : white,
       child: ListTile(
         leading: Badge(
           smallSize: 14,

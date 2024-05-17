@@ -232,7 +232,7 @@ class TrackingDocumentImplView extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: color),
         color: color.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(Corners.xll),
       ),
       child: Row(
         children: [

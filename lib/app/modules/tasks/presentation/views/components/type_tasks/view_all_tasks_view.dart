@@ -35,20 +35,20 @@ class ViewAllTasksView extends StatelessWidget {
 
   Widget _buildTabBar() {
     return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: grey),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(Corners.slg),
           color: white,
         ),
         child: TabBar(
           tabAlignment: TabAlignment.start,
-          padding: REdgeInsets.only(left: 2),
+          // padding: REdgeInsets.only(left: 2),
           isScrollable: true,
           controller: controller.tabController,
           indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(Corners.slg),
             color: primary,
           ),
           indicatorSize: TabBarIndicatorSize.tab,

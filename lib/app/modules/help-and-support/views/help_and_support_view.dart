@@ -63,45 +63,43 @@ class HelpAndSupportViewImpl extends StatelessWidget {
               15.verticalSpace,
               SizedBox(
                 height: 900.h,
-                child: Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (_, __) => const IntrinsicHeight(
-                      child: AppDivider(
-                        color: grey,
-                      ),
+                child: ListView.separated(
+                  separatorBuilder: (_, __) => const IntrinsicHeight(
+                    child: AppDivider(
+                      color: grey,
                     ),
-                    padding: EdgeInsets.only(bottom: 100.h),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.listPopularQuestions.length,
-                    itemBuilder: (ctx, index) {
-                      final r = controller.listPopularQuestions[index];
-
-                      return Theme(
-                        data: Theme.of(context).copyWith(
-                          dividerColor: Colors.transparent,
-                        ),
-                        child: ExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          childrenPadding: EdgeInsets.zero,
-                          title: Text(
-                            r.title,
-                            style: TS.bodyMedium
-                                .copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          backgroundColor: white,
-                          collapsedBackgroundColor: white,
-                          iconColor: black,
-                          collapsedIconColor: black,
-                          children: <Widget>[
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(r.description),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
                   ),
+                  padding: EdgeInsets.only(bottom: 150.h),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: controller.listPopularQuestions.length,
+                  itemBuilder: (ctx, index) {
+                    final r = controller.listPopularQuestions[index];
+
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        dividerColor: Colors.transparent,
+                      ),
+                      child: ExpansionTile(
+                        tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        title: Text(
+                          r.title,
+                          style: TS.bodyMedium
+                              .copyWith(fontWeight: FontWeight.w700),
+                        ),
+                        backgroundColor: white,
+                        collapsedBackgroundColor: white,
+                        iconColor: black,
+                        collapsedIconColor: black,
+                        children: <Widget>[
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(r.description),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               )
             ],

@@ -32,7 +32,7 @@ class StatusApproval extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(color: borderColor),
             color: decorationColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(Corners.xll),
           ),
           child: Row(
             children: [

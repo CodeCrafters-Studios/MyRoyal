@@ -126,7 +126,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
       height: height.h,
       decoration: BoxDecoration(
         color: primary,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(Corners.lsm),
       ),
       child: Center(
         child: Column(

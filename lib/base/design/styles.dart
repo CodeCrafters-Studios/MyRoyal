@@ -71,9 +71,12 @@ class Paddings {
 class Corners {
   static double get xs => 4.r;
   static double get sm => 8.r;
+  static double get lsm => 10.r;
   static double get med => 12.r;
+  static double get slg => 14.r;
   static double get lg => 16.r;
   static double get xl => 20.r;
+  static double get xll => 24.r;
   static double get xxl => 32.r;
 
   static Radius get xsRadius => Radius.circular(xs);

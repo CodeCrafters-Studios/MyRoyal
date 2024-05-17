@@ -104,7 +104,7 @@ class BranchPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                padding: REdgeInsets.only(top: 5, bottom: 20),
+                padding: REdgeInsets.only(top: 5, bottom: 150.h),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   final d = data[index];

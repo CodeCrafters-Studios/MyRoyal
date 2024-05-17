@@ -161,14 +161,14 @@ class DetailTasksViewImpl extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: grey),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(Corners.slg),
                   color: white,
                 ),
                 child: TabBar(
                   // tabAlignment: TabAlignment.start,
                   controller: controller.tabController,
                   indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(Corners.slg),
                     color: primary,
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
