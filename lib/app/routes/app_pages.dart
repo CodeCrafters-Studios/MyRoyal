@@ -6,12 +6,16 @@ import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
 import '../modules/detail_tasks/views/detail_tasks_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
 import '../modules/detail_tracking_document/views/detail_tracking_document_view.dart';
+import '../modules/help-and-support/bindings/help_and_support_binding.dart';
+import '../modules/help-and-support/views/help_and_support_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
+import '../modules/notifications/presentation/bindings/notifications_binding.dart';
+import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
 import '../modules/settings/presentation/bindings/settings_binding.dart';
@@ -94,6 +98,16 @@ class AppPages {
       name: _Paths.DETAIL_TASKS,
       page: () => const DetailTasksView(),
       binding: DetailTasksBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.HELP_AND_SUPPORT,
+      page: () => const HelpAndSupportView(),
+      binding: HelpAndSupportBinding(),
     ),
   ];
 }

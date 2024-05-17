@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/webtel/presentation/controllers/webtel_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/app_divider.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -98,7 +99,7 @@ class BranchPage extends StatelessWidget {
                 separatorBuilder: (context, index) => const IntrinsicHeight(
                   child: EPadding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
+                    child: AppDivider(
                       color: black,
                     ),
                   ),
