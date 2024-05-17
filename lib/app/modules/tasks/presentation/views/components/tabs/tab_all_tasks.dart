@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 
 class TabAllTasks extends StatelessWidget {
   const TabAllTasks({super.key, required this.controller});
@@ -18,6 +20,7 @@ class TabAllTasks extends StatelessWidget {
         itemBuilder: (ctx, index) {
           final r = controller.listAllTasksDummy[index];
           return TaskCard(
+            onTap: () => Get.toNamed(Routes.DETAIL_TASKS),
             title: r.title,
             status: r.status,
             progress: r.progress,
