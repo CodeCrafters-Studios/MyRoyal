@@ -1,4 +1,5 @@
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
@@ -27,10 +28,14 @@ class SettingsLocalDataImpl implements SettingsLocalData {
 
   @override
   Future<bool> biometrics() async {
+    final fingerPrintValue = await appStorage.read('fingerprint-login');
+    AppUtils.logApp(fingerPrintValue.toString());
     final confirm = await appDialog.showChoiceDialog(
-        description: 'Are you sure to allow app using biometrics?');
+        description: fingerPrintValue == 'true'
+            ? 'Are you sure to disable app using biometrics?'
+            : 'Are you sure to enable app using biometrics?');
     if (confirm) {
-      await appStorage.read('fingerprint-login');
+      fingerPrintValue;
       return true;
     } else {
       return false;
