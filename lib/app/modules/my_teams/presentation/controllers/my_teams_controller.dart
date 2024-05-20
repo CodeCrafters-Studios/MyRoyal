@@ -41,13 +41,19 @@ class MyTeamsController extends GetxController {
   }
 
   Future<void> _getIdCacheUser() async {
+    isLoading.value = true;
     final r = await getUser();
+
     r.fold(
-      (l) => getIdState = 'getIdRejected',
+      (l) {
+        isLoading.value = false;
+        getIdState = 'getIdRejected';
+      },
       (r) {
         getIdState = 'getIdSuccess';
         id(r.employee.id.toString());
         AppUtils.logApp('USER ID ::::::$id');
+        isLoading.value = false;
       },
     );
   }
@@ -63,10 +69,10 @@ class MyTeamsController extends GetxController {
         myTeamsState = 'getMyTeamsFailed';
       },
       (r) {
-        isLoading.value = false;
         myTeamsState = 'getMyTeamsSuccess';
         myTeamsData.value = r;
         filteredList.value = r.children;
+        isLoading.value = false;
       },
     );
   }
