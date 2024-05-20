@@ -25,6 +25,7 @@ import 'package:iroyal/app/modules/webtel/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
 import 'package:iroyal/app/modules/webtel/presentation/controllers/webtel_controller.dart';
+import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
@@ -96,6 +97,7 @@ class BottomnavbarBinding extends Bindings {
           logoutApp: Get.find(),
           appStorage: Get.find(),
           biometricsApp: Get.find(),
+          authBiometrics: Get.find<AuthBiometricsImpl>(),
         ),
       )
 

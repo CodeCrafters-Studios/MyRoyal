@@ -28,7 +28,9 @@ class SettingsLocalDataImpl implements SettingsLocalData {
 
   @override
   Future<bool> biometrics() async {
-    final fingerPrintValue = await appStorage.read('fingerprint-login');
+    // Check value for dialog message enable or disable
+
+    final fingerPrintValue = await appStorage.read('switch-biometrics-value');
     AppUtils.logApp(fingerPrintValue.toString());
     final confirm = await appDialog.showChoiceDialog(
         description: fingerPrintValue == 'true'

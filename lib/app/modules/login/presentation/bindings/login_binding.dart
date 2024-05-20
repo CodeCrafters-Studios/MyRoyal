@@ -41,13 +41,13 @@ class LoginBinding extends Bindings {
       ..lazyPut(() => AuthBiometricsLogin(Get.find<LoginRepositoryImpl>()))
       ..lazyPut(
         () => LoginController(
-          getLoginParams: Get.find(),
-          loginApp: Get.find(),
-          getCacheUserLogin: Get.find(),
-          authBiometricsLogin: Get.find(),
-          appDialog: Get.find<AppDialogImpl>(),
-          appStorage: Get.find(),
-        ),
+            getLoginParams: Get.find(),
+            loginApp: Get.find(),
+            getCacheUserLogin: Get.find(),
+            authBiometricsLogin: Get.find(),
+            appDialog: Get.find<AppDialogImpl>(),
+            appStorage: Get.find(),
+            authBiometrics: Get.find<AuthBiometricsImpl>()),
       );
   }
 }

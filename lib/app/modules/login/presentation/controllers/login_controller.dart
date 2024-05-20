@@ -11,8 +11,8 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/initial_route.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 enum FormLoginValue { username, password }
@@ -25,6 +25,7 @@ class LoginController extends GetxController {
     required this.getCacheUserLogin,
     required this.authBiometricsLogin,
     required this.appStorage,
+    required this.authBiometrics,
   });
 
   final FocusNode focusNodeUsername = FocusNode();
@@ -42,8 +43,8 @@ class LoginController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isCacheuser = false.obs;
   RxBool isAllowBiometrics = false.obs;
+  RxBool getAvailableBiometrics = false.obs;
   RxBool isFocus = false.obs;
-  RxBool fingerPrintStatus = false.obs;
 
   final AppDialog appDialog;
   final GetLoginParams getLoginParams;
@@ -51,6 +52,7 @@ class LoginController extends GetxController {
   final GetCacheUserLogin getCacheUserLogin;
   final AuthBiometricsLogin authBiometricsLogin;
   final AppStorage appStorage;
+  final AuthBiometrics authBiometrics;
 
   @override
   void onInit() async {
@@ -155,9 +157,6 @@ class LoginController extends GetxController {
       },
       (r) {
         loginState = 'loginSuccess';
-        fingerPrintStatus.value = true;
-        appStorage.write(
-            'fingerprint-status', fingerPrintStatus.value.toString());
         Get.offAllNamed(Routes.BOTTOMNAVBAR);
       },
     );
@@ -184,6 +183,21 @@ class LoginController extends GetxController {
       AppUtils.logApp('ERROR');
       return;
     }
+    await authBiometrics.isSupported();
+    await checkBiometricAuthentication();
+    if (isAllowBiometrics.value == false) {
+      AppUtils.logApp('HERE FALSE');
+      AppUtils.logApp('GET AVAILABLE :::: ${getAvailableBiometrics.value}');
+      appDialog.showInfoDialog(
+        imagePath: 'assets/icons/ic_information.svg',
+        description: getAvailableBiometrics.value == true
+            ? 'Biometrics has disabled, please set to enable to using biometrics'
+            : 'Biometrics is not set, please configure biometrics security on your phone.',
+        textButton: 'Continue',
+      );
+
+      return;
+    }
     final r = await authBiometricsLogin(NoParams());
     r.fold(
       (l) {
@@ -191,9 +205,8 @@ class LoginController extends GetxController {
         if (l.properties.isEmpty) {
           AppUtils.logApp('CANCEL BIO:::::::');
         } else {
-          fingerPrintStatus.value = false;
-          appStorage.write(
-              'fingerprint-status', fingerPrintStatus.value.toString());
+          // Handle Biometrics is not configuration on device user
+
           appDialog.showInfoDialog(
             imagePath: 'assets/icons/ic_information.svg',
             description:
@@ -202,14 +215,12 @@ class LoginController extends GetxController {
           );
           AppUtils.logApp('FAILURE::::::: ${l.properties.length}');
         }
-        AppUtils.logApp('ERROR NOT SET / CANCEL');
+        AppUtils.logApp('ERROR NOT SUPP / CANCEL / DISABLE SETTING BIOMETRICS');
       },
       (r) {
         if (r) {
           loginState = 'biometricsSuccess';
-          fingerPrintStatus.value = true;
-          appStorage.write(
-              'fingerprint-status', fingerPrintStatus.value.toString());
+
           loginWithCacheUser();
         } else {
           loginState = 'biometricsFailed';
@@ -231,12 +242,25 @@ class LoginController extends GetxController {
 
   Future<void> checkBiometricAuthentication() async {
     final isAllowedBiometrics =
-        await Get.find<InitialRouteImpl>().isAllowedBiometricsFingerPrint;
-    AppUtils.logApp('IS ALLOW BIO VALUE :::::::$isAllowedBiometrics');
-    if (isAllowedBiometrics == true) {
-      isAllowBiometrics.value = isAllowedBiometrics;
+        await appStorage.read('switch-biometrics-value');
+    final checkAvailableBiometrics =
+        await appStorage.read('get-available-biometrics');
+
+    AppUtils.logApp('CEKK AVAIL $checkAvailableBiometrics');
+
+    if (checkAvailableBiometrics == 'true') {
+      AppUtils.logApp('AVAILABLE');
+      getAvailableBiometrics.value = true;
     } else {
-      isAllowBiometrics.value = isAllowedBiometrics;
+      AppUtils.logApp('UNAVAILABLE');
+      getAvailableBiometrics.value = false;
+    }
+
+    AppUtils.logApp('IS ALLOW BIO VALUE :::::::$isAllowedBiometrics');
+    if (isAllowedBiometrics == 'true') {
+      isAllowBiometrics.value = true;
+    } else {
+      isAllowBiometrics.value = false;
     }
   }
 

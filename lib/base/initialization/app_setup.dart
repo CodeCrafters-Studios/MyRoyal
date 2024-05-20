@@ -62,7 +62,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
     ..put(appDialogImpl)
     // ..put(AppPermissionImpl())
     ..put(AppShareImpl())
-    ..put(AuthBiometricsImpl(auth: auth, appDialog: appDialogImpl))
+    ..put(AuthBiometricsImpl(
+        auth: auth, appDialog: appDialogImpl, appStorage: Get.find()))
     ..put(InitialRouteImpl(appStorage: Get.find()))
     ..put(AppEncryptImpl())
     ..put(

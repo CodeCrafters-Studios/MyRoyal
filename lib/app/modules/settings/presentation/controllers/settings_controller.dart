@@ -8,6 +8,7 @@ import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart'
 import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 class SettingsController extends GetxController {
@@ -16,16 +17,18 @@ class SettingsController extends GetxController {
     required this.biometricsApp,
     required this.getUser,
     required this.appStorage,
+    required this.authBiometrics,
   });
 
   final GetUser getUser;
   final LogoutApp logoutApp;
   final BiometricsApp biometricsApp;
   final AppStorage appStorage;
+  final AuthBiometrics authBiometrics;
 
   RxBool isLoading = false.obs;
-  RxBool biometricsValue = false.obs;
-  RxBool biometricsStatus = false.obs;
+  RxBool switchbiometricsValue = false.obs;
+  RxBool getAvailableBiometrics = false.obs;
 
   final iUser = const User(
     id: 0,
@@ -88,7 +91,8 @@ class SettingsController extends GetxController {
   }
 
   void _initial() {
-    setBiometricsValue();
+    _setSwitchBiometricsValue();
+    _getAvailableBiometrics();
   }
 
   String getImageName() {
@@ -119,37 +123,51 @@ class SettingsController extends GetxController {
   }
 
   Future<void> iBiometrics(bool value) async {
-    final result = await biometricsApp(); // Call the biometricsApp use case
+    final result = await biometricsApp();
     result.fold(
       (l) => null,
       (r) {
         if (r) {
-          biometricsValue.value = value;
-          appStorage.write('fingerprint-login', value.toString());
+          switchbiometricsValue.value = value;
+          // Save switch biometrics value enable / disable
+
+          appStorage.write('switch-biometrics-value', value.toString());
           AppUtils.logApp('FINGERPRINT VALUE iBiometrics:::::: $value');
         }
       },
     );
   }
 
-  void setBiometricsValue() async {
-    final fingerprintLogin = await appStorage.read('fingerprint-login');
-    final fingerprintStatus = await appStorage.read('fingerprint-status');
+  void _setSwitchBiometricsValue() async {
+    final checkSwitchBiometricsValue =
+        await appStorage.read('switch-biometrics-value');
 
-    if (fingerprintStatus == 'true') {
-      biometricsStatus.value = true;
-      AppUtils.logApp('BIO STATUS :::::::::: ${biometricsStatus.value}');
+    if (checkSwitchBiometricsValue == 'true') {
+      // Value switch button enable / turn on
+
+      switchbiometricsValue.value = true;
+      AppUtils.logApp('BIO VALUE :::::::::: ${switchbiometricsValue.value}');
     } else {
-      biometricsStatus.value = false;
-      AppUtils.logApp('BIO STATUS :::::::::: ${biometricsStatus.value}');
+      // Value switch button disable / turn off
+
+      switchbiometricsValue.value = false;
+      AppUtils.logApp('BIO VALUE :::::::::: ${switchbiometricsValue.value}');
     }
+  }
 
-    if (fingerprintLogin == 'true') {
-      biometricsValue.value = true;
-      AppUtils.logApp('BIO VALUE :::::::::: ${biometricsValue.value}');
+  void _getAvailableBiometrics() async {
+    await authBiometrics.isSupported();
+
+    final getAvailableBiometricsStorage =
+        await appStorage.read('get-available-biometrics');
+
+    if (getAvailableBiometricsStorage == 'true') {
+      // Show switch button biometrics
+      getAvailableBiometrics.value = true;
     } else {
-      biometricsValue.value = false;
-      AppUtils.logApp('BIO VALUE :::::::::: ${biometricsValue.value}');
+      // Hide switch button biometrics
+      appStorage.write('switch-biometrics-value', 'false');
+      getAvailableBiometrics.value = false;
     }
   }
 }

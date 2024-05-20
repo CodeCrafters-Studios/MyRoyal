@@ -2,6 +2,7 @@
 import 'package:flutter/services.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:local_auth/local_auth.dart';
 
@@ -11,12 +12,16 @@ abstract class AuthBiometrics {
 }
 
 class AuthBiometricsImpl implements AuthBiometrics {
-  final LocalAuthentication auth;
-  final AppDialog appDialog;
   AuthBiometricsImpl({
     required this.auth,
     required this.appDialog,
+    required this.appStorage,
   });
+
+  final LocalAuthentication auth;
+  final AppDialog appDialog;
+  final AppStorage appStorage;
+
   @override
   Future<AuthReason> authenticate({String? description}) async {
     final availableBiometrics = await auth.getAvailableBiometrics();
@@ -47,6 +52,7 @@ class AuthBiometricsImpl implements AuthBiometrics {
         return AuthReason(isAuthenticated: false, reason: e.toString());
       }
     } else {
+      appStorage.write('switch-biometrics-value', 'false');
       AppUtils.logApp('ELSE BIOMETRICS :::: v');
       appDialog.showInfoDialog(
         imagePath: 'assets/icons/ic_information.svg',
@@ -65,6 +71,15 @@ class AuthBiometricsImpl implements AuthBiometrics {
   Future<bool> isSupported() async {
     final canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
     final isSupported = await auth.isDeviceSupported();
+    final getAvailableBiometrics = await auth.getAvailableBiometrics();
+
+    if (getAvailableBiometrics.isNotEmpty) {
+      AppUtils.logApp('TRUE');
+      await appStorage.write('get-available-biometrics', 'true');
+    } else {
+      AppUtils.logApp('FALSE');
+      await appStorage.write('get-available-biometrics', 'false');
+    }
 
     return canAuthenticateWithBiometrics && isSupported;
   }
