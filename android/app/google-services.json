@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1045027803262",
+    "project_id": "iroyal-91744",
+    "storage_bucket": "iroyal-91744.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045027803262:android:d51c5193158dd78a39882f",
+        "android_client_info": {
+          "package_name": "com.example.iroyal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM0kzGTB7toppqEDg7j1SSFEV26ORvh0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

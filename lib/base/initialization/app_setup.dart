@@ -1,5 +1,8 @@
 import 'package:alice/alice.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +11,7 @@ import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
+import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
@@ -18,6 +22,7 @@ import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/share/app_share.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/utils/token/app_token.dart';
+import 'package:iroyal/firebase_options.dart';
 import 'package:local_auth/local_auth.dart';
 
 /// This is the main entry point of the app which performs any setups before
@@ -41,10 +46,10 @@ Future<void> setupAndRunApp(
 /// Configures application tools and packages before running the app. Services
 /// such as Firebase or background handlers can be configured here.
 Future configureApp(EnvironmentConfig envConfig) async {
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
-  // await _setupNotifications();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await _setupNotifications();
   await Hive.initFlutter();
   AppConfig.environment = envConfig;
 
@@ -85,19 +90,19 @@ Future configureApp(EnvironmentConfig envConfig) async {
 }
 
 /// Configures Firebase notifications
-// Future<void> _setupNotifications() async {
-//   await FirebaseMessaging.instance.requestPermission();
+Future<void> _setupNotifications() async {
+  await FirebaseMessaging.instance.requestPermission();
 
-//   if (!kIsWeb) {
-//     await FirebaseMessaging.instance
-//         .setForegroundNotificationPresentationOptions(
-//       alert: true, // Required to display a heads up notification
-//       badge: true,
-//       sound: true,
-//     );
-//   }
+  if (!kIsWeb) {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+  }
 
-//   // In order to receive notifications when the app is in background or
-//   // terminated, you need to pass a callback to onBackgroundMessage method
-//   FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
-// }
+  // In order to receive notifications when the app is in background or
+  // terminated, you need to pass a callback to onBackgroundMessage method
+  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
+}

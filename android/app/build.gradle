@@ -1,5 +1,9 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id "com.google.gms.google-services"
+    id "com.google.firebase.crashlytics"
+    // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -28,27 +32,27 @@ android {
      productFlavors {
         prod {
             dimension "flavor-dimension"
-            applicationId "id.co.iroyal.basecodee"
+            applicationId "com.example.iroyal"
             resValue "string", "app_name", "I-Royal"
          
         }
         dev {
             dimension "flavor-dimension"
-            applicationId "id.co.iroyal.basecodee"
+            applicationId "com.example.iroyal"
             resValue "string", "app_name", "I-Royal Dev"
             
         }
 
         staging {
             dimension "flavor-dimension"
-            applicationId "id.co.iroyal.basecodee"
+            applicationId "com.example.iroyal"
             resValue "string", "app_name", "I-Royal Staging"
            
         }
     }
 
     namespace "com.example.iroyal"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

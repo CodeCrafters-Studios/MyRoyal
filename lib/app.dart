@@ -1,6 +1,8 @@
 import 'package:alice/alice.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/bindings/initial_binding.dart';
@@ -8,6 +10,7 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/widgets/others/overlay_log_button.dart';
 
 class BaseApp extends StatelessWidget {
@@ -37,6 +40,14 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
+    // Initialize flutter_local_notifications
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initializationSettings =
+        InitializationSettings(android: androidSettings);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -49,25 +60,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       ),
     );
 
-    // _configureFCM();
+    _configureFCM();
 
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
-  // Future<void> _configureFCM() async {
-  //   /// Initialize the FCM callbacks
-  //   final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-  //   if (!mounted) return;
-  //   await onInitialMessageOpened(context, initialMessage);
+  Future<void> _configureFCM() async {
+    /// Initialize the FCM callbacks
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (!mounted) return;
+    await onInitialMessageOpened(context, initialMessage);
 
-  //   FirebaseMessaging.instance.onTokenRefresh
-  //       .listen((token) => onFCMTokenRefresh(context, token));
-  //   FirebaseMessaging.onMessage
-  //       .listen((message) => onForegroundMessage(context, message));
-  //   FirebaseMessaging.onMessageOpenedApp
-  //       .listen((message) => onMessageOpenedFromBackground(context, message));
-  // }
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen((token) => onFCMTokenRefresh(context, token));
+    FirebaseMessaging.onMessage
+        .listen((message) => onForegroundMessage(context, message));
+    FirebaseMessaging.onMessageOpenedApp
+        .listen((message) => onMessageOpenedFromBackground(context, message));
+  }
 
   @override
   void dispose() {
