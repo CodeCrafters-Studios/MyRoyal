@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_api0v2_storage
   url_launcher_linux
 )
 

@@ -42,7 +42,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void initState() {
     // Initialize flutter_local_notifications
     const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
     const initializationSettings =
         InitializationSettings(android: androidSettings);
 
