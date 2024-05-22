@@ -24,12 +24,12 @@ class HomeUserStatus extends GetView<HomeController> {
           () => Column(
             children: [
               controller.isLoading.value
-                  ? const Align(
+                  ? Align(
                       alignment: Alignment.topLeft,
                       child: EPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 18),
+                        padding: const EdgeInsets.symmetric(horizontal: 18),
                         child: ShimmerText(
-                          width: 150,
+                          width: 150.w,
                         ),
                       ),
                     )

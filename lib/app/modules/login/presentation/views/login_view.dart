@@ -53,11 +53,11 @@ class LoginView extends GetView<LoginController> {
                       ),
                       validation: (value) =>
                           value?.isEmpty ?? false ? 'Cannot be empty' : null,
-                      prefixIcon: const EPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
+                      prefixIcon: EPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: ImageIcon(
-                          AssetImage('assets/icons/ic_user.png'),
-                          size: 20,
+                          const AssetImage('assets/icons/ic_user.png'),
+                          size: 20.dm,
                           color: greyIcon,
                         ),
                       ),
@@ -85,11 +85,11 @@ class LoginView extends GetView<LoginController> {
                       }
                       return null;
                     },
-                    prefixIcon: const EPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 12),
+                    prefixIcon: EPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: ImageIcon(
-                        AssetImage('assets/icons/ic_lock.png'),
-                        size: 20,
+                        const AssetImage('assets/icons/ic_lock.png'),
+                        size: 20.dm,
                         color: greyIcon,
                       ),
                     ),
@@ -100,13 +100,8 @@ class LoginView extends GetView<LoginController> {
                       TextButton(
                         key: const Key('loginForgotPassword'),
                         onPressed: controller.gotoForgotPassword,
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: primary,
-                            fontSize: 14,
-                          ),
-                        ),
+                        child: Text('Forgot Password?',
+                            style: TS.bodyMedium.copyWith(color: primary)),
                       ),
                     ],
                   ),
@@ -116,7 +111,7 @@ class LoginView extends GetView<LoginController> {
             30.verticalSpace,
             Obx(
               () => ButtonPrimary(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
+                margin: REdgeInsets.symmetric(horizontal: 16),
                 key: const Key('loginBtn'),
                 onPressed: controller.getParams,
                 isLoading: controller.isLoading.value,
@@ -160,9 +155,9 @@ class OrLoginWith extends StatelessWidget {
           ),
         ),
         20.horizontalSpace,
-        const Text(
+        Text(
           'Or login with',
-          style: TextStyle(fontSize: 14),
+          style: TS.bodySmall,
         ),
         20.horizontalSpace,
         Expanded(
@@ -191,19 +186,19 @@ class BiometricsLogin extends StatelessWidget {
         children: [
           Image.asset(
             'assets/icons/ic_fingerprint.png',
-            width: 42,
-            height: 42,
+            width: 42.w,
+            height: 42.h,
           ),
           Container(
-            height: 56,
+            height: 56.h,
             width: 1,
             color: Colors.black,
             margin: REdgeInsets.symmetric(horizontal: 16),
           ),
           Image.asset(
             'assets/icons/ic_face_id.png',
-            width: 42,
-            height: 42,
+            width: 42.w,
+            height: 42.h,
           ),
         ],
       ),

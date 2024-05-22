@@ -345,8 +345,8 @@ class AppDialogImpl implements AppDialog {
           children: [
             Image.asset(
               'assets/icons/ic_danger.png',
-              width: 20,
-              height: 20,
+              width: 20.w,
+              height: 20.h,
             ),
             10.horizontalSpace,
             Text(
@@ -357,7 +357,7 @@ class AppDialogImpl implements AppDialog {
         ),
       ),
       titleText: const SizedBox(),
-      padding: const EdgeInsets.all(12),
+      padding: REdgeInsets.all(12),
       dismissDirection: DismissDirection.vertical,
     );
   }
@@ -413,7 +413,7 @@ class AppDialogImpl implements AppDialog {
         ),
       ),
       titleText: const SizedBox(),
-      padding: const EdgeInsets.all(12),
+      padding: REdgeInsets.all(12),
       dismissDirection: DismissDirection.vertical,
     );
   }

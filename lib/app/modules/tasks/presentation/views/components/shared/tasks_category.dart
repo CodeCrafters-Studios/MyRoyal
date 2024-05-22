@@ -42,7 +42,7 @@ class TaskCategoryCard extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.topRight,
-                child: Icon(icon, size: 25, color: white),
+                child: Icon(icon, size: 25.dm, color: white),
               ),
               Text(
                 title,

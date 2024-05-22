@@ -60,10 +60,10 @@ class HomeView extends GetView<HomeController> {
               'notifDummy': controller.notifDummy,
             },
           ),
-          child: const Icon(
+          child: Icon(
             Icons.notifications,
             color: primary,
-            size: 32,
+            size: 32.dm,
           ),
         ),
       ),

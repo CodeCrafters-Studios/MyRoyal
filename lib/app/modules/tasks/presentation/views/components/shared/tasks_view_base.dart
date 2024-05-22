@@ -26,6 +26,7 @@ class TaskViewBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       resizeInsetsBottom: false,
       title: title,
       child: Column(

@@ -18,7 +18,7 @@ class CompletedTasksView extends StatelessWidget {
       searchLabel: '',
       onChanged: (value) {},
       taskCount: controller.listCompletedTasksDummy.length,
-      taskCardBuilder: (ctx, index) {
+      taskCardBuilder: (_, index) {
         final r = controller.listCompletedTasksDummy[index];
         return TaskCard(
           onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

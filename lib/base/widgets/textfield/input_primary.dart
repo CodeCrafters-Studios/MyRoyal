@@ -201,7 +201,7 @@ class _InputPrimary extends State<InputPrimary> {
               errorStyle: widget.errorTextStyle,
               errorText: widget.errorMessage,
               prefixIconConstraints:
-                  const BoxConstraints(maxHeight: 42, maxWidth: 56),
+                  BoxConstraints(maxHeight: 42.h, maxWidth: 56.w),
             ),
             onChanged: widget.onChanged,
             controller: widget.controller,

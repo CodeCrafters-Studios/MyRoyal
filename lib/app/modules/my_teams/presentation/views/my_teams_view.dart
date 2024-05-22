@@ -54,7 +54,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
               child: Column(
                 children: [
                   _buildContainer('Average Age', '0', 175, 114),
-                  const SizedBox(height: 5),
+                  5.verticalSpace,
                   _buildTaskComplianceRatio(),
                 ],
               ),
@@ -64,7 +64,7 @@ class MyTeamsView extends GetView<MyTeamsController> {
               child: Column(
                 children: [
                   _buildTaskComplianceRatio(),
-                  const SizedBox(height: 5),
+                  5.verticalSpace,
                   _buildContainer(
                       'Immediate Action Required Task', '', 175, 114),
                 ],

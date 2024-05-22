@@ -29,6 +29,7 @@ class TrackingDocumentImplView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: 'Tracking Document',
       child: Obx(
         () => Column(
@@ -236,7 +237,7 @@ class TrackingDocumentImplView extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: color, size: 20),
+          Icon(icon, color: color, size: 20.dm),
           5.horizontalSpace,
           Text(
             label,

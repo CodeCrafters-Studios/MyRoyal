@@ -44,9 +44,9 @@ class NotificationsViewImpl extends StatelessWidget {
                     child: Obx(
                       () => ListView.builder(
                         shrinkWrap: true,
-                        padding: EdgeInsets.only(bottom: 100.h),
+                        padding: REdgeInsets.only(bottom: 100),
                         itemCount: controller.notifDummy.length,
-                        itemBuilder: (ctx, index) {
+                        itemBuilder: (_, index) {
                           final r = controller.notifDummy[index];
                           return NotificationsCard(
                             title: r.title,

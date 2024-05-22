@@ -38,6 +38,7 @@ class TaskViewImpl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: '',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -72,14 +73,14 @@ class TaskViewImpl extends StatelessWidget {
           ],
         ),
         ButtonPrimary(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
+          margin: REdgeInsets.only(left: 20, top: 5, right: 20),
           color: primary.withOpacity(0.85),
           fullWidth: false,
           onPressed: () => Get.to(() => CreateTaskView(controller: controller)),
           child: Row(
             children: [
-              const Icon(Icons.add, size: 20, color: white),
-              const SizedBox(width: 5),
+              Icon(Icons.add, size: 20.dm, color: white),
+              5.horizontalSpace,
               Text(
                 'Add Task',
                 style: TS.bodyMedium.copyWith(
@@ -161,7 +162,7 @@ class TaskViewImpl extends StatelessWidget {
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: controller.listLastTasksDummy.length,
-        itemBuilder: (ctx, index) {
+        itemBuilder: (_, index) {
           final r = controller.listLastTasksDummy[index];
           return TaskCard(
             onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

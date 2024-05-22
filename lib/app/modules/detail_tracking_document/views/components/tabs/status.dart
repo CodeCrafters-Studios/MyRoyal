@@ -28,7 +28,7 @@ class _MyAppState extends State<StatusView> {
         ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(6),
+        padding: REdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.brown,
           borderRadius: BorderRadius.all(
@@ -58,7 +58,7 @@ class _MyAppState extends State<StatusView> {
         ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(6),
+        padding: REdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.green,
           borderRadius: BorderRadius.all(
@@ -90,7 +90,7 @@ class _MyAppState extends State<StatusView> {
         ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(6),
+        padding: REdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.grey,
           borderRadius: BorderRadius.all(
@@ -116,7 +116,7 @@ class _MyAppState extends State<StatusView> {
         ),
       ),
       iconWidget: Container(
-        padding: const EdgeInsets.all(6),
+        padding: REdgeInsets.all(6),
         decoration: const BoxDecoration(
           color: Colors.grey,
           borderRadius: BorderRadius.all(
@@ -147,13 +147,13 @@ class _MyAppState extends State<StatusView> {
         child: Column(
           children: [
             EPadding(
-              padding: const EdgeInsets.only(left: 20),
+              padding: REdgeInsets.only(left: 20),
               child: AnotherStepper(
                 scrollPhysics: const NeverScrollableScrollPhysics(),
                 stepperList: stepperData,
                 stepperDirection: Axis.vertical,
-                iconWidth: 40,
-                iconHeight: 40,
+                iconWidth: 40.w,
+                iconHeight: 40.h,
                 activeBarColor: Colors.grey,
                 inActiveBarColor: Colors.grey,
                 verticalGap: 35,
@@ -165,7 +165,7 @@ class _MyAppState extends State<StatusView> {
         ),
       ),
       bottomSheet: Container(
-        padding: EdgeInsets.only(bottom: 10.h, top: 20.h),
+        padding: REdgeInsets.only(bottom: 10, top: 20),
         height: 100.h,
         width: Get.width,
         decoration: const BoxDecoration(
@@ -181,7 +181,7 @@ class _MyAppState extends State<StatusView> {
               height: 48.h,
               width: 180.w,
               child: ButtonPrimary(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
+                margin: REdgeInsets.symmetric(horizontal: 5),
                 onPressed: () {},
                 key: const Key('rejectBtn'),
                 suffixIcon: const Icon(
@@ -196,7 +196,7 @@ class _MyAppState extends State<StatusView> {
               height: 48.h,
               width: 180.w,
               child: ButtonPrimary(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
+                margin: REdgeInsets.symmetric(horizontal: 5),
                 onPressed: () {},
                 key: const Key('approveBtn'),
                 suffixIcon: const Icon(

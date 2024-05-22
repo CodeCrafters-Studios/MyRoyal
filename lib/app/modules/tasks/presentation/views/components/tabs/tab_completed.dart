@@ -17,7 +17,7 @@ class TabCompletedTasks extends StatelessWidget {
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: controller.listCompletedTasksDummy.length,
-        itemBuilder: (ctx, index) {
+        itemBuilder: (_, index) {
           final r = controller.listCompletedTasksDummy[index];
           return TaskCard(
             onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

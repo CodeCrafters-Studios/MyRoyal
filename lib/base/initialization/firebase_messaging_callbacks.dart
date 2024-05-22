@@ -57,6 +57,7 @@ Future<void> onForegroundMessage(
 /// Callback executed once the app receives a FCM message while in background
 /// or when the app is terminated. Note here that no build context is provided,
 /// as the app is running in headless state (without a GUI).
+@pragma('vm:entry-point')
 Future<void> onBackgroundMessage(RemoteMessage message) async {
   //If using other Firebase services, make sure that the Firebase is initialized
   await Firebase.initializeApp();

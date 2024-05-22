@@ -18,7 +18,7 @@ class InProgressTasksView extends StatelessWidget {
       searchLabel: '',
       onChanged: (value) {},
       taskCount: controller.listInProgressTasksDummy.length,
-      taskCardBuilder: (ctx, index) {
+      taskCardBuilder: (_, index) {
         final r = controller.listInProgressTasksDummy[index];
         return TaskCard(
           onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

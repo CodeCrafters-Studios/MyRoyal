@@ -37,17 +37,17 @@ class StatusApproval extends StatelessWidget {
           child: Row(
             children: [
               isIcon
-                  ? const Icon(
+                  ? Icon(
                       applyTextScaling: true,
                       Icons.bolt,
                       color: secondary,
-                      size: 20,
+                      size: 20.dm,
                     )
-                  : const Icon(
+                  : Icon(
                       applyTextScaling: true,
                       Icons.info,
                       color: primary50,
-                      size: 20,
+                      size: 20.dm,
                     ),
               5.horizontalSpace,
               Text(

@@ -3,6 +3,7 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/loading_indicator.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 class ButtonPrimaryOutlined extends StatelessWidget {
   const ButtonPrimaryOutlined({
@@ -119,7 +120,7 @@ class ButtonPrimaryOutlined extends StatelessWidget {
               if (icon != null) ...[
                 icon ?? emptyBox,
               ],
-              Padding(
+              EPadding(
                 padding: const EdgeInsets.all(12),
                 child: child ??
                     Text(
@@ -134,7 +135,7 @@ class ButtonPrimaryOutlined extends StatelessWidget {
               ],
             ],
           ),
-          child: const Padding(
+          child: const EPadding(
             padding: EdgeInsets.all(12),
             child: LoadingIndicator(),
           ),

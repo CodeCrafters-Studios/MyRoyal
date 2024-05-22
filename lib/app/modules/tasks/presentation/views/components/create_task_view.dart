@@ -20,6 +20,7 @@ class CreateTaskView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: 'Create Task',
       child: SingleChildScrollView(
         child: EPadding(
@@ -150,7 +151,7 @@ class CreateTaskView extends StatelessWidget {
             ),
             10.horizontalSpace,
             SizedBox(
-              height: 50,
+              height: 50.h,
               width: 288.w,
               child: ListView.separated(
                 separatorBuilder: (_, __) => 8.horizontalSpace,
@@ -187,7 +188,7 @@ class CreateTaskView extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 separatorBuilder: (_, __) => 8.horizontalSpace,
                 itemCount: controller.listTaskType.length,
-                itemBuilder: (ctx, index) {
+                itemBuilder: (_, index) {
                   final r = controller.listTaskType[index];
                   return Obx(
                     () => TaskTypeCard(

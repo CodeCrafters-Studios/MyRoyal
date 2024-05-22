@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 class AnimatedToggle extends StatefulWidget {
   final List<String> values;
@@ -56,7 +57,7 @@ class AnimatedToggleState extends State<AnimatedToggle> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
                   widget.values.length,
-                  (index) => Padding(
+                  (index) => EPadding(
                     padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
                     child: Text(
                       widget.values[index],

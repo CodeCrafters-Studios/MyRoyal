@@ -8,6 +8,7 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
 
@@ -39,7 +40,7 @@ class DetailTrackingDocumentView
               backgroundColor: white,
               foregroundColor: white,
               surfaceTintColor: white,
-              flexibleSpace: Padding(
+              flexibleSpace: EPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
@@ -77,7 +78,7 @@ class DetailTrackingDocumentView
               automaticallyImplyLeading: false,
               pinned: true,
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(100.0.h),
+                preferredSize: Size.fromHeight(100.h),
                 child: Stack(
                     fit: StackFit.passthrough,
                     alignment: Alignment.bottomCenter,

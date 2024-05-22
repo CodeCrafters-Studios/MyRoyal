@@ -14,7 +14,7 @@ class WebtelView extends GetView<WebtelController> {
   @override
   Widget build(BuildContext context) {
     return PageBase(
-      showBackground: true,
+      showBackground: false,
       title: 'Webtel',
       child: Obx(
         () => WebtelViewImpl(controller: controller),
@@ -80,7 +80,6 @@ class WebtelViewImpl extends StatelessWidget {
         final rasItems = controller.rasData.length.toString();
         final bmItems = controller.bmData.length.toString();
         final acaItems = controller.acaData.length.toString();
-
         return BranchCard(
           onTap: () {
             switch (data.code) {

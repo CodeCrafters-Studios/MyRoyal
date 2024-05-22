@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/styles.dart';
 
 class Indicator extends StatelessWidget {
@@ -29,7 +30,7 @@ class Indicator extends StatelessWidget {
             color: color,
           ),
         ),
-        const SizedBox(width: 4),
+        4.horizontalSpace,
         Text(
           text,
           style: TS.caption,

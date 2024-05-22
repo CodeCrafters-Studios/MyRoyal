@@ -12,7 +12,7 @@ class EmployeeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 155,
+      width: 155.w,
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: grey),
         borderRadius: const BorderRadius.all(

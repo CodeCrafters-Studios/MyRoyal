@@ -19,7 +19,7 @@ class CancelTasksView extends StatelessWidget {
       searchLabel: '',
       onChanged: (value) {},
       taskCount: controller.listCanceledTasksDummy.length,
-      taskCardBuilder: (ctx, index) {
+      taskCardBuilder: (_, index) {
         final r = controller.listCanceledTasksDummy[index];
         return TaskCard(
           onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

@@ -26,7 +26,7 @@ class ProfileView extends GetView<ProfileController> {
         elevation: 0,
         leading: InkWell(
           onTap: Get.back,
-          child: Padding(
+          child: EPadding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(
               Icons.arrow_back_ios_new_rounded,
@@ -42,7 +42,7 @@ class ProfileView extends GetView<ProfileController> {
         actions: [
           InkWell(
             onTap: () => Get.to(() => const ComingSoonScreen()),
-            child: Padding(
+            child: EPadding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(
                 Icons.edit,
@@ -214,8 +214,8 @@ class ProfileView extends GetView<ProfileController> {
                   ),
                   child: Image.asset(
                     'assets/images/img_profile.png',
-                    height: 100,
-                    width: 100,
+                    height: 100.h,
+                    width: 100.w,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -308,7 +308,7 @@ class ProfileView extends GetView<ProfileController> {
                     _buildInfoRow(
                       SvgPicture.asset(
                         'assets/icons/ic_instagram.svg',
-                        height: 20,
+                        height: 20.h,
                       ),
                       controller.profileData().instagram.isNotEmpty
                           ? controller.profileData().instagram
@@ -317,7 +317,7 @@ class ProfileView extends GetView<ProfileController> {
                     _buildInfoRow(
                       SvgPicture.asset(
                         'assets/icons/ic_linkedin.svg',
-                        height: 20,
+                        height: 20.h,
                       ),
                       'https://www.linkedin.com/example.username',
                       color: Colors.blue[800],
@@ -362,11 +362,11 @@ class ProfileView extends GetView<ProfileController> {
     return Shimmer.fromColors(
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
-      child: const Center(
+      child: Center(
         child: SizedBox(
-          height: 100,
-          width: 100,
-          child: CircleAvatar(),
+          height: 100.h,
+          width: 100.w,
+          child: const CircleAvatar(),
         ),
       ),
     );
@@ -393,7 +393,7 @@ class ProfileView extends GetView<ProfileController> {
         Text(
           'My Information',
           style: TS.bodyLarge.copyWith(
-            fontSize: 18,
+            fontSize: 18.dm,
             fontWeight: FontWeight.w600,
           ),
         ),

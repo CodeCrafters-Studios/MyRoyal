@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/tab_subtask_view.dart';
+import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/tab_subtask_view.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 

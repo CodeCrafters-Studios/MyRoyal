@@ -20,6 +20,7 @@ class ViewAllTasksView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: 'All Tasks',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

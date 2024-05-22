@@ -76,15 +76,6 @@ class AppbarDefault extends StatelessWidget {
                         size: 18.w,
                         color: iconColor ?? Colors.black,
                       ),
-                      // SvgPicture.asset(
-                      //   'assets/icons/ic_arrow_left.svg',
-                      //   width: 22.w,
-                      //   height: 22.w,
-                      //   colorFilter: ColorFilter.mode(
-                      //     Get.isDarkMode ? Colors.white : appTextColor,
-                      //     BlendMode.srcIn,
-                      //   ),
-                      // ),
                     ),
                   ),
                 ),

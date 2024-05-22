@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
@@ -56,7 +57,10 @@ class CardApp extends StatelessWidget {
               color: color,
               boxShadow: isShadow ? shadows : [],
             ),
-      child: InkWellTap(onTap: onTap, child: child ?? const SizedBox()),
+      child: InkWellTap(
+        onTap: onTap,
+        child: child ?? emptyBox,
+      ),
     );
   }
 }

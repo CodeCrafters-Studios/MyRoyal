@@ -36,8 +36,8 @@ class BranchCard extends StatelessWidget {
             Positioned(
               top: 0,
               child: Container(
-                width: 50,
-                height: 30,
+                width: 50.w,
+                height: 30.h,
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.5),
                   borderRadius: const BorderRadius.all(

@@ -18,7 +18,7 @@ class ToDoTasksView extends StatelessWidget {
       searchLabel: '',
       onChanged: (value) {},
       taskCount: controller.listToDoTasksDummy.length,
-      taskCardBuilder: (ctx, index) {
+      taskCardBuilder: (_, index) {
         final r = controller.listToDoTasksDummy[index];
         return TaskCard(
           onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

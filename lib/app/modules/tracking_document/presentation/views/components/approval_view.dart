@@ -23,6 +23,7 @@ class ApprovalView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       title: 'Approval',
       textStyle: TS.titleMedium,
       child: SingleChildScrollView(
@@ -138,7 +139,7 @@ class ApprovalView extends StatelessWidget {
           ),
           Row(
             children: [
-              const Icon(Icons.attach_file, size: 15),
+              Icon(Icons.attach_file, size: 15.dm),
               Text('2', style: TS.bodyLarge),
             ],
           ),
@@ -186,10 +187,10 @@ class ApprovalView extends StatelessWidget {
         children: [
           Row(
             children: [
-              const SizedBox(
-                height: 20,
-                width: 20,
-                child: CircleAvatar(),
+              SizedBox(
+                height: 20.h,
+                width: 20.w,
+                child: const CircleAvatar(),
               ),
               5.horizontalSpace,
               Text('Anonymous', style: TS.bodySmall.copyWith(color: black)),

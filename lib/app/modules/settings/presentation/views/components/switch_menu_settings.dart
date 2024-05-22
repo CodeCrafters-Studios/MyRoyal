@@ -31,8 +31,8 @@ class SwitchMenuSettings extends StatelessWidget {
               child: Text(text, style: TS.labelLarge),
             ),
             SizedBox(
-              width: 50,
-              height: 40,
+              width: 50.w,
+              height: 40.h,
               child: FittedBox(
                 fit: BoxFit.fill,
                 child: Switch(

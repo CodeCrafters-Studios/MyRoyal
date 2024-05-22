@@ -14,7 +14,7 @@ class HeaderView extends StatelessWidget {
       backgroundColor: white,
       body: SingleChildScrollView(
         child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+            padding: REdgeInsets.symmetric(horizontal: 18, vertical: 20),
             width: Get.width,
             height: Get.height,
             child: Column(children: [
@@ -240,7 +240,7 @@ class HeaderView extends StatelessWidget {
             ])),
       ),
       bottomSheet: Container(
-        padding: EdgeInsets.only(bottom: 10.h, top: 20.h),
+        padding: REdgeInsets.only(bottom: 10, top: 20),
         height: 100.h,
         width: Get.width,
         decoration: const BoxDecoration(
@@ -256,7 +256,7 @@ class HeaderView extends StatelessWidget {
               height: 48.h,
               width: 180.w,
               child: ButtonPrimary(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
+                margin: REdgeInsets.symmetric(horizontal: 5),
                 onPressed: () {},
                 key: const Key('rejectBtn'),
                 suffixIcon: const Icon(
@@ -271,7 +271,7 @@ class HeaderView extends StatelessWidget {
               height: 48.h,
               width: 180.w,
               child: ButtonPrimary(
-                margin: const EdgeInsets.symmetric(horizontal: 5),
+                margin: REdgeInsets.symmetric(horizontal: 5),
                 onPressed: () {},
                 key: const Key('approveBtn'),
                 suffixIcon: const Icon(

@@ -25,7 +25,7 @@ class NotificationsCard extends StatelessWidget {
       color: isNew ? greySecond.withOpacity(0.2) : white,
       child: ListTile(
         leading: Badge(
-          smallSize: 14,
+          smallSize: 14.dm,
           isLabelVisible: isNew,
           child: const CircleAvatar(),
         ),

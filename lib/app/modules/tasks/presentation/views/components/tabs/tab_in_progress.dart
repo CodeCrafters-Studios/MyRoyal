@@ -17,7 +17,7 @@ class TabInProgressTasks extends StatelessWidget {
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: controller.listInProgressTasksDummy.length,
-        itemBuilder: (ctx, index) {
+        itemBuilder: (_, index) {
           final r = controller.listInProgressTasksDummy[index];
           return TaskCard(
             onTap: () => Get.toNamed(Routes.DETAIL_TASKS),

@@ -265,14 +265,21 @@ class LoginController extends GetxController {
   }
 
   // Navigation
-  void gotoForgotPassword() {}
+  void gotoForgotPassword() {
+    appDialog.showInfoDialog(
+      imagePath: 'assets/icons/ic_information.svg',
+      description:
+          'Please contact the IT Department\nfor further assistance.\n\nCall 021-2345-6789',
+      textButton: 'Continue',
+    );
+  }
 
   // Dont have an Account
   void dontHaveAnAccount() {
     appDialog.showInfoDialog(
       imagePath: 'assets/icons/ic_information.svg',
       description:
-          'Please contact the IT Department\nfor further assistance.\n\nCall 021-XXXX XXXX',
+          'Please contact the IT Department\nfor further assistance.\n\nCall 021-2345-6789',
       textButton: 'Continue',
     );
   }

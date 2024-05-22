@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
 import 'package:iroyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -127,7 +128,7 @@ class SettingsViewImpl extends StatelessWidget {
                   value: controller.switchbiometricsValue.value,
                   onChanged: (value) => controller.iBiometrics(value),
                 )
-              : const SizedBox(),
+              : emptyBox,
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_log_out.svg',

@@ -29,7 +29,7 @@ class BranchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       appbarColor: _getAppbarColor(),
-      showBackground: true,
+      showBackground: false,
       title: title,
       textStyle: TS.titleSmall.copyWith(color: white),
       iconColor: white,
@@ -108,7 +108,7 @@ class BranchPage extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   final d = data[index];
-                  return Padding(
+                  return EPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListTile(
                       title: SearchHighlightText(

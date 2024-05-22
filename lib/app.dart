@@ -50,6 +50,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
     ]);
 
     SystemChrome.setSystemUIOverlayStyle(

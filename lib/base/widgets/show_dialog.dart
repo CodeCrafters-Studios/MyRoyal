@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 void showPopUpInfo({
   String? title,
@@ -45,14 +47,14 @@ void showPopUpInfo({
                 width: imageSize ?? IconSizes.xxl,
               )
             else
-              const SizedBox(),
-            const SizedBox(height: 12),
+              emptyBox,
+            12.verticalSpace,
             Text(
               description ?? '',
               style: TS.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 28),
+            28.verticalSpace,
             ButtonPrimary(
               onPressed: () {
                 Get.back();
@@ -63,7 +65,7 @@ void showPopUpInfo({
               text: labelButton ?? 'OK',
               fullWidth: true,
             ),
-            SizedBox(height: 20.h),
+            20.verticalSpace,
           ],
         ),
       ),
@@ -111,14 +113,14 @@ void showPopUpSuccess({
                 width: imageSize ?? IconSizes.xxl,
               )
             else
-              const SizedBox(),
-            const SizedBox(height: 12),
+              emptyBox,
+            12.verticalSpace,
             Text(
               description ?? '',
               style: TS.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 28),
+            28.verticalSpace,
             ButtonPrimary(
               onPressed: () {
                 Get.back();
@@ -129,7 +131,7 @@ void showPopUpSuccess({
               text: labelButton ?? 'OK',
               fullWidth: true,
             ),
-            SizedBox(height: 20.h),
+            20.verticalSpace,
           ],
         ),
       ),
@@ -233,16 +235,16 @@ Future<void> showPopUpChoice({
                 width: imageSize ?? IconSizes.xxl,
               )
             else
-              const SizedBox(),
-            SizedBox(height: 12.sp),
+              emptyBox,
+            12.verticalSpace,
             Text(
               description ?? '',
               style: TS.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 36.sp),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.sp),
+            36.verticalSpace,
+            EPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: ButtonPrimary(
                 onPressed: () {
                   Get.back();
@@ -254,7 +256,7 @@ Future<void> showPopUpChoice({
                 fullWidth: true,
               ),
             ),
-            SizedBox(height: 12.sp),
+            12.verticalSpace,
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 32.sp),
               child: ButtonPrimary(
@@ -315,16 +317,16 @@ Future showPopUpPermission({
                 width: imageSize ?? IconSizes.xxl,
               )
             else
-              const SizedBox(),
-            SizedBox(height: 12.sp),
+              emptyBox,
+            12.verticalSpace,
             Text(
               description ?? '',
               style: TS.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 36.sp),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.sp),
+            36.verticalSpace,
+            EPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: ButtonPrimary(
                 key: const Key('yesDialogConfirm'),
                 onPressed: onConfirm,
@@ -332,9 +334,9 @@ Future showPopUpPermission({
                 fullWidth: true,
               ),
             ),
-            SizedBox(height: 12.sp),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32.sp),
+            12.verticalSpace,
+            EPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ButtonPrimary(
                 key: const Key('noDialogConfirm'),
                 isOutline: true,

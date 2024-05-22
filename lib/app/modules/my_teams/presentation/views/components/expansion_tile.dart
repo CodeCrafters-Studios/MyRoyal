@@ -42,7 +42,9 @@ class _ExpansionTileControllerAppState
             elevation: 1,
             margin: REdgeInsets.symmetric(horizontal: 18, vertical: 8),
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
+              borderRadius: BorderRadius.all(
+                Radius.circular(8),
+              ),
             ),
             clipBehavior: Clip.antiAlias,
             child: ExpansionTile(
@@ -66,58 +68,58 @@ class _ExpansionTileControllerAppState
                 children: [
                   Text(
                     widget.username,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
+                    style: TS.bodyMedium,
                   ),
                   Text(
                     widget.departement,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
+                    style: TS.bodyMedium,
                   ),
                   Text(
                     widget.email,
-                    style: const TextStyle(
-                      fontSize: 14,
-                    ),
+                    style: TS.bodyMedium,
                   ),
                 ],
               ),
-              children: widget.children.map((child) {
-                return ListTileTheme(
-                  tileColor: Colors.white,
-                  child: Padding(
-                    padding: REdgeInsets.only(left: 40, bottom: 10),
-                    child: Card(
-                      color: white,
-                      shadowColor: white,
-                      elevation: 1,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: ListTile(
-                        title: Text(child.fullName),
-                        subtitle: Text(child.job.workEmail),
-                        leading: Text(
-                          child.fullName
-                                  .split(' ')
-                                  .first
-                                  .substring(0, 1)
-                                  .toUpperCase() +
-                              child.fullName
-                                  .split(' ')
-                                  .last
-                                  .substring(0, 1)
-                                  .toUpperCase(),
-                          style: TS.titleSmall.copyWith(color: primaryColor),
+              children: widget.children.map(
+                (child) {
+                  return ListTileTheme(
+                    tileColor: Colors.white,
+                    child: EPadding(
+                      padding: REdgeInsets.only(left: 40, bottom: 10),
+                      child: Card(
+                        color: white,
+                        shadowColor: white,
+                        elevation: 1,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
+                          ),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: ListTile(
+                          title: Text(child.fullName),
+                          subtitle: Text(child.job.workEmail),
+                          leading: Text(
+                            child.fullName
+                                    .split(' ')
+                                    .first
+                                    .substring(0, 1)
+                                    .toUpperCase() +
+                                child.fullName
+                                    .split(' ')
+                                    .last
+                                    .substring(0, 1)
+                                    .toUpperCase(),
+                            style: TS.titleSmall.copyWith(
+                              color: primaryColor,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
+                  );
+                },
+              ).toList(),
             ),
           ),
         )

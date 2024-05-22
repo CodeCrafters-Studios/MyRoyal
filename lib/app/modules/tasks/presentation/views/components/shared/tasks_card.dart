@@ -114,10 +114,10 @@ class TaskCard extends StatelessWidget {
                       ),
                     ),
                     5.horizontalSpace,
-                    const Icon(
+                    Icon(
                       Icons.people_alt_outlined,
                       color: Colors.grey,
-                      size: 24,
+                      size: 24.dm,
                     ),
                   ],
                 ),

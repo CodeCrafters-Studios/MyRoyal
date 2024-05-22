@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -49,13 +50,13 @@ class HomeUserCard extends StatelessWidget {
                   ),
                   child: Image.asset(
                     avatarPicture ?? 'assets/images/img_profile.png',
-                    height: 68,
-                    width: 68,
+                    height: 68.h,
+                    width: 68.w,
                     fit: BoxFit.cover,
                   ),
                 )
-              : const SizedBox(),
-          isAvatarPicture == true ? 12.horizontalSpace : const SizedBox(),
+              : emptyBox,
+          isAvatarPicture == true ? 12.horizontalSpace : emptyBox,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +81,7 @@ class HomeUserCard extends StatelessWidget {
                           color: textColor ?? white,
                         ),
                       )
-                    : const SizedBox(),
+                    : emptyBox,
               ],
             ),
           ),
@@ -92,7 +93,7 @@ class HomeUserCard extends StatelessWidget {
                     color: Colors.black,
                   ),
                 )
-              : const SizedBox()
+              : emptyBox,
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -39,7 +40,7 @@ class ItemMenuSettings extends StatelessWidget {
                         Icons.arrow_forward_ios_rounded,
                         color: primary,
                       )
-                    : const SizedBox(),
+                    : emptyBox,
               ],
             ),
           ),
