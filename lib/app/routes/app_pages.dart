@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/attendance/bindings/attendance_binding.dart';
+import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
@@ -108,6 +110,11 @@ class AppPages {
       name: _Paths.HELP_AND_SUPPORT,
       page: () => const HelpAndSupportView(),
       binding: HelpAndSupportBinding(),
+    ),
+    GetPage(
+      name: _Paths.ATTENDANCE,
+      page: () => const AttendanceView(),
+      binding: AttendanceBinding(),
     ),
   ];
 }

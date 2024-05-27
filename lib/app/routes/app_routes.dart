@@ -19,6 +19,7 @@ abstract class Routes {
   static const DETAIL_TASKS = _Paths.DETAIL_TASKS;
   static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
   static const HELP_AND_SUPPORT = _Paths.HELP_AND_SUPPORT;
+  static const ATTENDANCE = _Paths.ATTENDANCE;
 }
 
 abstract class _Paths {
@@ -37,4 +38,5 @@ abstract class _Paths {
   static const DETAIL_TASKS = '/detail-tasks';
   static const NOTIFICATIONS = '/notifications';
   static const HELP_AND_SUPPORT = '/help-and-support';
+  static const ATTENDANCE = '/attendance';
 }
