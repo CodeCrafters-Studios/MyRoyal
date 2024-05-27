@@ -68,9 +68,9 @@ class ProfileView extends GetView<ProfileController> {
           Positioned(
             top: -1,
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(Corners.lsm),
+                bottomRight: Radius.circular(Corners.lsm),
               ),
               child: Image.asset(
                 'assets/images/bg_profile.png',
@@ -190,9 +190,9 @@ class ProfileView extends GetView<ProfileController> {
           Positioned(
             top: -1,
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(Corners.lsm),
+                bottomRight: Radius.circular(Corners.lsm),
               ),
               child: Image.asset(
                 'assets/images/bg_profile.png',

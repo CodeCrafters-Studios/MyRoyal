@@ -72,7 +72,7 @@ class SubTaskCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: grey),
-        borderRadius: const BorderRadius.all(Radius.circular(14)),
+        borderRadius: BorderRadius.all(Radius.circular(Corners.slg)),
         color: white,
       ),
       child: ListTile(

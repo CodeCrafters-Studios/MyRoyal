@@ -1,23 +1,39 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 
 class AttendanceController extends GetxController {
-  //TODO: Implement AttendanceController
+  final currentTime = DateTime.now().obs;
+  final checkOutTime = DateTime.now().obs;
+  RxBool isCheckIn = false.obs;
+  RxBool isCheckOut = false.obs;
 
-  final count = 0.obs;
+  late Timer _timer;
+
   @override
   void onInit() {
     super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        currentTime.value = DateTime.now();
+      },
+    );
   }
 
   @override
   void onClose() {
     super.onClose();
+    _timer.cancel();
   }
 
-  void increment() => count.value++;
+  void checkIn() {
+    isCheckIn.value = true;
+  }
+
+  void checkOut() {
+    isCheckOut.value = true;
+    checkOutTime.value = DateTime.now();
+    _timer.cancel();
+  }
 }

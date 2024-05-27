@@ -153,9 +153,9 @@ class MyTeamsView extends GetView<MyTeamsController> {
   Widget _buildTaskComplianceRatio() {
     return Material(
       color: white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        side: BorderSide(color: primary),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Corners.smRadius),
+        side: const BorderSide(color: primary),
       ),
       child: EPadding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -216,9 +216,9 @@ class MyTeamsView extends GetView<MyTeamsController> {
   Widget _buildMaleFemaleRatio() {
     return Material(
       color: white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-        side: BorderSide(color: primary),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Corners.smRadius),
+        side: const BorderSide(color: primary),
       ),
       child: EPadding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

@@ -101,7 +101,7 @@ class CreateTaskView extends StatelessWidget {
           width: 160.w,
           decoration: BoxDecoration(
             border: Border.all(width: 1.0, color: primary),
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            borderRadius: BorderRadius.all(Corners.smRadius),
           ),
           child: EPadding(
             padding: const EdgeInsets.only(right: 15),

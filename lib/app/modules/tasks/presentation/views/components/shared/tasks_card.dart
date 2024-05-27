@@ -64,8 +64,8 @@ class TaskCard extends StatelessWidget {
                 Container(
                   width: 100.w,
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(24),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(Corners.xll),
                     ),
                     color: statusColor.withOpacity(0.3),
                   ),

@@ -8,6 +8,8 @@ class BottomnavbarController extends GetxController {
 
   List<BottomnavbarMenu> bottomnavbarMenu = <BottomnavbarMenu>[
     BottomnavbarMenu(name: 'Home', icon: 'assets/icons/ic_tab_home.svg'),
+    BottomnavbarMenu(
+        name: 'Attendance', icon: 'assets/icons/ic_tab_attendance.svg'),
     BottomnavbarMenu(name: 'Settings', icon: 'assets/icons/ic_settings.svg'),
   ];
 

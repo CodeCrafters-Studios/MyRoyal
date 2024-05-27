@@ -40,8 +40,8 @@ class HeaderDetailTask extends StatelessWidget {
             Container(
               width: 95.w,
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(24),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(Corners.xll),
                 ),
                 color: bgStatusColor.withOpacity(0.3),
               ),

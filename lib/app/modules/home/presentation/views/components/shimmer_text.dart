@@ -26,8 +26,8 @@ class ShimmerText extends StatelessWidget {
         padding: padding ?? REdgeInsets.only(left: 8, top: 8, bottom: 10),
         margin: margin ?? REdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+          borderRadius: BorderRadius.all(
+            Corners.smRadius,
           ),
           border: Border.all(color: grey, width: 0),
           boxShadow: Shadows.small,

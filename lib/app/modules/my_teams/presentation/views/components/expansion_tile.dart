@@ -41,16 +41,16 @@ class _ExpansionTileControllerAppState
             shadowColor: white,
             elevation: 1,
             margin: REdgeInsets.symmetric(horizontal: 18, vertical: 8),
-            shape: const RoundedRectangleBorder(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(8),
+                Corners.smRadius,
               ),
             ),
             clipBehavior: Clip.antiAlias,
             child: ExpansionTile(
               backgroundColor: white,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Corners.smRadius),
               ),
               leading: EPadding(
                 padding: const EdgeInsets.only(top: 4.0),
@@ -90,9 +90,9 @@ class _ExpansionTileControllerAppState
                         color: white,
                         shadowColor: white,
                         elevation: 1,
-                        shape: const RoundedRectangleBorder(
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(
-                            Radius.circular(8),
+                            Corners.smRadius,
                           ),
                         ),
                         clipBehavior: Clip.antiAlias,
