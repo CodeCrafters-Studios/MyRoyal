@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/help-and-support/controllers/help_and_support_controller.dart';
+import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';

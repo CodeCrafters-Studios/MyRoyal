@@ -2,14 +2,16 @@ import 'package:get/get.dart';
 
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
+import '../modules/attendance_summary/bindings/attendance_summary_binding.dart';
+import '../modules/attendance_summary/views/attendance_summary_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
 import '../modules/detail_tasks/views/detail_tasks_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
 import '../modules/detail_tracking_document/views/detail_tracking_document_view.dart';
-import '../modules/help-and-support/bindings/help_and_support_binding.dart';
-import '../modules/help-and-support/views/help_and_support_view.dart';
+import '../modules/help_and_support/bindings/help_and_support_binding.dart';
+import '../modules/help_and_support/views/help_and_support_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
@@ -115,6 +117,11 @@ class AppPages {
       name: _Paths.ATTENDANCE,
       page: () => const AttendanceView(),
       binding: AttendanceBinding(),
+    ),
+    GetPage(
+      name: _Paths.ATTENDANCE_SUMMARY,
+      page: () => const AttendanceSummaryView(),
+      binding: AttendanceSummaryBinding(),
     ),
   ];
 }

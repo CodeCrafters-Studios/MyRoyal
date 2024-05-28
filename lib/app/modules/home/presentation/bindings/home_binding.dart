@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
-import 'package:iroyal/app/modules/help-and-support/controllers/help_and_support_controller.dart';
+import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/controllers/attendance_controller.dart';
-import 'package:iroyal/app/modules/help-and-support/controllers/help_and_support_controller.dart';
+import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';

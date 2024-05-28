@@ -19,6 +19,10 @@ class AttendanceView extends GetView<AttendanceController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
+      showIconBack: false,
+      centeredTitle: true,
+      title: 'Attendance',
+      textStyle: TS.headlineSmall,
       child: SingleChildScrollView(
         padding: REdgeInsets.only(bottom: 100),
         child: EPadding(
@@ -324,7 +328,9 @@ class AttendanceView extends GetView<AttendanceController> {
                           'Attendance Summary',
                           style: TS.titleMedium,
                         ),
-                        const Icon(Icons.arrow_forward_rounded)
+                        InkWellTap(
+                            onTap: () {},
+                            child: const Icon(Icons.arrow_forward_rounded))
                       ],
                     ),
                     GridView.count(
