@@ -1,23 +1,111 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/attendance_summary/domain/entities.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
 class AttendanceSummaryController extends GetxController {
-  //TODO: Implement AttendanceSummaryController
+  final dataMap = <String, double>{
+    "Balance": 2,
+    "Used": 8,
+  };
 
-  final count = 0.obs;
+  final colorList = <Color>[
+    Colors.greenAccent,
+    Colors.grey,
+  ];
+
+  List<LeaveRequestDummyData> listAllLeaveRequestDummy =
+      <LeaveRequestDummyData>[
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Approved',
+      types: 'Sick',
+      statusColor: green,
+    ),
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Pending',
+      types: 'Sick',
+      statusColor: Colors.orangeAccent,
+    ),
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Rejected',
+      types: 'Casual',
+      statusColor: Colors.red,
+    ),
+  ];
+
+  late final TabController tabController;
+
+  RxBool isCasual = false.obs;
+  RxBool isSick = false.obs;
+
+  RxString selectedStartDate = 'Select date'.obs;
+  RxString selectedEndDate = 'Select date'.obs;
+
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
+
   @override
   void onInit() {
+    tabController = TabController(length: 3, vsync: TicckerProvider());
     super.onInit();
   }
 
   @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
   void onClose() {
+    tabController.dispose();
     super.onClose();
   }
 
-  void increment() => count.value++;
+  void selectCasualType() {
+    isCasual.value = true;
+    isSick.value = false;
+  }
+
+  void selectSickType() {
+    isSick.value = true;
+    isCasual.value = false;
+  }
+
+  Future<void> selectStartDate(BuildContext context) async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate:
+          selectedStartDate.value == 'Select date' ? DateTime.now() : startDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2025),
+    );
+    if (d != null) {
+      selectedStartDate.value = DateFormat.yMMMd("en_US").format(d);
+      startDate = d;
+      if (selectedEndDate.value != 'Select date' &&
+          startDate.isAfter(endDate)) {
+        selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
+        endDate = d;
+      }
+      AppUtils.logApp('Selected start date: $startDate');
+    }
+  }
+
+  Future<void> selectEndDate(BuildContext context) async {
+    DateTime? d = await showDatePicker(
+      context: context,
+      initialDate: startDate,
+      firstDate: startDate,
+      lastDate: DateTime(2025),
+    );
+    if (d != null) {
+      selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
+      endDate = d;
+      AppUtils.logApp('Selected end date: $endDate');
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -329,7 +330,7 @@ class AttendanceView extends GetView<AttendanceController> {
                           style: TS.titleMedium,
                         ),
                         InkWellTap(
-                            onTap: () {},
+                            onTap: () => Get.toNamed(Routes.ATTENDANCE_SUMMARY),
                             child: const Icon(Icons.arrow_forward_rounded))
                       ],
                     ),
