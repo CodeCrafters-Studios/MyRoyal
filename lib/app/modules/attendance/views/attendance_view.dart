@@ -24,65 +24,61 @@ class AttendanceView extends GetView<AttendanceController> {
         padding: REdgeInsets.only(bottom: 100),
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Column(
-            children: [
-              const AppbarSpacer(),
-              EasyDateTimeLine(
-                initialDate: DateTime.now(),
-                onDateChange: (selectedDate) {},
-                activeColor: primary,
-                headerProps: EasyHeaderProps(
-                  padding: EdgeInsets.zero,
-                  monthPickerType: MonthPickerType.switcher,
-                  monthStyle: TS.titleMedium,
-                  dateFormatter: const DateFormatter.custom(""),
-                ),
-                dayProps: EasyDayProps(
-                  height: 56.h,
-                  width: 56.w,
-                  dayStructure: DayStructure.dayStrDayNum,
-                  inactiveDayStyle: DayStyle(
-                    borderRadius: 48.0,
-                    dayNumStyle: TS.titleLarge,
+          child: Obx(
+            () => Column(
+              children: [
+                const AppbarSpacer(),
+                EasyDateTimeLine(
+                  initialDate: DateTime.now(),
+                  onDateChange: (selectedDate) {},
+                  activeColor: primary,
+                  headerProps: EasyHeaderProps(
+                    padding: EdgeInsets.zero,
+                    monthPickerType: MonthPickerType.switcher,
+                    monthStyle: TS.titleMedium,
+                    dateFormatter: const DateFormatter.custom(""),
                   ),
-                  activeDayStyle: DayStyle(
-                    dayNumStyle: TS.titleLarge.copyWith(
-                      color: white,
+                  dayProps: EasyDayProps(
+                    height: 56.h,
+                    width: 56.w,
+                    dayStructure: DayStructure.dayStrDayNum,
+                    inactiveDayStyle: DayStyle(
+                      borderRadius: 48.0,
+                      dayNumStyle: TS.titleLarge,
+                    ),
+                    activeDayStyle: DayStyle(
+                      dayNumStyle: TS.titleLarge.copyWith(
+                        color: white,
+                      ),
                     ),
                   ),
+                  timeLineProps: EasyTimeLineProps(
+                    hPadding: 8.w, // padding from left and right
+                    separatorPadding: 16.w, // padding between days
+                  ),
                 ),
-                timeLineProps: EasyTimeLineProps(
-                  hPadding: 8.w, // padding from left and right
-                  separatorPadding: 16.w, // padding between days
-                ),
-              ),
-              20.verticalSpace,
-              Obx(
-                () {
-                  return controller.isCheckOut.value
-                      ? Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'The End Of The Day!',
-                            style: TS.titleMedium
-                                .copyWith(fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.start,
-                          ),
-                        )
-                      : Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Today Attendance',
-                            style: TS.titleMedium
-                                .copyWith(fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.start,
-                          ),
-                        );
-                },
-              ),
-              15.verticalSpace,
-              Obx(
-                () => Column(
+                20.verticalSpace,
+                controller.isCheckOut.value
+                    ? Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'The End Of The Day!',
+                          style: TS.titleMedium
+                              .copyWith(fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.start,
+                        ),
+                      )
+                    : Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Today Attendance',
+                          style: TS.titleMedium
+                              .copyWith(fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                15.verticalSpace,
+                Column(
                   children: [
                     controller.isCheckOut.value
                         ? Container(
@@ -141,7 +137,7 @@ class AttendanceView extends GetView<AttendanceController> {
                                               horizontal: 22,
                                               vertical: 5,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: controller.stopTimer,
                                             text: 'Take a Break',
                                           ),
                                         ],
@@ -162,7 +158,10 @@ class AttendanceView extends GetView<AttendanceController> {
                                         const Icon(Icons.more_time_outlined),
                                         5.verticalSpace,
                                         Text(
-                                          '07:50 AM',
+                                          controller.isCheckIn.value
+                                              ? DateFormat('hh:mm a').format(
+                                                  controller.checkInTime.value)
+                                              : '--:-- AM',
                                           style: TS.titleSmall,
                                         ),
                                         Text(
@@ -195,7 +194,9 @@ class AttendanceView extends GetView<AttendanceController> {
                                         ),
                                         5.verticalSpace,
                                         Text(
-                                          '3h 48m',
+                                          controller.isCheckOut.value
+                                              ? controller.totalHours.value
+                                              : '--h --m',
                                           style: TS.titleSmall,
                                         ),
                                         Text(
@@ -246,8 +247,8 @@ class AttendanceView extends GetView<AttendanceController> {
                           ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
