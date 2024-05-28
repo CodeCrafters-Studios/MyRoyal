@@ -8,12 +8,14 @@ class AttendanceController extends GetxController {
   final currentTime = DateTime.now().obs;
   final checkInTime = DateTime.now().obs;
   final checkOutTime = DateTime.now().obs;
+  final breakTime = DateTime.now().obs;
 
   RxBool isCheckIn = false.obs;
   RxBool isCheckOut = false.obs;
+  RxBool isBreakTime = false.obs;
 
   RxString totalHours = ''.obs;
-  RxString countTimes = ''.obs;
+  RxString countTimes = '--:--:--'.obs;
 
   late Timer _timer;
 
@@ -23,12 +25,7 @@ class AttendanceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        currentTime.value = DateTime.now();
-      },
-    );
+    _startTimer();
   }
 
   @override
@@ -37,28 +34,13 @@ class AttendanceController extends GetxController {
     _timer.cancel();
   }
 
-  void startTimer() {
-    countingTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountingTimer());
-  }
-
-  void stopTimer() {
-    countingTimer!.cancel();
-  }
-
-  void setCountingTimer() {
-    const addSecondsBy = 1;
-    final countSeconds = myDuration.inSeconds + addSecondsBy;
-    myDuration = Duration(seconds: countSeconds);
-
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    final hours = twoDigits(myDuration.inHours.remainder(24));
-    final minutes = twoDigits(myDuration.inMinutes.remainder(60));
-    final seconds = twoDigits(myDuration.inSeconds.remainder(60));
-
-    countTimes.value = "$hours:$minutes:$seconds";
-
-    AppUtils.logApp(countTimes.value);
+  void _startTimer() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        currentTime.value = DateTime.now();
+      },
+    );
   }
 
   void checkIn() {
@@ -90,5 +72,41 @@ class AttendanceController extends GetxController {
         "$negativeSign${twoDigits(dif.inHours)}h ${twoDigitMinutes}m";
 
     AppUtils.logApp(totalHours.value);
+  }
+
+  void startBreakTime() {
+    isBreakTime.value = true;
+    breakTime.value = DateTime.now();
+    _startCountingTimer();
+  }
+
+  void _startCountingTimer() {
+    countingTimer =
+        Timer.periodic(const Duration(seconds: 1), (_) => setCountingTimer());
+  }
+
+  void endBreakTime() {
+    countingTimer!.cancel();
+    countTimes.value = '--:--:--';
+    isBreakTime.value = false;
+    myDuration = Duration.zero;
+
+    AppUtils.logApp(countTimes.value);
+    AppUtils.logApp('$myDuration');
+  }
+
+  void setCountingTimer() {
+    const addSecondsBy = 1;
+    final countSeconds = myDuration.inSeconds + addSecondsBy;
+    myDuration = Duration(seconds: countSeconds);
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final hours = twoDigits(myDuration.inHours.remainder(24));
+    final minutes = twoDigits(myDuration.inMinutes.remainder(60));
+    final seconds = twoDigits(myDuration.inSeconds.remainder(60));
+
+    countTimes.value = "$hours:$minutes:$seconds";
+
+    AppUtils.logApp(countTimes.value);
   }
 }
