@@ -12,11 +12,15 @@ class ItemMenuSettings extends StatelessWidget {
     super.key,
     required this.assetSvg,
     required this.text,
+    this.textStyle,
     this.withTrailing = false,
+    this.icon,
     this.onTap,
   });
   final String assetSvg;
   final String text;
+  final TextStyle? textStyle;
+  final IconData? icon;
   final bool withTrailing;
   final Function()? onTap;
 
@@ -33,11 +37,11 @@ class ItemMenuSettings extends StatelessWidget {
                 SvgPicture.asset(assetSvg),
                 12.horizontalSpace,
                 Expanded(
-                  child: Text(text, style: TS.labelLarge),
+                  child: Text(text, style: textStyle ?? TS.labelLarge),
                 ),
                 withTrailing
-                    ? const Icon(
-                        Icons.arrow_forward_ios_rounded,
+                    ? Icon(
+                        icon ?? Icons.arrow_forward_ios_rounded,
                         color: primary,
                       )
                     : emptyBox,

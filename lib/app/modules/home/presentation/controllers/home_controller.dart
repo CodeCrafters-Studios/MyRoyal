@@ -155,6 +155,10 @@ class HomeController extends GetxController {
       id: 0,
       firstName: '',
       lastName: '',
+      birthdate: '',
+      gender: '',
+      maritalStatus: '',
+      availableLeave: 0,
     ),
     job: JobModel(
       company: '',

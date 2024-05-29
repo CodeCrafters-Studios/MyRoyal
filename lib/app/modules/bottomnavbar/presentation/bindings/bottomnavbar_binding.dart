@@ -130,6 +130,7 @@ class BottomnavbarBinding extends Bindings {
         () => ProfileController(
           getProfile: Get.find(),
           getUser: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       )
       ..lazyPut<ProfileRemoteDataSourcesImpl>(
