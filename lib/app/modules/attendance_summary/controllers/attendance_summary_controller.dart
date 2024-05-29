@@ -40,7 +40,32 @@ class AttendanceSummaryController extends GetxController {
       types: 'Casual',
       statusColor: Colors.red,
     ),
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Approved',
+      types: 'Sick',
+      statusColor: green,
+    ),
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description:
+          'Lorem Ipsum dolor sit amet, consecture adipiscing elit.Lorem Ipsum dolor sit amet, consecture adipiscing elit.Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Pending',
+      types: 'Sick',
+      statusColor: Colors.orangeAccent,
+    ),
+    LeaveRequestDummyData(
+      date: '17, May 2024',
+      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
+      status: 'Rejected',
+      types: 'Casual',
+      statusColor: Colors.red,
+    ),
   ];
+
+  List<LeaveRequestDummyData> listCasualDummy = <LeaveRequestDummyData>[];
+  List<LeaveRequestDummyData> listSickDummy = <LeaveRequestDummyData>[];
 
   late final TabController tabController;
 
@@ -56,6 +81,7 @@ class AttendanceSummaryController extends GetxController {
   @override
   void onInit() {
     tabController = TabController(length: 3, vsync: TicckerProvider());
+    filterTypesLeaveRequest();
     super.onInit();
   }
 
@@ -107,5 +133,24 @@ class AttendanceSummaryController extends GetxController {
       endDate = d;
       AppUtils.logApp('Selected end date: $endDate');
     }
+  }
+
+  void filterTypesLeaveRequest() {
+    // Clear the existing lists
+    listSickDummy.clear();
+    listCasualDummy.clear();
+
+    // Iterate over the listAllLeaveRequestDummy and add items to respective lists
+    for (var element in listAllLeaveRequestDummy) {
+      if (element.types == 'Sick') {
+        listSickDummy.add(element);
+      } else if (element.types == 'Casual') {
+        listCasualDummy.add(element);
+      }
+    }
+
+    // Log the lengths of the lists for verification
+    AppUtils.logApp('Sick Leaves Count: ${listSickDummy.length}');
+    AppUtils.logApp('Casual Leaves Count: ${listCasualDummy.length}');
   }
 }

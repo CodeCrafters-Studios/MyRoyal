@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance_summary/controllers/attendance_summary_controller.dart';
@@ -20,79 +19,8 @@ class ApplyLeaveView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      bottomBarHeight: 100.h,
-      bottomBar: ButtonPrimary(
-        margin: REdgeInsets.symmetric(vertical: 22, horizontal: 14),
-        text: 'Apply',
-        onPressed: () {
-          showModalBottomSheet(
-            enableDrag: false,
-            isDismissible: false,
-            context: context,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(25.0),
-              ),
-            ),
-            builder: (context) {
-              return SizedBox(
-                height: 500.h,
-                width: Get.width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    15.verticalSpace,
-                    Center(
-                      child: Container(
-                        width: 80.w,
-                        height: 5.h,
-                        decoration: BoxDecoration(
-                            color: grey,
-                            borderRadius: BorderRadius.circular(40.r)),
-                      ),
-                    ),
-                    30.verticalSpace,
-                    EPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text(
-                        'Request Pending',
-                        style: TS.titleMedium,
-                      ),
-                    ),
-                    20.verticalSpace,
-                    Center(
-                      child: Container(
-                        height: 180.h,
-                        padding: const EdgeInsets.symmetric(horizontal: 14),
-                        child: Image.asset(
-                          'assets/images/img_bg_request_pending.png',
-                        ),
-                      ),
-                    ),
-                    10.verticalSpace,
-                    EPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Text(
-                        'Your request has been received and we will let you know as soon as possible.',
-                        style: TS.titleMedium.copyWith(color: greyText),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    50.verticalSpace,
-                    ButtonPrimary(
-                      fullWidth: true,
-                      margin: REdgeInsets.symmetric(horizontal: 14),
-                      text: 'Continue',
-                      onPressed: () => Get.back(),
-                    )
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ),
+      resizeInsetsBottom: false,
+      title: 'Apply a Leave',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Obx(
@@ -105,7 +33,9 @@ class ApplyLeaveView extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: 'Type of leave ',
-                      style: TS.bodyMedium,
+                      style: TS.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     TextSpan(
                       text: '*',
@@ -126,7 +56,7 @@ class ApplyLeaveView extends StatelessWidget {
                     ButtonPrimary(
                       margin: REdgeInsets.only(top: 5),
                       padding: REdgeInsets.symmetric(
-                        horizontal: 53,
+                        horizontal: 49,
                         vertical: 8,
                       ),
                       color: controller.isCasual.value ? primary : white,
@@ -138,7 +68,6 @@ class ApplyLeaveView extends StatelessWidget {
                           'Casual',
                           style: TS.bodyMedium.copyWith(
                             color: controller.isCasual.value ? white : primary,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -146,7 +75,7 @@ class ApplyLeaveView extends StatelessWidget {
                     ButtonPrimary(
                       margin: REdgeInsets.only(top: 5),
                       padding: REdgeInsets.symmetric(
-                        horizontal: 62,
+                        horizontal: 58,
                         vertical: 8,
                       ),
                       color: controller.isSick.value ? primary : white,
@@ -158,7 +87,6 @@ class ApplyLeaveView extends StatelessWidget {
                           'Sick',
                           style: TS.bodyMedium.copyWith(
                             color: controller.isSick.value ? white : primary,
-                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -180,7 +108,9 @@ class ApplyLeaveView extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: 'Start Date ',
-                                style: TS.bodyMedium,
+                                style: TS.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               TextSpan(
                                 text: '*',
@@ -212,7 +142,6 @@ class ApplyLeaveView extends StatelessWidget {
                             controller.selectedStartDate.value,
                             style: TS.bodyMedium.copyWith(
                               color: primary,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -226,7 +155,9 @@ class ApplyLeaveView extends StatelessWidget {
                             children: [
                               TextSpan(
                                 text: 'End Date ',
-                                style: TS.bodyMedium,
+                                style: TS.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               TextSpan(
                                 text: '*',
@@ -258,7 +189,6 @@ class ApplyLeaveView extends StatelessWidget {
                             controller.selectedEndDate.value,
                             style: TS.bodyMedium.copyWith(
                               color: primary,
-                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
@@ -273,7 +203,9 @@ class ApplyLeaveView extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: 'Reason for Leave ',
-                      style: TS.bodyMedium,
+                      style: TS.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     TextSpan(
                       text: '*',
@@ -296,6 +228,85 @@ class ApplyLeaveView extends StatelessWidget {
                 onChanged: (value) {},
                 validation: (value) =>
                     value?.isEmpty ?? false ? 'Cannot be empty' : null,
+              ),
+              const Spacer(),
+              ButtonPrimary(
+                fullWidth: true,
+                margin: REdgeInsets.symmetric(vertical: 20),
+                text: 'Apply',
+                onPressed: () {
+                  showModalBottomSheet(
+                    enableDrag: false,
+                    isDismissible: false,
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.r),
+                            topRight: Radius.circular(25.r),
+                          ),
+                          color: white,
+                        ),
+                        height: 500.h,
+                        width: Get.width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            10.verticalSpace,
+                            Center(
+                              child: Container(
+                                width: 80.w,
+                                height: 5.h,
+                                decoration: BoxDecoration(
+                                    color: grey,
+                                    borderRadius: BorderRadius.circular(40.r)),
+                              ),
+                            ),
+                            20.verticalSpace,
+                            EPadding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 14),
+                              child: Text(
+                                'Request Pending',
+                                style: TS.titleMedium,
+                              ),
+                            ),
+                            40.verticalSpace,
+                            Center(
+                              child: Container(
+                                height: 150.h,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 14),
+                                child: Image.asset(
+                                  'assets/images/img_bg_request_pending.png',
+                                ),
+                              ),
+                            ),
+                            40.verticalSpace,
+                            EPadding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 14),
+                              child: Text(
+                                'Your request has been received and we will let you know as soon as possible.',
+                                style: TS.bodyMedium.copyWith(color: greyText),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            50.verticalSpace,
+                            ButtonPrimary(
+                              fullWidth: true,
+                              margin: REdgeInsets.symmetric(horizontal: 14),
+                              text: 'Continue',
+                              onPressed: () => Get.back(),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),

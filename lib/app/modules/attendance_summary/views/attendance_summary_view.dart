@@ -4,12 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance_summary/views/components/apply_leave_view.dart';
 import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_all_leave_req.dart';
+import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_casual_leave_req.dart';
+import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_sick_leave_req.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -206,13 +207,13 @@ class AttendanceSummaryViewImpl extends StatelessWidget {
                 Container(
                   padding: REdgeInsets.symmetric(horizontal: 14),
                   width: Get.width,
-                  height: 540.h,
+                  height: 500.h,
                   child: TabBarView(
                     controller: controller.tabController,
                     children: [
                       TabAllLeaveRequest(controller: controller),
-                      const ComingSoonTabView(),
-                      const ComingSoonTabView(),
+                      TabCasualLeaveRequest(controller: controller),
+                      TabSickLeaveRequest(controller: controller),
                     ],
                   ),
                 ),

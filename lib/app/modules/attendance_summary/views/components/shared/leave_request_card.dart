@@ -75,8 +75,10 @@ class LeaveRequestCard extends StatelessWidget {
               ],
             ),
             15.verticalSpace,
-            Text(description,
-                style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400)),
+            Text(
+              description,
+              style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400),
+            ),
             15.verticalSpace,
             Row(
               children: [

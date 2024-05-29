@@ -103,7 +103,7 @@ class AttendanceView extends GetView<AttendanceController> {
                     controller.isCheckOut.value
                         ? Container(
                             padding: REdgeInsets.only(bottom: 5),
-                            height: 220.h,
+                            height: 258.h,
                             child: Image.asset(
                               'assets/images/img_bg_checkout.jpg',
                             ),
@@ -116,7 +116,15 @@ class AttendanceView extends GetView<AttendanceController> {
                                   'assets/images/img_bg_coffe_break.png',
                                 ),
                               )
-                            : const SizedBox.shrink(),
+                            : controller.isCheckIn.value
+                                ? Container(
+                                    padding: REdgeInsets.only(bottom: 5),
+                                    height: 188.h,
+                                    child: Image.asset(
+                                      'assets/images/img_bg_working_time.png',
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
 
                     // Show Time
                     controller.isCheckOut.value
