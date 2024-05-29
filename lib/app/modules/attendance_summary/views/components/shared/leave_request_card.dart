@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/linear_progress.dart';
-import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
-class TaskCard extends StatelessWidget {
-  const TaskCard({
+class LeaveRequestCard extends StatelessWidget {
+  const LeaveRequestCard({
     super.key,
-    required this.title,
+    required this.date,
     required this.status,
-    required this.member,
-    required this.progress,
+    required this.description,
     required this.statusColor,
-    required this.dueDate,
+    required this.types,
     this.titleStyle,
     this.dateStyle,
-    this.progressColor,
     this.onTap,
   });
 
-  final String title;
+  final String date;
   final String status;
-  final String member;
-  final double progress;
+  final String description;
   final Color statusColor;
-  final String dueDate;
+  final String types;
   final TextStyle? titleStyle;
   final TextStyle? dateStyle;
-  final Color? progressColor;
   final Function()? onTap;
 
   @override
@@ -44,7 +38,7 @@ class TaskCard extends StatelessWidget {
       isShadow: true,
       shadows: Shadows.small,
       child: EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Column(
           children: [
             Row(
@@ -54,7 +48,7 @@ class TaskCard extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Text(
-                    title,
+                    date,
                     style: titleStyle ??
                         TS.bodyLarge.copyWith(
                           fontWeight: FontWeight.w600,
@@ -80,46 +74,25 @@ class TaskCard extends StatelessWidget {
                 ),
               ],
             ),
-            10.verticalSpace,
-            LinearProgress(
-              percentageText:
-                  progress != 0 ? '${(progress * 100).toInt()}%' : 'Canceled',
-              percentageColor: progress != 0
-                  ? progressColor?.withOpacity(0.8) ??
-                      statusColor.withOpacity(0.8)
-                  : greyText,
-              progressColor: progressColor,
-              valueLinear: progress,
+            15.verticalSpace,
+            Text(
+              description,
+              style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400),
             ),
             15.verticalSpace,
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                CircleAvatar(
+                  backgroundColor: statusColor,
+                  radius: 8.r,
+                ),
+                5.horizontalSpace,
                 Text(
-                  'Due Date: $dueDate',
+                  types,
                   style: dateStyle ??
                       TS.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                       ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '$member persons',
-                      style: TS.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w400,
-                        decoration: status == 'Canceled'
-                            ? TextDecoration.lineThrough
-                            : null,
-                      ),
-                    ),
-                    5.horizontalSpace,
-                    Icon(
-                      Icons.people_alt_outlined,
-                      color: Colors.grey,
-                      size: 24.dm,
-                    ),
-                  ],
                 ),
               ],
             ),

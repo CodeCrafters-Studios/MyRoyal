@@ -40,8 +40,8 @@ class BranchCard extends StatelessWidget {
                 height: 30.h,
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.5),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(8.0),
+                  borderRadius: BorderRadius.all(
+                    Corners.smRadius,
                   ),
                 ),
                 child: Center(

@@ -6,8 +6,9 @@ import 'package:iroyal/app/modules/settings/presentation/views/components/switch
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -16,8 +17,13 @@ class SettingsView extends GetView<SettingsController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SettingsViewImpl(controller: controller),
+    return PageBase(
+      showBackground: false,
+      showIconBack: false,
+      centeredTitle: true,
+      title: 'Settings',
+      textStyle: TS.headlineSmall,
+      child: SettingsViewImpl(controller: controller),
     );
   }
 }
@@ -34,10 +40,10 @@ class SettingsViewImpl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _buildSettingsHeader(),
+        const AppbarSpacer(),
         Expanded(
           child: ListView(
-            padding: REdgeInsets.symmetric(horizontal: 21, vertical: 10),
+            padding: REdgeInsets.symmetric(horizontal: 21),
             children: [
               _buildPersonalInformationSection(),
               10.verticalSpace,
@@ -48,18 +54,6 @@ class SettingsViewImpl extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSettingsHeader() {
-    return Center(
-      child: EPadding(
-        padding: const EdgeInsets.only(top: 50, bottom: 20),
-        child: Text(
-          'Settings',
-          style: TS.headlineSmall,
-        ),
-      ),
     );
   }
 

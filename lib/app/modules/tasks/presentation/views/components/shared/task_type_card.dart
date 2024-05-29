@@ -28,8 +28,8 @@ class TaskTypeCard extends StatelessWidget {
         height: 50.h,
         decoration: BoxDecoration(
           border: Border.all(color: borderColor),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(8),
+          borderRadius: BorderRadius.all(
+            Corners.smRadius,
           ),
           color: backgroundColor,
         ),

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/help-and-support/entities/popular_questions.dart';
+import 'package:iroyal/app/modules/help_and_support/entities/popular_questions.dart';
 
 class HelpAndSupportController extends GetxController {
   List<PopularQuestions> listPopularQuestions = <PopularQuestions>[
