@@ -35,8 +35,8 @@ class HomeController extends GetxController {
       isVisible: true,
     ),
     const Menu(
-      code: 'ic_tracking_documents',
-      name: 'Tracking Documents',
+      code: 'ic_salary',
+      name: 'Salary',
       isVisible: true,
     ),
     const Menu(
@@ -45,13 +45,18 @@ class HomeController extends GetxController {
       isVisible: true,
     ),
     const Menu(
-      code: 'ic_teams',
-      name: 'My Teams',
+      code: 'ic_webtel',
+      name: 'Webtel',
       isVisible: true,
     ),
     const Menu(
-      code: 'ic_webtel',
-      name: 'Webtel',
+      code: 'ic_tracking_documents',
+      name: 'Tracking Documents',
+      isVisible: true,
+    ),
+    const Menu(
+      code: 'ic_teams',
+      name: 'My Teams',
       isVisible: true,
     ),
     const Menu(
