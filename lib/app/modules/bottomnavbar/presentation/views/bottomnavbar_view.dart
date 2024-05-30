@@ -34,8 +34,8 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
                   controller.selectMenu(index);
                   controller.tabController.animateToPage(
                     index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: 10),
+                    curve: Curves.ease,
                   );
                 },
               ),

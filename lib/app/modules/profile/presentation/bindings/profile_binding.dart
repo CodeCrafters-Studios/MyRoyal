@@ -1,7 +1,11 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
+import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/permission/app_permission.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -14,6 +18,14 @@ class ProfileBinding extends Bindings {
         () => ProfileController(
           getProfile: Get.find(),
           getUser: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
+          downloadFile: Get.find(),
+        ),
+      )
+      ..lazyPut<ProfileLocalDataSourcesImpl>(
+        () => ProfileLocalDataSourcesImpl(
+          appPermission: Get.find<AppPermissionImpl>(),
+          dio: Get.find(),
         ),
       )
       ..lazyPut<ProfileRemoteDataSourcesImpl>(
@@ -23,7 +35,13 @@ class ProfileBinding extends Bindings {
       )
       ..lazyPut<ProfileRepositoryImpl>(
         () => ProfileRepositoryImpl(
+          localData: Get.find<ProfileLocalDataSourcesImpl>(),
           remoteData: Get.find<ProfileRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => DownloadFile(
+          Get.find<ProfileRepositoryImpl>(),
         ),
       )
       ..lazyPut(

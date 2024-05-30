@@ -74,6 +74,12 @@ class SettingsViewImpl extends StatelessWidget {
             Get.toNamed(Routes.PROFILE);
           },
         ),
+        ItemMenuSettings(
+          assetSvg: 'assets/icons/ic_change_password.svg',
+          text: 'Change Password',
+          withTrailing: true,
+          onTap: () => Get.to(() => const ComingSoonScreen()),
+        ),
       ],
     );
   }

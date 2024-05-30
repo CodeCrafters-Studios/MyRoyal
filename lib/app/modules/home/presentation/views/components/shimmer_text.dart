@@ -8,11 +8,13 @@ class ShimmerText extends StatelessWidget {
   const ShimmerText({
     super.key,
     required this.width,
+    this.height,
     this.padding,
     this.margin,
   });
 
   final double width;
+  final double? height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
 
@@ -22,6 +24,7 @@ class ShimmerText extends StatelessWidget {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
+        height: height,
         width: width,
         padding: padding ?? REdgeInsets.only(left: 8, top: 8, bottom: 10),
         margin: margin ?? REdgeInsets.only(bottom: 8),
