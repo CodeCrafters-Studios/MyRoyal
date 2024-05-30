@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:iroyal/base/initialization/notification_services.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
-// import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 abstract class ProfileLocalDataSources {
@@ -32,7 +31,6 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
         AppUtils.logApp('ERROR: External storage directory is null');
         return false;
       }
-      // const filePath = '/storage/emulated/0/Download/downloaded_file.pdf';
       final filePath = '${directory.path}/downloaded_file.pdf';
 
       AppUtils.logApp(filePath);
@@ -42,7 +40,6 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
         url,
         onReceiveProgress: (received, total) async {
           if (total != -1) {
-            // _progressList[index] = (received / total);
             AppUtils.logApp('${(received / total * 100).toStringAsFixed(0)}%');
             notificationService.updateProgressNotification(
               100,
