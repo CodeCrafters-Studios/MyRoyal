@@ -6,6 +6,8 @@ import '../modules/attendance_summary/bindings/attendance_summary_binding.dart';
 import '../modules/attendance_summary/views/attendance_summary_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
+import '../modules/dashboard/bindings/dashboard_binding.dart';
+import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
 import '../modules/detail_tasks/views/detail_tasks_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
@@ -129,6 +131,11 @@ class AppPages {
       name: _Paths.SALARY,
       page: () => const SalaryView(),
       binding: SalaryBinding(),
+    ),
+    GetPage(
+      name: _Paths.DASHBOARD,
+      page: () => const DashboardView(),
+      binding: DashboardBinding(),
     ),
   ];
 }
