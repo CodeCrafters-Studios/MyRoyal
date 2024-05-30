@@ -1,0 +1,106 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/widgets/padding.dart';
+
+class AnimatedToggle extends StatefulWidget {
+  final List<String> values;
+  final ValueChanged onToggleCallback;
+  final Color backgroundColor;
+  final Color buttonColor;
+  final Color textColor;
+
+  const AnimatedToggle({
+    super.key,
+    required this.values,
+    required this.onToggleCallback,
+    this.backgroundColor = const Color(0xFFe7e7e8),
+    this.buttonColor = primary,
+    this.textColor = white,
+  });
+
+  @override
+  AnimatedToggleState createState() => AnimatedToggleState();
+}
+
+class AnimatedToggleState extends State<AnimatedToggle> {
+  bool initialPosition = true;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: REdgeInsets.only(top: 40),
+      width: Get.width * 0.6,
+      margin: REdgeInsets.all(20),
+      child: Stack(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              initialPosition = !initialPosition;
+              var index = 0;
+              if (!initialPosition) {
+                index = 1;
+              }
+              widget.onToggleCallback(index);
+              setState(() {});
+            },
+            child: Container(
+              width: Get.width * 0.6,
+              height: Get.width * 0.13,
+              decoration: ShapeDecoration(
+                color: widget.backgroundColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Get.width * 0.1),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                  widget.values.length,
+                  (index) => EPadding(
+                    padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                    child: Text(
+                      widget.values[index],
+                      style: TextStyle(
+                        fontFamily: 'Rubik',
+                        fontSize: Get.width * 0.045,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xAA000000),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          AnimatedAlign(
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.decelerate,
+            alignment:
+                initialPosition ? Alignment.centerLeft : Alignment.centerRight,
+            child: Container(
+              width: Get.width * 0.33,
+              height: Get.width * 0.13,
+              decoration: ShapeDecoration(
+                color: widget.buttonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(Get.width * 0.1),
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                initialPosition ? widget.values[0] : widget.values[1],
+                style: TextStyle(
+                  fontFamily: 'Rubik',
+                  fontSize: Get.width * 0.045,
+                  color: widget.textColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
