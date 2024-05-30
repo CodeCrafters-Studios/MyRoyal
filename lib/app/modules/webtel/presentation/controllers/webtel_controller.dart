@@ -1,0 +1,144 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/webtel/data/models/webtel_model.dart';
+import 'package:iroyal/app/modules/webtel/domain/entities/branch.dart';
+import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+
+class WebtelController extends GetxController {
+  WebtelController({required this.getWebtel});
+
+  TextEditingController searchR = TextEditingController();
+  TextEditingController searchB = TextEditingController();
+  TextEditingController searchA = TextEditingController();
+
+  final GetWebtel getWebtel;
+
+  String webtelState = '';
+
+  RxBool isLoading = false.obs;
+  RxString valueListener = ''.obs;
+
+  List<Branch> branchData = [
+    Branch(
+      branchName: 'PT Royal Abadi Sejahtera',
+      code: 'RAS',
+      color: primaryAccent,
+      logo: 'assets/images/img_logo.png',
+    ),
+    Branch(
+      branchName: 'PT BM',
+      code: 'BM',
+      color: primaryColor,
+      logo: 'assets/images/img_logo_bm.png',
+    ),
+    Branch(
+      branchName: 'PT ACA',
+      code: 'ACA',
+      color: Colors.pink,
+      logo: 'assets/images/img_logo_cam.png',
+    ),
+  ];
+
+  RxList<Webtel> webtelData = <WebtelModel>[].obs;
+  RxList<Webtel> rasData = <Webtel>[].obs;
+  RxList<Webtel> bmData = <Webtel>[].obs;
+  RxList<Webtel> acaData = <Webtel>[].obs;
+
+  RxList<Webtel> filterRasData = <Webtel>[].obs;
+  RxList<Webtel> filterBmData = <Webtel>[].obs;
+  RxList<Webtel> filterAcaData = <Webtel>[].obs;
+
+  @override
+  void onInit() {
+    _getDataWebtel();
+    super.onInit();
+  }
+
+  void clear() {
+    searchR.clear();
+    searchB.clear();
+    searchA.clear();
+    filterRasData(rasData);
+    filterBmData(bmData);
+    filterAcaData(acaData);
+    valueListener.value = '';
+  }
+
+  Future<void> _getDataWebtel() async {
+    isLoading(true);
+
+    final r = await getWebtel();
+    isLoading(false);
+    r.fold(
+      (l) => webtelState = 'getPromFailed',
+      (r) {
+        webtelState = 'getPromSuccess';
+        webtelData(r);
+        rasData(_generateBranch('PT RAS', r));
+        bmData(_generateBranch('PT BM', r));
+        acaData(_generateBranch('PT ACA', r));
+        filterRasData(rasData);
+        filterBmData(bmData);
+        filterAcaData(acaData);
+        AppUtils.logApp('RAS :::::${rasData.length}');
+        AppUtils.logApp('FILTER RAS :::::${rasData.length}');
+      },
+    );
+  }
+
+  List<Webtel> _generateBranch(String branchName, List<Webtel> getBranch) {
+    final branchList = <Webtel>[];
+
+    getBranch.where((x) => x.branchName == branchName).forEach((x) {
+      branchList.add(
+        Webtel(
+          fullname: x.fullname,
+          departmentName: x.departmentName,
+          ext: x.ext,
+          branchName: x.branchName,
+          id: x.id,
+        ),
+      );
+    });
+    AppUtils.logApp('$branchName :::::$branchList');
+
+    return branchList;
+  }
+
+  void onChangedR(String value) {
+    valueListener.value = value;
+    _filterData(value, rasData, filterRasData);
+  }
+
+  void onChangedB(String value) {
+    valueListener.value = value;
+    _filterData(value, bmData, filterBmData);
+  }
+
+  void onChangedA(String value) {
+    valueListener.value = value;
+    _filterData(value, acaData, filterAcaData);
+  }
+
+  void _filterData(
+      String value, RxList<Webtel> data, RxList<Webtel> filterData) {
+    if (value.isEmpty) {
+      filterData.value = data;
+      AppUtils.logApp('${filterData.length}');
+    } else {
+      filterData.value = data
+          .where((e) =>
+              e.fullname.toLowerCase().contains(value.toLowerCase()) ||
+              e.ext.toString().toLowerCase().contains(value.toLowerCase()) ||
+              e.departmentName
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterData.length}');
+    }
+  }
+}
