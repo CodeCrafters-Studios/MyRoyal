@@ -141,7 +141,6 @@ class HomeUserStatus extends GetView<HomeController> {
                         ),
                       ],
                     ),
-              10.verticalSpace
             ],
           ),
         ),
