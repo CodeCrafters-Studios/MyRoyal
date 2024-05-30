@@ -22,46 +22,56 @@ class CreateTaskView extends StatelessWidget {
     return PageBase(
       showBackground: false,
       title: 'Create Task',
-      child: SingleChildScrollView(
-        child: EPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppbarSpacer(),
-              InputPrimary(
-                color: white,
-                outlineColor: primary,
-                key: const Key('inputTaskTitle'),
-                label: 'Task Name',
-                hint: 'Type here..',
-                onChanged: (value) {},
-                validation: (value) =>
-                    value?.isEmpty ?? false ? 'Cannot be empty' : null,
-              ),
-              20.verticalSpace,
-              InputPrimary(
-                maxLength: 1000,
-                maxLines: 5,
-                color: white,
-                outlineColor: primary,
-                key: const Key('inputTaskDesc'),
-                label: 'Task Description',
-                hint: 'Type here..',
-                onChanged: (value) {},
-                validation: (value) =>
-                    value?.isEmpty ?? false ? 'Cannot be empty' : null,
-              ),
-              20.verticalSpace,
-              _buildDatePickers(context),
-              20.verticalSpace,
-              _buildTaskAssignSection(),
-              20.verticalSpace,
-              _buildTaskTypeSection(),
-            ],
-          ),
+      child: EPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppbarSpacer(),
+            InputPrimary(
+              color: white,
+              outlineColor: primary,
+              key: const Key('inputTaskTitle'),
+              label: 'Task Name',
+              hint: 'Type here..',
+              onChanged: (value) {},
+              validation: (value) =>
+                  value?.isEmpty ?? false ? 'Cannot be empty' : null,
+            ),
+            20.verticalSpace,
+            InputPrimary(
+              maxLength: 1000,
+              maxLines: 5,
+              color: white,
+              outlineColor: primary,
+              key: const Key('inputTaskDesc'),
+              label: 'Task Description',
+              hint: 'Type here..',
+              onChanged: (value) {},
+              validation: (value) =>
+                  value?.isEmpty ?? false ? 'Cannot be empty' : null,
+            ),
+            20.verticalSpace,
+            _buildDatePickers(context),
+            20.verticalSpace,
+            _buildTaskAssignSection(),
+            20.verticalSpace,
+            _buildTaskTypeSection(),
+            const Spacer(),
+            _buildButtonPrimarySection(),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _buildButtonPrimarySection() {
+    return ButtonPrimary(
+      margin: REdgeInsets.symmetric(vertical: 20),
+      key: const Key('createTaskBtn'),
+      onPressed: () {},
+      text: 'Create Task',
+      fullWidth: true,
     );
   }
 
@@ -211,13 +221,6 @@ class CreateTaskView extends StatelessWidget {
               ),
             )
           ],
-        ),
-        80.verticalSpace,
-        ButtonPrimary(
-          key: const Key('createTaskBtn'),
-          onPressed: () {},
-          text: 'Create Task',
-          fullWidth: true,
         ),
       ],
     );
