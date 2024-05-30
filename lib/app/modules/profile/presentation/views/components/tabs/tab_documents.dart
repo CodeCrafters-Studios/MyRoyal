@@ -22,7 +22,7 @@ class TabDocumentsView extends StatelessWidget {
               textStyle: TS.bodyMedium,
               icon: Icons.download,
               withTrailing: true,
-              onTap: () {},
+              onTap: controller.downloadPdf,
             ),
             ItemMenuSettings(
               assetSvg: 'assets/icons/ic_download_doc.svg',

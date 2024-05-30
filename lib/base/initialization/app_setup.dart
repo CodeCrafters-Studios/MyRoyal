@@ -19,6 +19,7 @@ import 'package:iroyal/base/utils/initial_route.dart';
 // ignore: unused_import
 import 'package:iroyal/base/utils/location/app_location.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
+import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:iroyal/base/utils/share/app_share.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/utils/token/app_token.dart';
@@ -61,11 +62,12 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final appDialogImpl = AppDialogImpl();
   Get
     ..put(alice)
+    ..put(dio)
     ..put(AppStorage(box: box))
     ..put(NetworkInfoImpl(internetConnectionChecker))
     // ..put(AppLocationImpl())
     ..put(appDialogImpl)
-    // ..put(AppPermissionImpl())
+    ..put(AppPermissionImpl())
     ..put(AppShareImpl())
     ..put(AuthBiometricsImpl(
         auth: auth, appDialog: appDialogImpl, appStorage: Get.find()))
@@ -74,7 +76,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
     ..put(
       HttpService(
         alice: alice,
-        dio: dio,
+        dio: Get.find(),
         appStorage: Get.find(),
         networkInfo: Get.find<NetworkInfoImpl>(),
         appEncrypt: Get.find<AppEncryptImpl>(),
