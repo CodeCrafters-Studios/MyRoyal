@@ -57,6 +57,10 @@ abstract class AppDialog {
     String textButton,
     Function()? onPress,
   });
+
+  Future<void> showSuccessSnackBar({
+    required String description,
+  });
 }
 
 class AppDialogImpl implements AppDialog {
@@ -475,6 +479,46 @@ class AppDialogImpl implements AppDialog {
         ),
       ),
       barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showSuccessSnackBar({
+    required String description,
+  }) async {
+    if (Get.isSnackbarOpen) {
+      return;
+    }
+    Get.snackbar(
+      '',
+      '',
+      backgroundColor: successColor,
+      borderRadius: 10,
+      colorText: Colors.white,
+      duration: const Duration(milliseconds: 1500),
+      margin: REdgeInsets.only(top: 20, left: 20, right: 20),
+      maxWidth: Get.width * .8,
+      animationDuration: const Duration(milliseconds: 500),
+      snackStyle: SnackStyle.FLOATING,
+      messageText: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.check,
+              color: white,
+            ),
+            10.horizontalSpace,
+            Text(
+              description,
+              style: TS.caption.copyWith(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
+      titleText: const SizedBox(),
+      padding: REdgeInsets.all(12),
+      dismissDirection: DismissDirection.vertical,
     );
   }
 }

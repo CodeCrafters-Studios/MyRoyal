@@ -10,8 +10,6 @@ import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
-// import 'package:open_file/open_file.dart';
-// import 'package:path_provider/path_provider.dart';
 
 class ProfileController extends GetxController {
   ProfileController({
@@ -114,8 +112,7 @@ class ProfileController extends GetxController {
 
   Future<void> downloadPdf() async {
     isLoading(true);
-    const url =
-        'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+    const url = 'https://www.tutorialspoint.com/flutter/flutter_tutorial.pdf';
     final result = await downloadFile(url);
     isLoading(false);
 
@@ -123,15 +120,9 @@ class ProfileController extends GetxController {
         (failure) =>
             appDialog.showErrorSnackBar(description: 'failed_download_pdf'.tr),
         (success) async {
-      await appDialog.showInfoSnackbar(
+      await appDialog.showSuccessSnackBar(
         description: 'success_download_pdf',
-        title: 'success',
       );
-      // final directory = await getExternalStorageDirectory();
-      // if (directory != null) {
-      //   final savePath = '${directory.path}/downloaded_file.pdf';
-      //   OpenFile.open(savePath);
-      // }
     });
   }
 }

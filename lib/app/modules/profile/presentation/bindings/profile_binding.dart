@@ -35,7 +35,7 @@ class ProfileBinding extends Bindings {
       )
       ..lazyPut<ProfileRepositoryImpl>(
         () => ProfileRepositoryImpl(
-          localData: Get.find<ProfileLocalDataSources>(),
+          localData: Get.find<ProfileLocalDataSourcesImpl>(),
           remoteData: Get.find<ProfileRemoteDataSourcesImpl>(),
         ),
       )

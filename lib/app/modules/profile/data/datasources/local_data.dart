@@ -27,23 +27,30 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
     }
 
     try {
-      // final directory = await getDownloadsDirectory();
-      const filePath = '/storage/emulated/0/Download/downloaded_file.pdf';
+      final directory = await getDownloadsDirectory();
+      if (directory == null) {
+        AppUtils.logApp('ERROR: External storage directory is null');
+        return false;
+      }
+      // const filePath = '/storage/emulated/0/Download/downloaded_file.pdf';
+      final filePath = '${directory.path}/downloaded_file.pdf';
 
       AppUtils.logApp(filePath);
 
+      NotificationService notificationService = NotificationService();
       Response response = await dio.get(
         url,
         onReceiveProgress: (received, total) async {
-          NotificationService notificationService = NotificationService();
-
           if (total != -1) {
+            // _progressList[index] = (received / total);
             AppUtils.logApp('${(received / total * 100).toStringAsFixed(0)}%');
+            notificationService.updateProgressNotification(
+              100,
+              ((received / total * 100).toInt()),
+              0,
+              filePath,
+            );
           }
-          await Future.delayed(const Duration(seconds: 1), () {
-            notificationService.createNotification(
-                100, ((received / total) * 100).toInt(), 0);
-          });
         },
         options: Options(
             responseType: ResponseType.bytes,
@@ -54,12 +61,12 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
       );
       File file = File(filePath);
       var raf = file.openSync(mode: FileMode.write);
-      // response.data is List<int> type
       raf.writeFromSync(response.data);
       await raf.close();
+
       return true;
     } catch (e) {
-      AppUtils.logApp(e.toString());
+      AppUtils.logApp('ERROR HERE :::: $e');
       rethrow;
     }
   }
