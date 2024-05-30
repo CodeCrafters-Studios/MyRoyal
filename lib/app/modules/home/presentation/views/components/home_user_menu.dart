@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/loading_main_menu.dart';
+import 'package:iroyal/base/widgets/card_app.dart';
+
+class HomeUserMenu extends GetView<HomeController> {
+  const HomeUserMenu({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Obx(
+        () => CardApp(
+          width: Get.width,
+          height: controller.mainMenu.length <= 4
+              ? 150.h
+              : controller.mainMenu.length > 4
+                  ? 200.h
+                  : 300.h,
+          padding: REdgeInsets.all(14),
+          child: controller.isLoading.value
+              ? const LoadingMainMenu()
+              : GridView.count(
+                  padding: EdgeInsets.zero,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 4,
+                  shrinkWrap: true,
+                  children: controller.mainMenu,
+                ),
+        ),
+      ),
+    );
+  }
+}
