@@ -19,7 +19,7 @@ jobs:
       - run: flutter pub get
       # - run: flutter format --set-exit-if-changed .
       # - run: flutter analyze .
-      - run: flutter build apk
+      - run: flutter build apk --flavor dev -t lib/main_dev.dart
       - uses: actions/upload-artifact@v1
         with:
           name: release-apk
