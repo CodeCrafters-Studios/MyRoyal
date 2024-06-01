@@ -65,7 +65,6 @@ jobs:
           "📱 <b>Debug Apk released</b>%0A\
           url:  https://github.com/${{ github.repository }}/releases/tag/continuous" \
           -F document=@"build/app/outputs/apk/dev/release" \
-          -F document=@"build/app/outputs/apk/dev/release" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
       - name: Send debug APk to telegram
         uses: appleboy/telegram-action@master
