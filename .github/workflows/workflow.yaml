@@ -23,7 +23,7 @@ jobs:
       # Build iOS IPA using flavor
       - run: pod repo update
         working-directory: ios
-      - run: flutter build ios --release --no-codesign
+      - run: flutter build ios --no-codesign --flavor dev -t lib/main-main_dev.dart
 
       # Move built app to Payload directory
       - run: mkdir Payload
