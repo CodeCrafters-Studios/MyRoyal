@@ -57,15 +57,13 @@ jobs:
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
       - name: Send a message about the release
-        if: "contains(github.event.head_commit.message, '#genapk')"
         run: |
           curl \
           -d chat_id=${{ secrets.TELEGRAM_TO }} \
           -d parse_mode=HTML \
           -d text=\
           "📱 <b>Debug Apk released</b>%0A\
-          url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
-          "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+          url: https://github.com/CodeCrafters-Studios/i-Royal/actions/runs/9328546964/artifacts/1558561242
       - name: Send debug APk to telegram
         uses: appleboy/telegram-action@master
         with:
@@ -81,9 +79,8 @@ jobs:
             Base ref: ${{ github.base_ref }}
             Head ref: ${{ github.head_ref }}
             Commit SHA: ${{ github.sha }}
-          document: app/build/outputs/apk/release/app-release.apk
+          document: https://github.com/CodeCrafters-Studios/i-Royal/actions/runs/9328546964/artifacts/1558561242
       - name: Send apk to chat
-        if: "contains(github.event.head_commit.message, '#genapk-chat')"
         run: |
           curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
