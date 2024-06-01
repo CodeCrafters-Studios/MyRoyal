@@ -63,7 +63,10 @@ jobs:
           -d parse_mode=HTML \
           -d text=\
           "📱 <b>Debug Apk released</b>%0A\
-          url: https://github.com/CodeCrafters-Studios/i-Royal/actions/runs/9328546964/artifacts/1558561242
+          url:  https://github.com/${{ github.repository }}/releases/tag/continuous" \
+          -F document=@"build/app/outputs/apk/dev/release" \
+          -F document=@"build/app/outputs/apk/dev/release" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
       - name: Send debug APk to telegram
         uses: appleboy/telegram-action@master
         with:
@@ -79,7 +82,7 @@ jobs:
             Base ref: ${{ github.base_ref }}
             Head ref: ${{ github.head_ref }}
             Commit SHA: ${{ github.sha }}
-          document: https://github.com/CodeCrafters-Studios/i-Royal/actions/runs/9328546964/artifacts/1558561242
+          document: build/app/outputs/apk/dev/release
       - name: Send apk to chat
         run: |
           curl \
@@ -88,7 +91,7 @@ jobs:
           -F caption=\
           "📱 <b>Debug Apk released</b> \
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
-          -F document=@"app/build/outputs/apk/release/app-release.apk" \
+          -F document=@"build/app/outputs/apk/dev/release" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
       - name: Send a message if build fails
         if: failure()
