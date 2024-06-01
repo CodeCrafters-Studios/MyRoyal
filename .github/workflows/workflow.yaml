@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
       - uses: subosito/flutter-action@v1
         with:
           channel: "beta"
