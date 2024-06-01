@@ -17,14 +17,39 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "beta"
-      - run: flutter pub get
+
+      # Build iOS IPA using flavor
+      - run: pod repo update
+        working-directory: ios
+      - run: flutter build ios --release --no-codesign
+
+       # Move built app to Payload directory
+      - run: mkdir Payload
+        working-directory: build/ios/iphoneos
+      - run: mv Runner.app/ Payload
+        working-directory: build/ios/iphoneos
+
+      # Zip output
+      - name: Zip output
+        run: zip -qq -r -9 FlutterIpaExport.ipa Payload
+        working-directory: build/ios/iphoneos
+      
       # - run: flutter format --set-exit-if-changed .
       # - run: flutter analyze .
-      - run: flutter build apk --split-per-abi --flavor dev -t lib/main_dev.dart
-      - uses: actions/upload-artifact@v1
+      
+      # Build APK DEV
+      - run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --split-per-abi --flavor dev -t lib/main_dev.dart
+      
+      # Upload APK artifact
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: build/app/outputs/apk/dev/release
+      
+      # Get commit details
       - name: Get commit details
         id: commit_info
         run: |
@@ -38,6 +63,8 @@ jobs:
           FILES_CHANGED="${FILES_CHANGED//$'\n'/'%0A'}"
           FILES_CHANGED="${FILES_CHANGED//$'\r'/'%0D'}"
           echo ::set-output name=files_changed::$FILES_CHANGED
+      
+      # Send a message about the latest commit
       - name: Send a message about the latest commit
         run: |
           curl \
@@ -56,6 +83,7 @@ jobs:
           %0A\
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
+      
       # - name: Send a message about the release
       #   run: |
       #     curl \
@@ -82,6 +110,8 @@ jobs:
       #       Head ref: ${{ github.head_ref }}
       #       Commit SHA: ${{ github.sha }}
       #     document: build/app/outputs/flutter-apk/app-dev-release.apk
+      
+      # Send APK to chat
       - name: Send apk to chat
         run: |
           curl \
@@ -92,6 +122,19 @@ jobs:
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
           -F document=@"build/app/outputs/flutter-apk/app-armeabi-v7a-dev-release.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
+      
+      # Send IPA to chat
+      - name: Send IPA to chat
+        run: |
+        curl \
+          -F chat_id=${{ secrets.TELEGRAM_TO }} \
+          -F parse_mode=HTML \
+          -F caption=\
+          "📱 <b>Debug Apk released</b> \
+          url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
+          -F document=@"build/ios/iphoneos/FlutterIpaExport.ipa" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
+
       - name: Send a message if build fails
         if: failure()
         run: |
