@@ -66,7 +66,22 @@ jobs:
           "📱 <b>Debug Apk released</b>%0A\
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
           "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
-
+      - name: Send debug APk to telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Here is the debug APK for ${{ github.event_name }}
+            Runner OS: ${{ runner.os }}
+            Event: ${{ github.event_name }}
+            Job ID: ${{ github.job }}
+            Triggered by: ${{ github.actor }}
+            Branch or TAG: ${{ github.ref }}
+            Base ref: ${{ github.base_ref }}
+            Head ref: ${{ github.head_ref }}
+            Commit SHA: ${{ github.sha }}
+          document: app/build/outputs/apk/debug/app-debug.apk
       - name: Send apk to chat
         if: "contains(github.event.head_commit.message, '#genapk-chat')"
         run: |
@@ -78,7 +93,6 @@ jobs:
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
           -F document=@"./app/build/outputs/apk/debug/app-debug.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
-
       - name: Send a message if build fails
         if: failure()
         run: |
