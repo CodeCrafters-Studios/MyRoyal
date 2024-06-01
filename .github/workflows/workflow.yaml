@@ -56,16 +56,16 @@ jobs:
           %0A\
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
-      - name: Send a message about the release
-        run: |
-          curl \
-          -d chat_id=${{ secrets.TELEGRAM_TO }} \
-          -d parse_mode=HTML \
-          -d text=\
-          "📱 <b>Debug Apk released</b>%0A\
-          url:  https://github.com/${{ github.repository }}/releases/tag/continuous" \
-          -F document=@"build/app/outputs/apk/dev/release" \
-          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
+      # - name: Send a message about the release
+      #   run: |
+      #     curl \
+      #     -d chat_id=${{ secrets.TELEGRAM_TO }} \
+      #     -d parse_mode=HTML \
+      #     -d text=\
+      #     "📱 <b>Debug Apk released</b>%0A\
+      #     url:  https://github.com/${{ github.repository }}/releases/tag/continuous" \
+      #     -F document=@"build/app/outputs/apk/dev/release" \
+      #     https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
       - name: Send debug APk to telegram
         uses: appleboy/telegram-action@master
         with:
