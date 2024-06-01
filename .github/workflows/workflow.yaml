@@ -23,7 +23,7 @@ jobs:
         working-directory: ios
       - run: flutter build ios --release --no-codesign
 
-       # Move built app to Payload directory
+      # Move built app to Payload directory
       - run: mkdir Payload
         working-directory: build/ios/iphoneos
       - run: mv Runner.app/ Payload
@@ -33,22 +33,19 @@ jobs:
       - name: Zip output
         run: zip -qq -r -9 FlutterIpaExport.ipa Payload
         working-directory: build/ios/iphoneos
-      
-      # - run: flutter format --set-exit-if-changed .
-      # - run: flutter analyze .
-      
+
       # Build APK DEV
       - run: flutter pub get
       - name: Build APK
         run: flutter build apk --split-per-abi --flavor dev -t lib/main_dev.dart
-      
+
       # Upload APK artifact
       - name: Upload APK artifact
         uses: actions/upload-artifact@v1
         with:
           name: release-apk
           path: build/app/outputs/apk/dev/release
-      
+
       # Get commit details
       - name: Get commit details
         id: commit_info
@@ -63,7 +60,7 @@ jobs:
           FILES_CHANGED="${FILES_CHANGED//$'\n'/'%0A'}"
           FILES_CHANGED="${FILES_CHANGED//$'\r'/'%0D'}"
           echo ::set-output name=files_changed::$FILES_CHANGED
-      
+
       # Send a message about the latest commit
       - name: Send a message about the latest commit
         run: |
@@ -83,36 +80,9 @@ jobs:
           %0A\
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
-      
-      # - name: Send a message about the release
-      #   run: |
-      #     curl \
-      #     -d chat_id=${{ secrets.TELEGRAM_TO }} \
-      #     -d parse_mode=HTML \
-      #     -d text=\
-      #     "📱 <b>Debug Apk released</b>%0A\
-      #     url:  https://github.com/${{ github.repository }}/releases/tag/continuous" \
-      #     -F document=@"build/app/outputs/apk/dev/release" \
-      #     https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
-      # - name: Send debug APk to telegram
-      #   uses: appleboy/telegram-action@master
-      #   with:
-      #     to: ${{ secrets.TELEGRAM_TO }}
-      #     token: ${{ secrets.TELEGRAM_TOKEN }}
-      #     message: |
-      #       Here is the debug APK for ${{ github.event_name }}
-      #       Runner OS: ${{ runner.os }}
-      #       Event: ${{ github.event_name }}
-      #       Job ID: ${{ github.job }}
-      #       Triggered by: ${{ github.actor }}
-      #       Branch or TAG: ${{ github.ref }}
-      #       Base ref: ${{ github.base_ref }}
-      #       Head ref: ${{ github.head_ref }}
-      #       Commit SHA: ${{ github.sha }}
-      #     document: build/app/outputs/flutter-apk/app-dev-release.apk
-      
+
       # Send APK to chat
-      - name: Send apk to chat
+      - name: Send APK to chat
         run: |
           curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
@@ -122,15 +92,15 @@ jobs:
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
           -F document=@"build/app/outputs/flutter-apk/app-armeabi-v7a-dev-release.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
-      
+
       # Send IPA to chat
       - name: Send IPA to chat
         run: |
-        curl \
+          curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
           -F parse_mode=HTML \
           -F caption=\
-          "📱 <b>Debug Apk released</b> \
+          "📱 <b>Debug IPA released</b> \
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
           -F document=@"build/ios/iphoneos/FlutterIpaExport.ipa" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
