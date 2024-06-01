@@ -81,7 +81,7 @@ jobs:
             Base ref: ${{ github.base_ref }}
             Head ref: ${{ github.head_ref }}
             Commit SHA: ${{ github.sha }}
-          document: build/app/outputs/apk/dev/release
+          document: app/build/app/outputs/apk/dev/release/app-release.apk
       - name: Send apk to chat
         run: |
           curl \
@@ -90,7 +90,7 @@ jobs:
           -F caption=\
           "📱 <b>Debug Apk released</b> \
           url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
-          -F document=@"build/app/outputs/apk/dev/release" \
+          -F document=@"app/build/app/outputs/apk/dev/release/app-release.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
       - name: Send a message if build fails
         if: failure()
