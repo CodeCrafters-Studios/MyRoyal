@@ -2,8 +2,9 @@ name: Flutter CI
 
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
+  pull_request:
+    branches: [dev]
 
 jobs:
   build:
@@ -24,3 +25,67 @@ jobs:
         with:
           name: release-apk
           path: build/app/outputs/apk/dev/release
+      - name: Get commit details
+        id: commit_info
+        run: |
+          echo ::set-output name=commit_count::$(git rev-list --count HEAD)
+          FILES_CHANGED="$(git diff-tree --no-commit-id --name-status --diff-filter=ADMR -r ${{ github.sha }})"
+          FILES_CHANGED="${FILES_CHANGED//$'A\t'/[A]~ }"
+          FILES_CHANGED="${FILES_CHANGED//$'D\t'/[D]~ }"
+          FILES_CHANGED="${FILES_CHANGED//$'M\t'/[M]~ }"
+          FILES_CHANGED="${FILES_CHANGED//$'R\t'/[R]~ }"
+          FILES_CHANGED="${FILES_CHANGED//'%'/'%25'}"
+          FILES_CHANGED="${FILES_CHANGED//$'\n'/'%0A'}"
+          FILES_CHANGED="${FILES_CHANGED//$'\r'/'%0D'}"
+          echo ::set-output name=files_changed::$FILES_CHANGED
+      - name: Send a message about the latest commit
+        run: |
+          curl \
+          -d chat_id=${{ secrets.TELEGRAM_TO }} \
+          -d parse_mode=HTML \
+          -d text=\
+          "↗️ <b>PUSH</b>%0A\
+          <b>was made at:</b> ${{ github.repository }}%0A\
+          <b>by:</b> <u>${{ github.actor }}</u>%0A\
+          <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
+          <b>commit message:</b>%0A\
+          ${{ github.event.head_commit.message }}%0A\
+          %0A\
+          <b>files changed:</b>%0A\
+          <pre>${{  steps.commit_info.outputs.files_changed }}</pre>%0A\
+          %0A\
+          <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
+      - name: Send a message about the release
+        if: "contains(github.event.head_commit.message, '#genapk')"
+        run: |
+          curl \
+          -d chat_id=${{ secrets.TELEGRAM_TO }} \
+          -d parse_mode=HTML \
+          -d text=\
+          "📱 <b>Debug Apk released</b>%0A\
+          url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
+          "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+
+      - name: Send apk to chat
+        if: "contains(github.event.head_commit.message, '#genapk-chat')"
+        run: |
+          curl \
+          -F chat_id=${{ secrets.TELEGRAM_TO }} \
+          -F parse_mode=HTML \
+          -F caption=\
+          "📱 <b>Debug Apk released</b> \
+          url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
+          -F document=@"./app/build/outputs/apk/debug/app-debug.apk" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
+
+      - name: Send a message if build fails
+        if: failure()
+        run: |
+          curl \
+          -d chat_id=${{ secrets.TELEGRAM_TO }} \
+          -d parse_mode=HTML \
+          -d text=\
+          "❌ <b><u>BUILD FAILED!!!</u></b>%0A\
+          <b>job url:</b> https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+          "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
