@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [dev]
 
+permissions:
+  actions: read|write|none
+
 jobs:
   build_ios:
     runs-on: macos-latest
