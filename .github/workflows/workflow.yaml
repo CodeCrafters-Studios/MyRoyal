@@ -8,23 +8,21 @@ on:
 
 jobs:
   build_ios:
-  runs-on: macos-latest
-  steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: "12.x"
-    - uses: subosito/flutter-action@v1
-      with:
-        channel: "beta"
-    - run: flutter pub get
-    - run: flutter build ios --release --no-codesign --build-name=1.0.0 --build-number=1
-      env:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "beta"
+      - run: flutter pub get
+        working-directory: ios
+      - run: flutter build ios --release --no-codesign --build-name=1.0.0 --build-number=1
+        env:
         FLUTTER_TARGET: lib/main_dev.dart # Update with the correct entry point
         FLUTTER_BUILD_MODE: release
-        # Add any other environment variables as needed
-        # Add additional steps to package the IPA and send it to the desired destination
-
       # - run: mkdir Payload
       #   working-directory: build/ios/iphoneos
       # - run: mv Runner.app/ Payload
