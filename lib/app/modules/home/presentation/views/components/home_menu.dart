@@ -51,7 +51,6 @@ class HomeMenu extends StatelessWidget {
               ),
             ),
           ),
-          4.verticalSpace,
           Text(
             menu.name,
             textAlign: TextAlign.center,
