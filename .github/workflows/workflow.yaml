@@ -108,7 +108,7 @@ jobs:
       # Send APK to Telegram Bot
       - name: Send APK to chat
         run: |
-          caption="📦 <b>New iRoyal APK release</b>\n\n🔎 <b>What's New</b>\n\n✨ New in this update:\n• ${{ github.event.head_commit.message }}"
+          caption=$(printf "📦 <b>New iRoyal APK release</b>\n\n🔎 <b>What's New</b>\n\n✨ New in this update:\n• ${{ github.event.head_commit.message }}")
           curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
           -F parse_mode=HTML \
