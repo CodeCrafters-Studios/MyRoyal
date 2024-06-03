@@ -74,8 +74,8 @@ jobs:
       - name: Get commit details
         id: commit_info
         run: |
-          echo "commit_count=$(git rev-list --count HEAD)" >> $GITHUB_ENV
-          FILES_CHANGED=$(git diff-tree --no-commit-id --name-status --diff-filter=ADMR -r ${{ github.sha }})
+          echo ::set-output name=commit_count::$(git rev-list --count HEAD)
+          FILES_CHANGED="$(git diff-tree --no-commit-id --name-status --diff-filter=ADMR -r ${{ github.sha }})"
           FILES_CHANGED="${FILES_CHANGED//$'A\t'/[A]~ }"
           FILES_CHANGED="${FILES_CHANGED//$'D\t'/[D]~ }"
           FILES_CHANGED="${FILES_CHANGED//$'M\t'/[M]~ }"
@@ -83,7 +83,7 @@ jobs:
           FILES_CHANGED="${FILES_CHANGED//'%'/'%25'}"
           FILES_CHANGED="${FILES_CHANGED//$'\n'/'%0A'}"
           FILES_CHANGED="${FILES_CHANGED//$'\r'/'%0D'}"
-          echo "files_changed=$FILES_CHANGED" >> $GITHUB_ENV
+          echo ::set-output name=files_changed::$FILES_CHANGED
 
       # Send a message about the latest commit
       - name: Send a message about the latest commit
