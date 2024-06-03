@@ -48,11 +48,12 @@ jobs:
     name: 🔨 Android Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
         with:
-          java-version: "12.x"
-      - uses: subosito/flutter-action@v1
+          distribution: "temurin"
+          java-version: "12"
+      - uses: subosito/flutter-action@v2
         with:
           channel: "beta"
 
@@ -64,7 +65,7 @@ jobs:
       - name: Rename APK
         run: mv build/app/outputs/flutter-apk/app-armeabi-v7a-dev-release.apk build/app/outputs/flutter-apk/iRoyal-release.apk
 
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v3
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/iRoyal-release.apk
@@ -73,8 +74,8 @@ jobs:
       - name: Get commit details
         id: commit_info
         run: |
-          echo ::set-output name=commit_count::$(git rev-list --count HEAD)
-          FILES_CHANGED="$(git diff-tree --no-commit-id --name-status --diff-filter=ADMR -r ${{ github.sha }})"
+          echo "commit_count=$(git rev-list --count HEAD)" >> $GITHUB_ENV
+          FILES_CHANGED=$(git diff-tree --no-commit-id --name-status --diff-filter=ADMR -r ${{ github.sha }})
           FILES_CHANGED="${FILES_CHANGED//$'A\t'/[A]~ }"
           FILES_CHANGED="${FILES_CHANGED//$'D\t'/[D]~ }"
           FILES_CHANGED="${FILES_CHANGED//$'M\t'/[M]~ }"
@@ -82,55 +83,30 @@ jobs:
           FILES_CHANGED="${FILES_CHANGED//'%'/'%25'}"
           FILES_CHANGED="${FILES_CHANGED//$'\n'/'%0A'}"
           FILES_CHANGED="${FILES_CHANGED//$'\r'/'%0D'}"
-          echo ::set-output name=files_changed::$FILES_CHANGED
+          echo "files_changed=$FILES_CHANGED" >> $GITHUB_ENV
 
-      # Send a message about the last commit
+      # Send a message about the latest commit
       - name: Send a message about the latest commit
         run: |
           curl \
           -d chat_id=${{ secrets.TELEGRAM_TO }} \
           -d parse_mode=HTML \
           -d text=\
-          "✨ <b>PUSH</b>%0A\
+          "📈 <b>Latest Changes</b>%0A\
           <b>was made at:</b> ${{ github.repository }}%0A\
           <b>by:</b> <u>${{ github.actor }}</u>%0A\
-          <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
+          <b>commit #:</b> ${{ env.commit_count }}%0A\
           <b>commit message:</b>%0A\
           ${{ github.event.head_commit.message }}%0A\
+          <b>📱 Debug Apk released</b> url: https://github.com/${{ github.repository }}/releases/tag/continuous%0A\
           %0A\
           <b>files changed:</b>%0A\
-          <pre>${{  steps.commit_info.outputs.files_changed }}</pre>%0A\
+          <pre>${{ env.files_changed }}</pre>%0A\
           %0A\
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
 
-      # Send a message about the release
-      - name: Send a message about the release
-        run: |
-          curl \
-          -F chat_id=${{ secrets.TELEGRAM_TO }} \
-          -F parse_mode=HTML \
-          -F caption="📱 <b>Debug Apk released</b>%0Aurl: https://github.com/${{ github.repository }}/releases/tag/continuous" \
-          -F document=@"build/app/outputs/flutter-apk/iRoyal-release.apk" \
-          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
-
-      # Send debug APK to Telegram Bot
-      - name: Send debug APK to telegram
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            Here is the debug APK for ${{ github.event_name }}
-            Runner OS: ${{ runner.os }}
-            Event: ${{ github.event_name }}
-            Job ID: ${{ github.job }}
-            Triggered by: ${{ github.actor }}
-            Branch or TAG: ${{ github.ref }}
-            Base ref: ${{ github.base_ref }}
-            Head ref: ${{ github.head_ref }}
-            Commit SHA: ${{ github.sha }}
-          document: build/app/outputs/flutter-apk/iRoyal-release.apk
+      # Send APK to chat Telegram Bot
       - name: Send apk to chat
         run: |
           curl \
@@ -152,4 +128,4 @@ jobs:
           -d text=\
           "❌ <b><u>BUILD FAILED!!!</u></b>%0A\
           <b>job url:</b> https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
-          "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage"
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
