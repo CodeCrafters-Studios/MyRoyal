@@ -111,8 +111,12 @@ jobs:
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
           -F parse_mode=HTML \
           -F caption=\
-          "📦 <b>New iRoyal APK released</b> \
-          url: https://github.com/${{ github.repository }}/releases/tag/continuous" \
+          "📦 <b>New iRoyal APK Release:</b>%0A\
+          %0A
+          🔎 <b>What's New</b>%0A\
+          %0A
+          ✨ New in this update:%0A\
+          • ${{ github.event.head_commit.message }}%0A\
           -F document=@"build/app/outputs/flutter-apk/iRoyal-release.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
 
