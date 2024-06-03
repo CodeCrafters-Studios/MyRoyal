@@ -18,8 +18,7 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
 
   @override
   Future<bool> downloadFile(String url) async {
-    await appPermission.requestStorage();
-    final status = await appPermission.storageStatus;
+    final status = await appPermission.requestStorage();
     AppUtils.logApp('PERMISSION STORAGE ::::$status');
     if (!status) {
       return false;
@@ -31,7 +30,8 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
         AppUtils.logApp('ERROR: External storage directory is null');
         return false;
       }
-      final filePath = '${directory.path}/downloaded_file.pdf';
+      // final filePath = '${directory.path}/downloaded_file.pdf';
+      final filePath = '/storage/emulated/0/Download/downloaded_file.pdf';
 
       AppUtils.logApp(filePath);
 
@@ -39,14 +39,17 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
       Response response = await dio.get(
         url,
         onReceiveProgress: (received, total) async {
+          double _total = (received / total * 100);
           if (total != -1) {
-            AppUtils.logApp('${(received / total * 100).toStringAsFixed(0)}%');
+            AppUtils.logApp('${_total.toStringAsFixed(0)}%');
+            if(total != -1){
             notificationService.updateProgressNotification(
               100,
-              ((received / total * 100).toInt()),
+              (_total.toInt()),
               0,
               filePath,
             );
+            }
           }
         },
         options: Options(
