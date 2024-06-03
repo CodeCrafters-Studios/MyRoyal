@@ -92,10 +92,7 @@ jobs:
           -d chat_id=${{ secrets.TELEGRAM_TO }} \
           -d parse_mode=HTML \
           -d text=\
-          "📱 <b>Debug Apk released url:</b>%0A\
-          https://github.com/${{ github.repository }}/releases/tag/continuous%0A\
-          %0A\
-          📈 <b>Latest Changes</b>%0A\
+          "📈 <b>Latest Changes</b>%0A\
           <b>was made at:</b> ${{ github.repository }}%0A\
           <b>by:</b> <u>${{ github.actor }}</u>%0A\
           <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
