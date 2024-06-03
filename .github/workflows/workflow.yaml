@@ -92,16 +92,18 @@ jobs:
           -d chat_id=${{ secrets.TELEGRAM_TO }} \
           -d parse_mode=HTML \
           -d text=\
-          "📈 <b>Latest Changes</b>%0A\
+          "📱 <b>Debug Apk released url:</b>%0A\
+          https://github.com/${{ github.repository }}/releases/tag/continuous%0A\
+          %0A\
+          📈 <b>Latest Changes</b>%0A\
           <b>was made at:</b> ${{ github.repository }}%0A\
           <b>by:</b> <u>${{ github.actor }}</u>%0A\
-          <b>commit #:</b> ${{ env.commit_count }}%0A\
+          <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
           <b>commit message:</b>%0A\
           ${{ github.event.head_commit.message }}%0A\
-          <b>📱 Debug Apk released</b> url: https://github.com/${{ github.repository }}/releases/tag/continuous%0A\
           %0A\
           <b>files changed:</b>%0A\
-          <pre>${{ env.files_changed }}</pre>%0A\
+          <pre>${{  steps.commit_info.outputs.files_changed }}</pre>%0A\
           %0A\
           <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
