@@ -111,7 +111,7 @@ jobs:
           curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
           -F parse_mode=HTML \
-          text=\
+          -F text=\
           "📦 <b>New iRoyal APK release</b>%0A\
           <b>What's New</b>%0A\
           <b>by:</b> <u>${{ github.actor }}</u>%0A\
