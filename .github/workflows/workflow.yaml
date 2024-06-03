@@ -108,10 +108,11 @@ jobs:
       # Send APK to Telegram Bot
       - name: Send APK to chat
         run: |
+          caption="📦 <b>New iRoyal APK release</b>\n\n🔎 <b>What's New</b>\n\n✨ New in this update:\n• ${{ github.event.head_commit.message }}"
           curl \
           -F chat_id=${{ secrets.TELEGRAM_TO }} \
           -F parse_mode=HTML \
-          -F caption="📦 <b>New iRoyal APK release</b>%0A<b>What's New</b>%0A<b>by:</b> <u>${{ github.actor }}</u>%0A✨ New in this update:%0A${{ github.event.head_commit.message }}" \
+          -F caption="$caption" \
           -F document=@"build/app/outputs/flutter-apk/iRoyal-release.apk" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
 
