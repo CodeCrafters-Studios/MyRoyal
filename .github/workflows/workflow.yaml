@@ -85,38 +85,41 @@ jobs:
           echo ::set-output name=files_changed::$FILES_CHANGED
 
       # Send a message about the last commit
+      # Send a message about the last commit
       - name: Send a message about the latest commit
         run: |
-          curl -d chat_id=${{ secrets.TELEGRAM_TO }} \
-               -d parse_mode=HTML \
-               -d text="📈 <b>Latest Changes</b>%0A\
-                       <b>was made at:</b> ${{ github.repository }}%0A\
-                       <b>by:</b> <u>${{ github.actor }}</u>%0A\
-                       <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
-                       <b>commit message:</b>%0A\
-                       ${{ github.event.head_commit.message }}%0A\
-                       %0A\
-                       <b>files changed:</b>%0A\
-                       <pre>${{ steps.commit_info.outputs.files_changed }}</pre>%0A\
-                       %0A\
-                       <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
-               https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
+          curl \
+          -d chat_id=${{ secrets.TELEGRAM_TO }} \
+          -d parse_mode=HTML \
+          -d text=\
+          "📈 <b>Latest Changes</b>%0A\
+          <b>was made at:</b> ${{ github.repository }}%0A\
+          <b>by:</b> <u>${{ github.actor }}</u>%0A\
+          <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
+          <b>commit message:</b>%0A\
+          ${{ github.event.head_commit.message }}%0A\
+          %0A\
+          <b>files changed:</b>%0A\
+          <pre>${{  steps.commit_info.outputs.files_changed }}</pre>%0A\
+          %0A\
+          <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
 
       # Send APK to Telegram Bot
       - name: Send APK to chat
         run: |
-          curl -F chat_id=${{ secrets.TELEGRAM_TO }} \
-               -F parse_mode=HTML \
-               -F caption="📦 <b>New iRoyal APK Release:</b>%0A\
-                          %0A\
-                          🔎 <b>What's New</b>%0A\
-                          %0A\
-                          ✨ New in this update:%0A\
-                          • ${{ github.event.head_commit.message }}" \
-               -F document=@"build/app/outputs/flutter-apk/iRoyal-release.apk" \
-               https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
+          curl \
+          -F chat_id=${{ secrets.TELEGRAM_TO }} \
+          -F parse_mode=HTML \
+          -F caption=\
+          "📦 <b>New iRoyal APK release</b> \
+          🔎 <b>What's New</b> \
+          ✨ New in this update:\
+          • ${{ github.event.head_commit.message }}" \
+          -F document=@"build/app/outputs/flutter-apk/iRoyal-release.apk" \
+          https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendDocument
 
-      # Error / Failure build
+        # Error / Failure build
       - name: Send a message if build fails
         if: failure()
         run: |
