@@ -41,19 +41,13 @@ class DetailTrackingDocumentView
               foregroundColor: white,
               surfaceTintColor: white,
               flexibleSpace: EPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Request for man power replacement',
-                      style: TS.titleLarge.copyWith(
-                        color: black,
-                      ),
-                    ),
-                    15.verticalSpace,
                     SizedBox(
                       width: Get.width,
-                      height: 25.h,
+                      height: 30.h,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: controller.statusApproval.length,
@@ -71,40 +65,52 @@ class DetailTrackingDocumentView
                         },
                       ),
                     ),
+                    5.verticalSpace,
+                    Text(
+                      'Request for man power replacement',
+                      style: TS.titleLarge.copyWith(
+                        color: black,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              expandedHeight: 150.h,
+              expandedHeight: 155.h,
               automaticallyImplyLeading: false,
               pinned: true,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(100.h),
                 child: Stack(
-                    fit: StackFit.passthrough,
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: grey, width: 2.0),
-                          ),
+                  fit: StackFit.passthrough,
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: grey, width: 2.0),
                         ),
                       ),
-                      TabBar(
-                        controller: controller.tabController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        labelColor: black,
-                        indicatorColor: black,
-                        unselectedLabelColor: greyText,
-                        isScrollable: false,
-                        tabs: const [
-                          Tab(text: 'Headers'),
-                          Tab(text: 'Details'),
-                          Tab(text: 'Attacheds'),
-                          Tab(text: 'Status'),
-                        ],
-                      ),
-                    ]),
+                    ),
+                    TabBar(
+                      tabAlignment: TabAlignment.center,
+                      padding: EdgeInsets.zero,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      controller: controller.tabController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      labelStyle: TS.bodyMedium,
+                      labelColor: black,
+                      indicatorColor: black,
+                      unselectedLabelColor: greyText,
+                      isScrollable: true,
+                      tabs: const [
+                        Tab(text: 'Headers'),
+                        Tab(text: 'Details'),
+                        Tab(text: 'Attachment'),
+                        Tab(text: 'Status'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

@@ -2,9 +2,9 @@ import 'package:another_stepper/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/bottom_sheet_button.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class StatusView extends StatefulWidget {
@@ -164,52 +164,7 @@ class _MyAppState extends State<StatusView> {
           ],
         ),
       ),
-      bottomSheet: Container(
-        padding: REdgeInsets.only(bottom: 10, top: 20),
-        height: 100.h,
-        width: Get.width,
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: grey, width: 2.0),
-          ),
-          color: white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 48.h,
-              width: 180.w,
-              child: ButtonPrimary(
-                margin: REdgeInsets.symmetric(horizontal: 5),
-                onPressed: () {},
-                key: const Key('rejectBtn'),
-                suffixIcon: const Icon(
-                  Icons.close,
-                  color: white,
-                ),
-                text: 'Reject',
-                color: Colors.red,
-              ),
-            ),
-            SizedBox(
-              height: 48.h,
-              width: 180.w,
-              child: ButtonPrimary(
-                margin: REdgeInsets.symmetric(horizontal: 5),
-                onPressed: () {},
-                key: const Key('approveBtn'),
-                suffixIcon: const Icon(
-                  Icons.check,
-                  color: white,
-                ),
-                text: 'Approve',
-                color: green,
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomSheet: const BottomSheetButton(),
     );
   }
 }

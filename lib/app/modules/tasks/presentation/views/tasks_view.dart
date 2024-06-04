@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/create_task_view.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/view_all_tasks_view.dart';
+import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/all_tasks_view.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/cancel_tasks_view.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/completed_taks_view.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/type_tasks/in_progress_tasks_view.dart';
@@ -40,19 +40,22 @@ class TaskViewImpl extends StatelessWidget {
     return PageBase(
       showBackground: false,
       title: '',
-      child: EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const AppbarSpacer(),
-            _buildHeader(),
-            _buildTaskCategories(),
-            10.verticalSpace,
-            _buildLatestTasksReport(),
-            15.verticalSpace,
-            _buildLatestTasksList(),
-          ],
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: EPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AppbarSpacer(),
+              _buildHeader(),
+              _buildTaskCategories(),
+              10.verticalSpace,
+              _buildLatestTasksReport(),
+              15.verticalSpace,
+              _buildLatestTasksList(),
+            ],
+          ),
         ),
       ),
     );
@@ -97,9 +100,8 @@ class TaskViewImpl extends StatelessWidget {
 
   Widget _buildTaskCategories() {
     return SizedBox(
-      height: 300.h,
       child: GridView.count(
-        childAspectRatio: 1.5,
+        childAspectRatio: 1.2.h,
         mainAxisSpacing: 15,
         crossAxisSpacing: 15,
         physics: const NeverScrollableScrollPhysics(),
@@ -148,7 +150,7 @@ class TaskViewImpl extends StatelessWidget {
         Text('My latest tasks report', style: TS.titleLarge),
         InkWellTap(
           onTap: () => Get.to(
-            () => ViewAllTasksView(controller: controller),
+            () => AllTasksView(controller: controller),
           ),
           child: Text('View All', style: TS.bodyMedium),
         ),
@@ -158,9 +160,9 @@ class TaskViewImpl extends StatelessWidget {
 
   Widget _buildLatestTasksList() {
     return SizedBox(
-      height: 300.h,
+      height: Get.height,
       child: ListView.builder(
-        padding: EdgeInsets.zero,
+        padding: REdgeInsets.only(bottom: 500),
         itemCount: controller.listLastTasksDummy.length,
         itemBuilder: (_, index) {
           final r = controller.listLastTasksDummy[index];
