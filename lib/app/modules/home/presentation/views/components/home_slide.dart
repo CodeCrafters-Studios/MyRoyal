@@ -16,7 +16,6 @@ class HomeSlide extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          10.verticalSpace,
           Container(
             decoration: const BoxDecoration(
               boxShadow: [

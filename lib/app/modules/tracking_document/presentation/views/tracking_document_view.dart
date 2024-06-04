@@ -229,7 +229,7 @@ class TrackingDocumentImplView extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      padding: REdgeInsets.symmetric(horizontal: 10),
+      padding: REdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         border: Border.all(color: color),
         color: color.withOpacity(0.3),
@@ -238,7 +238,7 @@ class TrackingDocumentImplView extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: color, size: 20.dm),
-          5.horizontalSpace,
+          2.horizontalSpace,
           Text(
             label,
             style: TS.labelMedium.copyWith(color: color),

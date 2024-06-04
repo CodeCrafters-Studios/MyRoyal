@@ -63,8 +63,4 @@ class NotificationService {
       int count, int progress, int id, String filePath) {
     createNotification(count, progress, id, filePath);
   }
-
-  void completeNotification(int id, String filePath) {
-    createNotification(100, 100, id, filePath);
-  }
 }

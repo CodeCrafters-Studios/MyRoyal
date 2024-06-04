@@ -61,7 +61,6 @@ class IconTab extends StatelessWidget {
               width: 28.w,
               height: 28.h,
             ),
-            5.verticalSpace,
             Text(
               name,
               style: TS.caption.copyWith(color: primary),

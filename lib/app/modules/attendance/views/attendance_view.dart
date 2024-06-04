@@ -298,25 +298,18 @@ class AttendanceView extends GetView<AttendanceController> {
                             children: [
                               CircleAvatar(
                                 backgroundColor: primary30.withOpacity(0.2),
-                                radius: 78.r,
+                                radius: 80.r,
                                 child: InkWellTap(
+                                  radius: 72.r,
                                   color: primary.withOpacity(0.3),
-                                  radius: 80,
                                   onTap: controller.checkIn,
-                                  child: Container(
-                                    height: 120,
-                                    width: 120,
-                                    decoration: BoxDecoration(
-                                      color: primary,
-                                      borderRadius: BorderRadius.circular(80),
-                                      boxShadow: Shadows.small,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Check in',
-                                        style:
-                                            TS.bodyLarge.copyWith(color: white),
-                                      ),
+                                  child: CircleAvatar(
+                                    backgroundColor: primary,
+                                    radius: 72.r,
+                                    child: Text(
+                                      'Check in',
+                                      style:
+                                          TS.bodyLarge.copyWith(color: white),
                                     ),
                                   ),
                                 ),
