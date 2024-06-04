@@ -78,7 +78,7 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_change_password.svg',
           text: 'Change Password',
           withTrailing: true,
-          onTap: () => Get.to(() => const ComingSoonScreen()),
+          onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
         ),
       ],
     );
