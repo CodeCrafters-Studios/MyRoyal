@@ -98,11 +98,6 @@ jobs:
           <b>commit #:</b> ${{ steps.commit_info.outputs.commit_count }}%0A\
           <b>commit message:</b>%0A\
           ${{ github.event.head_commit.message }}%0A\
-          %0A\
-          <b>files changed:</b>%0A\
-          <pre>${{  steps.commit_info.outputs.files_changed }}</pre>%0A\
-          %0A\
-          <b>url:</b> https://github.com/${{ github.repository }}/commit/${{ github.sha }}" \
           https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
 
       # Send APK to Telegram Bot
