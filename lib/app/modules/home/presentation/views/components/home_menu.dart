@@ -31,8 +31,8 @@ class HomeMenu extends StatelessWidget {
           case 'Tasks':
             Get.toNamed(Routes.TASKS);
             break;
-          case 'Salary':
-            Get.toNamed(Routes.SALARY);
+          case 'Payroll':
+            Get.toNamed(Routes.PAYROLL);
             break;
           default:
             Get.to(() => const ComingSoonScreen());
