@@ -18,49 +18,43 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
 
   @override
   Future<bool> downloadFile(String url) async {
-    final status = await appPermission.requestStorage();
-    AppUtils.logApp('PERMISSION STORAGE ::::$status');
-    if (!status) {
-      return false;
-    }
+    final hasPermission = await _requestStoragePermission();
+    if (!hasPermission) return false;
 
     try {
-      final directory = await getDownloadsDirectory();
+      final directory = await _getDownloadDirectory();
       if (directory == null) {
         AppUtils.logApp('ERROR: External storage directory is null');
         return false;
       }
-      // final filePath = '${directory.path}/downloaded_file.pdf';
-      final filePath = '/storage/emulated/0/Download/downloaded_file.pdf';
 
+      final filePath = '${directory.path}/downloaded_file.pdf';
       AppUtils.logApp(filePath);
 
       NotificationService notificationService = NotificationService();
-      Response response = await dio.get(
+      final response = await dio.get(
         url,
-        onReceiveProgress: (received, total) async {
-          double _total = (received / total * 100);
+        onReceiveProgress: (received, total) {
           if (total != -1) {
-            AppUtils.logApp('${_total.toStringAsFixed(0)}%');
-            if(total != -1){
+            final progress = (received / total * 100).toInt();
+            AppUtils.logApp('$progress%');
             notificationService.updateProgressNotification(
               100,
-              (_total.toInt()),
+              progress,
               0,
               filePath,
             );
-            }
           }
         },
         options: Options(
-            responseType: ResponseType.bytes,
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            }),
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status! < 500,
+        ),
       );
-      File file = File(filePath);
-      var raf = file.openSync(mode: FileMode.write);
+
+      final file = File(filePath);
+      final raf = file.openSync(mode: FileMode.write);
       raf.writeFromSync(response.data);
       await raf.close();
 
@@ -70,4 +64,32 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
       rethrow;
     }
   }
+
+  Future<bool> _requestStoragePermission() async {
+    final status = await appPermission.requestStorage();
+    if (!status) {
+      AppUtils.logApp('Storage permission denied');
+      return false;
+    }
+    return true;
+  }
+
+  Future<Directory?> _getDownloadDirectory() async {
+    if (Platform.isAndroid) {
+      return Directory('/storage/emulated/0/Download');
+    } else {
+      return await getDownloadsDirectory();
+    }
+  }
+
+  // Future<Directory?> _getDownloadDirectory() async {
+  //   if (Platform.isAndroid) {
+  //     if (await Permission.manageExternalStorage.isGranted) {
+  //       return Directory('/storage/emulated/0/Download');
+  //     }
+  //     return await getExternalStorageDirectory();
+  //   } else {
+  //     return await getDownloadsDirectory();
+  //   }
+  // }
 }

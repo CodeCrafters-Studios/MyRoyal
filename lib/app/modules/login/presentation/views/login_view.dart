@@ -1,14 +1,14 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/login/presentation/views/components/biometric_login.dart';
+import 'package:iroyal/app/modules/login/presentation/views/components/have_no_account.dart';
+import 'package:iroyal/app/modules/login/presentation/views/components/or_login_with.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_images/logo.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_password.dart';
@@ -136,101 +136,6 @@ class LoginView extends GetView<LoginController> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class OrLoginWith extends StatelessWidget {
-  const OrLoginWith({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: grey,
-          ),
-        ),
-        20.horizontalSpace,
-        Text(
-          'Or login with',
-          style: TS.bodySmall,
-        ),
-        20.horizontalSpace,
-        Expanded(
-          child: Container(
-            height: 1,
-            color: grey,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class BiometricsLogin extends StatelessWidget {
-  const BiometricsLogin({super.key, required this.onTap});
-
-  final Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWellTap(
-      onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            'assets/icons/ic_fingerprint.png',
-            width: 42.w,
-            height: 42.h,
-          ),
-          Container(
-            height: 56.h,
-            width: 1,
-            color: Colors.black,
-            margin: REdgeInsets.symmetric(horizontal: 16),
-          ),
-          Image.asset(
-            'assets/icons/ic_face_id.png',
-            width: 42.w,
-            height: 42.h,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class HaveNoAccount extends StatelessWidget {
-  const HaveNoAccount({super.key, this.onTap});
-  final Function()? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final stringArray = 'Dont have an Account? ^Click^ here'.split('^');
-    return RichText(
-      text: TextSpan(
-        children: stringArray.mapIndexed(
-          (index, element) {
-            if (index.isEven) {
-              return TextSpan(
-                text: element,
-                style: TS.bodySmall.copyWith(color: appTextColor),
-              );
-            } else {
-              return TextSpan(
-                text: element,
-                style: TS.bodySmall.copyWith(color: primaryColor),
-                recognizer: TapGestureRecognizer()..onTap = onTap,
-              );
-            }
-          },
-        ).toList(),
       ),
     );
   }

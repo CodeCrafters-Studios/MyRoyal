@@ -43,11 +43,6 @@ class HomeView extends GetView<HomeController> {
           HomeSlide(
             controller: controller,
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: 100.h,
-            ),
-          )
         ],
       ),
     );

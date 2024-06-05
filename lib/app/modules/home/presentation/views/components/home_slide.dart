@@ -56,15 +56,9 @@ class HomeSlide extends StatelessWidget {
               ),
             ),
           ),
-          // 10.verticalSpace,
-          // CarouselIndicator(
-          //   activeColor: primary,
-          //   color: grey,
-          //   count: controller.homeSLider.length,
-          //   index: controller.indexSlider(),
-          //   width: 8,
-          //   height: 8,
-          // ),
+          Container(
+            height: 100.h,
+          ),
         ],
       ),
     );
