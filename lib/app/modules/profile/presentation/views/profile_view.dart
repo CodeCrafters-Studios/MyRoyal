@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_professional.dart';
@@ -38,54 +39,62 @@ class ProfileViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const AppbarSpacer(),
-        Stack(
-          fit: StackFit.passthrough,
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(color: grey, width: 2.0),
-                ),
-              ),
-            ),
-            TabBar(
-              tabAlignment: TabAlignment.center,
-              padding: EdgeInsets.zero,
-              isScrollable: true,
-              controller: controller.tabController,
-              indicator: const BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(width: 2),
-                ),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelStyle: TS.bodyMedium.copyWith(color: primary),
-              unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-              unselectedLabelColor: primary,
-              tabs: const [
-                Tab(text: 'Personal'),
-                Tab(text: 'Professional'),
-                Tab(text: 'Documents'),
-              ],
-            ),
-          ],
-        ),
+        _buildTabBar(),
         20.verticalSpace,
+        _buildTabBarView(),
+      ],
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Stack(
+      fit: StackFit.passthrough,
+      alignment: Alignment.bottomCenter,
+      children: [
         Container(
-          padding: REdgeInsets.symmetric(horizontal: 14),
-          width: Get.width,
-          height: 600.h,
-          child: TabBarView(
-            controller: controller.tabController,
-            children: [
-              TabPersonalView(controller: controller),
-              TabProfessionalView(controller: controller),
-              TabDocumentsView(controller: controller),
-            ],
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: grey, width: 2.0),
+            ),
           ),
         ),
+        TabBar(
+          tabAlignment: TabAlignment.center,
+          padding: EdgeInsets.zero,
+          isScrollable: true,
+          controller: controller.tabController,
+          indicator: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(width: 2),
+            ),
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: TS.bodyMedium.copyWith(color: primary),
+          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+          unselectedLabelColor: primary,
+          tabs: const [
+            Tab(text: 'Personal'),
+            Tab(text: 'Professional'),
+            Tab(text: 'Documents'),
+          ],
+        ),
       ],
+    );
+  }
+
+  Widget _buildTabBarView() {
+    return Container(
+      padding: REdgeInsets.symmetric(horizontal: 14),
+      width: Get.width,
+      height: 600.h,
+      child: TabBarView(
+        controller: controller.tabController,
+        children: [
+          TabPersonalView(controller: controller),
+          TabProfessionalView(controller: controller),
+          TabDocumentsView(controller: controller),
+        ],
+      ),
     );
   }
 }

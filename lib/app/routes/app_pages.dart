@@ -22,8 +22,8 @@ import '../modules/notifications/presentation/bindings/notifications_binding.dar
 import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
-import '../modules/salary/bindings/salary_binding.dart';
-import '../modules/salary/views/salary_view.dart';
+import '../modules/payroll/bindings/payroll_binding.dart';
+import '../modules/payroll/views/payroll_view.dart';
 import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -127,8 +127,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SALARY,
-      page: () => const SalaryView(),
-      binding: SalaryBinding(),
+      page: () => const PayrollView(),
+      binding: PayrollBinding(),
     ),
   ];
 }

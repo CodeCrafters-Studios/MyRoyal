@@ -35,8 +35,8 @@ class HomeController extends GetxController {
       isVisible: true,
     ),
     const Menu(
-      code: 'ic_salary',
-      name: 'Salary',
+      code: 'ic_payroll',
+      name: 'Payroll',
       isVisible: true,
     ),
     const Menu(
