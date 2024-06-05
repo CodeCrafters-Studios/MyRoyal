@@ -5,6 +5,7 @@ import 'package:iroyal/base/initialization/notification_services.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 abstract class ProfileLocalDataSources {
   Future<bool> downloadFile(String url);
@@ -74,22 +75,22 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
     return true;
   }
 
-  Future<Directory?> _getDownloadDirectory() async {
-    if (Platform.isAndroid) {
-      return Directory('/storage/emulated/0/Download');
-    } else {
-      return await getDownloadsDirectory();
-    }
-  }
-
   // Future<Directory?> _getDownloadDirectory() async {
   //   if (Platform.isAndroid) {
-  //     if (await Permission.manageExternalStorage.isGranted) {
-  //       return Directory('/storage/emulated/0/Download');
-  //     }
-  //     return await getExternalStorageDirectory();
+  //     return Directory('/storage/emulated/0/Download');
   //   } else {
   //     return await getDownloadsDirectory();
   //   }
   // }
+
+  Future<Directory?> _getDownloadDirectory() async {
+    if (Platform.isAndroid) {
+      if (await Permission.manageExternalStorage.isGranted) {
+        return Directory('/storage/emulated/0/Download');
+      }
+      return await getExternalStorageDirectory();
+    } else {
+      return await getDownloadsDirectory();
+    }
+  }
 }
