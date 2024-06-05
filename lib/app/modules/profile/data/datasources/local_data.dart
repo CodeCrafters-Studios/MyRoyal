@@ -36,18 +36,15 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
       final response = await dio.get(
         url,
         onReceiveProgress: (received, total) {
-          double progress = (received / total * 100);
           if (total != -1) {
-            AppUtils.logApp('${(received / total * 100).toStringAsFixed(0)}%');
-            AppUtils.logApp('${progress.toStringAsFixed(0)}%');
-            if (total != -1) {
-              notificationService.updateProgressNotification(
-                100,
-                ((received / total * 100).toInt()),
-                (progress.toInt()),
-                filePath,
-              );
-            }
+            final progress = (received / total * 100).toInt();
+            AppUtils.logApp('$progress%');
+            notificationService.updateProgressNotification(
+              100,
+              progress,
+              0,
+              filePath,
+            );
           }
         },
         options: Options(
