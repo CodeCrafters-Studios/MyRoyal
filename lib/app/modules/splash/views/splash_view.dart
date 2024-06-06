@@ -24,7 +24,7 @@ class SplashView extends GetView<SplashController> {
         children: [
           Center(
             child: EImages(
-              width: 200.w,
+              width: 200.r,
               name: 'assets/images/img_logo.png',
             ).animate().fadeIn(
                   duration: const Duration(milliseconds: 1500),

@@ -77,13 +77,13 @@ class CreateTaskView extends StatelessWidget {
 
   Widget _buildDatePickers(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         _buildDatePicker(
           label: 'Start Date',
           selectedDate: controller.selectedStartDate,
           onSelectDate: () => controller.selectStartDate(context),
         ),
+        16.horizontalSpace,
         _buildDatePicker(
           label: 'End Date',
           selectedDate: controller.selectedEndDate,
@@ -107,34 +107,22 @@ class CreateTaskView extends StatelessWidget {
           style: TS.labelLarge,
         ),
         3.verticalSpace,
-        Container(
-          width: 160.w,
-          decoration: BoxDecoration(
-            border: Border.all(width: 1.0, color: primary),
-            borderRadius: BorderRadius.all(Corners.smRadius),
+        ButtonPrimary(
+          margin: REdgeInsets.only(top: 5),
+          padding: REdgeInsets.symmetric(
+            horizontal:
+                controller.selectedStartDate.value == 'Select date' ? 15 : 10,
+            vertical: 5,
           ),
-          child: EPadding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.calendar_today, color: primary),
-                  tooltip: 'Tap to open date picker',
-                  onPressed: onSelectDate,
-                ),
-                Obx(
-                  () => InkWell(
-                    onTap: onSelectDate,
-                    child: Text(
-                      selectedDate.value,
-                      textAlign: TextAlign.center,
-                      style: TS.bodyMedium.copyWith(color: greyText),
-                    ),
-                  ),
-                ),
-              ],
+          color: white,
+          borderSide: const BorderSide(color: primary),
+          fullWidth: false,
+          onPressed: onSelectDate,
+          suffixIcon: const Icon(Icons.calendar_today, color: primary),
+          child: Text(
+            selectedDate.value,
+            style: TS.bodyMedium.copyWith(
+              color: primary,
             ),
           ),
         ),

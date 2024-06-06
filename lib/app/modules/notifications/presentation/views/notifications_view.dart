@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
+
 import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
 import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -11,19 +11,15 @@ import '../controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
   const NotificationsView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return NotificationsViewImpl(
-      controller: controller,
-    );
+    return NotificationsViewImpl(controller: controller);
   }
 }
 
 class NotificationsViewImpl extends StatelessWidget {
-  const NotificationsViewImpl({
-    super.key,
-    required this.controller,
-  });
+  const NotificationsViewImpl({super.key, required this.controller});
 
   final NotificationsController controller;
 
@@ -39,28 +35,32 @@ class NotificationsViewImpl extends StatelessWidget {
               child: Column(
                 children: [
                   const AppbarSpacer(),
-                  SizedBox(
-                    height: Get.height,
-                    child: Obx(
-                      () => ListView.builder(
-                        shrinkWrap: true,
-                        padding: REdgeInsets.only(bottom: 100),
-                        itemCount: controller.notifDummy.length,
-                        itemBuilder: (_, index) {
-                          final r = controller.notifDummy[index];
-                          return NotificationsCard(
-                            title: r.title,
-                            description: r.description,
-                            date: r.date,
-                            isNew: r.isNew,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  _buildNotificationsList(),
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildNotificationsList() {
+    return SizedBox(
+      height: Get.height,
+      child: Obx(
+        () => ListView.builder(
+          shrinkWrap: true,
+          padding: REdgeInsets.only(bottom: 100),
+          itemCount: controller.notifDummy.length,
+          itemBuilder: (_, index) {
+            final notification = controller.notifDummy[index];
+            return NotificationsCard(
+              title: notification.title,
+              description: notification.description,
+              date: notification.date,
+              isNew: notification.isNew,
+            );
+          },
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
+import 'package:pie_chart/pie_chart.dart';
+
 import 'package:iroyal/app/modules/attendance_summary/views/components/apply_leave_view.dart';
 import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_all_leave_req.dart';
 import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_casual_leave_req.dart';
@@ -13,12 +14,12 @@ import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:pie_chart/pie_chart.dart';
 
 import '../controllers/attendance_summary_controller.dart';
 
 class AttendanceSummaryView extends GetView<AttendanceSummaryController> {
   const AttendanceSummaryView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PageBase(
@@ -30,10 +31,7 @@ class AttendanceSummaryView extends GetView<AttendanceSummaryController> {
 }
 
 class AttendanceSummaryViewImpl extends StatelessWidget {
-  const AttendanceSummaryViewImpl({
-    super.key,
-    required this.controller,
-  });
+  const AttendanceSummaryViewImpl({super.key, required this.controller});
 
   final AttendanceSummaryController controller;
 
@@ -45,182 +43,161 @@ class AttendanceSummaryViewImpl extends StatelessWidget {
         child: Column(
           children: [
             const AppbarSpacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Dashboard',
-                  style: TS.titleMedium,
-                ),
-                10.verticalSpace,
-                Text(
-                  'Leaves Summary',
-                  style: TS.bodyLarge,
-                ),
-                30.verticalSpace,
-                PieChart(
-                  chartRadius: 200.r,
-                  centerWidget: Text(
-                    '10',
-                    style: TS.headlineLarge,
-                  ),
-                  legendOptions: LegendOptions(
-                    legendTextStyle: TS.bodyLarge,
-                    legendPosition: LegendPosition.bottom,
-                    showLegendsInRow: true,
-                  ),
-                  dataMap: controller.dataMap,
-                  chartType: ChartType.ring,
-                  baseChartColor: black.withOpacity(0.15),
-                  colorList: controller.colorList,
-                  chartValuesOptions: ChartValuesOptions(
-                    showChartValuesInPercentage: false,
-                    decimalPlaces: 0,
-                    showChartValuesOutside: true,
-                    showChartValueBackground: false,
-                    chartValueStyle: TS.titleMedium.copyWith(color: black),
-                  ),
-                  totalValue: 10,
-                ),
-              ],
-            ),
+            _buildDashboardSection(),
             const AppDivider(),
-            SizedBox(
-              width: Get.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Types",
-                    style: TS.bodyLarge,
-                  ),
-                  10.verticalSpace,
-                  Row(
-                    children: [
-                      Text(
-                        "Casual",
-                        style: TS.bodyMedium,
-                      ),
-                      10.horizontalSpace,
-                      SizedBox(
-                        width: 230.w,
-                        child: const LinearProgressIndicator(
-                          color: Colors.green,
-                          backgroundColor: greyHint,
-                          value: 0.5,
-                        ),
-                      ),
-                      10.horizontalSpace,
-                      Text(
-                        "05/08",
-                        style: TS.bodyMedium,
-                      )
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Sick",
-                        style: TS.bodyMedium,
-                      ),
-                      28.horizontalSpace,
-                      SizedBox(
-                        width: 230.w,
-                        child: const LinearProgressIndicator(
-                          color: Colors.orange,
-                          backgroundColor: greyHint,
-                          value: 0.3,
-                        ),
-                      ),
-                      10.horizontalSpace,
-                      Text(
-                        "03/08",
-                        style: TS.bodyMedium,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
+            _buildTypesSection(),
             20.verticalSpace,
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Leave Request',
-                      style: TS.titleMedium,
-                    ),
-                    ButtonPrimary(
-                      margin: REdgeInsets.only(
-                        top: 5,
-                      ),
-                      color: white,
-                      borderSide: const BorderSide(color: primary),
-                      fullWidth: false,
-                      onPressed: () =>
-                          Get.to(() => ApplyLeaveView(controller: controller)),
-                      child: Row(
-                        children: [
-                          Icon(Icons.add, size: 20.dm, color: primary),
-                          5.horizontalSpace,
-                          Text(
-                            'Create',
-                            style: TS.bodyMedium.copyWith(
-                              color: primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                25.verticalSpace,
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: grey),
-                    borderRadius: BorderRadius.circular(Corners.slg),
-                    color: white,
-                  ),
-                  child: TabBar(
-                    controller: controller.tabController,
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Corners.slg),
-                      color: primary,
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelStyle: TS.bodyMedium.copyWith(color: white),
-                    unselectedLabelStyle:
-                        TS.bodyMedium.copyWith(color: primary),
-                    unselectedLabelColor: primary,
-                    tabs: const [
-                      Tab(text: 'All'),
-                      Tab(text: 'Casual'),
-                      Tab(text: 'Sick'),
-                    ],
-                  ),
-                ),
-                20.verticalSpace,
-                Container(
-                  padding: REdgeInsets.symmetric(horizontal: 14),
-                  width: Get.width,
-                  height: 500.h,
-                  child: TabBarView(
-                    controller: controller.tabController,
-                    children: [
-                      TabAllLeaveRequest(controller: controller),
-                      TabCasualLeaveRequest(controller: controller),
-                      TabSickLeaveRequest(controller: controller),
-                    ],
-                  ),
-                ),
-              ],
-            )
+            _buildLeaveRequestSection(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDashboardSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Dashboard', style: TS.titleMedium),
+        10.verticalSpace,
+        Text('Leaves Summary', style: TS.bodyLarge),
+        30.verticalSpace,
+        PieChart(
+          chartRadius: 200.r,
+          centerWidget: Text('10', style: TS.headlineLarge),
+          legendOptions: LegendOptions(
+            legendTextStyle: TS.bodyLarge,
+            legendPosition: LegendPosition.bottom,
+            showLegendsInRow: true,
+          ),
+          dataMap: controller.dataMap,
+          chartType: ChartType.ring,
+          baseChartColor: black.withOpacity(0.15),
+          colorList: controller.colorList,
+          chartValuesOptions: ChartValuesOptions(
+            showChartValuesInPercentage: false,
+            decimalPlaces: 0,
+            showChartValuesOutside: true,
+            showChartValueBackground: false,
+            chartValueStyle: TS.titleMedium.copyWith(color: black),
+          ),
+          totalValue: 10,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTypesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Types", style: TS.bodyLarge),
+        10.verticalSpace,
+        _buildTypeRow("Casual", 0.5, "05/08"),
+        10.verticalSpace,
+        _buildTypeRow("Sick", 0.3, "03/08"),
+      ],
+    );
+  }
+
+  Widget _buildTypeRow(String type, double value, String ratio) {
+    return Row(
+      children: [
+        Text(type, style: TS.bodyMedium),
+        10.horizontalSpace,
+        Expanded(
+          child: LinearProgressIndicator(
+            color: type == "Casual" ? primary : secondary,
+            backgroundColor: greyHint,
+            value: value,
+          ),
+        ),
+        10.horizontalSpace,
+        Text(ratio, style: TS.bodyMedium),
+      ],
+    );
+  }
+
+  Widget _buildLeaveRequestSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLeaveRequestHeader(),
+        25.verticalSpace,
+        _buildLeaveRequestTabs(),
+        20.verticalSpace,
+        _buildLeaveRequestTabViews(),
+      ],
+    );
+  }
+
+  Widget _buildLeaveRequestHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Leave Request', style: TS.titleMedium),
+        ButtonPrimary(
+          margin: REdgeInsets.only(top: 5),
+          color: white,
+          borderSide: const BorderSide(color: primary),
+          fullWidth: false,
+          onPressed: () => Get.to(() => ApplyLeaveView(controller: controller)),
+          child: Row(
+            children: [
+              Icon(Icons.add, size: 20.dm, color: primary),
+              5.horizontalSpace,
+              Text(
+                'Create',
+                style: TS.bodyMedium.copyWith(
+                  color: primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLeaveRequestTabs() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: grey),
+        borderRadius: BorderRadius.circular(Corners.slg),
+        color: white,
+      ),
+      child: TabBar(
+        controller: controller.tabController,
+        indicator: BoxDecoration(
+          borderRadius: BorderRadius.circular(Corners.slg),
+          color: primary,
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        labelStyle: TS.bodyMedium.copyWith(color: white),
+        unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+        unselectedLabelColor: primary,
+        tabs: const [
+          Tab(text: 'All'),
+          Tab(text: 'Casual'),
+          Tab(text: 'Sick'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLeaveRequestTabViews() {
+    return Container(
+      padding: REdgeInsets.symmetric(horizontal: 14),
+      width: Get.width,
+      height: 500.h,
+      child: TabBarView(
+        controller: controller.tabController,
+        children: [
+          TabAllLeaveRequest(controller: controller),
+          TabCasualLeaveRequest(controller: controller),
+          TabSickLeaveRequest(controller: controller),
+        ],
       ),
     );
   }

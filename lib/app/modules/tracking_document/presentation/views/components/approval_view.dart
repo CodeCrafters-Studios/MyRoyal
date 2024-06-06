@@ -159,7 +159,7 @@ class ApprovalView extends StatelessWidget {
   Widget _buildStatusList(dynamic d) {
     return SizedBox(
       width: Get.width,
-      height: 25.h,
+      height: 30.h,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: controller.listStatus.length,

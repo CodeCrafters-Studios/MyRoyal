@@ -40,19 +40,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
-    // Initialize flutter_local_notifications
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
-    const initializationSettings =
-        InitializationSettings(android: androidSettings);
-
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.transparent,
@@ -62,6 +49,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     );
 
     _configureFCM();
+    _requestNotificationPermissions();
 
     WidgetsBinding.instance.addObserver(this);
     super.initState();
@@ -79,6 +67,15 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         .listen((message) => onForegroundMessage(context, message));
     FirebaseMessaging.onMessageOpenedApp
         .listen((message) => onMessageOpenedFromBackground(context, message));
+  }
+
+  Future<void> _requestNotificationPermissions() async {
+    // Initialize flutter_local_notifications
+    const androidSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
+    const initializationSettings = InitializationSettings(android: androidSettings);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
   }
 
   @override

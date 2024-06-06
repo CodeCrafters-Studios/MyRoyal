@@ -117,12 +117,13 @@ class ProfileController extends GetxController {
     isLoading(false);
 
     await result.fold(
-        (failure) =>
-            appDialog.showErrorSnackBar(description: 'failed_download_pdf'.tr),
-        (success) async {
-      await appDialog.showSuccessSnackBar(
-        description: 'success_download_pdf',
-      );
-    });
+      (failure) =>
+          appDialog.showErrorSnackBar(description: 'failed_download_pdf'.tr),
+      (success) async {
+        await appDialog.showSuccessSnackBar(
+          description: 'success_download_pdf',
+        );
+      },
+    );
   }
 }

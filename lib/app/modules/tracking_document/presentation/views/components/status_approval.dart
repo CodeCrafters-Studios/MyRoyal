@@ -28,7 +28,7 @@ class StatusApproval extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: REdgeInsets.symmetric(horizontal: 10),
+          padding: REdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             border: Border.all(color: borderColor),
             color: decorationColor.withOpacity(0.3),
@@ -49,7 +49,7 @@ class StatusApproval extends StatelessWidget {
                       color: primary50,
                       size: 20.dm,
                     ),
-              5.horizontalSpace,
+              2.horizontalSpace,
               Text(
                 status,
                 style: TS.labelMedium.copyWith(color: statusColor),

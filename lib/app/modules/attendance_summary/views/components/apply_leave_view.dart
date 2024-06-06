@@ -51,7 +51,6 @@ class ApplyLeaveView extends StatelessWidget {
               SizedBox(
                 width: Get.width,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ButtonPrimary(
                       margin: REdgeInsets.only(top: 5),
@@ -72,6 +71,7 @@ class ApplyLeaveView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    30.horizontalSpace,
                     ButtonPrimary(
                       margin: REdgeInsets.only(top: 5),
                       padding: REdgeInsets.symmetric(
@@ -98,7 +98,6 @@ class ApplyLeaveView extends StatelessWidget {
               SizedBox(
                 width: Get.width,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,6 +146,7 @@ class ApplyLeaveView extends StatelessWidget {
                         ),
                       ],
                     ),
+                    20.horizontalSpace,
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
