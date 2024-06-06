@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 
 class BottomSheetButton extends StatelessWidget {
@@ -20,7 +21,12 @@ class BottomSheetButton extends StatelessWidget {
         children: [
           Expanded(
             child: ButtonPrimary(
-              onPressed: () {},
+              onPressed: () {
+                AppDialogImpl().showChoiceDialog(
+                  title: 'Confirmation',
+                  description: 'Are you sure want to reject this document?',
+                );
+              },
               key: const Key('rejectBtn'),
               suffixIcon: const Icon(
                 Icons.close,
@@ -34,7 +40,12 @@ class BottomSheetButton extends StatelessWidget {
           20.horizontalSpace,
           Expanded(
             child: ButtonPrimary(
-              onPressed: () {},
+              onPressed: () {
+                AppDialogImpl().showChoiceDialog(
+                  title: 'Confirmation',
+                  description: 'Are you sure want to approve this document?',
+                );
+              },
               key: const Key('approveBtn'),
               suffixIcon: const Icon(
                 Icons.check,

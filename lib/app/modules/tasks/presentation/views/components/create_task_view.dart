@@ -6,6 +6,7 @@ import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/em
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/task_type_card.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -69,8 +70,15 @@ class CreateTaskView extends StatelessWidget {
     return ButtonPrimary(
       margin: REdgeInsets.symmetric(vertical: 20),
       key: const Key('createTaskBtn'),
-      onPressed: () {},
-      text: 'Create Task',
+      onPressed: () {
+        AppDialogImpl().showInfoDialog(
+          height: 60.r,
+          imagePath: 'assets/icons/ic_success.svg',
+          title: 'Task Created Successfully!',
+          textButton: 'Continue',
+        );
+      },
+      text: 'Create',
       fullWidth: true,
     );
   }
@@ -83,7 +91,7 @@ class CreateTaskView extends StatelessWidget {
           selectedDate: controller.selectedStartDate,
           onSelectDate: () => controller.selectStartDate(context),
         ),
-        16.horizontalSpace,
+        10.horizontalSpace,
         _buildDatePicker(
           label: 'End Date',
           selectedDate: controller.selectedEndDate,
