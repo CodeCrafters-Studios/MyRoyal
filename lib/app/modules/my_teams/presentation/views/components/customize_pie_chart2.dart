@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PieChartSample2 extends StatefulWidget {
   const PieChartSample2({super.key});
@@ -27,7 +28,6 @@ class PieChartSample2State extends State {
   List<PieChartSectionData> showingSections() {
     return List.generate(4, (i) {
       const fontSize = 12.0;
-      const radius = 65.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
 
       switch (i) {
@@ -36,7 +36,7 @@ class PieChartSample2State extends State {
             color: Colors.blueAccent,
             value: 40,
             title: '40%',
-            radius: radius,
+            radius: 80.r,
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class PieChartSample2State extends State {
             color: Colors.red,
             value: 30,
             title: '30%',
-            radius: radius,
+            radius: 80.r,
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class PieChartSample2State extends State {
             color: Colors.purple,
             value: 15,
             title: '15%',
-            radius: radius,
+            radius: 80.r,
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class PieChartSample2State extends State {
             color: Colors.green,
             value: 15,
             title: '15%',
-            radius: radius,
+            radius: 80.r,
             titleStyle: const TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,

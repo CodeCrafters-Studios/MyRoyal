@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/controllers/attendance_controller.dart';
+import 'package:iroyal/app/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
@@ -210,6 +211,14 @@ class BottomnavbarBinding extends Bindings {
       // Attendance
       ..lazyPut<AttendanceController>(
         () => AttendanceController(),
+      )
+
+      // Dashboard
+      ..lazyPut<DashboardController>(
+        () => DashboardController(
+          getMyTeams: Get.find(),
+          getUser: Get.find(),
+        ),
       );
   }
 }

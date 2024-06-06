@@ -16,4 +16,9 @@ class GenderDistributionModel extends GenderDistribution {
         "male": male,
         "female": female,
       };
+
+  Map<String, double> toMap() => {
+        "Male": male,
+        "Female": female,
+      };
 }

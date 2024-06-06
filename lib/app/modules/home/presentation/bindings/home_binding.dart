@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/dashboard/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
@@ -124,6 +125,14 @@ class HomeBinding extends Bindings {
       ..lazyPut(
         () => GetProfile(
           Get.find<ProfileRepositoryImpl>(),
+        ),
+      )
+
+      // Dashboard
+      ..lazyPut<DashboardController>(
+        () => DashboardController(
+          getMyTeams: Get.find(),
+          getUser: Get.find(),
         ),
       );
   }

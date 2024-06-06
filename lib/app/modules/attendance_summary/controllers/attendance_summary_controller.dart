@@ -7,16 +7,6 @@ import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
 class AttendanceSummaryController extends GetxController {
-  final dataMap = <String, double>{
-    "Balance": 2,
-    "Used": 8,
-  };
-
-  final colorList = <Color>[
-    Colors.greenAccent,
-    Colors.grey,
-  ];
-
   List<LeaveRequestDummyData> listAllLeaveRequestDummy =
       <LeaveRequestDummyData>[
     LeaveRequestDummyData(
