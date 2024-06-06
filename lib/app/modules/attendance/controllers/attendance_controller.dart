@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
@@ -9,6 +11,10 @@ class AttendanceController extends GetxController {
   final checkInTime = DateTime.now().obs;
   final checkOutTime = DateTime.now().obs;
   final breakTime = DateTime.now().obs;
+  late GoogleMapController mapController;
+  final Completer<GoogleMapController> controller = Completer();
+  final currentPosition = Rxn<LatLng>();
+  final locationError = RxnString();
 
   RxBool isCheckIn = false.obs;
   RxBool isCheckOut = false.obs;
@@ -26,12 +32,33 @@ class AttendanceController extends GetxController {
   void onInit() {
     super.onInit();
     _startTimer();
+    getCurrentLocation();
   }
 
   @override
   void onClose() {
     super.onClose();
     _timer.cancel();
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 15),
+      );
+      currentPosition.value = LatLng(position.latitude, position.longitude);
+    } catch (e) {
+      // Handle any other errors.
+      locationError.value = "Failed to get location: ${e.toString()}";
+    }
+  }
+
+  void onMapCreated(GoogleMapController controller) {
+    if (!this.controller.isCompleted) {
+      mapController = controller;
+      this.controller.complete(controller);
+    }
   }
 
   void _startTimer() {

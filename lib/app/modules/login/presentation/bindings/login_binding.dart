@@ -23,7 +23,7 @@ class LoginBinding extends Bindings {
           // deviceInfo: Get.find(),
           biometrics: Get.find<AuthBiometricsImpl>(),
           appStorage: Get.find(),
-          // appLocation: Get.find<AppLocationImpl>(),
+          appLocation: Get.find<AppLocationImpl>(),
           // commonParam: Get.find<CommonParamsImpl>(),
           appDialog: Get.find<AppDialogImpl>(),
         ),

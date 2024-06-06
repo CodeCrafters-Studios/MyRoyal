@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/app/modules/attendance_summary/controllers/attendance_summary_controller.dart';
-import 'package:iroyal/app/modules/attendance_summary/views/components/shared/leave_request_card.dart';
+import 'package:iroyal/app/modules/leave_summary/controllers/leave_summary_controller.dart';
+import 'package:iroyal/app/modules/leave_summary/views/components/shared/leave_request_card.dart';
 
 class TabCasualLeaveRequest extends StatelessWidget {
   const TabCasualLeaveRequest({super.key, required this.controller});
 
-  final AttendanceSummaryController controller;
+  final LeaveSummaryController controller;
 
   @override
   Widget build(BuildContext context) {

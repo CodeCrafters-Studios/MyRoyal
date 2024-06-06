@@ -117,11 +117,11 @@ class DetailTrackingDocumentView
           body: TabBarView(
             controller: controller.tabController,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              HeaderView(),
-              ComingSoonTabView(),
-              ComingSoonTabView(),
-              StatusView(),
+            children: [
+              const HeaderView(),
+              const ComingSoonTabView(),
+              const ComingSoonTabView(),
+              StatusView(controller: controller),
             ],
           ),
         ),

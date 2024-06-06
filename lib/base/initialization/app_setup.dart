@@ -70,7 +70,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
     ..put(dio)
     ..put(AppStorage(box: box))
     ..put(NetworkInfoImpl(internetConnectionChecker))
-    // ..put(AppLocationImpl())
+    ..put(AppLocationImpl())
     ..put(appDialogImpl)
     ..put(AppPermissionImpl())
     ..put(AppShareImpl())

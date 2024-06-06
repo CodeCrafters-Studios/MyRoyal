@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'package:iroyal/app/modules/attendance_summary/views/components/apply_leave_view.dart';
-import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_all_leave_req.dart';
-import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_casual_leave_req.dart';
-import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_sick_leave_req.dart';
+import 'package:iroyal/app/modules/leave_summary/views/components/apply_leave_view.dart';
+import 'package:iroyal/app/modules/leave_summary/views/components/tabs/tab_all_leave_req.dart';
+import 'package:iroyal/app/modules/leave_summary/views/components/tabs/tab_casual_leave_req.dart';
+import 'package:iroyal/app/modules/leave_summary/views/components/tabs/tab_sick_leave_req.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -13,25 +13,28 @@ import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
-import '../controllers/attendance_summary_controller.dart';
+import '../controllers/leave_summary_controller.dart';
 
-class AttendanceSummaryView extends GetView<AttendanceSummaryController> {
-  const AttendanceSummaryView({super.key});
+class LeaveSummaryView extends GetView<LeaveSummaryController> {
+  const LeaveSummaryView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Attendance Summary',
-      child: AttendanceSummaryViewImpl(controller: controller),
+      title: 'Leave Summary',
+      child: LeaveSummaryViewImpl(controller: controller),
     );
   }
 }
 
-class AttendanceSummaryViewImpl extends StatelessWidget {
-  const AttendanceSummaryViewImpl({super.key, required this.controller});
+class LeaveSummaryViewImpl extends StatelessWidget {
+  const LeaveSummaryViewImpl({
+    super.key,
+    required this.controller,
+  });
 
-  final AttendanceSummaryController controller;
+  final LeaveSummaryController controller;
 
   @override
   Widget build(BuildContext context) {

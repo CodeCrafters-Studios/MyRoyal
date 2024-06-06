@@ -2,8 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
-import '../modules/attendance_summary/bindings/attendance_summary_binding.dart';
-import '../modules/attendance_summary/views/attendance_summary_view.dart';
+import '../modules/leave_summary/bindings/leave_summary_binding.dart';
+import '../modules/leave_summary/views/leave_summary_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
@@ -123,9 +123,9 @@ class AppPages {
       binding: AttendanceBinding(),
     ),
     GetPage(
-      name: _Paths.ATTENDANCE_SUMMARY,
-      page: () => const AttendanceSummaryView(),
-      binding: AttendanceSummaryBinding(),
+      name: _Paths.LEAVE_SUMMARY,
+      page: () => const LeaveSummaryView(),
+      binding: LeaveSummaryBinding(),
     ),
     GetPage(
       name: _Paths.PAYROLL,

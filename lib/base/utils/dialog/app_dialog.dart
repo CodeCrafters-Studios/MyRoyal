@@ -71,6 +71,8 @@ class AppDialogImpl implements AppDialog {
     String? description,
     String? textYes,
     String? textNo,
+    Function()? onPressedYes,
+    Function()? onPressedNo,
   }) async {
     final r = await Get.dialog(
       Dialog(
@@ -113,7 +115,7 @@ class AppDialogImpl implements AppDialog {
                 children: [
                   Expanded(
                     child: ButtonPrimaryOutlined(
-                      onPressed: () => Get.back(result: false),
+                      onPressed: onPressedNo ?? () => Get.back(result: false),
                       text: textNo ?? 'No',
                       textColor: primary,
                       isOutline: true,
@@ -124,7 +126,7 @@ class AppDialogImpl implements AppDialog {
                   12.horizontalSpace,
                   Expanded(
                     child: ButtonPrimary(
-                      onPressed: () => Get.back(result: true),
+                      onPressed: onPressedYes ?? () => Get.back(result: true),
                       text: textYes ?? 'Yes',
                       fullWidth: true,
                     ),

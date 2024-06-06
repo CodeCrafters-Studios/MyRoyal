@@ -1,14 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/views/components/attendance_card.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/modules/my_teams/presentation/views/components/customize_pie_chart1.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/views/components/customize_pie_chart2.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/views/components/indicator.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -82,8 +80,8 @@ class DashboardView extends GetView<DashboardController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDashboardSection(),
-        20.verticalSpace,
-        _buildMyTeamsSection(),
+        controller.hasTeams.value ? 20.verticalSpace : emptyBox,
+        controller.hasTeams.value ? _buildMyTeamsSection() : emptyBox,
         20.verticalSpace,
         _buildTaskComplianceRatio(),
       ],
@@ -100,7 +98,10 @@ class DashboardView extends GetView<DashboardController> {
         20.verticalSpace,
         PieChart(
           chartRadius: 150.r,
-          centerWidget: Text('10', style: TS.headlineLarge),
+          centerWidget: Text(
+            controller.remainingLeave.toString(),
+            style: TS.headlineLarge,
+          ),
           legendOptions: LegendOptions(
             legendTextStyle: TS.bodyLarge,
             legendPosition: LegendPosition.bottom,
@@ -117,7 +118,7 @@ class DashboardView extends GetView<DashboardController> {
             showChartValueBackground: false,
             chartValueStyle: TS.titleMedium.copyWith(color: black),
           ),
-          totalValue: 10,
+          totalValue: controller.remainingLeave.value.toDouble(),
         ),
       ],
     );
@@ -313,57 +314,6 @@ class DashboardView extends GetView<DashboardController> {
           totalValue: controller.totalValueGender.value,
         ),
       ],
-    );
-
-    Material(
-      color: white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Corners.smRadius),
-        side: const BorderSide(color: primary),
-      ),
-      child: EPadding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        child: Column(
-          children: [
-            Text(
-              'Gender Comparison',
-              style: TS.bodySmall
-                  .copyWith(color: primary, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            5.verticalSpace,
-            SizedBox(
-              height: 200.h,
-              child: PieChartSample1(
-                titleSection1:
-                    '${controller.myTeamsData().genderDistribution.male.round()}%',
-                titleSection2:
-                    '${controller.myTeamsData().genderDistribution.female.round()}%',
-                valueSection1: controller.myTeamsData().genderDistribution.male,
-                valueSection2:
-                    controller.myTeamsData().genderDistribution.female,
-              ),
-            ),
-            10.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Indicator(
-                  color: Colors.blue,
-                  text: 'Male',
-                  isSquare: true,
-                ),
-                10.horizontalSpace,
-                const Indicator(
-                  color: Colors.purple,
-                  text: 'Female',
-                  isSquare: true,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

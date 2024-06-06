@@ -12,8 +12,8 @@ class DashboardController extends GetxController {
     required this.getUser,
   });
   final dataMap = <String, double>{
-    "Balance": 2,
-    "Used": 8,
+    "Balance": 11,
+    "Used": 1,
   };
 
   final colorList = <Color>[
@@ -32,21 +32,24 @@ class DashboardController extends GetxController {
     genderDistribution: GenderDistributionModel(male: 0.0, female: 0.0),
     children: [],
   ).obs;
+
   final GetMyTeams getMyTeams;
   final GetUser getUser;
 
   RxBool isLoading = false.obs;
+  RxBool hasTeams = false.obs;
 
   RxString id = ''.obs;
   String getIdState = '';
   String myTeamsState = '';
 
   RxDouble totalValueGender = 0.0.obs;
+  RxInt remainingLeave = 0.obs;
 
   @override
   void onInit() async {
     await _getIdCacheUser();
-    await _getMyTeamsData();
+    hasTeams.value ? _getMyTeamsData() : null;
     super.onInit();
   }
 
@@ -62,6 +65,8 @@ class DashboardController extends GetxController {
       (r) {
         getIdState = 'getIdSuccess';
         id(r.employee.id.toString());
+        remainingLeave(r.employee.availableLeave);
+        hasTeams(r.children);
         AppUtils.logApp('USER ID ::::::$id');
         isLoading.value = false;
       },

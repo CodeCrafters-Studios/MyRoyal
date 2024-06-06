@@ -25,6 +25,10 @@ class BottomSheetButton extends StatelessWidget {
                 AppDialogImpl().showChoiceDialog(
                   title: 'Confirmation',
                   description: 'Are you sure want to reject this document?',
+                  onPressedYes: () {
+                    Get.back();
+                    Get.back(result: true);
+                  },
                 );
               },
               key: const Key('rejectBtn'),
@@ -44,6 +48,10 @@ class BottomSheetButton extends StatelessWidget {
                 AppDialogImpl().showChoiceDialog(
                   title: 'Confirmation',
                   description: 'Are you sure want to approve this document?',
+                  onPressedYes: () {
+                    Get.back();
+                    Get.back(result: true);
+                  },
                 );
               },
               key: const Key('approveBtn'),

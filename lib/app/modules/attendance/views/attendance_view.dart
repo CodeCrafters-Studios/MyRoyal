@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/attendance/views/components/attendance_card.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -26,6 +26,7 @@ class AttendanceView extends GetView<AttendanceController> {
       title: 'Attendance',
       textStyle: TS.headlineSmall,
       child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         padding: REdgeInsets.only(bottom: 100),
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -79,15 +80,57 @@ class AttendanceView extends GetView<AttendanceController> {
     return Column(
       children: [
         _buildBackgroundImage(controller),
+        _buildGoogleMapsLocation(controller),
+        10.verticalSpace,
         _buildTimeDisplay(controller),
         _buildTimesInfo(controller),
         20.verticalSpace,
         _buildActionButton(controller),
-        20.verticalSpace,
-        _buildAttendanceSummary(),
-        _buildAttendanceGrid(),
       ],
     );
+  }
+
+  Widget _buildGoogleMapsLocation(AttendanceController controller) {
+    return Obx(() {
+      // Wait until currentPosition is not null
+      if (controller.currentPosition.value == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      return controller.isCheckIn.value
+          ? emptyBox
+          : SizedBox(
+              height: 300.h,
+              width: Get.width,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: controller.currentPosition.value!,
+                  zoom: 18,
+                ),
+                onMapCreated: controller.onMapCreated,
+                markers: {
+                  Marker(
+                    markerId: const MarkerId("1"),
+                    position: controller.currentPosition.value!,
+                  ),
+                  const Marker(
+                    markerId: MarkerId("2"),
+                    position: LatLng(-6.8617228, 107.5010659),
+                  ),
+                  // Add more markers here
+                },
+                circles: {
+                  Circle(
+                    circleId: const CircleId("2"),
+                    center: const LatLng(-6.8617228, 107.5010659),
+                    radius: 25.r,
+                    strokeWidth: 2,
+                    fillColor: const Color(0xFF006491).withOpacity(0.2),
+                  ),
+                },
+                // ToDo: Add polygon
+              ),
+            );
+    });
   }
 
   Widget _buildBackgroundImage(AttendanceController controller) {
@@ -213,8 +256,10 @@ class AttendanceView extends GetView<AttendanceController> {
               child: CircleAvatar(
                 backgroundColor: primary,
                 radius: 72.r,
-                child: Text('Check in',
-                    style: TS.bodyLarge.copyWith(color: white)),
+                child: Text(
+                  'Check in',
+                  style: TS.bodyLarge.copyWith(color: white),
+                ),
               ),
             ),
           ),
@@ -266,52 +311,6 @@ class AttendanceView extends GetView<AttendanceController> {
         5.verticalSpace,
         Text(time, style: TS.titleSmall),
         Text(label, style: TS.bodyMedium),
-      ],
-    );
-  }
-
-  Widget _buildAttendanceSummary() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Attendance Summary', style: TS.titleMedium),
-        InkWellTap(
-          onTap: () => Get.toNamed(Routes.ATTENDANCE_SUMMARY),
-          child: const Icon(Icons.arrow_forward_rounded),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAttendanceGrid() {
-    return GridView.count(
-      childAspectRatio: 2.5,
-      mainAxisSpacing: 15,
-      crossAxisSpacing: 15,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      children: const [
-        AttendanceCard(
-          backgroundColor: primary,
-          title: '02',
-          subTitle: 'Special Leaves',
-        ),
-        AttendanceCard(
-          backgroundColor: secondary70,
-          title: '05',
-          subTitle: 'Absents',
-        ),
-        AttendanceCard(
-          backgroundColor: red,
-          title: '0',
-          subTitle: 'Late in',
-        ),
-        AttendanceCard(
-          backgroundColor: Colors.orange,
-          title: '08',
-          subTitle: 'Leaves',
-        ),
       ],
     );
   }

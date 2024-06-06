@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/attendance_summary/domain/entities.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
-class AttendanceSummaryController extends GetxController {
+class LeaveSummaryController extends GetxController {
   List<LeaveRequestDummyData> listAllLeaveRequestDummy =
       <LeaveRequestDummyData>[
     LeaveRequestDummyData(

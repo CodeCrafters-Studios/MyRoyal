@@ -72,11 +72,14 @@ class CreateTaskView extends StatelessWidget {
       key: const Key('createTaskBtn'),
       onPressed: () {
         AppDialogImpl().showInfoDialog(
-          height: 60.r,
-          imagePath: 'assets/icons/ic_success.svg',
-          title: 'Task Created Successfully!',
-          textButton: 'Continue',
-        );
+            height: 60.r,
+            imagePath: 'assets/icons/ic_success.svg',
+            title: 'Task Created Successfully!',
+            textButton: 'Continue',
+            onPress: () {
+              Get.back();
+              Get.back();
+            });
       },
       text: 'Create',
       fullWidth: true,
@@ -106,35 +109,37 @@ class CreateTaskView extends StatelessWidget {
     required RxString selectedDate,
     required VoidCallback onSelectDate,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          textAlign: TextAlign.start,
-          style: TS.labelLarge,
-        ),
-        3.verticalSpace,
-        ButtonPrimary(
-          margin: REdgeInsets.only(top: 5),
-          padding: REdgeInsets.symmetric(
-            horizontal:
-                controller.selectedStartDate.value == 'Select date' ? 15 : 10,
-            vertical: 5,
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            textAlign: TextAlign.start,
+            style: TS.labelLarge,
           ),
-          color: white,
-          borderSide: const BorderSide(color: primary),
-          fullWidth: false,
-          onPressed: onSelectDate,
-          suffixIcon: const Icon(Icons.calendar_today, color: primary),
-          child: Text(
-            selectedDate.value,
-            style: TS.bodyMedium.copyWith(
-              color: primary,
+          3.verticalSpace,
+          ButtonPrimary(
+            margin: REdgeInsets.only(top: 5),
+            padding: REdgeInsets.symmetric(
+              horizontal:
+                  controller.selectedStartDate.value == 'Select date' ? 15 : 10,
+              vertical: 5,
+            ),
+            color: white,
+            borderSide: const BorderSide(color: primary),
+            fullWidth: false,
+            onPressed: onSelectDate,
+            suffixIcon: const Icon(Icons.calendar_today, color: primary),
+            child: Text(
+              selectedDate.value,
+              style: TS.bodyMedium.copyWith(
+                color: primary,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

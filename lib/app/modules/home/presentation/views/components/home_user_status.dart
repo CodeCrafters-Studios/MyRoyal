@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -33,18 +35,7 @@ class HomeUserStatus extends GetView<HomeController> {
                         ),
                       ),
                     )
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        EPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18),
-                          child: Text(
-                            "Activity for Today",
-                            style: TS.titleMedium,
-                          ),
-                        )
-                      ],
-                    ),
+                  : _buildLeaveSummary(),
               20.verticalSpace,
               controller.isLoading.value
                   ? Shimmer.fromColors(
@@ -144,6 +135,22 @@ class HomeUserStatus extends GetView<HomeController> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLeaveSummary() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 21),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Leave Summary', style: TS.titleMedium),
+          InkWellTap(
+            onTap: () => Get.toNamed(Routes.LEAVE_SUMMARY),
+            child: const Icon(Icons.arrow_forward_rounded),
+          ),
+        ],
       ),
     );
   }
