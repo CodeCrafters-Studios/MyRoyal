@@ -428,6 +428,8 @@ class AppDialogImpl implements AppDialog {
     String? title,
     String? description,
     String? textButton,
+    double? height,
+    double? width,
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -451,10 +453,10 @@ class AppDialogImpl implements AppDialog {
               if (imagePath != null)
                 SvgPicture.asset(
                   imagePath,
-                  height: 40.w,
-                  width: 40.w,
+                  height: height ?? 40.w,
+                  width: width ?? 40.w,
                 ),
-              5.verticalSpace,
+              description == null ? 28.verticalSpace : 5.verticalSpace,
               Text(
                 title ?? 'Information',
                 style: TS.titleMedium,

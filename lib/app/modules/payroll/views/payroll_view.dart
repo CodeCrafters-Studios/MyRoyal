@@ -22,7 +22,7 @@ class PayrollView extends GetView<PayrollController> {
       appbarColor: grey50,
       bgColors: grey50,
       showBackground: false,
-      title: 'Salary',
+      title: 'Payroll',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Column(

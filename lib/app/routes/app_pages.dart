@@ -128,7 +128,7 @@ class AppPages {
       binding: AttendanceSummaryBinding(),
     ),
     GetPage(
-      name: _Paths.SALARY,
+      name: _Paths.PAYROLL,
       page: () => const PayrollView(),
       binding: PayrollBinding(),
     ),

@@ -21,7 +21,7 @@ abstract class Routes {
   static const HELP_AND_SUPPORT = _Paths.HELP_AND_SUPPORT;
   static const ATTENDANCE = _Paths.ATTENDANCE;
   static const ATTENDANCE_SUMMARY = _Paths.ATTENDANCE_SUMMARY;
-  static const SALARY = _Paths.SALARY;
+  static const PAYROLL = _Paths.PAYROLL;
   static const DASHBOARD = _Paths.DASHBOARD;
 }
 
@@ -43,6 +43,6 @@ abstract class _Paths {
   static const HELP_AND_SUPPORT = '/help-and-support';
   static const ATTENDANCE = '/attendance';
   static const ATTENDANCE_SUMMARY = '/attendance-summary';
-  static const SALARY = '/salary';
+  static const PAYROLL = '/payroll';
   static const DASHBOARD = '/dashboard';
 }

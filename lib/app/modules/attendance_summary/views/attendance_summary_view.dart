@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:pie_chart/pie_chart.dart';
 
 import 'package:iroyal/app/modules/attendance_summary/views/components/apply_leave_view.dart';
 import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_all_leave_req.dart';
@@ -9,7 +8,6 @@ import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_
 import 'package:iroyal/app/modules/attendance_summary/views/components/tabs/tab_sick_leave_req.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/app_divider.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -43,47 +41,11 @@ class AttendanceSummaryViewImpl extends StatelessWidget {
         child: Column(
           children: [
             const AppbarSpacer(),
-            _buildDashboardSection(),
-            const AppDivider(),
-            _buildTypesSection(),
-            20.verticalSpace,
             _buildLeaveRequestSection(),
+            20.verticalSpace,
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildDashboardSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Dashboard', style: TS.titleMedium),
-        10.verticalSpace,
-        Text('Leaves Summary', style: TS.bodyLarge),
-        30.verticalSpace,
-        PieChart(
-          chartRadius: 200.r,
-          centerWidget: Text('10', style: TS.headlineLarge),
-          legendOptions: LegendOptions(
-            legendTextStyle: TS.bodyLarge,
-            legendPosition: LegendPosition.bottom,
-            showLegendsInRow: true,
-          ),
-          dataMap: controller.dataMap,
-          chartType: ChartType.ring,
-          baseChartColor: black.withOpacity(0.15),
-          colorList: controller.colorList,
-          chartValuesOptions: ChartValuesOptions(
-            showChartValuesInPercentage: false,
-            decimalPlaces: 0,
-            showChartValuesOutside: true,
-            showChartValueBackground: false,
-            chartValueStyle: TS.titleMedium.copyWith(color: black),
-          ),
-          totalValue: 10,
-        ),
-      ],
     );
   }
 
@@ -123,6 +85,8 @@ class AttendanceSummaryViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildLeaveRequestHeader(),
+        5.verticalSpace,
+        _buildTypesSection(),
         25.verticalSpace,
         _buildLeaveRequestTabs(),
         20.verticalSpace,
