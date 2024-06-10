@@ -1,0 +1,36 @@
+{
+    "stations": [
+        {
+            "id" : "1",
+            "name": "PT. Royal Abadi Sejahtera",
+            "address": "Jl. Raya Barat, Cimareme, Kec. Ngamprah, Kabupaten Bandung Barat, Jawa Barat 40552",
+            "phone": "0812-3456-789",
+            "lat": -6.8617228,
+            "long": 107.5010659
+        },
+        {
+            "id" : "2",
+            "name": "PT. Royal Abadi Sejahtera",
+            "address": "Jl. Raya Gadobangkong No.100 - 104, Cimareme, Kec. Ngamprah, Kabupaten Bandung Barat, Jawa Barat 40552",
+            "phone": "0812-3456-789",
+            "lat": -6.866871,
+            "long": 107.5133599
+        },
+        {
+            "id" : "3",
+            "name": "PT. Royal Abadi Sejahtera",
+            "address": "5GFG+R25, Pasirhalang, Cisarua, West Bandung Regency, West Java 40551",
+            "phone": "0812-3456-789",
+            "lat": -6.8254878,
+            "long": 107.5205922
+        },
+        {
+            "id" : "4",
+            "name": "PT. Royal Abadi Sejahtera",
+            "address": "QX3R+7MG, Bekasi Cyber Park LGF, Jl. KH. Noer Ali, Pekayon Jaya, Bekasi Selatan, RT.001/RW.005, Kayuringin Jaya, Kec. Bekasi Sel., Kota Bks, Jawa Barat 17144",
+            "phone": "0812-3456-789",
+            "lat": -6.3216575,
+            "long": 107.0405079
+        }
+    ]
+}

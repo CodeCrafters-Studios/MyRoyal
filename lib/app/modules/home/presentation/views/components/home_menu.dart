@@ -37,6 +37,9 @@ class HomeMenu extends StatelessWidget {
           case 'Dashboard':
             Get.toNamed(Routes.DASHBOARD);
             break;
+          case 'Visit':
+            Get.toNamed(Routes.VISIT);
+            break;
           default:
             Get.to(() => const ComingSoonScreen());
             break;
