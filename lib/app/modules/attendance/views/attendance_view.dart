@@ -102,31 +102,32 @@ class AttendanceView extends GetView<AttendanceController> {
               height: 300.h,
               width: Get.width,
               child: GoogleMap(
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
                 initialCameraPosition: CameraPosition(
                   target: controller.currentPosition.value!,
                   zoom: 18,
                 ),
                 onMapCreated: controller.onMapCreated,
+                circles: {
+                  Circle(
+                    strokeWidth: 1,
+                    fillColor: green.withOpacity(0.3),
+                    radius: 18.r,
+                    visible: true,
+                    strokeColor: green,
+                    circleId: const CircleId('royal'),
+                    center: const LatLng(-6.8617228, 107.5010659),
+                  )
+                },
                 markers: {
-                  Marker(
-                    markerId: const MarkerId("1"),
-                    position: controller.currentPosition.value!,
-                  ),
                   const Marker(
-                    markerId: MarkerId("2"),
+                    markerId: MarkerId('royal'),
                     position: LatLng(-6.8617228, 107.5010659),
                   ),
                   // Add more markers here
                 },
-                circles: {
-                  Circle(
-                    circleId: const CircleId("2"),
-                    center: const LatLng(-6.8617228, 107.5010659),
-                    radius: 25.r,
-                    strokeWidth: 2,
-                    fillColor: const Color(0xFF006491).withOpacity(0.2),
-                  ),
-                },
+
                 // ToDo: Add polygon
               ),
             );

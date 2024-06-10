@@ -34,8 +34,8 @@ import '../modules/tasks/presentation/bindings/tasks_binding.dart';
 import '../modules/tasks/presentation/views/tasks_view.dart';
 import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
 import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
-import '../modules/visit/bindings/visit_binding.dart';
-import '../modules/visit/views/visit_view.dart';
+import '../modules/visit/presentation/bindings/visit_binding.dart';
+import '../modules/visit/presentation/views/visit_view.dart';
 import '../modules/webtel/presentation/bindings/webtel_binding.dart';
 import '../modules/webtel/presentation/views/webtel_view.dart';
 
