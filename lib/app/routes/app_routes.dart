@@ -23,6 +23,7 @@ abstract class Routes {
   static const LEAVE_SUMMARY = _Paths.LEAVE_SUMMARY;
   static const PAYROLL = _Paths.PAYROLL;
   static const DASHBOARD = _Paths.DASHBOARD;
+  static const VISIT = _Paths.VISIT;
 }
 
 abstract class _Paths {
@@ -45,4 +46,5 @@ abstract class _Paths {
   static const LEAVE_SUMMARY = '/attendance-summary';
   static const PAYROLL = '/payroll';
   static const DASHBOARD = '/dashboard';
+  static const VISIT = '/visit';
 }

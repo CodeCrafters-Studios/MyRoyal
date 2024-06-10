@@ -2,8 +2,6 @@ import 'package:get/get.dart';
 
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
-import '../modules/leave_summary/bindings/leave_summary_binding.dart';
-import '../modules/leave_summary/views/leave_summary_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
@@ -16,16 +14,18 @@ import '../modules/help_and_support/bindings/help_and_support_binding.dart';
 import '../modules/help_and_support/views/help_and_support_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
+import '../modules/leave_summary/bindings/leave_summary_binding.dart';
+import '../modules/leave_summary/views/leave_summary_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
 import '../modules/notifications/presentation/bindings/notifications_binding.dart';
 import '../modules/notifications/presentation/views/notifications_view.dart';
-import '../modules/profile/presentation/bindings/profile_binding.dart';
-import '../modules/profile/presentation/views/profile_view.dart';
 import '../modules/payroll/bindings/payroll_binding.dart';
 import '../modules/payroll/views/payroll_view.dart';
+import '../modules/profile/presentation/bindings/profile_binding.dart';
+import '../modules/profile/presentation/views/profile_view.dart';
 import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -34,6 +34,8 @@ import '../modules/tasks/presentation/bindings/tasks_binding.dart';
 import '../modules/tasks/presentation/views/tasks_view.dart';
 import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
 import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
+import '../modules/visit/bindings/visit_binding.dart';
+import '../modules/visit/views/visit_view.dart';
 import '../modules/webtel/presentation/bindings/webtel_binding.dart';
 import '../modules/webtel/presentation/views/webtel_view.dart';
 
@@ -136,6 +138,11 @@ class AppPages {
       name: _Paths.DASHBOARD,
       page: () => const DashboardView(),
       binding: DashboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.VISIT,
+      page: () => const VisitView(),
+      binding: VisitBinding(),
     ),
   ];
 }
