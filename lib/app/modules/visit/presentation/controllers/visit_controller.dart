@@ -80,10 +80,6 @@ class VisitController extends GetxController {
         Marker(
           markerId: MarkerId(location.id),
           position: LatLng(location.lat, location.long),
-          infoWindow: InfoWindow(
-            title: location.name,
-            snippet: location.address,
-          ),
         ),
       );
     }

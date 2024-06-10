@@ -16,8 +16,8 @@ class VisitBinding extends Bindings {
       )
       ..lazyPut<VisitLocalDataSourcesImpl>(
         () => VisitLocalDataSourcesImpl(
-          httpService: Get.find(),
-        ),
+            // httpService: Get.find(),
+            ),
       )
       ..lazyPut<VisitRepositoryImpl>(
         () => VisitRepositoryImpl(

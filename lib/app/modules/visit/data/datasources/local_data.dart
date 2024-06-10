@@ -4,16 +4,13 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:iroyal/app/modules/visit/data/models/locations_model.dart';
 
 import 'package:iroyal/app/modules/visit/domain/entities/locations.dart';
-import 'package:iroyal/base/services/http_service.dart';
 
 abstract class VisitLocalDataSources {
   Future<List<Locations>> fetchLocations();
 }
 
 class VisitLocalDataSourcesImpl extends VisitLocalDataSources {
-  VisitLocalDataSourcesImpl({required this.httpService});
-
-  final HttpService httpService;
+  VisitLocalDataSourcesImpl();
 
   @override
   Future<List<Locations>> fetchLocations() async {
