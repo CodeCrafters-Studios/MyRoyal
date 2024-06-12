@@ -24,6 +24,7 @@ abstract class Routes {
   static const PAYROLL = _Paths.PAYROLL;
   static const DASHBOARD = _Paths.DASHBOARD;
   static const VISIT = _Paths.VISIT;
+  static const PIN = _Paths.PIN;
 }
 
 abstract class _Paths {
@@ -47,4 +48,5 @@ abstract class _Paths {
   static const PAYROLL = '/payroll';
   static const DASHBOARD = '/dashboard';
   static const VISIT = '/visit';
+  static const PIN = '/pin';
 }

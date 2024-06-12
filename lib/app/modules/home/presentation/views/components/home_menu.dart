@@ -32,7 +32,7 @@ class HomeMenu extends StatelessWidget {
             Get.toNamed(Routes.TASKS);
             break;
           case 'Payroll':
-            Get.toNamed(Routes.PAYROLL);
+            Get.toNamed(Routes.PIN);
             break;
           case 'Dashboard':
             Get.toNamed(Routes.DASHBOARD);

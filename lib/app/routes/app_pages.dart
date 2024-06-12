@@ -24,6 +24,8 @@ import '../modules/notifications/presentation/bindings/notifications_binding.dar
 import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/payroll/bindings/payroll_binding.dart';
 import '../modules/payroll/views/payroll_view.dart';
+import '../modules/pin/bindings/pin_binding.dart';
+import '../modules/pin/views/pin_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
 import '../modules/settings/presentation/bindings/settings_binding.dart';
@@ -143,6 +145,11 @@ class AppPages {
       name: _Paths.VISIT,
       page: () => const VisitView(),
       binding: VisitBinding(),
+    ),
+    GetPage(
+      name: _Paths.PIN,
+      page: () => const PinView(),
+      binding: PinBinding(),
     ),
   ];
 }
