@@ -80,6 +80,12 @@ class SettingsViewImpl extends StatelessWidget {
           withTrailing: true,
           onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
         ),
+        ItemMenuSettings(
+          assetSvg: 'assets/icons/ic_change_pin.svg',
+          text: 'Change PIN',
+          withTrailing: true,
+          onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
+        ),
       ],
     );
   }

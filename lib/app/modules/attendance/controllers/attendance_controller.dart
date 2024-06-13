@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class AttendanceController extends GetxController {
   final currentTime = DateTime.now().obs;
@@ -75,11 +76,18 @@ class AttendanceController extends GetxController {
     checkInTime.value = DateTime.now();
   }
 
-  void checkOut() async {
-    isCheckOut.value = true;
-    checkOutTime.value = DateTime.now();
-    _timer.cancel();
-    _totalHours();
+  void checkOut() {
+    AppDialogImpl().showChoiceDialog(
+      title: 'Confirmation',
+      description: 'Are you sure want to Checkout?',
+      onPressedYes: () {
+        Get.back();
+        isCheckOut.value = true;
+        checkOutTime.value = DateTime.now();
+        _timer.cancel();
+        _totalHours();
+      },
+    );
   }
 
   void _totalHours() {
