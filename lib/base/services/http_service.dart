@@ -4,17 +4,24 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:alice/alice.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
+import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/show_dialog.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
@@ -26,6 +33,7 @@ class HttpService extends getx.GetxService {
     required this.appStorage,
     required this.networkInfo,
     required this.appEncrypt,
+    required this.connectivity,
   });
 
   final Alice alice;
@@ -33,6 +41,7 @@ class HttpService extends getx.GetxService {
   final AppStorage appStorage;
   final NetworkInfo networkInfo;
   final AppEncrypt appEncrypt;
+  final Connectivity connectivity;
 
   @override
   void onReady() {
@@ -66,10 +75,209 @@ class HttpService extends getx.GetxService {
         },
       ),
     );
+
+    connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
     final isTest = Platform.environment.containsKey('FLUTTER_TEST');
     if (!isTest) {
       dio.interceptors.add(alice.getDioInterceptor());
     }
+  }
+
+  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
+    getx.RxString connectionStatus = "".obs;
+
+    switch (connectivityResult) {
+      case ConnectivityResult.mobile:
+        connectionStatus.value = "Mobile data connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+      case ConnectivityResult.wifi:
+        connectionStatus.value = "Wi-Fi connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+
+        break;
+      case ConnectivityResult.bluetooth:
+        connectionStatus.value = "Bluetooth connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+      case ConnectivityResult.ethernet:
+        connectionStatus.value = "Ethernet connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+      case ConnectivityResult.other:
+        connectionStatus.value = "Other connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+      case ConnectivityResult.vpn:
+        connectionStatus.value = "Vpn connection is being used.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 2),
+            title: "Connected!",
+            messageText: Text(
+              'You are connnected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.wifi,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+      case ConnectivityResult.none:
+        connectionStatus.value = "No connection.";
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            title: "No Internet Connection",
+            messageText: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Please check your internet connection',
+                  style: TS.caption.copyWith(color: white),
+                ),
+                InkWellTap(
+                  onTap: () {
+                    getx.Get.back();
+                  },
+                  child: Text(
+                    'Dismiss',
+                    style: TS.caption.copyWith(color: white),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: red,
+            margin: EdgeInsets.zero,
+            snackStyle: SnackStyle.GROUNDED,
+            icon: const EPadding(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Icon(
+                Icons.wifi_off,
+                color: Colors.white,
+                size: 35,
+              ),
+            ),
+          ),
+        );
+        break;
+    }
+    AppUtils.logApp(connectionStatus.value);
   }
 
   Future<dynamic> request({
@@ -86,6 +294,7 @@ class HttpService extends getx.GetxService {
       catchError('No Internet Connection!', showPopUp: showPopUp);
       return;
     }
+
     Response response;
     final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + enpoint : url;
 
@@ -109,10 +318,7 @@ class HttpService extends getx.GetxService {
     if (!isTest) {
       dio.httpClientAdapter = IOHttpClientAdapter(
         createHttpClient: () {
-          // Don't trust any certificate just because their root cert is trusted.
           final client = HttpClient(context: SecurityContext());
-          // You can test the intermediate / root cert here. We just ignore it.
-          // ignore: cascade_invocations
           client.badCertificateCallback =
               (X509Certificate cert, String host, int port) => true;
           return client;

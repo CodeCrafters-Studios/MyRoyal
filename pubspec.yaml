@@ -12,6 +12,7 @@ dependencies:
   carousel_indicator: ^1.0.6
   carousel_slider: ^4.2.1
   collection: ^1.18.0
+  connectivity_plus: ^5.0.1
   crypto: ^3.0.3
   cupertino_icons: ^1.0.6
   dartz: ^0.10.1

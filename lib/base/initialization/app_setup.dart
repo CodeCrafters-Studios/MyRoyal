@@ -1,4 +1,5 @@
 import 'package:alice/alice.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -65,6 +66,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final alice = Alice(showNotification: false);
   final internetConnectionChecker = InternetConnectionChecker();
   final appDialogImpl = AppDialogImpl();
+  final Connectivity connectivity = Connectivity();
   Get
     ..put(alice)
     ..put(dio)
@@ -85,6 +87,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
         appStorage: Get.find(),
         networkInfo: Get.find<NetworkInfoImpl>(),
         appEncrypt: Get.find<AppEncryptImpl>(),
+        connectivity: connectivity,
       ),
     )
     ..put(
@@ -92,7 +95,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
         appStorage: Get.find(),
         http: Get.find(),
       ),
-    );
+    )
+    ..put(connectivity);
   // ..put(CommonParamsImpl(appToken: Get.find<AppTokenImpl>()));
 }
 

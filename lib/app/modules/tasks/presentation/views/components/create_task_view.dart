@@ -123,7 +123,7 @@ class CreateTaskView extends StatelessWidget {
             margin: REdgeInsets.only(top: 5),
             padding: REdgeInsets.symmetric(
               horizontal:
-                  controller.selectedStartDate.value == 'Select date' ? 15 : 10,
+                  controller.selectedStartDate.value == 'Select date' ? 13 : 10,
               vertical: 5,
             ),
             color: white,
