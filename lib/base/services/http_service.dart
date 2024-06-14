@@ -42,6 +42,7 @@ class HttpService extends getx.GetxService {
   final NetworkInfo networkInfo;
   final AppEncrypt appEncrypt;
   final Connectivity connectivity;
+  final getx.RxString connectionStatus = ''.obs;
 
   @override
   void onReady() {
@@ -85,199 +86,72 @@ class HttpService extends getx.GetxService {
   }
 
   void _updateConnectionStatus(ConnectivityResult connectivityResult) {
-    getx.RxString connectionStatus = "".obs;
-
-    switch (connectivityResult) {
-      case ConnectivityResult.mobile:
-        connectionStatus.value = "Mobile data connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
+    if (connectivityResult == ConnectivityResult.none) {
+      connectionStatus.value = "No connection";
+      AppUtils.logApp(connectionStatus.value);
+      getx.Get.showSnackbar(
+        GetSnackBar(
+          duration: null,
+          title: "No Internet Connection",
+          messageText: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Please check your internet connection',
+                style: TS.caption.copyWith(color: white),
               ),
-            ),
-          ),
-        );
-        break;
-      case ConnectivityResult.wifi:
-        connectionStatus.value = "Wi-Fi connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-
-        break;
-      case ConnectivityResult.bluetooth:
-        connectionStatus.value = "Bluetooth connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-        break;
-      case ConnectivityResult.ethernet:
-        connectionStatus.value = "Ethernet connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-        break;
-      case ConnectivityResult.other:
-        connectionStatus.value = "Other connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-        break;
-      case ConnectivityResult.vpn:
-        connectionStatus.value = "Vpn connection is being used.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 2),
-            title: "Connected!",
-            messageText: Text(
-              'You are connnected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-        break;
-      case ConnectivityResult.none:
-        connectionStatus.value = "No connection.";
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            title: "No Internet Connection",
-            messageText: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Please check your internet connection',
+              InkWellTap(
+                onTap: () {
+                  getx.Get.back();
+                },
+                child: Text(
+                  'Dismiss',
                   style: TS.caption.copyWith(color: white),
                 ),
-                InkWellTap(
-                  onTap: () {
-                    getx.Get.back();
-                  },
-                  child: Text(
-                    'Dismiss',
-                    style: TS.caption.copyWith(color: white),
-                  ),
-                ),
-              ],
+              ),
+            ],
+          ),
+          backgroundColor: red,
+          margin: EdgeInsets.zero,
+          snackStyle: SnackStyle.GROUNDED,
+          icon: const EPadding(
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            child: Icon(
+              Icons.wifi_off,
+              color: Colors.white,
+              size: 35,
             ),
-            backgroundColor: red,
+          ),
+        ),
+      );
+    } else {
+      if (connectionStatus.value == "No connection") {
+        connectionStatus.value = "Connected";
+        getx.Get.back();
+        getx.Get.showSnackbar(
+          GetSnackBar(
+            duration: const Duration(seconds: 1),
+            title: "Connected!",
+            messageText: Text(
+              'You are connected to the internet',
+              style: TS.caption.copyWith(color: white),
+            ),
+            backgroundColor: green,
+            isDismissible: true,
             margin: EdgeInsets.zero,
             snackStyle: SnackStyle.GROUNDED,
             icon: const EPadding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.only(right: 10),
               child: Icon(
-                Icons.wifi_off,
+                Icons.wifi,
                 color: Colors.white,
                 size: 35,
               ),
             ),
           ),
         );
-        break;
+      }
     }
-    AppUtils.logApp(connectionStatus.value);
   }
 
   Future<dynamic> request({

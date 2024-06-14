@@ -16,6 +16,7 @@ class ItemMenuSettings extends StatelessWidget {
     this.withTrailing = false,
     this.icon,
     this.onTap,
+    this.withDivider = true,
   });
   final String assetSvg;
   final String text;
@@ -23,6 +24,7 @@ class ItemMenuSettings extends StatelessWidget {
   final IconData? icon;
   final bool withTrailing;
   final Function()? onTap;
+  final bool withDivider;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class ItemMenuSettings extends StatelessWidget {
             ),
           ),
         ),
-        const AppDivider(),
+        withDivider ? const AppDivider() : emptyBox,
       ],
     );
   }

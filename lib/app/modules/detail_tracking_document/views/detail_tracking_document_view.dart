@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/attachments.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/details.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/status.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/views/components/tabs/header.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
@@ -34,7 +35,6 @@ class DetailTrackingDocumentView
           surfaceTintColor: white,
         ),
         body: NestedScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             SliverAppBar(
               backgroundColor: white,
@@ -96,7 +96,6 @@ class DetailTrackingDocumentView
                       padding: EdgeInsets.zero,
                       indicatorSize: TabBarIndicatorSize.tab,
                       controller: controller.tabController,
-                      physics: const NeverScrollableScrollPhysics(),
                       labelStyle: TS.bodyMedium,
                       labelColor: black,
                       indicatorColor: black,
@@ -116,12 +115,11 @@ class DetailTrackingDocumentView
           ],
           body: TabBarView(
             controller: controller.tabController,
-            physics: const NeverScrollableScrollPhysics(),
             children: [
-              const HeaderView(),
-              const ComingSoonTabView(),
-              const ComingSoonTabView(),
-              StatusView(controller: controller),
+              const HeaderDocumentView(),
+              const DetailsDocumentView(),
+              const AttachmentsView(),
+              StatusDocumentView(controller: controller),
             ],
           ),
         ),

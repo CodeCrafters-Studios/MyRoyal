@@ -8,16 +8,16 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
-class StatusView extends StatefulWidget {
-  const StatusView({super.key, required this.controller});
+class StatusDocumentView extends StatefulWidget {
+  const StatusDocumentView({super.key, required this.controller});
 
   final DetailTrackingDocumentController controller;
 
   @override
-  State<StatusView> createState() => _MyAppState();
+  State<StatusDocumentView> createState() => _StatusDocumentViewState();
 }
 
-class _MyAppState extends State<StatusView> {
+class _StatusDocumentViewState extends State<StatusDocumentView> {
   List<StepperData> stepperData = [
     StepperData(
       title: StepperText(

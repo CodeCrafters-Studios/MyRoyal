@@ -34,6 +34,8 @@ import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/tasks/presentation/bindings/tasks_binding.dart';
 import '../modules/tasks/presentation/views/tasks_view.dart';
+import '../modules/terms_and_policies/bindings/terms_and_policies_binding.dart';
+import '../modules/terms_and_policies/views/terms_and_policies_view.dart';
 import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
 import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
 import '../modules/visit/presentation/bindings/visit_binding.dart';
@@ -150,6 +152,11 @@ class AppPages {
       name: _Paths.PIN,
       page: () => const PinView(),
       binding: PinBinding(),
+    ),
+    GetPage(
+      name: _Paths.TERMS_AND_POLICIES,
+      page: () => const TermsAndPoliciesView(),
+      binding: TermsAndPoliciesBinding(),
     ),
   ];
 }

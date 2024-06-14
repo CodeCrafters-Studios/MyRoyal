@@ -85,10 +85,16 @@ class SubTaskCard extends StatelessWidget {
           value: value,
           onChanged: onChanged,
         ),
-        title: Text(
-          title,
-          style: TS.bodyMedium,
-        ),
+        title: value
+            ? Text(
+                title,
+                style: TS.bodyMedium
+                    .copyWith(decoration: TextDecoration.lineThrough),
+              )
+            : Text(
+                title,
+                style: TS.bodyMedium,
+              ),
       ),
     );
   }

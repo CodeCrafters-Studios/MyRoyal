@@ -7,7 +7,6 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/settings_controller.dart';
@@ -109,9 +108,7 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_terms&polcies.svg',
           text: 'Terms & Policies',
           withTrailing: true,
-          onTap: () => Get.to(
-            () => const ComingSoonScreen(),
-          ),
+          onTap: () => Get.toNamed(Routes.TERMS_AND_POLICIES),
         ),
       ],
     );

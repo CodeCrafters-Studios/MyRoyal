@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 import 'package:readmore/readmore.dart';
 
 class DescriptionDetailTask extends StatelessWidget {
@@ -13,18 +14,21 @@ class DescriptionDetailTask extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReadMoreText(
-      description,
-      style: TS.bodyMedium.copyWith(color: greyText),
-      trimMode: TrimMode.Line,
-      trimLines: 2,
-      colorClickableText: primary,
-      trimCollapsedText: ' Show more',
-      trimExpandedText: '  Show less',
-      moreStyle:
-          TS.bodyMedium.copyWith(color: primary, fontWeight: FontWeight.w600),
-      lessStyle:
-          TS.bodyMedium.copyWith(color: primary, fontWeight: FontWeight.w600),
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: ReadMoreText(
+        description,
+        style: TS.bodyMedium.copyWith(color: greyText),
+        trimMode: TrimMode.Line,
+        trimLines: 2,
+        colorClickableText: primary,
+        trimCollapsedText: ' Show more',
+        trimExpandedText: '  Show less',
+        moreStyle:
+            TS.bodyMedium.copyWith(color: primary, fontWeight: FontWeight.w600),
+        lessStyle:
+            TS.bodyMedium.copyWith(color: primary, fontWeight: FontWeight.w600),
+      ),
     );
   }
 }

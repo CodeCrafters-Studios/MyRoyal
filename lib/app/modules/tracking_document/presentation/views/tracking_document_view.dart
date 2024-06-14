@@ -107,20 +107,32 @@ class TrackingDocumentImplView extends StatelessWidget {
                   10.verticalSpace,
                   Row(
                     children: [
-                      _statusContainer(
-                          icon: Icons.info, label: 'OVERDUE', color: primary50),
-                      5.horizontalSpace,
-                      Text(
-                        '0',
-                        style: TS.bodyMedium.copyWith(color: primary50),
+                      Row(
+                        children: [
+                          _statusContainer(
+                              icon: Icons.info,
+                              label: 'OVERDUE',
+                              color: primary50),
+                          5.horizontalSpace,
+                          Text(
+                            '0',
+                            style: TS.bodyMedium.copyWith(color: primary50),
+                          ),
+                        ],
                       ),
-                      60.horizontalSpace,
-                      _statusContainer(
-                          icon: Icons.bolt, label: 'URGENT', color: secondary),
-                      5.horizontalSpace,
-                      Text(
-                        '0',
-                        style: TS.bodyMedium.copyWith(color: secondary),
+                      65.horizontalSpace,
+                      Row(
+                        children: [
+                          _statusContainer(
+                              icon: Icons.bolt,
+                              label: 'URGENT',
+                              color: secondary),
+                          5.horizontalSpace,
+                          Text(
+                            '0',
+                            style: TS.bodyMedium.copyWith(color: secondary),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -184,7 +196,6 @@ class TrackingDocumentImplView extends StatelessWidget {
                   ),
                   10.verticalSpace,
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -195,11 +206,12 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                           5.horizontalSpace,
                           Text(
-                            '300',
+                            '0',
                             style: TS.bodyMedium.copyWith(color: green),
                           ),
                         ],
                       ),
+                      55.horizontalSpace,
                       Row(
                         children: [
                           _statusContainer(
@@ -209,7 +221,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                           5.horizontalSpace,
                           Text(
-                            '100',
+                            '0',
                             style: TS.bodyMedium.copyWith(color: red),
                           ),
                         ],

@@ -67,9 +67,9 @@ class BranchCard extends StatelessWidget {
                       backgroundImage: AssetImage(logo),
                     ),
                   ),
-                  25.verticalSpace,
+                  10.verticalSpace,
                   Text(
-                    '$totalbranch items',
+                    '$totalbranch\nEmployees',
                     style: TS.titleSmall,
                     textAlign: TextAlign.center,
                   ),

@@ -25,6 +25,7 @@ abstract class Routes {
   static const DASHBOARD = _Paths.DASHBOARD;
   static const VISIT = _Paths.VISIT;
   static const PIN = _Paths.PIN;
+  static const TERMS_AND_POLICIES = _Paths.TERMS_AND_POLICIES;
 }
 
 abstract class _Paths {
@@ -49,4 +50,5 @@ abstract class _Paths {
   static const DASHBOARD = '/dashboard';
   static const VISIT = '/visit';
   static const PIN = '/pin';
+  static const TERMS_AND_POLICIES = '/terms-and-policies';
 }

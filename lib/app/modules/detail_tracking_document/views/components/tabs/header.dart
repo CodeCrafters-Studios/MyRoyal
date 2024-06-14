@@ -5,8 +5,8 @@ import 'package:iroyal/app/modules/detail_tracking_document/views/components/bot
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 
-class HeaderView extends StatelessWidget {
-  const HeaderView({super.key});
+class HeaderDocumentView extends StatelessWidget {
+  const HeaderDocumentView({super.key});
 
   @override
   Widget build(BuildContext context) {

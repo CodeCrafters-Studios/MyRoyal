@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tasks/views/components/description_detail_task.dart';
 import 'package:iroyal/app/modules/detail_tasks/views/components/header_detail_task.dart';
+import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/comment_task_view.dart';
+import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/attachments_task_view.dart';
 import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/tab_subtask_view.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/linear_progress.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
@@ -37,48 +38,51 @@ class DetailTasksViewImpl extends StatelessWidget {
       showBackground: false,
       title: 'Detail Task',
       child: SingleChildScrollView(
-        child: EPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Column(
-            children: [
-              const HeaderDetailTask(
-                title: 'Mobile Application Design',
-                status: 'To-Do',
-                statusColor: Colors.blue,
-                bgStatusColor: Colors.blue,
-              ),
-              10.verticalSpace,
-              const DescriptionDetailTask(
-                description:
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-              ),
-              30.verticalSpace,
-              _buildTeamsAndDateSection(),
-              20.verticalSpace,
-              const LinearProgress(
+        child: Column(
+          children: [
+            const HeaderDetailTask(
+              title: 'Mobile Application Design',
+              status: 'To-Do',
+              statusColor: Colors.blue,
+              bgStatusColor: Colors.blue,
+            ),
+            10.verticalSpace,
+            const DescriptionDetailTask(
+              description:
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            ),
+            20.verticalSpace,
+            _buildTeamsAndDateSection(),
+            20.verticalSpace,
+            const EPadding(
+              padding: EdgeInsets.symmetric(horizontal: 14),
+              child: LinearProgress(
                 percentageText: '10%',
                 percentageColor: red,
                 valueLinear: 0.1,
                 progressColor: Colors.red,
               ),
-              30.verticalSpace,
-              _buildTabSection(),
-              20.verticalSpace,
-              _buildTabViewSection(),
-            ],
-          ),
+            ),
+            20.verticalSpace,
+            _buildTabSection(),
+            20.verticalSpace,
+            _buildTabViewSection(),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildTeamsAndDateSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildTeamsSection(),
-        _buildDateSection(),
-      ],
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildTeamsSection(),
+          _buildDateSection(),
+        ],
+      ),
     );
   }
 
@@ -139,27 +143,36 @@ class DetailTasksViewImpl extends StatelessWidget {
   }
 
   Widget _buildTabSection() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: grey),
-        borderRadius: BorderRadius.circular(Corners.slg),
-        color: white,
-      ),
-      child: TabBar(
-        controller: controller.tabController,
-        indicator: BoxDecoration(
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: grey),
           borderRadius: BorderRadius.circular(Corners.slg),
-          color: primary,
+          color: white,
         ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: TS.bodyMedium.copyWith(color: white),
-        unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-        unselectedLabelColor: primary,
-        tabs: const [
-          Tab(text: 'Sub Task'),
-          Tab(text: 'File'),
-          Tab(text: 'Comment'),
-        ],
+        child: TabBar(
+          tabAlignment: TabAlignment.center,
+          padding: EdgeInsets.zero,
+          indicatorSize: TabBarIndicatorSize.tab,
+          controller: controller.tabController,
+          physics: const NeverScrollableScrollPhysics(),
+          labelStyle: TS.bodyMedium.copyWith(color: white),
+          labelColor: black,
+          indicatorColor: black,
+          unselectedLabelColor: greyText,
+          isScrollable: true,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(Corners.slg),
+            color: primary,
+          ),
+          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+          tabs: const [
+            Tab(text: 'Sub Task'),
+            Tab(text: 'Attachments'),
+            Tab(text: 'Comment'),
+          ],
+        ),
       ),
     );
   }
@@ -174,8 +187,8 @@ class DetailTasksViewImpl extends StatelessWidget {
         controller: controller.tabController,
         children: [
           TabSubTaskView(controller: controller),
-          const ComingSoonTabView(),
-          const ComingSoonTabView(),
+          AttachmentsTaskView(controller: controller),
+          const CommentTaskView(),
         ],
       ),
     );

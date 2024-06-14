@@ -57,7 +57,7 @@ class LoginView extends GetView<LoginController> {
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: ImageIcon(
                           const AssetImage('assets/icons/ic_user.png'),
-                          size: 20.dm,
+                          size: 20.r,
                           color: greyIcon,
                         ),
                       ),
@@ -89,7 +89,7 @@ class LoginView extends GetView<LoginController> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: ImageIcon(
                         const AssetImage('assets/icons/ic_lock.png'),
-                        size: 20.dm,
+                        size: 20.r,
                         color: greyIcon,
                       ),
                     ),
