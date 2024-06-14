@@ -144,7 +144,7 @@ class DetailTasksViewImpl extends StatelessWidget {
 
   Widget _buildTabSection() {
     return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 22),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: grey),
@@ -158,7 +158,7 @@ class DetailTasksViewImpl extends StatelessWidget {
           controller: controller.tabController,
           physics: const NeverScrollableScrollPhysics(),
           labelStyle: TS.bodyMedium.copyWith(color: white),
-          labelColor: black,
+          labelColor: white,
           indicatorColor: black,
           unselectedLabelColor: greyText,
           isScrollable: true,
@@ -166,7 +166,7 @@ class DetailTasksViewImpl extends StatelessWidget {
             borderRadius: BorderRadius.circular(Corners.slg),
             color: primary,
           ),
-          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+          unselectedLabelStyle: TS.bodyMedium,
           tabs: const [
             Tab(text: 'Sub Task'),
             Tab(text: 'Attachments'),

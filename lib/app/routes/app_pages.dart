@@ -4,6 +4,8 @@ import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
+import '../modules/change_password/bindings/change_password_binding.dart';
+import '../modules/change_password/views/change_password_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
@@ -157,6 +159,11 @@ class AppPages {
       name: _Paths.TERMS_AND_POLICIES,
       page: () => const TermsAndPoliciesView(),
       binding: TermsAndPoliciesBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGE_PASSWORD,
+      page: () => const ChangePasswordView(),
+      binding: ChangePasswordBinding(),
     ),
   ];
 }

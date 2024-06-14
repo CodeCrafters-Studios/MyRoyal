@@ -77,7 +77,7 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_change_password.svg',
           text: 'Change Password',
           withTrailing: true,
-          onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
+          onTap: () => Get.toNamed(Routes.CHANGE_PASSWORD),
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_change_pin.svg',

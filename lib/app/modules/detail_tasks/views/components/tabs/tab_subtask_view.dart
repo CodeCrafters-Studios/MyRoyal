@@ -34,7 +34,7 @@ class TabSubTaskView extends StatelessWidget {
             height: Get.height,
             child: ListView.separated(
               separatorBuilder: (_, __) => 20.verticalSpace,
-              padding: REdgeInsets.only(bottom: 60),
+              padding: REdgeInsets.only(bottom: 20),
               itemCount: controller.listSubTasks.length,
               itemBuilder: (_, index) {
                 return Obx(
