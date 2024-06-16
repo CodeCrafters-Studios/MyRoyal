@@ -6,6 +6,8 @@ import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart'
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
+import '../modules/change_pin/bindings/change_pin_binding.dart';
+import '../modules/change_pin/views/change_pin_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
@@ -164,6 +166,11 @@ class AppPages {
       name: _Paths.CHANGE_PASSWORD,
       page: () => const ChangePasswordView(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGE_PIN,
+      page: () => const ChangePinView(),
+      binding: ChangePinBinding(),
     ),
   ];
 }

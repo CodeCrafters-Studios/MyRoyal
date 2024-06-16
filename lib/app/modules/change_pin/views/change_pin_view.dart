@@ -11,32 +11,16 @@ import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_password.dart';
 
-import '../controllers/change_password_controller.dart';
+import '../controllers/change_pin_controller.dart';
 
-class ChangePasswordView extends GetView<ChangePasswordController> {
-  const ChangePasswordView({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return ChangePasswordViewImpl(
-      controller: controller,
-    );
-  }
-}
-
-class ChangePasswordViewImpl extends StatelessWidget {
-  const ChangePasswordViewImpl({
-    super.key,
-    required this.controller,
-  });
-
-  final ChangePasswordController controller;
-
+class ChangePinView extends GetView<ChangePinController> {
+  const ChangePinView({super.key});
   @override
   Widget build(BuildContext context) {
     return PageBase(
       resizeInsetsBottom: false,
       showBackground: false,
-      title: 'Change Password',
+      title: 'Change PIN',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Column(
@@ -44,70 +28,76 @@ class ChangePasswordViewImpl extends StatelessWidget {
           children: [
             const AppbarSpacer(),
             Text(
-              'Set a new password',
+              'Set a new PIN',
               style: TS.bodyLarge.copyWith(fontWeight: FontWeight.w600),
             ),
             10.verticalSpace,
             Text(
-              'Create a new password. Ensure it differs from previous ones for security',
+              'Create a new PIN. Ensure it differs from previous ones for security',
               style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400),
             ),
             30.verticalSpace,
             InputPassword(
-              label: 'Current Password',
-              key: const Key('currentPassword'),
+              label: 'Current PIN',
+              key: const Key('currentPIN'),
+              maxLength: 6,
+              keyboardType: TextInputType.number,
               color: white,
               outlineColor: grey,
-              hint: 'Enter your current password',
+              hint: 'Enter your current PIN',
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
               onChanged: (value) {},
               // validation: (value) {
               //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
+              //     return 'PIN cannot be empty';
               //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
+              //     return 'PIN must be at least 6 characters long';
               //   }
               //   return null;
               // },
             ),
             20.verticalSpace,
             InputPassword(
-              label: 'New Password',
-              key: const Key('newPassword'),
+              label: 'New PIN',
+              key: const Key('newPIN'),
+              maxLength: 6,
+              keyboardType: TextInputType.number,
               color: white,
               outlineColor: grey,
-              hint: 'Enter your new password',
+              hint: 'Enter your new PIN',
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
               onChanged: (value) {},
               // validation: (value) {
               //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
+              //     return 'PIN cannot be empty';
               //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
+              //     return 'PIN must be at least 6 characters long';
               //   }
               //   return null;
               // },
             ),
             20.verticalSpace,
             InputPassword(
-              label: 'Confirm Password',
-              key: const Key('confirmPassword'),
+              label: 'Confirm PIN',
+              key: const Key('confirmPIN'),
+              maxLength: 6,
+              keyboardType: TextInputType.number,
               color: white,
               outlineColor: grey,
-              hint: 'Re-enter password',
+              hint: 'Re-enter PIN',
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
               onChanged: (value) {},
               // validation: (value) {
               //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
+              //     return 'PIN cannot be empty';
               //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
+              //     return 'PIN must be at least 6 characters long';
               //   }
               //   return null;
               // },
@@ -119,7 +109,7 @@ class ChangePasswordViewImpl extends StatelessWidget {
               text: 'Continue',
               onPressed: () => Get.offAll(
                 () => const SuccessChangeSecurityView(
-                  subtitle: 'password',
+                  subtitle: 'PIN',
                 ),
               ),
             )

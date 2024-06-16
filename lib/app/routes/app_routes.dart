@@ -27,6 +27,7 @@ abstract class Routes {
   static const PIN = _Paths.PIN;
   static const TERMS_AND_POLICIES = _Paths.TERMS_AND_POLICIES;
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
+  static const CHANGE_PIN = _Paths.CHANGE_PIN;
 }
 
 abstract class _Paths {
@@ -53,4 +54,5 @@ abstract class _Paths {
   static const PIN = '/pin';
   static const TERMS_AND_POLICIES = '/terms-and-policies';
   static const CHANGE_PASSWORD = '/change-password';
+  static const CHANGE_PIN = '/change-pin';
 }
