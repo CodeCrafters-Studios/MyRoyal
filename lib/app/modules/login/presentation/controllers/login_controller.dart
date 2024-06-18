@@ -123,8 +123,8 @@ class LoginController extends GetxController {
         grantType: "password",
         username: username(),
         password: password(),
-        clientId: "H4K3aPzo1VXD8JwTj7AHSayJ1fOQfUmZwSMpDu7uKmM",
-        clientSecret: "dYr3QnrIqgmflANWZLfWg3Qgh-A1dNHssQ9KprP3DTE",
+        clientId: "_a_7w7Lf2aPTFaOketH8QgEvU8rdSegFoJzAY2Gxh_w",
+        clientSecret: "yJdF3bVdHd0S7yN4tc6nEhjCa9mbIpeRkAFQWp_d2pQ",
       ),
     );
     r.fold((l) {
