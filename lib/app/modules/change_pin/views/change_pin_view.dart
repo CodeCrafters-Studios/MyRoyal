@@ -49,14 +49,6 @@ class ChangePinView extends GetView<ChangePinController> {
                 color: grey,
               ),
               onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'PIN cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'PIN must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
             ),
             20.verticalSpace,
             InputPassword(
@@ -70,15 +62,15 @@ class ChangePinView extends GetView<ChangePinController> {
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
-              onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'PIN cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'PIN must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
+              onChanged: (value) => controller.setNewPin(value),
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'PIN cannot be empty';
+                } else if (value.length < 6) {
+                  return 'PIN must be at least 6 characters long';
+                }
+                return null;
+              },
             ),
             20.verticalSpace,
             InputPassword(
@@ -92,15 +84,17 @@ class ChangePinView extends GetView<ChangePinController> {
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
-              onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'PIN cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'PIN must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
+              onChanged: (value) => controller.setConfirmPin(value),
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'PIN cannot be empty';
+                } else if (value.length < 6) {
+                  return 'PIN must be at least 6 characters long';
+                } else if (value != controller.newPin.value) {
+                  return 'PIN do not match. Try again.';
+                }
+                return null;
+              },
             ),
             const Spacer(),
             ButtonPrimary(

@@ -97,9 +97,10 @@ class WebtelController extends GetxController {
         Webtel(
           fullname: x.fullname,
           departmentName: x.departmentName,
-          ext: x.ext,
+          lineNumber: x.lineNumber,
+          extentionNumber: x.extentionNumber,
           branchName: x.branchName,
-          id: x.id,
+          workEmail: x.workEmail,
         ),
       );
     });
@@ -132,7 +133,10 @@ class WebtelController extends GetxController {
       filterData.value = data
           .where((e) =>
               e.fullname.toLowerCase().contains(value.toLowerCase()) ||
-              e.ext.toString().toLowerCase().contains(value.toLowerCase()) ||
+              e.extentionNumber
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
               e.departmentName
                   .toString()
                   .toLowerCase()

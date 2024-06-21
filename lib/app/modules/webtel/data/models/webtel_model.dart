@@ -4,24 +4,27 @@ class WebtelModel extends Webtel {
   const WebtelModel({
     required super.fullname,
     required super.departmentName,
-    required super.ext,
+    required super.lineNumber,
+    required super.extentionNumber,
     required super.branchName,
-    required super.id,
+    required super.workEmail,
   });
 
   factory WebtelModel.fromJson(Map<String, dynamic> json) => WebtelModel(
         fullname: json["full_name"],
         departmentName: json["department_name"],
-        ext: json["ext"],
+        lineNumber: json["line_number"],
+        extentionNumber: json["extention_number"],
         branchName: json["branch_name"],
-        id: json["id"],
+        workEmail: json["work_email"],
       );
 
   Map<String, dynamic> toJson() => {
         "full_name": fullname,
         "department_name": departmentName,
-        "ext": ext,
+        "line_number": departmentName,
+        "extention_number": extentionNumber,
         "branch_name": branchName,
-        "id": id,
+        "workEmail": workEmail,
       };
 }

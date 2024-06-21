@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/others/success_change_security_view.dart';
@@ -63,14 +65,6 @@ class ChangePasswordViewImpl extends StatelessWidget {
                 color: grey,
               ),
               onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
             ),
             20.verticalSpace,
             InputPassword(
@@ -82,15 +76,15 @@ class ChangePasswordViewImpl extends StatelessWidget {
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
-              onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
+              onChanged: (value) => controller.setNewPassword(value),
+              validation: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password cannot be empty';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters long';
+                }
+                return null;
+              },
             ),
             20.verticalSpace,
             InputPassword(
@@ -102,15 +96,77 @@ class ChangePasswordViewImpl extends StatelessWidget {
               hintStyle: TS.bodyMedium.copyWith(
                 color: grey,
               ),
-              onChanged: (value) {},
-              // validation: (value) {
-              //   if (value == null || value.isEmpty) {
-              //     return 'Password cannot be empty';
-              //   } else if (value.length < 6) {
-              //     return 'Password must be at least 6 characters long';
-              //   }
-              //   return null;
-              // },
+              onChanged: (value) => controller.setConfirmPassword(value),
+              validation: (value) {
+                AppUtils.logApp('HERE ${controller.newPassword.value}');
+                if (value == null || value.isEmpty) {
+                  return 'Password cannot be empty';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters long';
+                } else if (value != controller.newPassword.value) {
+                  return 'Password do not match. Try again.';
+                }
+                return null;
+              },
+            ),
+            5.verticalSpace,
+            SizedBox(
+              width: Get.width,
+              child: Column(
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    minLeadingWidth: 0,
+                    minVerticalPadding: 0,
+                    horizontalTitleGap: 10,
+                    leading: Icon(
+                      Icons.check_circle,
+                      color: grey,
+                      size: 20.r,
+                    ),
+                    title: Text(
+                      'Password must contains atleast 1 special characters',
+                      style: TS.bodySmall,
+                    ),
+                  ),
+                  ListTile(
+                    visualDensity:
+                        const VisualDensity(horizontal: 0, vertical: -4),
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.zero,
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 10,
+                    leading: Obx(
+                      () => Icon(
+                        Icons.check_circle,
+                        color: controller.containsNumber.value ? green : grey,
+                        size: 20.r,
+                      ),
+                    ),
+                    title: Text(
+                      'Password must contains Numbers',
+                      style: TS.bodySmall,
+                    ),
+                  ),
+                  ListTile(
+                    visualDensity:
+                        const VisualDensity(horizontal: 0, vertical: -4),
+                    minVerticalPadding: 0,
+                    contentPadding: EdgeInsets.zero,
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 10,
+                    leading: Icon(
+                      Icons.check_circle,
+                      color: grey,
+                      size: 20.r,
+                    ),
+                    title: Text(
+                      'Password must contains capital letter',
+                      style: TS.bodySmall,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const Spacer(),
             ButtonPrimary(
