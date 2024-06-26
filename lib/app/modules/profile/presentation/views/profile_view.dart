@@ -8,6 +8,7 @@ import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/ta
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/profile_controller.dart';
@@ -20,6 +21,21 @@ class ProfileView extends GetView<ProfileController> {
     return PageBase(
       showBackground: false,
       title: 'Profile',
+      actions: [
+        EPadding(
+          padding: const EdgeInsets.only(right: 10),
+          child: TextButton(
+            child: Text(
+              'Edit Profile',
+              style: TS.bodyMedium.copyWith(
+                color: Colors.blue,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            onPressed: () {},
+          ),
+        )
+      ],
       child: ProfileViewImpl(controller: controller),
     );
   }

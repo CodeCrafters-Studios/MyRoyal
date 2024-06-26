@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/domain/entities/job.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
+import 'package:iroyal/app/modules/profile/domain/entities/personal.dart';
+import 'package:iroyal/app/modules/profile/domain/entities/professional.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
@@ -30,23 +32,39 @@ class ProfileController extends GetxController {
 
   RxString id = ''.obs;
   RxString status = ''.obs;
+  RxString professionalEmail = ''.obs;
 
   String getIdState = '';
   String profileState = '';
 
   final Rx<Profile> profileData = Profile(
-    fullName: '',
-    company: '',
-    department: '',
-    position: '',
-    reportTo: '',
-    remainingLeave: 0,
-    birthdate: DateTime(0),
-    email: '',
-    gender: '',
-    instagram: '',
-    linkedin: '',
-  ).obs;
+      personal: Personal(
+        id: 0,
+        fullName: '',
+        lastName: '',
+        birthdate: DateTime(0),
+        gender: '',
+        maritalStatus: false,
+        nickname: '',
+        idCard: '',
+        birthplace: '',
+        instagram: '',
+        linkedin: '',
+        npwp: '',
+        npwpStatus: '',
+        smoker: false,
+        personalEmail: '',
+      ),
+      professional: const Professional(
+        company: '',
+        department: '',
+        position: '',
+        reportTo: '',
+        remainingLeave: 0,
+        bpjsKesehatan: '',
+        bpjsTenagakerja: '',
+        active: false,
+      )).obs;
 
   final Rx<Job> jobData = const Job(
     company: '',
@@ -86,6 +104,7 @@ class ProfileController extends GetxController {
         getIdState = 'getIdSuccess';
         id(r.employee.id.toString());
         status(r.employee.maritalStatus);
+        professionalEmail(r.job.workEmail);
         jobData(r.job);
         AppUtils.logApp('USER ID ::::::$id');
       },

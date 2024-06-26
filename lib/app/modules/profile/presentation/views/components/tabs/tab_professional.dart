@@ -16,6 +16,13 @@ class TabProfessionalView extends StatelessWidget {
         child: Column(
           children: [
             ProfileInformation(
+              label: 'ID Card',
+              value: controller.profileData().personal.idCard.isNotEmpty
+                  ? controller.profileData().personal.idCard
+                  : '-',
+              controller: controller,
+            ),
+            ProfileInformation(
               label: 'Employee ID',
               value: controller.jobData().employeeNumber.isNotEmpty
                   ? controller.jobData().employeeNumber
@@ -23,37 +30,64 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
+              label: 'Remaining Leave',
+              value: controller
+                  .profileData()
+                  .professional
+                  .remainingLeave
+                  .toString(),
+              controller: controller,
+            ),
+            ProfileInformation(
+              label: 'BPJS Kesehatan',
+              value: controller
+                  .profileData()
+                  .professional
+                  .bpjsKesehatan
+                  .toString(),
+              controller: controller,
+            ),
+            ProfileInformation(
+              label: 'BPJS Ketenagakerjaan',
+              value: controller
+                  .profileData()
+                  .professional
+                  .bpjsTenagakerja
+                  .toString(),
+              controller: controller,
+            ),
+            ProfileInformation(
               label: 'Email Address',
-              value: controller.profileData().email.isNotEmpty
-                  ? controller.profileData().email
+              value: controller.professionalEmail.value.isNotEmpty
+                  ? controller.professionalEmail.value
                   : '-',
               controller: controller,
             ),
             ProfileInformation(
               label: 'Position',
-              value: controller.profileData().position.isNotEmpty
-                  ? controller.profileData().position
+              value: controller.profileData().professional.position.isNotEmpty
+                  ? controller.profileData().professional.position
                   : '-',
               controller: controller,
             ),
             ProfileInformation(
               label: 'Departement',
-              value: controller.profileData().department.isNotEmpty
-                  ? controller.profileData().department
+              value: controller.profileData().professional.department.isNotEmpty
+                  ? controller.profileData().professional.department
                   : '-',
               controller: controller,
             ),
             ProfileInformation(
               label: 'Company',
-              value: controller.profileData().company.isNotEmpty
-                  ? controller.profileData().company
+              value: controller.profileData().professional.company.isNotEmpty
+                  ? controller.profileData().professional.company
                   : '-',
               controller: controller,
             ),
             ProfileInformation(
               label: 'Report to',
-              value: controller.profileData().reportTo.isNotEmpty
-                  ? controller.profileData().reportTo
+              value: controller.profileData().professional.reportTo.isNotEmpty
+                  ? controller.profileData().professional.reportTo
                   : '-',
               controller: controller,
             ),

@@ -12,55 +12,91 @@ class TabPersonalView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      child: Obx(
-        () => Column(
-          children: [
-            ProfileInformation(
-              label: 'Full Name',
-              value: controller.profileData().fullName.isNotEmpty
-                  ? controller.profileData().fullName
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
-              label: 'Birthdate',
-              value: controller.profileData().birthdate.toString().isNotEmpty
-                  ? DateFormat('dd, MMMM y')
-                      .format(controller.profileData().birthdate)
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
-              label: 'Gender',
-              value: controller.profileData().gender.isNotEmpty
-                  ? controller.profileData().gender
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
-              label: 'Status',
-              value: controller.status.value.isNotEmpty
-                  ? controller.status.value
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
-              label: 'Instagram',
-              value: controller.profileData().instagram.isNotEmpty
-                  ? controller.profileData().instagram
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
-              label: 'LinkedIn',
-              value: controller.profileData().linkedin.isNotEmpty
-                  ? controller.profileData().linkedin
-                  : '-',
-              controller: controller,
-            ),
-          ],
+    return SingleChildScrollView(
+      child: EPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Obx(
+          () => Column(
+            children: [
+              ProfileInformation(
+                label: 'Full Name',
+                value: controller.profileData().personal.fullName.isNotEmpty
+                    ? controller.profileData().personal.fullName
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Birthdate',
+                value: controller
+                        .profileData()
+                        .personal
+                        .birthdate
+                        .toString()
+                        .isNotEmpty
+                    ? DateFormat('dd, MMMM y')
+                        .format(controller.profileData().personal.birthdate)
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Birthplace',
+                value: controller.profileData().personal.birthplace.isNotEmpty
+                    ? controller.profileData().personal.birthplace
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Gender',
+                value: controller.profileData().personal.gender.isNotEmpty
+                    ? controller.profileData().personal.gender
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Status',
+                value: controller.status.value.isNotEmpty
+                    ? controller.status.value
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'No NPWP',
+                value: controller.profileData().personal.npwp.isNotEmpty
+                    ? controller.profileData().personal.npwp
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'NPWP Status',
+                value: controller.profileData().personal.npwpStatus.isNotEmpty
+                    ? controller.profileData().personal.npwpStatus
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Email Address',
+                value:
+                    controller.profileData().personal.personalEmail.isNotEmpty
+                        ? controller.profileData().personal.personalEmail
+                        : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Instagram',
+                value: controller.profileData().personal.instagram.isNotEmpty
+                    ? controller.profileData().personal.instagram
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'LinkedIn',
+                value: controller.profileData().personal.linkedin.isNotEmpty
+                    ? controller.profileData().personal.linkedin
+                    : '-',
+                controller: controller,
+              ),
+            ],
+          ),
         ),
       ),
     );
