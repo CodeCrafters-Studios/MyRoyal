@@ -14,6 +14,8 @@ import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
 import '../modules/detail_tasks/views/detail_tasks_view.dart';
 import '../modules/detail_tracking_document/bindings/detail_tracking_document_binding.dart';
 import '../modules/detail_tracking_document/views/detail_tracking_document_view.dart';
+import '../modules/edit_profile/presentation/bindings/edit_profile_binding.dart';
+import '../modules/edit_profile/presentation/views/edit_profile_view.dart';
 import '../modules/help_and_support/bindings/help_and_support_binding.dart';
 import '../modules/help_and_support/views/help_and_support_view.dart';
 import '../modules/home/presentation/bindings/home_binding.dart';
@@ -171,6 +173,11 @@ class AppPages {
       name: _Paths.CHANGE_PIN,
       page: () => const ChangePinView(),
       binding: ChangePinBinding(),
+    ),
+    GetPage(
+      name: _Paths.EDIT_PROFILE,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
     ),
   ];
 }

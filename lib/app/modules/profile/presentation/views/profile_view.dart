@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_professional.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -32,7 +33,9 @@ class ProfileView extends GetView<ProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(Routes.EDIT_PROFILE);
+            },
           ),
         )
       ],

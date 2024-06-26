@@ -99,7 +99,7 @@ class ChangePinView extends GetView<ChangePinController> {
             const Spacer(),
             ButtonPrimary(
               fullWidth: true,
-              margin: REdgeInsets.only(bottom: 20),
+              margin: REdgeInsets.only(left: 16, bottom: 20, right: 16),
               text: 'Continue',
               onPressed: () => Get.offAll(
                 () => const SuccessChangeSecurityView(
