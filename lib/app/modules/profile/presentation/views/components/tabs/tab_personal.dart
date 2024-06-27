@@ -26,6 +26,20 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
+                label: 'Last Name',
+                value: controller.profileData().personal.lastName.isNotEmpty
+                    ? controller.profileData().personal.lastName
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'Nickname',
+                value: controller.profileData().personal.nickname.isNotEmpty
+                    ? controller.profileData().personal.nickname
+                    : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
                 label: 'Birthdate',
                 value: controller
                         .profileData()
@@ -54,8 +68,8 @@ class TabPersonalView extends StatelessWidget {
               ),
               ProfileInformation(
                 label: 'Status',
-                value: controller.status.value.isNotEmpty
-                    ? controller.status.value
+                value: controller.userData().employee.maritalStatus.isNotEmpty
+                    ? controller.userData().employee.maritalStatus
                     : '-',
                 controller: controller,
               ),

@@ -16,9 +16,20 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<Either<Failure, User>> getUser() async {
     try {
       final r = await remoteData.getUser();
+      await localData.cacheUserResponse(r);
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, User>> getCacheUser() async {
+    try {
+      final r = await localData.getCacheUserLogin();
+      return Right(r);
+    } on CacheException {
+      return const Left(CacheFailure());
     }
   }
 }

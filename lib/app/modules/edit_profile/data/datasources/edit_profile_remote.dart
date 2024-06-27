@@ -21,8 +21,9 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
   ) async {
     try {
       final r = await httpService.request(
+        withToken: true,
         params: editProfileParams,
-        enpoint: '/api/v1/employees/$id/profile',
+        enpoint: '/api/v1/employees/$id/update_profile',
         method: Method.PATCH,
       );
       final editProfileResponse = EditProfileResponseModel.fromJson(r);

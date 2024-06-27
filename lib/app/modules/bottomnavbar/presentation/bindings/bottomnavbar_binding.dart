@@ -6,6 +6,7 @@ import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_control
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
@@ -71,6 +72,11 @@ class BottomnavbarBinding extends Bindings {
           Get.find<HomeRepositoryImpl>(),
         ),
       )
+      ..lazyPut(
+        () => GetCacheUser(
+          Get.find<HomeRepositoryImpl>(),
+        ),
+      )
 
       // Settings
       ..lazyPut(
@@ -133,7 +139,7 @@ class BottomnavbarBinding extends Bindings {
       ..lazyPut<ProfileController>(
         () => ProfileController(
           getProfile: Get.find(),
-          getUser: Get.find(),
+          getCacheUser: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
           downloadFile: Get.find(),
         ),

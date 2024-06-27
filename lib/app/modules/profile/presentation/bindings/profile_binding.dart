@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
@@ -17,7 +19,7 @@ class ProfileBinding extends Bindings {
       ..lazyPut<ProfileController>(
         () => ProfileController(
           getProfile: Get.find(),
-          getUser: Get.find(),
+          getCacheUser: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
           downloadFile: Get.find(),
         ),
@@ -47,6 +49,13 @@ class ProfileBinding extends Bindings {
       ..lazyPut(
         () => GetProfile(
           Get.find<ProfileRepositoryImpl>(),
+        ),
+      )
+
+      // Home
+      ..lazyPut(
+        () => GetCacheUser(
+          Get.find<HomeRepositoryImpl>(),
         ),
       );
   }

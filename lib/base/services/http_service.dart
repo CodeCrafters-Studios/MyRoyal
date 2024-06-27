@@ -54,14 +54,6 @@ class HttpService extends getx.GetxService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (requestOptions, handler) {
-          // try {
-          //   AppUtils.logApp(
-          //     '[${requestOptions.method}] ${requestOptions.path}|||${jsonEncode(requestOptions.headers)}|||${jsonEncode(requestOptions.data)}',
-          //   );
-          // } catch (e) {
-          //   //
-          // }
-
           return handler.next(requestOptions);
         },
         onResponse: (response, handler) {
@@ -162,7 +154,6 @@ class HttpService extends getx.GetxService {
     Map<String, dynamic>? headers,
     bool withToken = false,
     bool showPopUp = false,
-    // bool isEncrypted = true,
   }) async {
     if (!await networkInfo.isConnected) {
       catchError('No Internet Connection!', showPopUp: showPopUp);
@@ -236,7 +227,7 @@ class HttpService extends getx.GetxService {
       } else if (method == Method.DELETE) {
         response = await dio.delete(newUrl);
       } else if (method == Method.PATCH) {
-        response = await dio.patch(newUrl);
+        response = await dio.patch(newUrl, data: params);
       } else if (method == Method.PUT) {
         response = await dio.put(newUrl, data: params);
       } else {
@@ -255,11 +246,11 @@ class HttpService extends getx.GetxService {
       } else if (response.statusCode == 500) {
         catchError('Internal Server Error', showPopUp: showPopUp);
       } else {
-        catchError("Something does wen't wrong", showPopUp: showPopUp);
+        catchError("Something went wrong", showPopUp: showPopUp);
       }
     } on SocketException catch (e) {
       AppUtils.logApp(e.toString());
-      catchError('Not Internet Connection', showPopUp: showPopUp);
+      catchError('No Internet Connection', showPopUp: showPopUp);
     } on FormatException catch (e) {
       AppUtils.logApp(e.toString());
       catchError('Bad response format', showPopUp: showPopUp);

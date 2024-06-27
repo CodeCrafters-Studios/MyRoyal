@@ -14,6 +14,7 @@ class HomeController extends GetxController {
   HomeController({required this.getUser});
 
   String userState = '';
+  RxString id = ''.obs;
 
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;

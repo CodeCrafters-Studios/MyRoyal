@@ -7,7 +7,7 @@ import 'package:iroyal/base/errors/failures.dart';
 class EditProfileRepositoryImpl implements EditProfileRepository {
   EditProfileRepositoryImpl({required this.remoteData});
 
-  final EditProfileRemoteDataSource remoteData;
+  final EditProfileRemoteSourceImpl remoteData;
 
   @override
   Future<Either<Failure, EditProfileResponse>> patchEditProfile(

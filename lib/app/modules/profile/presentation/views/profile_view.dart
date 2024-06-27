@@ -33,9 +33,15 @@ class ProfileView extends GetView<ProfileController> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            onPressed: () {
-              Get.toNamed(Routes.EDIT_PROFILE,
-                  arguments: controller.profileData());
+            onPressed: () async {
+              await Get.toNamed(
+                Routes.EDIT_PROFILE,
+                arguments: controller.profileData(),
+              )?.then((value) {
+                if (value == true) {
+                  controller.refreshProfile();
+                }
+              });
             },
           ),
         )

@@ -95,7 +95,7 @@ class HomeBinding extends Bindings {
       ..lazyPut<ProfileController>(
         () => ProfileController(
           getProfile: Get.find(),
-          getUser: Get.find(),
+          getCacheUser: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
           downloadFile: Get.find(),
         ),

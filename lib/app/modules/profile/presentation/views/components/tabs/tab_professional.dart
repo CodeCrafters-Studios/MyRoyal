@@ -24,8 +24,8 @@ class TabProfessionalView extends StatelessWidget {
             ),
             ProfileInformation(
               label: 'Employee ID',
-              value: controller.jobData().employeeNumber.isNotEmpty
-                  ? controller.jobData().employeeNumber
+              value: controller.userData().job.employeeNumber.isNotEmpty
+                  ? controller.userData().job.employeeNumber
                   : '-',
               controller: controller,
             ),
@@ -58,8 +58,8 @@ class TabProfessionalView extends StatelessWidget {
             ),
             ProfileInformation(
               label: 'Email Address',
-              value: controller.professionalEmail.value.isNotEmpty
-                  ? controller.professionalEmail.value
+              value: controller.userData().job.workEmail.isNotEmpty
+                  ? controller.userData().job.workEmail
                   : '-',
               controller: controller,
             ),
@@ -93,8 +93,8 @@ class TabProfessionalView extends StatelessWidget {
             ),
             ProfileInformation(
               label: 'Join Date',
-              value: controller.jobData().joinDate.isNotEmpty
-                  ? controller.jobData().joinDate
+              value: controller.userData().job.joinDate.isNotEmpty
+                  ? controller.userData().job.joinDate
                   : '-',
               controller: controller,
             ),

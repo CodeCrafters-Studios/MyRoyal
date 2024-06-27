@@ -4,4 +4,5 @@ import 'package:iroyal/base/errors/failures.dart';
 
 abstract class HomeRepository {
   Future<Either<Failure, User>> getUser();
+  Future<Either<Failure, User>> getCacheUser();
 }
