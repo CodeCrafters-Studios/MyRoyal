@@ -1,39 +1,36 @@
-class GetLoginParams implements UseCase<LoginParams, ParamsLogin> {
-  GetLoginParams(this.loginRepository);
+import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
+import 'package:iroyal/app/modules/edit_profile/domain/entities/edit_profile_response.dart';
+import 'package:iroyal/app/modules/edit_profile/domain/entities/employee_params.dart';
+import 'package:iroyal/app/modules/edit_profile/domain/repositories/edit_profile_repository.dart';
+import 'package:iroyal/base/errors/failures.dart';
+import 'package:iroyal/base/usecases/usecase.dart';
 
-  final LoginRepository loginRepository;
+class PatchEditProfile
+    implements UseCase<EditProfileResponse, ParamsEditProfile> {
+  PatchEditProfile(this.editProfileRepository);
+
+  final EditProfileRepository editProfileRepository;
+
   @override
-  Future<Either<Failure, LoginParams>> call(ParamsLogin params) {
-    return loginRepository.getLoginParam(
-      grantType: params.grantType,
-      username: params.username,
-      password: params.password,
-      clientId: params.clientId,
-      clientSecret: params.clientSecret,
-    );
+  Future<Either<Failure, EditProfileResponse>> call(ParamsEditProfile params) {
+    return editProfileRepository.patchEditProfile(params.toMap(), params.id);
   }
 }
 
-class ParamsLogin extends Equatable {
-  const ParamsLogin({
-    required this.grantType,
-    required this.username,
-    required this.password,
-    required this.clientId,
-    required this.clientSecret,
-  });
-  final String grantType;
-  final String username;
-  final String password;
-  final String clientId;
-  final String clientSecret;
+class ParamsEditProfile extends Equatable {
+  const ParamsEditProfile({required this.employeeParams, required this.id});
+
+  final EmployeeParams employeeParams;
+  final String id;
 
   @override
   List<Object?> get props => [
-        grantType,
-        username,
-        password,
-        clientId,
-        clientSecret,
+        employeeParams,
+        id,
       ];
+
+  Map<String, dynamic> toMap() => {
+        "employee": employeeParams.toJson(),
+      };
 }

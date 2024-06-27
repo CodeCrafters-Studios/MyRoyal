@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:iroyal/app/modules/edit_profile/domain/entities/employee_params.dart';
+import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profile.dart';
+import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 enum FormLoginValue { email, npwp }
 
 class EditProfileController extends GetxController {
+  EditProfileController({required this.patchEditProfileUseCase});
+
   TextEditingController emailController = TextEditingController();
 
   RxBool isLoading = false.obs;
@@ -13,7 +17,15 @@ class EditProfileController extends GetxController {
   RxString personalEmail = ''.obs;
   RxString npwp = ''.obs;
 
-  final GetLoginParams getLoginParams;
+  final PatchEditProfile patchEditProfileUseCase;
+
+  Profile argumentData = Get.arguments;
+
+  @override
+  void onInit() {
+    print(argumentData.personal.npwp);
+    super.onInit();
+  }
 
   void setEditProfileValue(FormLoginValue key, String value) {
     switch (key) {
@@ -28,36 +40,25 @@ class EditProfileController extends GetxController {
     }
   }
 
-  Future<void> getParams() async {
+  Future<void> patchEditProfile() async {
     AppUtils.logApp(personalEmail());
     AppUtils.logApp(npwp());
 
     isLoading(true);
-    final r = await getLoginParams(
-      ParamsLogin(
-        grantType: "password",
-        username: username(),
-        password: password(),
-        clientId: "_a_7w7Lf2aPTFaOketH8QgEvU8rdSegFoJzAY2Gxh_w",
-        clientSecret: "yJdF3bVdHd0S7yN4tc6nEhjCa9mbIpeRkAFQWp_d2pQ",
+    final r = await patchEditProfileUseCase(ParamsEditProfile(
+      employeeParams: EmployeeParams(
+        lastName: personalEmail.value.isEmpty
+            ? argumentData.personal.lastName
+            : personalEmail.value,
+        npwp: npwp.value,
       ),
-    );
+      id: '22',
+    ));
     r.fold((l) {
       isLoading(false);
-      loginState = 'getParamsFailed';
-      appDialog.showErrorDialog();
+      AppUtils.logApp('Failure');
     }, (r) {
-      loginState = 'getParamsSuccess';
-      loginParams(
-        LoginParamsModel(
-          grantType: r.grantType,
-          username: r.username,
-          password: r.password,
-          clientId: r.clientId,
-          clientSecret: r.clientSecret,
-        ),
-      );
-      login();
+      AppUtils.logApp('Success');
     });
   }
 }

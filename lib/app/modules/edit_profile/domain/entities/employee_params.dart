@@ -14,4 +14,6 @@ class EmployeeParams extends Equatable {
         lastName,
         npwp,
       ];
+
+  toJson() {}
 }

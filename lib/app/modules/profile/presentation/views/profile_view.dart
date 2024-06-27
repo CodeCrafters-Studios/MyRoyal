@@ -34,7 +34,8 @@ class ProfileView extends GetView<ProfileController> {
               ),
             ),
             onPressed: () {
-              Get.toNamed(Routes.EDIT_PROFILE);
+              Get.toNamed(Routes.EDIT_PROFILE,
+                  arguments: controller.profileData());
             },
           ),
         )
