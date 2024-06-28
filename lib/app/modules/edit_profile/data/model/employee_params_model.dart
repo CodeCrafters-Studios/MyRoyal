@@ -35,5 +35,6 @@ class EmployeeParamsModel extends EmployeeParams {
         "personal_email": email,
         "instagram": instagram,
         "linkedin": linkedIn,
+        "marital_status": maritalStatus,
       };
 }

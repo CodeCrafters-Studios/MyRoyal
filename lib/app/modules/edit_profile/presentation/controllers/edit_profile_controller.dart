@@ -14,7 +14,8 @@ enum FormLoginValue {
   npwpStatus,
   email,
   instagram,
-  linkedin
+  linkedin,
+  maritalStatus,
 }
 
 class EditProfileController extends GetxController {
@@ -61,14 +62,7 @@ class EditProfileController extends GetxController {
   List<String> listMaritalStatus = [
     'Single',
     'Married',
-    'Divorced',
   ];
-
-  // DropdownMenuItem dropDownListModel = DropdownMenuItem(
-  //   child: Text(value),
-  // );
-  // Rx<DropdownMenuItem> optionItemSelected =
-  //     DropdownMenuItem(title: "Select User").obs;
 
   @override
   void onInit() {
@@ -122,6 +116,10 @@ class EditProfileController extends GetxController {
       case FormLoginValue.linkedin:
         linkedIn(value);
         AppUtils.logApp(linkedIn.value);
+        break;
+      case FormLoginValue.maritalStatus:
+        maritalStatus(value);
+        AppUtils.logApp(maritalStatus.value);
         break;
     }
     validatorButton();

@@ -69,13 +69,13 @@ class HomeController extends GetxController {
 
   List<HomeSlider> homeSLider = <HomeSlider>[
     const HomeSlider(
-      link: '',
+      link: 'assets/images/img_banner1.jpeg',
     ),
     const HomeSlider(
-      link: '',
+      link: 'assets/images/img_banner2.jpeg',
     ),
     const HomeSlider(
-      link: '',
+      link: 'assets/images/img_banner3.jpeg',
     ),
   ];
 

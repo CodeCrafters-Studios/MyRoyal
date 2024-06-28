@@ -69,8 +69,10 @@ class BranchPage extends StatelessWidget {
         return primaryAccent.withOpacity(0.3);
       case 'PT Bestari Mulia':
         return primaryColor.withOpacity(0.3);
-      default:
+      case 'PT ACA':
         return Colors.pink.withOpacity(0.3);
+      default:
+        return Colors.green.withOpacity(0.3);
     }
   }
 
@@ -124,7 +126,7 @@ class BranchPage extends StatelessWidget {
                         highlightStyle: TS.labelLarge.copyWith(color: red),
                       ),
                       trailing: SearchHighlightText(
-                        d.ext.toString(),
+                        d.extentionNumber.toString(),
                         softWrap: true,
                         style: TS.titleMedium.copyWith(color: black),
                         highlightStyle: TS.titleMedium.copyWith(color: red),
@@ -146,6 +148,8 @@ class BranchPage extends StatelessWidget {
       return controller.searchR;
     } else if (title == 'PT Bestari Mulia') {
       return controller.searchB;
+    } else if (title == 'PT CAM') {
+      return controller.searchC;
     } else {
       return controller.searchA;
     }
@@ -156,6 +160,8 @@ class BranchPage extends StatelessWidget {
       return const Key('search-RasBranch');
     } else if (title == 'PT Bestari Mulia') {
       return const Key('search-BmBranch');
+    } else if (title == 'PT CAM') {
+      return const Key('search-CamBranch');
     } else {
       return const Key('search-AcaBranch');
     }
@@ -166,6 +172,8 @@ class BranchPage extends StatelessWidget {
       return controller.onChangedR;
     } else if (title == 'PT Bestari Mulia') {
       return controller.onChangedB;
+    } else if (title == 'PT CAM') {
+      return controller.onChangedC;
     } else {
       return controller.onChangedA;
     }

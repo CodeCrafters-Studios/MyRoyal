@@ -13,6 +13,7 @@ class WebtelController extends GetxController {
   TextEditingController searchR = TextEditingController();
   TextEditingController searchB = TextEditingController();
   TextEditingController searchA = TextEditingController();
+  TextEditingController searchC = TextEditingController();
 
   final GetWebtel getWebtel;
 
@@ -38,6 +39,12 @@ class WebtelController extends GetxController {
       branchName: 'PT ACA',
       code: 'ACA',
       color: Colors.pink,
+      logo: 'assets/images/img_logo-aca.png.png',
+    ),
+    Branch(
+      branchName: 'PT CAM',
+      code: 'CAM',
+      color: Colors.green,
       logo: 'assets/images/img_logo_cam.png',
     ),
   ];
@@ -46,10 +53,12 @@ class WebtelController extends GetxController {
   RxList<Webtel> rasData = <Webtel>[].obs;
   RxList<Webtel> bmData = <Webtel>[].obs;
   RxList<Webtel> acaData = <Webtel>[].obs;
+  RxList<Webtel> camData = <Webtel>[].obs;
 
   RxList<Webtel> filterRasData = <Webtel>[].obs;
   RxList<Webtel> filterBmData = <Webtel>[].obs;
   RxList<Webtel> filterAcaData = <Webtel>[].obs;
+  RxList<Webtel> filterCamData = <Webtel>[].obs;
 
   @override
   void onInit() {
@@ -64,6 +73,7 @@ class WebtelController extends GetxController {
     filterRasData(rasData);
     filterBmData(bmData);
     filterAcaData(acaData);
+    filterCamData(filterCamData);
     valueListener.value = '';
   }
 
@@ -80,11 +90,15 @@ class WebtelController extends GetxController {
         rasData(_generateBranch('PT RAS', r));
         bmData(_generateBranch('PT BM', r));
         acaData(_generateBranch('PT ACA', r));
+        camData(_generateBranch('PT CAM', r));
         filterRasData(rasData);
         filterBmData(bmData);
         filterAcaData(acaData);
+        filterCamData(camData);
         AppUtils.logApp('RAS :::::${rasData.length}');
-        AppUtils.logApp('FILTER RAS :::::${rasData.length}');
+        AppUtils.logApp('BM :::::${bmData.length}');
+        AppUtils.logApp('ACA :::::${acaData.length}');
+        AppUtils.logApp('CAM :::::${camData.length}');
       },
     );
   }
@@ -122,6 +136,11 @@ class WebtelController extends GetxController {
   void onChangedA(String value) {
     valueListener.value = value;
     _filterData(value, acaData, filterAcaData);
+  }
+
+  void onChangedC(String value) {
+    valueListener.value = value;
+    _filterData(value, camData, filterAcaData);
   }
 
   void _filterData(

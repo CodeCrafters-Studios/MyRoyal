@@ -80,6 +80,7 @@ class WebtelViewImpl extends StatelessWidget {
         final rasItems = controller.rasData.length.toString();
         final bmItems = controller.bmData.length.toString();
         final acaItems = controller.acaData.length.toString();
+        final camItems = controller.camData.length.toString();
         return BranchCard(
           onTap: () {
             switch (data.code) {
@@ -101,12 +102,21 @@ class WebtelViewImpl extends StatelessWidget {
                   ),
                 );
                 break;
+              case 'ACA':
+                Get.to(
+                  () => BranchPage(
+                    title: 'PT ACA',
+                    controller: controller,
+                    data: controller.filterAcaData,
+                  ),
+                );
+                break;
               default:
                 Get.to(
                   () => BranchPage(
                     title: 'PT Cemerlang Abadi Mulia',
                     controller: controller,
-                    data: controller.filterAcaData,
+                    data: controller.filterCamData,
                   ),
                 );
                 break;
@@ -119,7 +129,9 @@ class WebtelViewImpl extends StatelessWidget {
               ? rasItems
               : data.code == 'BM'
                   ? bmItems
-                  : acaItems,
+                  : data.code == 'ACA'
+                      ? acaItems
+                      : camItems,
           color: data.color,
         );
       },
