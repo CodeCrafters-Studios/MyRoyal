@@ -45,7 +45,7 @@ class EditProfileController extends GetxController {
   Profile argumentData = Get.arguments;
 
   List<String> listNpwpStatus = [
-    'TK0',
+    'TK',
     'TK1',
     'TK2',
     'TK3',

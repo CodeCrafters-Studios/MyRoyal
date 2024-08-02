@@ -68,9 +68,10 @@ class TabPersonalView extends StatelessWidget {
               ),
               ProfileInformation(
                 label: 'Status',
-                value: controller.userData().employee.maritalStatus.isNotEmpty
-                    ? controller.userData().employee.maritalStatus
-                    : '-',
+                value:
+                    controller.profileData().personal.maritalStatus.isNotEmpty
+                        ? controller.profileData().personal.maritalStatus
+                        : '-',
                 controller: controller,
               ),
               ProfileInformation(

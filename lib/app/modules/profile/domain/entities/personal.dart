@@ -24,7 +24,7 @@ class Personal extends Equatable {
   final String lastName;
   final DateTime birthdate;
   final String gender;
-  final bool maritalStatus;
+  final String maritalStatus;
   final String nickname;
   final String idCard;
   final String birthplace;

@@ -46,7 +46,7 @@ class ProfileController extends GetxController {
         lastName: '',
         birthdate: DateTime(0),
         gender: '',
-        maritalStatus: false,
+        maritalStatus: '',
         nickname: '',
         idCard: '',
         birthplace: '',

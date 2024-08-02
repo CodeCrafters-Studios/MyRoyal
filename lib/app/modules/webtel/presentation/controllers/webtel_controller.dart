@@ -70,10 +70,11 @@ class WebtelController extends GetxController {
     searchR.clear();
     searchB.clear();
     searchA.clear();
+    searchC.clear();
     filterRasData(rasData);
     filterBmData(bmData);
     filterAcaData(acaData);
-    filterCamData(filterCamData);
+    filterCamData(camData);
     valueListener.value = '';
   }
 
@@ -140,7 +141,7 @@ class WebtelController extends GetxController {
 
   void onChangedC(String value) {
     valueListener.value = value;
-    _filterData(value, camData, filterAcaData);
+    _filterData(value, camData, filterCamData);
   }
 
   void _filterData(

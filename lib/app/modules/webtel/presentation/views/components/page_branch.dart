@@ -119,11 +119,33 @@ class BranchPage extends StatelessWidget {
                         style: TS.labelLarge.copyWith(color: black),
                         highlightStyle: TS.labelLarge.copyWith(color: red),
                       ),
-                      subtitle: SearchHighlightText(
-                        d.departmentName,
-                        softWrap: true,
-                        style: TS.bodySmall.copyWith(color: black),
-                        highlightStyle: TS.labelLarge.copyWith(color: red),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          d.workEmail != ''
+                              ? SearchHighlightText(
+                                  d.workEmail,
+                                  softWrap: true,
+                                  style: TS.bodyMedium.copyWith(color: black),
+                                  highlightStyle:
+                                      TS.labelLarge.copyWith(color: red),
+                                )
+                              : Text(
+                                  "-",
+                                  softWrap: true,
+                                  style: TS.bodyMedium.copyWith(color: black),
+                                ),
+                          10.verticalSpace,
+                          SearchHighlightText(
+                            d.departmentName,
+                            softWrap: true,
+                            style: TS.labelLarge.copyWith(
+                              color: black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            highlightStyle: TS.labelLarge.copyWith(color: red),
+                          ),
+                        ],
                       ),
                       trailing: SearchHighlightText(
                         d.extentionNumber.toString(),
@@ -148,10 +170,10 @@ class BranchPage extends StatelessWidget {
       return controller.searchR;
     } else if (title == 'PT Bestari Mulia') {
       return controller.searchB;
-    } else if (title == 'PT CAM') {
-      return controller.searchC;
-    } else {
+    } else if (title == 'PT ACA') {
       return controller.searchA;
+    } else {
+      return controller.searchC;
     }
   }
 
@@ -160,10 +182,10 @@ class BranchPage extends StatelessWidget {
       return const Key('search-RasBranch');
     } else if (title == 'PT Bestari Mulia') {
       return const Key('search-BmBranch');
-    } else if (title == 'PT CAM') {
-      return const Key('search-CamBranch');
-    } else {
+    } else if (title == 'PT ACA') {
       return const Key('search-AcaBranch');
+    } else {
+      return const Key('search-CamBranch');
     }
   }
 
@@ -172,10 +194,10 @@ class BranchPage extends StatelessWidget {
       return controller.onChangedR;
     } else if (title == 'PT Bestari Mulia') {
       return controller.onChangedB;
-    } else if (title == 'PT CAM') {
-      return controller.onChangedC;
-    } else {
+    } else if (title == 'PT ACA') {
       return controller.onChangedA;
+    } else {
+      return controller.onChangedC;
     }
   }
 

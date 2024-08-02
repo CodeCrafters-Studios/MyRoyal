@@ -24,6 +24,6 @@ class SplashController extends GetxController {
   }
 
   void gotoLogin() {
-    Get.toNamed(Routes.LOGIN);
+    Get.offAllNamed(Routes.LOGIN);
   }
 }
