@@ -1,26 +1,24 @@
 import 'package:equatable/equatable.dart';
+import 'package:iroyal/app/modules/login/data/models/login_data.dart';
 
 class LoginResponse extends Equatable {
   const LoginResponse({
-    required this.accessToken,
-    required this.tokenType,
-    required this.expiresin,
-    required this.refreshToken,
-    required this.createdAt,
+    required this.status,
+    required this.code,
+    required this.message,
+    required this.data,
   });
 
-  final String accessToken;
-  final String tokenType;
-  final int expiresin;
-  final String refreshToken;
-  final int createdAt;
+  final bool status;
+  final int code;
+  final String message;
+  final LoginData data;
 
   @override
   List<Object?> get props => [
-        accessToken,
-        tokenType,
-        expiresin,
-        refreshToken,
-        createdAt,
+        status,
+        code,
+        message,
+        data,
       ];
 }

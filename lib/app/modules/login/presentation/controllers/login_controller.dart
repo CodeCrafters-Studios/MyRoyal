@@ -120,11 +120,8 @@ class LoginController extends GetxController {
     isLoading(true);
     final r = await getLoginParams(
       ParamsLogin(
-        grantType: "password",
         username: username(),
         password: password(),
-        clientId: "_a_7w7Lf2aPTFaOketH8QgEvU8rdSegFoJzAY2Gxh_w",
-        clientSecret: "yJdF3bVdHd0S7yN4tc6nEhjCa9mbIpeRkAFQWp_d2pQ",
       ),
     );
     r.fold((l) {
@@ -135,11 +132,8 @@ class LoginController extends GetxController {
       loginState = 'getParamsSuccess';
       loginParams(
         LoginParamsModel(
-          grantType: r.grantType,
           username: r.username,
           password: r.password,
-          clientId: r.clientId,
-          clientSecret: r.clientSecret,
         ),
       );
       login();

@@ -165,7 +165,10 @@ class HttpService extends getx.GetxService {
 
     ///SET Default Headers
     if (headers == null) {
-      final defaultHeader = {'Content-Type': 'application/json'};
+      final defaultHeader = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
       dio.options.headers = defaultHeader;
       if (withToken) {
         ///SET headers with TOKEN from CACHE [Authorization : bearer]
@@ -263,7 +266,7 @@ class HttpService extends getx.GetxService {
           e.type == DioExceptionType.sendTimeout) {
         catchError('Request timeout', showPopUp: showPopUp);
       } else if (e.error is SocketException) {
-        catchError('No Internet Connection!', showPopUp: showPopUp);
+        catchError(e.error.toString(), showPopUp: showPopUp);
       } else if (e.response?.statusCode == 400) {
         AppUtils.logApp('LOGIN ERROR HERE');
         catchError(errorLogin, showPopUp: showPopUp);

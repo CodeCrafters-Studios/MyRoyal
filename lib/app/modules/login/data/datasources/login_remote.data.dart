@@ -15,16 +15,10 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     try {
       final r = await httpService.request(
         params: loginParams,
-        enpoint: '/oauth/token',
+        enpoint: 'login',
       );
       final loginResponse = LoginResponseModel.fromJson(r);
       return loginResponse;
-      // if (r['response_msg'] == 'success') {
-      //   final loginResponse = LoginResponseModel.fromJson(r);
-      //   return loginResponse;
-      // } else {
-      //   throw ApiException(r['response_msg'] ?? 'Login Failed');
-      // }
     } on ApiException {
       rethrow;
     }

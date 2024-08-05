@@ -19,18 +19,11 @@ abstract class LoginLocalDataSource {
   Future<void> cacheUserLogin(CacheUserLoginModel user);
   Future<CacheUserLogin> getCacheUserLogin();
   Future<LoginParamsModel> getLoginParams({
-    required String grantType,
     required String username,
     required String password,
-    required String clientId,
-    required String clientSecret,
   });
   Future<bool> authBiometrics();
-  Future<void> saveLoginToken(
-    String token,
-    String refreshToken,
-    int expiresin,
-  );
+  Future<void> saveLoginToken(String token);
 }
 
 class LoginLocalDataSourceImpl implements LoginLocalDataSource {
@@ -86,11 +79,8 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
 
   @override
   Future<LoginParamsModel> getLoginParams({
-    required String grantType,
     required String username,
     required String password,
-    required String clientId,
-    required String clientSecret,
   }) async {
     if (username.isEmpty || password.isEmpty) {
       throw LocalDataException('Username or Password cannot be empty');
@@ -114,13 +104,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
         final result = await appLocation.requestPermission();
         if (result == LocationPermission.whileInUse ||
             result == LocationPermission.always) {
-          return loginParam(
-            grantType,
-            username,
-            password,
-            clientId,
-            clientSecret,
-          );
+          return loginParam(username, password);
         } else {
           throw LocalDataException('Permission Denied');
         }
@@ -132,11 +116,8 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     } else if (permissionStatus == LocationPermission.always ||
         permissionStatus == LocationPermission.whileInUse) {
       return loginParam(
-        grantType,
         username,
         password,
-        clientId,
-        clientSecret,
       );
     } else {
       throw LocalDataException('Permission Denied');
@@ -165,41 +146,30 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }
 
   Future<LoginParamsModel> loginParam(
-    final String grantType,
-    final String username,
-    final String password,
-    final String clientId,
-    final String clientSecret,
-  ) async {
+      final String username, final String password) async {
     // final info = await deviceInfo.info();
     // final position = await appLocation.position;
     // final latlong = '${position.latitude}, ${position.longitude}';
 
     return LoginParamsModel(
-      grantType: grantType,
       username: username,
       password: password,
-      clientId: clientId,
-      clientSecret: clientSecret,
     );
   }
 
   @override
-  Future<void> saveLoginToken(
-      String token, String refreshToken, int expiresToken) async {
+  Future<void> saveLoginToken(String token) async {
     await appStorage.write('ever-login', 'true');
     await appStorage.write(CACHE_ACCESS_TOKEN, token);
-    await appStorage.write(CACHE_REFRESH_TOKEN, refreshToken);
-    await appStorage.write(CACHE_EXPIRES_TOKEN, expiresToken.toString());
-    final now = DateTime.now();
+    // final now = DateTime.now();
     // final expiresIn = appStorage.read(CACHE_EXPIRES_TOKEN);
     // final convertExp = int.tryParse(expiresIn.toString());
 
-    final later = now.add(const Duration(milliseconds: 60000));
+    // final later = now.add(const Duration(milliseconds: 60000));
     // final later = now.add( Duration(milliseconds: convertExp ?? 0));
-    AppUtils.logApp('FIRST DATE TIME NOW :::::::$now');
-    AppUtils.logApp('FIRST GET TOKEN :::::::$later');
+    // AppUtils.logApp('FIRST DATE TIME NOW :::::::$now');
+    // AppUtils.logApp('FIRST GET TOKEN :::::::$later');
 
-    await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
+    // await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
   }
 }

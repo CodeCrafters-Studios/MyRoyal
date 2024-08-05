@@ -4,6 +4,7 @@
        <domain includeSubdomains="true">http://api.ras.co.id</domain>
        <domain includeSubdomains="true">http://staging.hrms.ras.co.id</domain>
        <domain includeSubdomains="true">https://www.w3.org</domain>
+       <domain includeSubdomains="true">https://dev-hr.royalcorp.co.id/api</domain>
     </domain-config>
     <base-config cleartextTrafficPermitted="false"/>
 </network-security-config>
