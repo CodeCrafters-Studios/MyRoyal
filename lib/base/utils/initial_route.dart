@@ -25,15 +25,20 @@ class InitialRouteImpl implements InitialRoute {
     if (token == null) {
       return Routes.LOGIN;
     } else {
-      final isExpired = await isTokenExpired(token);
-      AppUtils.logApp('EXPIRED ::::::::: $isExpired');
-      if (!isExpired) {
-        return Routes.BOTTOMNAVBAR;
-      } else {
-        AppUtils.logApp("TOKEN IS EXPIRED");
-        return Routes.LOGIN;
-      }
+      return Routes.BOTTOMNAVBAR;
     }
+    // if (token == null) {
+    //   return Routes.LOGIN;
+    // } else {
+    //   final isExpired = await isTokenExpired(token);
+    //   AppUtils.logApp('EXPIRED ::::::::: $isExpired');
+    //   if (!isExpired) {
+    //     return Routes.BOTTOMNAVBAR;
+    //   } else {
+    //     AppUtils.logApp("TOKEN IS EXPIRED");
+    //     return Routes.LOGIN;
+    //   }
+    // }
   }
 
   Future<bool> isTokenExpired(String token) async {

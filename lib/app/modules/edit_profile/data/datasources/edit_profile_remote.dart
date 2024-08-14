@@ -4,9 +4,7 @@ import 'package:iroyal/base/services/http_service.dart';
 
 abstract class EditProfileRemoteDataSource {
   Future<EditProfileResponseModel> editProfile(
-    Map<String, dynamic> editProfileParams,
-    String id,
-  );
+      Map<String, dynamic> editProfileParams);
 }
 
 class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
@@ -16,15 +14,12 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
 
   @override
   Future<EditProfileResponseModel> editProfile(
-    Map<String, dynamic> editProfileParams,
-    String id,
-  ) async {
+      Map<String, dynamic> editProfileParams) async {
     try {
       final r = await httpService.request(
         withToken: true,
         params: editProfileParams,
-        enpoint: '/api/v1/employees/$id/update_profile',
-        method: Method.PATCH,
+        enpoint: '/auth/updateProfile',
       );
       final editProfileResponse = EditProfileResponseModel.fromJson(r);
       return editProfileResponse;

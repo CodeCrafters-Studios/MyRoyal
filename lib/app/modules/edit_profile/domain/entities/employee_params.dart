@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class EmployeeParams extends Equatable {
   const EmployeeParams({
+    required this.employeeId,
     required this.firstName,
     required this.lastName,
     required this.nickname,
@@ -13,6 +14,7 @@ class EmployeeParams extends Equatable {
     required this.maritalStatus,
   });
 
+  final int employeeId;
   final String firstName;
   final String lastName;
   final String nickname;
@@ -26,7 +28,7 @@ class EmployeeParams extends Equatable {
   @override
   List<Object?> get props => [
         firstName,
-        lastName,
+        // lastName,
         nickname,
         npwp,
         npwpStatus,

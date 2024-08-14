@@ -36,7 +36,7 @@ class ProfileView extends GetView<ProfileController> {
             onPressed: () async {
               await Get.toNamed(
                 Routes.EDIT_PROFILE,
-                arguments: controller.profileData(),
+                arguments: [controller.profileData(), controller.id.value],
               )?.then((value) {
                 if (value == true) {
                   controller.refreshProfile();

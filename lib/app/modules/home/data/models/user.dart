@@ -1,36 +1,25 @@
-import 'package:iroyal/app/modules/home/data/models/attendance.dart';
-import 'package:iroyal/app/modules/home/data/models/employee.dart';
-import 'package:iroyal/app/modules/home/data/models/job.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({
-    required super.id,
-    required super.username,
-    required super.email,
-    required super.children,
-    required super.employee,
-    required super.job,
-    required super.attendance,
+    required super.status,
+    required super.code,
+    required super.message,
+    required super.data,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["id"],
-        username: json["username"],
-        email: json["email"],
-        children: json["children"],
-        employee: EmployeeModel.fromJson(json["employee"]),
-        job: JobModel.fromJson(json["job"]),
-        attendance: AttendanceModel.fromJson(json["attendance"]),
+        status: json["status"],
+        code: json["code"],
+        message: json["message"],
+        data: UserDataModel.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "username": username,
-        "email": email,
-        "children": children,
-        "employee": employee.toJson(),
-        "job": job.toJson(),
-        "attendance": attendance.toJson(),
+        "status": status,
+        "code": code,
+        "message": message,
+        "data": data.toJson(),
       };
 }

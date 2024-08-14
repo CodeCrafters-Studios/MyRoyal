@@ -1,17 +1,25 @@
-import 'package:iroyal/app/modules/profile/data/models/personal.dart';
-import 'package:iroyal/app/modules/profile/data/models/professional.dart';
+import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 
 class ProfileModel extends Profile {
-  const ProfileModel({required super.personal, required super.professional});
+  const ProfileModel({
+    required super.status,
+    required super.code,
+    required super.message,
+    required super.data,
+  });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-        personal: PersonalModel.fromJson(json["personal"]),
-        professional: ProfessionalModel.fromJson(json["work"]),
+        status: json["status"],
+        code: json["code"],
+        message: json["message"],
+        data: ProfileDataModel.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "personal": personal,
-        "work": professional,
+        "status": status,
+        "code": code,
+        "message": message,
+        "data": data.toJson(),
       };
 }

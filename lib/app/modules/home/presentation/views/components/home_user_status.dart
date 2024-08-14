@@ -86,17 +86,18 @@ class HomeUserStatus extends GetView<HomeController> {
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
-                            child: HomeUserCard(
+                            child: const HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
                               title: 'Today In',
-                              subtitle: controller.userData.value.attendance
-                                      .todayCheckin.isEmpty
-                                  ? "00:00:00"
-                                  : controller
-                                      .userData.value.attendance.todayCheckin
-                                      .split(' ')[1]
-                                      .substring(0, 8),
+                              subtitle: '00:00:00',
+                              // controller.userData.value.attendance
+                              //         .todayCheckin.isEmpty
+                              //     ? "00:00:00"
+                              //     : controller
+                              //         .userData.value.attendance.todayCheckin
+                              //         .split(' ')[1]
+                              //         .substring(0, 8),
                               isThridLine: false,
                               textColor: white,
                               backgroundColor: white,
@@ -111,17 +112,18 @@ class HomeUserStatus extends GetView<HomeController> {
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
-                            child: HomeUserCard(
+                            child: const HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
                               title: 'Yesterday Out',
-                              subtitle: controller.userData.value.attendance
-                                      .yesterdayCheckout.isEmpty
-                                  ? "00:00:00"
-                                  : controller.userData.value.attendance
-                                      .yesterdayCheckout
-                                      .split(' ')[1]
-                                      .substring(0, 8),
+                              subtitle: '00:00:00',
+                              // controller.userData.value.attendance
+                              //         .yesterdayCheckout.isEmpty
+                              //     ? "00:00:00"
+                              //     : controller.userData.value.attendance
+                              //         .yesterdayCheckout
+                              //         .split(' ')[1]
+                              //         .substring(0, 8),
                               isThridLine: false,
                               textColor: black,
                               backgroundColor: white,

@@ -3,18 +3,21 @@ import 'package:equatable/equatable.dart';
 class EditProfileResponse extends Equatable {
   const EditProfileResponse({
     required this.status,
+    required this.code,
     required this.message,
-    required this.employee,
+    required this.data,
   });
 
-  final String status;
+  final bool status;
+  final int code;
   final String message;
-  final String employee;
+  final String data;
 
   @override
   List<Object?> get props => [
         status,
+        code,
         message,
-        employee,
+        data,
       ];
 }

@@ -2,55 +2,47 @@ import 'package:equatable/equatable.dart';
 
 class Personal extends Equatable {
   const Personal({
-    required this.id,
     required this.fullName,
+    required this.firstName,
     required this.lastName,
     required this.birthdate,
     required this.gender,
     required this.maritalStatus,
     required this.nickname,
-    required this.idCard,
     required this.birthplace,
     required this.instagram,
     required this.linkedin,
     required this.npwp,
     required this.npwpStatus,
-    required this.smoker,
     required this.personalEmail,
   });
 
-  final int id;
   final String fullName;
+  final String firstName;
   final String lastName;
+  final String nickname;
   final DateTime birthdate;
+  final String birthplace;
   final String gender;
   final String maritalStatus;
-  final String nickname;
-  final String idCard;
-  final String birthplace;
-  final String instagram;
-  final String linkedin;
   final String npwp;
   final String npwpStatus;
-  final bool smoker;
   final String personalEmail;
+  final String instagram;
+  final String linkedin;
 
   @override
   List<Object?> get props => [
-        id,
         fullName,
-        lastName,
         birthdate,
         gender,
         maritalStatus,
         nickname,
-        idCard,
         birthplace,
         instagram,
         linkedin,
         npwp,
         npwpStatus,
-        smoker,
         personalEmail,
       ];
 }

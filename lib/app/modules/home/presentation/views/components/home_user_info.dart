@@ -28,7 +28,7 @@ class HomeUserInfo extends GetView<HomeController> {
                     shadows: Shadows.small,
                     padding: REdgeInsets.all(8),
                     margin: REdgeInsets.all(16),
-                    child: const Column(
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         HomeUserCard(
@@ -37,6 +37,10 @@ class HomeUserInfo extends GetView<HomeController> {
                           isThridLine: true,
                           thridLineTitle: '',
                           isAvatarPicture: true,
+                          avatarPicture:
+                              controller.userData().data.profilePicture.isEmpty
+                                  ? ''
+                                  : controller.userData().data.profilePicture,
                           suffixIcon: false,
                         ),
                       ],
@@ -53,17 +57,29 @@ class HomeUserInfo extends GetView<HomeController> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       HomeUserCard(
-                        title: controller.userData.value.email.isEmpty
+                        title: controller.userData().data.email.isEmpty
                             ? '-'
-                            : controller.userData.value.email,
+                            : controller.userData().data.email,
                         subtitle:
-                            '${controller.userData.value.job.employeeNumber} | ${controller.userData.value.job.position} | ${controller.userData.value.job.department}',
+                            '${controller.userData().data.employeeNumber} | ${controller.userData().data.position} | ${controller.userData().data.department}',
                         isThridLine: true,
                         thridLineTitle: controller
-                                .userData.value.job.joinDate.isEmpty
+                                .userData()
+                                .data
+                                .joinDate
+                                .isEmpty
                             ? '-'
-                            : 'Join date: ${controller.userData.value.job.joinDate}',
+                            : 'Join date: ${controller.userData().data.joinDate}',
+                        isImageAvailable: controller.isImageAvailable.value,
                         isAvatarPicture: true,
+                        avatarPicture:
+                            controller.userData().data.profilePicture.isNotEmpty
+                                ? controller.userData().data.profilePicture
+                                : '',
+                        initial:
+                            controller.userData().data.initialName.isNotEmpty
+                                ? controller.userData().data.initialName
+                                : '',
                         suffixIcon: false,
                       ),
                     ],

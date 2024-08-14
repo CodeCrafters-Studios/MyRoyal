@@ -1,19 +1,24 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/personal.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/professional.dart';
+import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
 
 class Profile extends Equatable {
   const Profile({
-    required this.personal,
-    required this.professional,
+    required this.status,
+    required this.code,
+    required this.message,
+    required this.data,
   });
 
-  final Personal personal;
-  final Professional professional;
+  final bool status;
+  final int code;
+  final String message;
+  final ProfileDataModel data;
 
   @override
   List<Object?> get props => [
-        personal,
-        professional,
+        status,
+        code,
+        message,
+        data,
       ];
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/config/app_constants.dart';
@@ -10,8 +11,10 @@ class HomeUserCard extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
+    this.initial,
     required this.isThridLine,
     required this.isAvatarPicture,
+    this.isImageAvailable = false,
     this.textColor,
     this.backgroundColor,
     this.borderSideColor,
@@ -19,16 +22,18 @@ class HomeUserCard extends StatelessWidget {
     this.thridLineTitle,
     this.thridLineSubtitle,
     required this.suffixIcon,
-    this.avatarPicture,
+    this.avatarPicture = '',
   });
 
   final String title;
   final String subtitle;
+  final String? initial;
   final String? thridLineTitle;
   final String? thridLineSubtitle;
-  final String? avatarPicture;
+  final String avatarPicture;
   final bool isThridLine;
   final bool isAvatarPicture;
+  final bool isImageAvailable;
   final bool suffixIcon;
   final Color? textColor;
   final Color? backgroundColor;
@@ -43,18 +48,31 @@ class HomeUserCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          isAvatarPicture == true
-              ? ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(90),
-                  ),
-                  child: Image.asset(
-                    avatarPicture ?? 'assets/images/img_profile.png',
-                    height: 68.h,
-                    width: 68.w,
-                    fit: BoxFit.cover,
-                  ),
-                )
+          isAvatarPicture
+              ? CircleAvatar(
+                  backgroundColor: isImageAvailable ? null : secondary,
+                  radius: 30,
+                  child: isImageAvailable
+                      ? ClipRRect(
+                          child: CachedNetworkImage(
+                            imageUrl: avatarPicture.isNotEmpty
+                                ? avatarPicture
+                                : 'https://via.placeholder.com/150', // Replace with your default image URL
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                              child: CircularProgressIndicator(
+                                value: downloadProgress.progress,
+                              ),
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : Text(
+                          initial ?? '',
+                          style: TS.titleLarge,
+                        ))
               : emptyBox,
           isAvatarPicture == true ? 12.horizontalSpace : emptyBox,
           Expanded(

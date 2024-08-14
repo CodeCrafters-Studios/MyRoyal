@@ -16,9 +16,9 @@ class ProfileRepositoryImpl extends ProfileRepository {
   final ProfileRemoteDataSources remoteData;
 
   @override
-  Future<Either<Failure, Profile>> getProfile(String id) async {
+  Future<Either<Failure, Profile>> getProfile() async {
     try {
-      final r = await remoteData.getProfile(id);
+      final r = await remoteData.getProfile();
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());

@@ -64,9 +64,9 @@ class DashboardController extends GetxController {
       },
       (r) {
         getIdState = 'getIdSuccess';
-        id(r.employee.id.toString());
-        remainingLeave(r.employee.availableLeave);
-        hasTeams(r.children);
+        // id(r.employee.id.toString());
+        // remainingLeave(r.employee.availableLeave);
+        // hasTeams(r.children);
         AppUtils.logApp('USER ID ::::::$id');
         isLoading.value = false;
       },

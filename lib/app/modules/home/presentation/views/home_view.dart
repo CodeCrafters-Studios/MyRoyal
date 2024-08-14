@@ -110,7 +110,7 @@ class HomeView extends GetView<HomeController> {
 
   Widget _buildLoadedText() {
     return Text(
-      '${controller.userData.value.employee.firstName.toUpperCase()} ${controller.userData.value.employee.lastName.toUpperCase()}',
+      controller.userData().data.fullName,
       style: TS.labelMedium,
     );
   }

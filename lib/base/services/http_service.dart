@@ -165,16 +165,13 @@ class HttpService extends getx.GetxService {
 
     ///SET Default Headers
     if (headers == null) {
-      final defaultHeader = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      };
+      final defaultHeader = {'Content-Type': 'application/json'};
       dio.options.headers = defaultHeader;
       if (withToken) {
         ///SET headers with TOKEN from CACHE [Authorization : bearer]
         final token = await appStorage.read(CACHE_ACCESS_TOKEN);
         dio.options.headers = {
-          'Authorization': 'bearer $token',
+          'Authorization': 'Bearer $token',
           ...defaultHeader,
         };
       }

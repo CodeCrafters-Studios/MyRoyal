@@ -4,7 +4,5 @@ import 'package:iroyal/base/errors/failures.dart';
 
 abstract class EditProfileRepository {
   Future<Either<Failure, EditProfileResponse>> patchEditProfile(
-    Map<String, dynamic> editProfileParams,
-    String id,
-  );
+      Map<String, dynamic> editProfileParams);
 }

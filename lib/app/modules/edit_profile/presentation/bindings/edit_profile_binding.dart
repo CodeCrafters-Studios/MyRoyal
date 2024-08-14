@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/edit_profile/data/datasources/edit_profile_remote.dart';
 import 'package:iroyal/app/modules/edit_profile/data/repositories/edit_profile_repository_impl.dart';
 import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profile.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/edit_profile_controller.dart';
 
@@ -10,7 +11,10 @@ class EditProfileBinding extends Bindings {
   void dependencies() {
     Get
       ..lazyPut<EditProfileController>(
-        () => EditProfileController(patchEditProfileUseCase: Get.find()),
+        () => EditProfileController(
+          patchEditProfileUseCase: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
+        ),
       )
       ..lazyPut<PatchEditProfile>(
         () => PatchEditProfile(Get.find()),

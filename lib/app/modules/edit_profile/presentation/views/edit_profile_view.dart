@@ -41,12 +41,13 @@ class EditProfileView extends GetView<EditProfileController> {
                 30.verticalSpace,
                 InputPrimary(
                   controller: controller.firstNameController,
-                  label: 'Firstname',
+                  label: 'First Name',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.fullName.isNotEmpty
-                      ? controller.argumentData.personal.fullName
-                      : 'Firstname',
+                  hint:
+                      controller.argumentData.data.personal.fullName.isNotEmpty
+                          ? controller.argumentData.data.personal.fullName
+                          : 'Firstname',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -58,12 +59,13 @@ class EditProfileView extends GetView<EditProfileController> {
                 20.verticalSpace,
                 InputPrimary(
                   controller: controller.lastNameController,
-                  label: 'Lastname',
+                  label: 'Last Name',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.lastName.isNotEmpty
-                      ? controller.argumentData.personal.lastName
-                      : 'Lastname',
+                  hint:
+                      controller.argumentData.data.personal.lastName.isNotEmpty
+                          ? controller.argumentData.data.personal.lastName
+                          : 'Lastname',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -77,9 +79,10 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Nickname',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.nickname.isNotEmpty
-                      ? controller.argumentData.personal.nickname
-                      : 'Nickname',
+                  hint:
+                      controller.argumentData.data.personal.nickname.isNotEmpty
+                          ? controller.argumentData.data.personal.nickname
+                          : 'Nickname',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -90,19 +93,20 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
+                  keyboardType: TextInputType.number,
                   maxLength: 15,
                   label: 'NPWP',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.npwp.isNotEmpty
-                      ? controller.argumentData.personal.npwp
+                  hint: controller.argumentData.data.personal.npwp.isNotEmpty
+                      ? controller.argumentData.data.personal.npwp
                       : 'Enter your NPWP',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
                   validation: (value) {
                     AppUtils.logApp('HERE ${controller.npwp.value}');
-                    if (value!.length < 15) {
+                    if (value!.length < 15 && value.isNotEmpty) {
                       return 'Password must be at least 15 characters long';
                     }
                     return null;
@@ -146,10 +150,10 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Personal Email',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.personal.personalEmail.isNotEmpty
-                          ? controller.argumentData.personal.personalEmail
-                          : 'Enter your email',
+                  hint: controller
+                          .argumentData.data.personal.personalEmail.isNotEmpty
+                      ? controller.argumentData.data.personal.personalEmail
+                      : 'Enter your email',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -163,9 +167,10 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Instagram',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.instagram.isNotEmpty
-                      ? controller.argumentData.personal.instagram
-                      : 'Enter your instagram',
+                  hint:
+                      controller.argumentData.data.personal.instagram.isNotEmpty
+                          ? controller.argumentData.data.personal.instagram
+                          : 'Enter your instagram',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -179,9 +184,10 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'LinkedIn',
                   color: white,
                   outlineColor: grey,
-                  hint: controller.argumentData.personal.linkedin.isNotEmpty
-                      ? controller.argumentData.personal.linkedin
-                      : 'Enter your linkedin',
+                  hint:
+                      controller.argumentData.data.personal.linkedin.isNotEmpty
+                          ? controller.argumentData.data.personal.linkedin
+                          : 'Enter your linkedin',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -225,7 +231,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   fullWidth: true,
                   margin: REdgeInsets.only(left: 16, bottom: 20, right: 16),
                   text: 'Continue',
-                  onPressed: () => controller.patchEditProfile(),
+                  onPressed: () => controller.editProfile(),
                 )
               ],
             ),

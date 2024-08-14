@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/attendance.dart';
-import 'package:iroyal/app/modules/home/data/models/employee.dart';
-import 'package:iroyal/app/modules/home/data/models/job.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/personal.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/professional.dart';
+import 'package:iroyal/app/modules/profile/data/models/personal.dart';
+import 'package:iroyal/app/modules/profile/data/models/professional.dart';
+import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
@@ -40,69 +39,59 @@ class ProfileController extends GetxController {
   String profileState = '';
 
   final Rx<Profile> profileData = Profile(
-      personal: Personal(
-        id: 0,
-        fullName: '',
-        lastName: '',
-        birthdate: DateTime(0),
-        gender: '',
-        maritalStatus: '',
-        nickname: '',
-        idCard: '',
-        birthplace: '',
-        instagram: '',
-        linkedin: '',
-        npwp: '',
-        npwpStatus: '',
-        smoker: false,
-        personalEmail: '',
-      ),
-      professional: const Professional(
-        company: '',
-        department: '',
-        position: '',
-        reportTo: '',
-        remainingLeave: 0,
-        bpjsKesehatan: '',
-        bpjsTenagakerja: '',
-        active: false,
-      )).obs;
+      status: false,
+      code: 0,
+      message: '',
+      data: ProfileDataModel(
+          personal: PersonalModel(
+            fullName: '',
+            firstName: '',
+            lastName: '',
+            birthdate: DateTime(0),
+            gender: '',
+            maritalStatus: '',
+            nickname: '',
+            birthplace: '',
+            instagram: '',
+            linkedin: '',
+            npwp: '',
+            npwpStatus: '',
+            personalEmail: '',
+          ),
+          professional: const ProfessionalModel(
+            idCard: '',
+            employeeNumber: '',
+            reaminingLeave: '',
+            bpjsKesehatan: '',
+            bpjsKetenagakerjaan: '',
+            workEmail: '',
+            position: '',
+            department: '',
+            joinDate: '',
+            reportTo: '',
+          ))).obs;
 
   final Rx<User> userData = const User(
-    id: 0,
-    username: '',
-    email: '',
-    children: false,
-    employee: EmployeeModel(
-      id: 0,
-      firstName: '',
-      lastName: '',
-      birthdate: '',
-      gender: '',
-      maritalStatus: '',
-      availableLeave: 0,
-    ),
-    job: JobModel(
-        company: '',
-        department: '',
-        section: '',
+      status: false,
+      code: 0,
+      message: '',
+      data: UserDataModel(
+        employeeId: 0,
+        email: '',
+        fullName: '',
+        employeeNumber: '',
         position: '',
+        department: '',
         joinDate: '',
-        absenceNumber: '',
-        workEmail: '',
-        employeeNumber: ''),
-    attendance: AttendanceModel(
-      todayCheckin: '',
-      yesterdayCheckin: '',
-      yesterdayCheckout: '',
-    ),
-  ).obs;
+        initialName: '',
+        profilePicture: '',
+      )).obs;
 
   @override
   void onInit() async {
     tabController = TabController(length: 3, vsync: TicckerProvider());
     await _getCacheUser();
-    await _getProfileData();
+    _getProfileData();
     super.onInit();
   }
 
@@ -121,21 +110,24 @@ class ProfileController extends GetxController {
   }
 
   Future<void> _getCacheUser() async {
+    isLoading.value = true;
     final r = await getCacheUser(NoParams());
     r.fold((l) {
+      isLoading.value = false;
       AppUtils.logApp(l.toString());
     }, (r) {
+      isLoading.value = false;
       AppUtils.logApp('RESPONSE CACHE USER :::: $r');
-      AppUtils.logApp('ID CACHE USER :::: ${r.employee.id}');
+      AppUtils.logApp('ID CACHE USER :::: ${r.data.employeeId}');
       userData.value = r;
-      id.value = r.employee.id.toString();
+      id.value = r.data.employeeId.toString();
     });
   }
 
   Future<void> _getProfileData() async {
     isLoading.value = true;
 
-    final result = await getProfile(id.value);
+    final result = await getProfile();
 
     result.fold(
       (l) {

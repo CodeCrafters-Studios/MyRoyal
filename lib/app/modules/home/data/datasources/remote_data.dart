@@ -15,7 +15,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: '/api/v1/employees',
+        enpoint: '/auth/user',
         method: Method.GET,
       );
       final userResponse = UserModel.fromJson(r);

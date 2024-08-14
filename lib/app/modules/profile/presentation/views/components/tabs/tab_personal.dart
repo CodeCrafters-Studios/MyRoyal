@@ -20,94 +20,118 @@ class TabPersonalView extends StatelessWidget {
             children: [
               ProfileInformation(
                 label: 'Full Name',
-                value: controller.profileData().personal.fullName.isNotEmpty
-                    ? controller.profileData().personal.fullName
-                    : '-',
+                value:
+                    controller.profileData().data.personal.fullName.isNotEmpty
+                        ? controller.profileData().data.personal.fullName
+                        : '',
+                controller: controller,
+              ),
+              ProfileInformation(
+                label: 'First Name',
+                value:
+                    controller.profileData().data.personal.firstName.isNotEmpty
+                        ? controller.profileData().data.personal.firstName
+                        : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Last Name',
-                value: controller.profileData().personal.lastName.isNotEmpty
-                    ? controller.profileData().personal.lastName
-                    : '-',
+                value:
+                    controller.profileData().data.personal.lastName.isNotEmpty
+                        ? controller.profileData().data.personal.lastName
+                        : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Nickname',
-                value: controller.profileData().personal.nickname.isNotEmpty
-                    ? controller.profileData().personal.nickname
-                    : '-',
+                value:
+                    controller.profileData().data.personal.nickname.isNotEmpty
+                        ? controller.profileData().data.personal.nickname
+                        : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Birthdate',
                 value: controller
                         .profileData()
+                        .data
                         .personal
                         .birthdate
                         .toString()
                         .isNotEmpty
-                    ? DateFormat('dd, MMMM y')
-                        .format(controller.profileData().personal.birthdate)
+                    ? DateFormat('dd, MMMM y').format(
+                        controller.profileData().data.personal.birthdate)
                     : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Birthplace',
-                value: controller.profileData().personal.birthplace.isNotEmpty
-                    ? controller.profileData().personal.birthplace
-                    : '-',
+                value:
+                    controller.profileData().data.personal.birthplace.isNotEmpty
+                        ? controller.profileData().data.personal.birthplace
+                        : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Gender',
-                value: controller.profileData().personal.gender.isNotEmpty
-                    ? controller.profileData().personal.gender
+                value: controller.profileData().data.personal.gender.isNotEmpty
+                    ? controller.profileData().data.personal.gender
                     : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'Status',
-                value:
-                    controller.profileData().personal.maritalStatus.isNotEmpty
-                        ? controller.profileData().personal.maritalStatus
-                        : '-',
+                value: controller
+                        .profileData()
+                        .data
+                        .personal
+                        .maritalStatus
+                        .isNotEmpty
+                    ? controller.profileData().data.personal.maritalStatus
+                    : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'No NPWP',
-                value: controller.profileData().personal.npwp.isNotEmpty
-                    ? controller.profileData().personal.npwp
+                value: controller.profileData().data.personal.npwp.isNotEmpty
+                    ? controller.profileData().data.personal.npwp
                     : '-',
                 controller: controller,
               ),
               ProfileInformation(
                 label: 'NPWP Status',
-                value: controller.profileData().personal.npwpStatus.isNotEmpty
-                    ? controller.profileData().personal.npwpStatus
-                    : '-',
-                controller: controller,
-              ),
-              ProfileInformation(
-                label: 'Email Address',
                 value:
-                    controller.profileData().personal.personalEmail.isNotEmpty
-                        ? controller.profileData().personal.personalEmail
+                    controller.profileData().data.personal.npwpStatus.isNotEmpty
+                        ? controller.profileData().data.personal.npwpStatus
                         : '-',
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Instagram',
-                value: controller.profileData().personal.instagram.isNotEmpty
-                    ? controller.profileData().personal.instagram
+                label: 'Email Address',
+                value: controller
+                        .profileData()
+                        .data
+                        .personal
+                        .personalEmail
+                        .isNotEmpty
+                    ? controller.profileData().data.personal.personalEmail
                     : '-',
                 controller: controller,
               ),
               ProfileInformation(
+                label: 'Instagram',
+                value:
+                    controller.profileData().data.personal.instagram.isNotEmpty
+                        ? controller.profileData().data.personal.instagram
+                        : '-',
+                controller: controller,
+              ),
+              ProfileInformation(
                 label: 'LinkedIn',
-                value: controller.profileData().personal.linkedin.isNotEmpty
-                    ? controller.profileData().personal.linkedin
-                    : '-',
+                value:
+                    controller.profileData().data.personal.linkedin.isNotEmpty
+                        ? controller.profileData().data.personal.linkedin
+                        : '-',
                 controller: controller,
               ),
             ],

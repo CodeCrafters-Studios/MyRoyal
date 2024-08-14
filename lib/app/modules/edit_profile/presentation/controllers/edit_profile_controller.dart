@@ -5,6 +5,7 @@ import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profi
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 enum FormLoginValue {
   firstName,
@@ -21,9 +22,13 @@ enum FormLoginValue {
 class EditProfileController extends GetxController {
   EditProfileController({
     required this.patchEditProfileUseCase,
+    required this.appDialog,
   });
 
   final PatchEditProfile patchEditProfileUseCase;
+  final AppDialog appDialog;
+  Profile argumentData = Get.arguments[0];
+  final String id = Get.arguments[1];
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -32,6 +37,7 @@ class EditProfileController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool enableButton = false.obs;
 
+  RxString fullName = ''.obs;
   RxString firstName = ''.obs;
   RxString lastName = ''.obs;
   RxString nickname = ''.obs;
@@ -41,8 +47,6 @@ class EditProfileController extends GetxController {
   RxString instagram = ''.obs;
   RxString linkedIn = ''.obs;
   RxString maritalStatus = ''.obs;
-
-  Profile argumentData = Get.arguments;
 
   List<String> listNpwpStatus = [
     'TK',
@@ -66,20 +70,24 @@ class EditProfileController extends GetxController {
 
   @override
   void onInit() {
-    AppUtils.logApp(argumentData.personal.npwp);
+    AppUtils.logApp(argumentData.data.personal.npwp);
     super.onInit();
   }
 
   void validatorButton() {
-    enableButton.value = firstName.value.isNotEmpty ||
-        lastName.value.isNotEmpty ||
-        nickname.value.isNotEmpty ||
-        npwp.value.length == 15 ||
-        npwpStatus.value.isNotEmpty ||
-        email.value.isNotEmpty ||
-        instagram.value.isNotEmpty ||
-        linkedIn.value.isNotEmpty ||
-        maritalStatus.value.isNotEmpty;
+    if (npwp.value.length == 15 || npwp.value.isEmpty) {
+      enableButton.value = firstName.value.isNotEmpty ||
+          lastName.value.isNotEmpty ||
+          nickname.value.isNotEmpty ||
+          npwp.value.length == 15 ||
+          npwpStatus.value.isNotEmpty ||
+          email.value.isNotEmpty ||
+          instagram.value.isNotEmpty ||
+          linkedIn.value.isNotEmpty ||
+          maritalStatus.value.isNotEmpty;
+    } else if (npwp.value.length < 15) {
+      enableButton.value = false;
+    }
     AppUtils.logApp('${enableButton.value}');
   }
 
@@ -125,7 +133,8 @@ class EditProfileController extends GetxController {
     validatorButton();
   }
 
-  Future<void> patchEditProfile() async {
+  Future<void> editProfile() async {
+    AppUtils.logApp(fullName.value);
     AppUtils.logApp(firstName.value);
     AppUtils.logApp(lastName.value);
     AppUtils.logApp(nickname.value);
@@ -139,33 +148,34 @@ class EditProfileController extends GetxController {
     final r = await patchEditProfileUseCase(
       ParamsEditProfile(
         employeeParams: EmployeeParamsModel(
+          employeeId: int.parse(id),
           firstName: firstName.value.isEmpty
-              ? argumentData.personal.fullName
+              ? argumentData.data.personal.fullName
               : firstName.value,
           lastName: lastName.value.isEmpty
-              ? argumentData.personal.lastName
+              ? argumentData.data.personal.lastName
               : lastName.value,
           nickname: nickname.value.isEmpty
-              ? argumentData.personal.nickname
+              ? argumentData.data.personal.nickname
               : nickname.value,
-          npwp: npwp.value.isEmpty ? argumentData.personal.npwp : npwp.value,
+          npwp:
+              npwp.value.isEmpty ? argumentData.data.personal.npwp : npwp.value,
           npwpStatus: npwpStatus.value.isEmpty
-              ? argumentData.personal.npwpStatus
+              ? argumentData.data.personal.npwpStatus
               : npwpStatus.value,
           email: email.value.isEmpty
-              ? argumentData.personal.personalEmail
+              ? argumentData.data.personal.personalEmail
               : email.value,
           instagram: instagram.value.isEmpty
-              ? argumentData.personal.instagram
+              ? argumentData.data.personal.instagram
               : instagram.value,
           linkedIn: linkedIn.value.isEmpty
-              ? argumentData.personal.linkedin
+              ? argumentData.data.personal.linkedin
               : linkedIn.value,
           maritalStatus: maritalStatus.value.isEmpty
-              ? argumentData.personal.maritalStatus.toString()
+              ? argumentData.data.personal.maritalStatus.toString()
               : maritalStatus.value,
         ),
-        id: argumentData.personal.id.toString(),
       ),
     );
     r.fold((l) {
@@ -176,6 +186,8 @@ class EditProfileController extends GetxController {
       AppUtils.logApp('Success');
       Get.find<ProfileController>().setTabIndex(0);
       Get.back(result: true);
+      appDialog.showSuccessSnackBar(
+          description: 'Profile changes saved successfully');
     });
   }
 

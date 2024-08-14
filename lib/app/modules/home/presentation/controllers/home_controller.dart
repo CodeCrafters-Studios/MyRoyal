@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/attendance.dart';
-import 'package:iroyal/app/modules/home/data/models/employee.dart';
-import 'package:iroyal/app/modules/home/data/models/job.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
@@ -18,6 +16,7 @@ class HomeController extends GetxController {
 
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;
+  RxBool isImageAvailable = false.obs;
 
   RxInt indexSlider = 0.obs;
 
@@ -55,11 +54,11 @@ class HomeController extends GetxController {
       name: 'Tracking Documents',
       isVisible: true,
     ),
-    const Menu(
-      code: 'ic_teams',
-      name: 'My Teams',
-      isVisible: true,
-    ),
+    // const Menu(
+    //   code: 'ic_teams',
+    //   name: 'My Teams',
+    //   isVisible: true,
+    // ),
     const Menu(
       code: 'ic_others',
       name: 'Others',
@@ -153,35 +152,20 @@ class HomeController extends GetxController {
   ];
 
   Rx<User> userData = const User(
-    id: 0,
-    username: '',
-    email: '',
-    children: false,
-    employee: EmployeeModel(
-      id: 0,
-      firstName: '',
-      lastName: '',
-      birthdate: '',
-      gender: '',
-      maritalStatus: '',
-      availableLeave: 0,
-    ),
-    job: JobModel(
-      company: '',
-      department: '',
-      section: '',
-      position: '',
-      joinDate: '',
-      absenceNumber: '',
-      workEmail: '',
-      employeeNumber: '',
-    ),
-    attendance: AttendanceModel(
-      todayCheckin: '',
-      yesterdayCheckin: '',
-      yesterdayCheckout: '',
-    ),
-  ).obs;
+      status: false,
+      code: 0,
+      message: '',
+      data: UserDataModel(
+        employeeId: 0,
+        email: '',
+        department: '',
+        fullName: '',
+        employeeNumber: '',
+        joinDate: '',
+        position: '',
+        initialName: '',
+        profilePicture: '',
+      )).obs;
 
   final GetUser getUser;
 
@@ -256,7 +240,13 @@ class HomeController extends GetxController {
         userState = 'getUserSuccess';
         isLoading.value = false;
         userData.value = r;
-        isVisible.value = r.children;
+        if (userData.value.data.profilePicture.isEmpty ||
+            userData.value.data.profilePicture == '') {
+          isImageAvailable.value = false;
+        } else {
+          isImageAvailable.value = true;
+        }
+        // isVisible.value = r.children;
       },
     );
   }

@@ -4,7 +4,7 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/services/http_service.dart';
 
 abstract class ProfileRemoteDataSources {
-  Future<Profile> getProfile(String id);
+  Future<Profile> getProfile();
 }
 
 class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
@@ -12,11 +12,11 @@ class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
 
   final HttpService httpService;
   @override
-  Future<Profile> getProfile(String id) async {
+  Future<Profile> getProfile() async {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: '/api/v1/employees/$id/profile',
+        enpoint: '/auth/profile',
         method: Method.GET,
       );
       final profileResponse = ProfileModel.fromJson(r);

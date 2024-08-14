@@ -11,9 +11,9 @@ class EditProfileRepositoryImpl implements EditProfileRepository {
 
   @override
   Future<Either<Failure, EditProfileResponse>> patchEditProfile(
-      Map<String, dynamic> editProfileParams, String id) async {
+      Map<String, dynamic> editProfileParams) async {
     try {
-      final r = await remoteData.editProfile(editProfileParams, id);
+      final r = await remoteData.editProfile(editProfileParams);
       return Right(r);
     } catch (e) {
       return Left(ServerFailure(properties: [e]));

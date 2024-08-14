@@ -2,6 +2,7 @@ import 'package:iroyal/app/modules/edit_profile/domain/entities/employee_params.
 
 class EmployeeParamsModel extends EmployeeParams {
   const EmployeeParamsModel({
+    required super.employeeId,
     required super.firstName,
     required super.lastName,
     required super.nickname,
@@ -15,6 +16,7 @@ class EmployeeParamsModel extends EmployeeParams {
 
   factory EmployeeParamsModel.fromJson(Map<String, dynamic> json) =>
       EmployeeParamsModel(
+        employeeId: json["employee_id"],
         firstName: json["first_name"],
         lastName: json["last_name"],
         nickname: json["nickname"],
@@ -27,7 +29,8 @@ class EmployeeParamsModel extends EmployeeParams {
       );
 
   Map<String, dynamic> toJson() => {
-        "firs_name": firstName,
+        "employee_id": employeeId,
+        "first_name": firstName,
         "last_name": lastName,
         "nickname": nickname,
         "npwp": npwp,

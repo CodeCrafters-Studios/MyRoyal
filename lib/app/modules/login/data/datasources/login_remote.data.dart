@@ -15,7 +15,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     try {
       final r = await httpService.request(
         params: loginParams,
-        enpoint: 'login',
+        enpoint: '/login',
       );
       final loginResponse = LoginResponseModel.fromJson(r);
       return loginResponse;

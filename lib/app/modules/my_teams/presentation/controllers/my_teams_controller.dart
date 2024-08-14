@@ -51,7 +51,7 @@ class MyTeamsController extends GetxController {
       },
       (r) {
         getIdState = 'getIdSuccess';
-        id(r.employee.id.toString());
+        // id(r.employee.id.toString());
         AppUtils.logApp('USER ID ::::::$id');
         isLoading.value = false;
       },

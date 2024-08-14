@@ -13,24 +13,19 @@ class PatchEditProfile
   final EditProfileRepositoryImpl editProfileRepository;
 
   @override
-  Future<Either<Failure, EditProfileResponse>> call(ParamsEditProfile params) {
-    return editProfileRepository.patchEditProfile(params.toMap(), params.id);
+  Future<Either<Failure, EditProfileResponse>> call(params) {
+    return editProfileRepository.patchEditProfile(params.toMap());
   }
 }
 
 class ParamsEditProfile extends Equatable {
-  const ParamsEditProfile({required this.employeeParams, required this.id});
+  const ParamsEditProfile({required this.employeeParams});
 
   final EmployeeParamsModel employeeParams;
-  final String id;
-
   @override
   List<Object?> get props => [
         employeeParams,
-        id,
       ];
 
-  Map<String, dynamic> toMap() => {
-        "employee": employeeParams.toJson(),
-      };
+  Map<String, dynamic> toMap() => employeeParams.toJson();
 }
