@@ -43,9 +43,8 @@ class HomeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      padding: EdgeInsets.fromLTRB(isAvatarPicture ? 5 : 12, 10, 0, 10),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           isAvatarPicture

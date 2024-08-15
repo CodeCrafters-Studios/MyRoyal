@@ -62,7 +62,7 @@ class HomeView extends GetView<HomeController> {
           ),
           child: Icon(
             Icons.notifications,
-            color: primary,
+            color: secondary,
             size: 32.dm,
           ),
         ),
@@ -78,7 +78,7 @@ class HomeView extends GetView<HomeController> {
         children: [
           Text(
             "Welcome Back!👋",
-            style: TS.labelLarge,
+            style: TS.bodyMedium,
           ),
           Obx(
             () => controller.isLoading.value
@@ -111,7 +111,8 @@ class HomeView extends GetView<HomeController> {
   Widget _buildLoadedText() {
     return Text(
       controller.userData().data.fullName,
-      style: TS.labelMedium,
+      style:
+          TS.labelLarge.copyWith(color: primary, fontWeight: FontWeight.bold),
     );
   }
 }

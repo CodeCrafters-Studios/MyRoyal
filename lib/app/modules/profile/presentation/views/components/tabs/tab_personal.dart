@@ -14,7 +14,7 @@ class TabPersonalView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 14),
         child: Obx(
           () => Column(
             children: [

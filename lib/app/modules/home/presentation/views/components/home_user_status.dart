@@ -20,10 +20,10 @@ class HomeUserStatus extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: EPadding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Obx(
-          () => Column(
+      child: Obx(
+        () => EPadding(
+          padding: const EdgeInsets.only(bottom: 15),
+          child: Column(
             children: [
               controller.isLoading.value
                   ? Align(
@@ -36,7 +36,7 @@ class HomeUserStatus extends GetView<HomeController> {
                       ),
                     )
                   : _buildLeaveSummary(),
-              20.verticalSpace,
+              15.verticalSpace,
               controller.isLoading.value
                   ? Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
@@ -79,17 +79,17 @@ class HomeUserStatus extends GetView<HomeController> {
                       ),
                     )
                   : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CardApp(
-                          color: primary.withOpacity(0.8),
+                          color: green,
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
                             child: const HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
-                              title: 'Today In',
+                              title: "Today's Check In",
                               subtitle: '00:00:00',
                               // controller.userData.value.attendance
                               //         .todayCheckin.isEmpty
@@ -106,16 +106,15 @@ class HomeUserStatus extends GetView<HomeController> {
                             ),
                           ),
                         ),
-                        20.horizontalSpace,
                         CardApp(
-                          color: grey,
+                          color: secondary10,
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
                             child: const HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
-                              title: 'Yesterday Out',
+                              title: 'Last Check Out',
                               subtitle: '00:00:00',
                               // controller.userData.value.attendance
                               //         .yesterdayCheckout.isEmpty
@@ -125,7 +124,7 @@ class HomeUserStatus extends GetView<HomeController> {
                               //         .split(' ')[1]
                               //         .substring(0, 8),
                               isThridLine: false,
-                              textColor: black,
+                              textColor: white,
                               backgroundColor: white,
                               borderSideColor: greyHint,
                               suffixIcon: false,

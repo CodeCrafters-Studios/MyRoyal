@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
@@ -29,7 +28,7 @@ class ProfileView extends GetView<ProfileController> {
             child: Text(
               'Edit Profile',
               style: TS.bodyMedium.copyWith(
-                color: Colors.blue,
+                color: secondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -66,7 +65,6 @@ class ProfileViewImpl extends StatelessWidget {
       children: [
         const AppbarSpacer(),
         _buildTabBar(),
-        20.verticalSpace,
         _buildTabBarView(),
       ],
     );
@@ -109,10 +107,7 @@ class ProfileViewImpl extends StatelessWidget {
   }
 
   Widget _buildTabBarView() {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: 14),
-      width: Get.width,
-      height: 600.h,
+    return Expanded(
       child: TabBarView(
         controller: controller.tabController,
         children: [

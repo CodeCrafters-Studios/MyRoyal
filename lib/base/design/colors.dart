@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const primary = Color(0xFF313352);
-const secondary = Color(0xFFFA8C26);
+const secondary = Color(0xFFBE9B34);
 const white = Color(0xFFFFFFFF);
 const black = Color.fromRGBO(0, 0, 0, 1);
 const grey = Color(0xFFD9D9D9);
@@ -29,7 +29,7 @@ const Color secondary90 = Color(0xFF003A49);
 const Color secondary70 = Color(0xFF007491);
 const Color secondary50 = Color(0xFF00C1F2);
 const Color secondary30 = Color(0xFF66DAF7);
-const Color secondary10 = Color(0xFFB2ECFB);
+const Color secondary10 = Color(0xFFFBC02D);
 
 const Color neutral90 = Color(0xFF101820);
 const Color neutral70 = Color(0xFF333333);
