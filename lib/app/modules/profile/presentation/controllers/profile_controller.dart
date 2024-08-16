@@ -61,7 +61,7 @@ class ProfileController extends GetxController {
           professional: const ProfessionalModel(
             idCard: '',
             employeeNumber: '',
-            reaminingLeave: 0,
+            reaminingLeave: '',
             bpjsKesehatan: '',
             bpjsKetenagakerjaan: '',
             workEmail: '',

@@ -16,7 +16,7 @@ class Professional extends Equatable {
 
   final String idCard;
   final String employeeNumber;
-  final int reaminingLeave;
+  final String reaminingLeave;
   final String bpjsKesehatan;
   final String bpjsKetenagakerjaan;
   final String workEmail;
