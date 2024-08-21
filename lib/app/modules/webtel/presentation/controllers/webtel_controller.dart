@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/webtel/data/models/webtel_model.dart';
+import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
 import 'package:iroyal/app/modules/webtel/domain/entities/branch.dart';
 import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
@@ -14,6 +14,7 @@ class WebtelController extends GetxController {
   TextEditingController searchB = TextEditingController();
   TextEditingController searchA = TextEditingController();
   TextEditingController searchC = TextEditingController();
+  TextEditingController searchBC = TextEditingController();
 
   final GetWebtel getWebtel;
 
@@ -47,18 +48,26 @@ class WebtelController extends GetxController {
       color: Colors.green,
       logo: 'assets/images/img_logo_cam.png',
     ),
+    Branch(
+      branchName: 'PT BCP',
+      code: 'BCP',
+      color: Colors.orange,
+      logo: 'assets/images/img_logo.png',
+    ),
   ];
 
-  RxList<Webtel> webtelData = <WebtelModel>[].obs;
-  RxList<Webtel> rasData = <Webtel>[].obs;
-  RxList<Webtel> bmData = <Webtel>[].obs;
-  RxList<Webtel> acaData = <Webtel>[].obs;
-  RxList<Webtel> camData = <Webtel>[].obs;
+  Rx<Webtel> webtelData = const Webtel(code: 0, message: '', data: {}).obs;
+  RxList<WebtelDataModel> rasData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> bmData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> acaData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> camData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> bcpData = <WebtelDataModel>[].obs;
 
-  RxList<Webtel> filterRasData = <Webtel>[].obs;
-  RxList<Webtel> filterBmData = <Webtel>[].obs;
-  RxList<Webtel> filterAcaData = <Webtel>[].obs;
-  RxList<Webtel> filterCamData = <Webtel>[].obs;
+  RxList<WebtelDataModel> filterRasData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> filterBmData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> filterAcaData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> filterCamData = <WebtelDataModel>[].obs;
+  RxList<WebtelDataModel> filterBcpData = <WebtelDataModel>[].obs;
 
   @override
   void onInit() {
@@ -71,10 +80,12 @@ class WebtelController extends GetxController {
     searchB.clear();
     searchA.clear();
     searchC.clear();
+    searchBC.clear();
     filterRasData(rasData);
     filterBmData(bmData);
     filterAcaData(acaData);
     filterCamData(camData);
+    filterBcpData(bcpData);
     valueListener.value = '';
   }
 
@@ -88,40 +99,18 @@ class WebtelController extends GetxController {
       (r) {
         webtelState = 'getPromSuccess';
         webtelData(r);
-        rasData(_generateBranch('PT RAS', r));
-        bmData(_generateBranch('PT BM', r));
-        acaData(_generateBranch('PT ACA', r));
-        camData(_generateBranch('PT CAM', r));
+        rasData(r.data['PT RAS']);
+        bmData(r.data['PT BM']);
+        acaData(r.data['PT ACA']);
+        camData(r.data['PT CAM']);
+        bcpData(r.data['PT BCP']);
         filterRasData(rasData);
         filterBmData(bmData);
         filterAcaData(acaData);
         filterCamData(camData);
-        AppUtils.logApp('RAS :::::${rasData.length}');
-        AppUtils.logApp('BM :::::${bmData.length}');
-        AppUtils.logApp('ACA :::::${acaData.length}');
-        AppUtils.logApp('CAM :::::${camData.length}');
+        filterBcpData(bcpData);
       },
     );
-  }
-
-  List<Webtel> _generateBranch(String branchName, List<Webtel> getBranch) {
-    final branchList = <Webtel>[];
-
-    getBranch.where((x) => x.branchName == branchName).forEach((x) {
-      branchList.add(
-        Webtel(
-          fullname: x.fullname,
-          departmentName: x.departmentName,
-          lineNumber: x.lineNumber,
-          extentionNumber: x.extentionNumber,
-          branchName: x.branchName,
-          workEmail: x.workEmail,
-        ),
-      );
-    });
-    AppUtils.logApp('$branchName :::::$branchList');
-
-    return branchList;
   }
 
   void onChangedR(String value) {
@@ -144,20 +133,29 @@ class WebtelController extends GetxController {
     _filterData(value, camData, filterCamData);
   }
 
-  void _filterData(
-      String value, RxList<Webtel> data, RxList<Webtel> filterData) {
+  void onChangedBC(String value) {
+    valueListener.value = value;
+    _filterData(value, bcpData, filterBcpData);
+  }
+
+  void _filterData(String value, RxList<WebtelDataModel> data,
+      RxList<WebtelDataModel> filterData) {
     if (value.isEmpty) {
       filterData.value = data;
       AppUtils.logApp('${filterData.length}');
     } else {
       filterData.value = data
           .where((e) =>
-              e.fullname.toLowerCase().contains(value.toLowerCase()) ||
+              e.fullName.toLowerCase().contains(value.toLowerCase()) ||
               e.extentionNumber
                   .toString()
                   .toLowerCase()
                   .contains(value.toLowerCase()) ||
               e.departmentName
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.workEmail
                   .toString()
                   .toLowerCase()
                   .contains(value.toLowerCase()))

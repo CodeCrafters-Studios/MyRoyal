@@ -1,13 +1,14 @@
-import 'package:iroyal/app/modules/login/domain/entities/login_data_response.dart';
+import 'package:iroyal/app/modules/login/data/models/token_response.dart';
+import 'package:iroyal/app/modules/login/domain/entities/login_data.dart';
 
 class LoginData extends LoginDataResponse {
-  const LoginData({required super.accessToken});
+  const LoginData({required super.token});
 
   factory LoginData.fromJson(Map<String, dynamic> json) => LoginData(
-        accessToken: json["access_token"],
+        token: TokenResponseModel.fromJson(json["token"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "access_token": accessToken,
+        "token": token.toJson(),
       };
 }

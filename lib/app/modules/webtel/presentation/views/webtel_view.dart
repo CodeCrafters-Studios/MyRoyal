@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/webtel/presentation/views/components/card_branch.dart';
-import 'package:iroyal/app/modules/webtel/presentation/views/components/page_branch.dart';
+import 'package:iroyal/app/modules/webtel/presentation/views/components/branch_page.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
@@ -81,6 +81,8 @@ class WebtelViewImpl extends StatelessWidget {
         final bmItems = controller.bmData.length.toString();
         final acaItems = controller.acaData.length.toString();
         final camItems = controller.camData.length.toString();
+        final bcpItems = controller.bcpData.length.toString();
+
         return BranchCard(
           onTap: () {
             switch (data.code) {
@@ -111,6 +113,15 @@ class WebtelViewImpl extends StatelessWidget {
                   ),
                 );
                 break;
+              case 'BCP':
+                Get.to(
+                  () => BranchPage(
+                    title: 'PT BCP',
+                    controller: controller,
+                    data: controller.filterBcpData,
+                  ),
+                );
+                break;
               default:
                 Get.to(
                   () => BranchPage(
@@ -131,7 +142,9 @@ class WebtelViewImpl extends StatelessWidget {
                   ? bmItems
                   : data.code == 'ACA'
                       ? acaItems
-                      : camItems,
+                      : data.code == 'BCP'
+                          ? bcpItems
+                          : camItems,
           color: data.color,
         );
       },

@@ -39,12 +39,22 @@ class LoginRepositoryImpl implements LoginRepository {
   }
 
   @override
-  Future<Either<Failure, LoginParams>> getLoginParam(
-      {required String username, required String password}) async {
+  Future<Either<Failure, LoginParams>> getLoginParam({
+    required String grantType,
+    required String clientId,
+    required String clientSecret,
+    required String username,
+    required String password,
+    required String scope,
+  }) async {
     try {
       final r = await localData.getLoginParams(
+        grantType: grantType,
+        clientId: clientId,
+        clientSecret: clientSecret,
         username: username,
         password: password,
+        scope: scope,
       );
       return Right(r);
     } on LocalDataException {
@@ -61,12 +71,16 @@ class LoginRepositoryImpl implements LoginRepository {
       await localData.cacheLoginResponse(r);
       await localData.cacheUserLogin(
         CacheUserLoginModel(
+          grantType: loginParams['grant_type'],
+          clientId: loginParams['client_id'],
+          clientSecret: loginParams['client_secret'],
           username: loginParams['username'],
           password: loginParams['password'],
+          scope: loginParams['scope'],
         ),
       );
       await localData.saveLoginToken(
-        r.data.accessToken,
+        r.data.token.accessToken,
       );
       return Right(r);
     } catch (e) {

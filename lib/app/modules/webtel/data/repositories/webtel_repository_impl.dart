@@ -11,7 +11,7 @@ class WebtelRepositoryImpl implements WebtelRepository {
   final WebtelRemoteDataSources remoteData;
 
   @override
-  Future<Either<Failure, List<Webtel>>> getWebtel() async {
+  Future<Either<Failure, Webtel>> getWebtel() async {
     try {
       final r = await remoteData.getWebtel();
       return Right(r);

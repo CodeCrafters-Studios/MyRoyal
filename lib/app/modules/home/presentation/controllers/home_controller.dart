@@ -151,21 +151,8 @@ class HomeController extends GetxController {
     ),
   ];
 
-  Rx<User> userData = const User(
-      status: false,
-      code: 0,
-      message: '',
-      data: UserDataModel(
-        employeeId: 0,
-        email: '',
-        department: '',
-        fullName: '',
-        employeeNumber: '',
-        joinDate: '',
-        position: '',
-        initialName: '',
-        profilePicture: '',
-      )).obs;
+  Rx<User> userData =
+      User(code: 0, message: '', data: UserDataModel.empty()).obs;
 
   final GetUser getUser;
 

@@ -1,28 +1,30 @@
 import 'package:iroyal/app/modules/profile/domain/entities/personal.dart';
 
 class PersonalModel extends Personal {
-  const PersonalModel({
-    required super.fullName,
-    required super.firstName,
-    required super.lastName,
-    required super.nickname,
-    required super.birthdate,
-    required super.birthplace,
-    required super.gender,
-    required super.maritalStatus,
-    required super.npwp,
-    required super.npwpStatus,
-    required super.personalEmail,
-    required super.instagram,
-    required super.linkedin,
-  });
+  PersonalModel({
+    super.fullName = '',
+    super.firstName = '',
+    super.lastName = '',
+    super.nickname = '',
+    DateTime? birthdate,
+    super.birthplace = '',
+    super.gender = '',
+    super.maritalStatus = '',
+    super.npwp = '',
+    super.npwpStatus = '',
+    super.personalEmail = '',
+    super.instagram = '',
+    super.linkedin = '',
+  }) : super(birthdate: birthdate ?? DateTime(0));
 
   factory PersonalModel.fromJson(Map<String, dynamic> json) => PersonalModel(
         fullName: json["full_name"],
         firstName: json["first_name"],
         lastName: json["last_name"],
         nickname: json["nickname"],
-        birthdate: DateTime.parse(json["birthdate"]),
+        birthdate: json["birthdate"] != null
+            ? DateTime.parse(json["birthdate"])
+            : DateTime(0),
         birthplace: json["birthplace"],
         gender: json["gender"],
         maritalStatus: json["marital_Status"],

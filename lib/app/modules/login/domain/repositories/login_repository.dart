@@ -5,8 +5,14 @@ import 'package:iroyal/app/modules/login/domain/entities/login_response.dart';
 import 'package:iroyal/base/errors/failures.dart';
 
 abstract class LoginRepository {
-  Future<Either<Failure, LoginParams>> getLoginParam(
-      {required String username, required String password});
+  Future<Either<Failure, LoginParams>> getLoginParam({
+    required String grantType,
+    required String clientId,
+    required String clientSecret,
+    required String username,
+    required String password,
+    required String scope,
+  });
   Future<Either<Failure, LoginResponse>> loginApp(
     Map<String, dynamic> loginParams,
   );

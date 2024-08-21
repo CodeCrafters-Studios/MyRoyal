@@ -10,6 +10,10 @@ class UserData extends Equatable {
   final String joinDate;
   final String initialName;
   final String profilePicture;
+  final String absentStartDay;
+  final String absentEndDay;
+  final String absentStartTime;
+  final String absentEndTime;
 
   const UserData({
     required this.employeeId,
@@ -21,6 +25,10 @@ class UserData extends Equatable {
     required this.joinDate,
     required this.initialName,
     required this.profilePicture,
+    required this.absentStartDay,
+    required this.absentEndDay,
+    required this.absentStartTime,
+    required this.absentEndTime,
   });
 
   @override
@@ -33,6 +41,10 @@ class UserData extends Equatable {
         department,
         joinDate,
         initialName,
-        profilePicture
+        profilePicture,
+        absentStartDay,
+        absentEndDay,
+        absentStartTime,
+        absentEndTime,
       ];
 }

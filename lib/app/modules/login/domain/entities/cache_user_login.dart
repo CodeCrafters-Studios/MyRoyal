@@ -2,16 +2,28 @@ import 'package:equatable/equatable.dart';
 
 class CacheUserLogin extends Equatable {
   const CacheUserLogin({
+    required this.grantType,
+    required this.clientId,
+    required this.clientSecret,
     required this.username,
     required this.password,
+    required this.scope,
   });
 
+  final String grantType;
+  final String clientId;
+  final String clientSecret;
   final String username;
   final String password;
+  final String scope;
 
   @override
   List<Object?> get props => [
+        grantType,
+        clientId,
+        clientSecret,
         username,
         password,
+        scope,
       ];
 }

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/repositories/home_repository.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -24,7 +25,7 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<Either<Failure, User>> getCacheUser() async {
+  Future<Either<Failure, UserDataModel>> getCacheUser() async {
     try {
       final r = await localData.getCacheUserLogin();
       return Right(r);

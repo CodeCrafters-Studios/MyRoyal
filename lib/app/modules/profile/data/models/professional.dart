@@ -2,16 +2,16 @@ import 'package:iroyal/app/modules/profile/domain/entities/professional.dart';
 
 class ProfessionalModel extends Professional {
   const ProfessionalModel({
-    required super.idCard,
-    required super.employeeNumber,
-    required super.reaminingLeave,
-    required super.bpjsKesehatan,
-    required super.bpjsKetenagakerjaan,
-    required super.workEmail,
-    required super.position,
-    required super.department,
-    required super.joinDate,
-    required super.reportTo,
+    super.idCard = '',
+    super.employeeNumber = '',
+    super.reaminingLeave = 0,
+    super.bpjsKesehatan = '',
+    super.bpjsKetenagakerjaan = '',
+    super.workEmail = '',
+    super.position = '',
+    super.department = '',
+    super.joinDate = '',
+    super.reportTo = '',
   });
 
   factory ProfessionalModel.fromJson(Map<String, dynamic> json) =>

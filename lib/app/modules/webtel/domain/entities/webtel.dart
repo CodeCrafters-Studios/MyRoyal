@@ -1,29 +1,21 @@
 import 'package:equatable/equatable.dart';
+import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
 
 class Webtel extends Equatable {
   const Webtel({
-    required this.fullname,
-    required this.departmentName,
-    required this.lineNumber,
-    required this.extentionNumber,
-    required this.branchName,
-    required this.workEmail,
+    required this.code,
+    required this.message,
+    required this.data,
   });
 
-  final String fullname;
-  final String departmentName;
-  final int lineNumber;
-  final int extentionNumber;
-  final String branchName;
-  final String workEmail;
+  final int code;
+  final String message;
+  final Map<String, List<WebtelDataModel>> data;
 
   @override
   List<Object?> get props => [
-        fullname,
-        departmentName,
-        lineNumber,
-        extentionNumber,
-        branchName,
-        workEmail,
+        code,
+        message,
+        data,
       ];
 }

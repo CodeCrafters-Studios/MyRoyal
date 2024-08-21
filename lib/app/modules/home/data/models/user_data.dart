@@ -11,18 +11,42 @@ class UserDataModel extends UserData {
     required super.joinDate,
     required super.initialName,
     required super.profilePicture,
+    required super.absentStartDay,
+    required super.absentEndDay,
+    required super.absentStartTime,
+    required super.absentEndTime,
   });
 
+  factory UserDataModel.empty() => const UserDataModel(
+        employeeId: 0,
+        email: '',
+        fullName: '',
+        employeeNumber: '',
+        position: '',
+        department: '',
+        joinDate: '',
+        initialName: '',
+        profilePicture: '',
+        absentStartDay: '',
+        absentEndDay: '',
+        absentStartTime: '',
+        absentEndTime: '',
+      );
+
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
-        employeeId: json["employee_id"],
-        email: json["email"],
-        fullName: json["full_name"],
-        employeeNumber: json["employee_number"],
-        position: json["position"],
-        department: json["department"],
-        joinDate: json["join_date"],
-        initialName: json["initial_name"],
-        profilePicture: json["profile_picture"],
+        employeeId: json["employee_id"] ?? '',
+        email: json["email"] ?? '',
+        fullName: json["full_name"] ?? '',
+        employeeNumber: json["employee_number"] ?? '',
+        position: json["position"] ?? '',
+        department: json["department"] ?? '',
+        joinDate: json["join_date"] ?? '',
+        initialName: json["initial_name"] ?? '',
+        profilePicture: json["profile_picture"] ?? '',
+        absentStartDay: json["absent_start_day"] ?? '',
+        absentEndDay: json["absent_end_day"] ?? '',
+        absentStartTime: json["absent_start_time"] ?? '',
+        absentEndTime: json["absent_end_time"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,5 +59,9 @@ class UserDataModel extends UserData {
         "join_date": joinDate,
         "initial_name": initialName,
         "profile_picture": profilePicture,
+        "absentStartDay": absentStartDay,
+        "absentEndDay": absentEndDay,
+        "absentStartTime": absentStartTime,
+        "absentEndTime": absentEndTime,
       };
 }

@@ -12,18 +12,34 @@ class GetLoginParams implements UseCase<LoginParams, ParamsLogin> {
   @override
   Future<Either<Failure, LoginParams>> call(ParamsLogin params) {
     return loginRepository.getLoginParam(
-        username: params.username, password: params.password);
+      grantType: params.grantType,
+      clientId: params.clientId,
+      clientSecret: params.clientSecret,
+      username: params.username,
+      password: params.password,
+      scope: params.scope,
+    );
   }
 }
 
 class ParamsLogin extends Equatable {
   const ParamsLogin({
+    required this.grantType,
+    required this.clientId,
+    required this.clientSecret,
     required this.username,
     required this.password,
+    required this.scope,
   });
+
+  final String grantType;
+  final String clientId;
+  final String clientSecret;
   final String username;
   final String password;
+  final String scope;
 
   @override
-  List<Object?> get props => [username, password];
+  List<Object?> get props =>
+      [grantType, clientId, clientSecret, username, password, scope];
 }

@@ -6,6 +6,9 @@ class ProfileDataModel extends ProfileData {
   const ProfileDataModel(
       {required super.personal, required super.professional});
 
+  factory ProfileDataModel.empty() => ProfileDataModel(
+      personal: PersonalModel(), professional: const ProfessionalModel());
+
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) =>
       ProfileDataModel(
         personal: PersonalModel.fromJson(json["personal"]),

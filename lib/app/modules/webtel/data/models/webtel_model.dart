@@ -1,30 +1,24 @@
+import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
 import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
 
 class WebtelModel extends Webtel {
-  const WebtelModel({
-    required super.fullname,
-    required super.departmentName,
-    required super.lineNumber,
-    required super.extentionNumber,
-    required super.branchName,
-    required super.workEmail,
-  });
+  const WebtelModel(
+      {required super.code, required super.message, required super.data});
 
   factory WebtelModel.fromJson(Map<String, dynamic> json) => WebtelModel(
-        fullname: json["full_name"],
-        departmentName: json["department_name"],
-        lineNumber: json["line_number"],
-        extentionNumber: json["extention_number"],
-        branchName: json["branch_name"],
-        workEmail: json["work_email"],
+        code: json["code"],
+        message: json["message"],
+        data: Map.from(json["data"]).map((k, v) =>
+            MapEntry<String, List<WebtelDataModel>>(
+                k,
+                List<WebtelDataModel>.from(
+                    v.map((x) => WebtelDataModel.fromJson(x))))),
       );
 
   Map<String, dynamic> toJson() => {
-        "full_name": fullname,
-        "department_name": departmentName,
-        "line_number": departmentName,
-        "extention_number": extentionNumber,
-        "branch_name": branchName,
-        "workEmail": workEmail,
+        "code": code,
+        "message": message,
+        "data": Map.from(data).map((k, v) => MapEntry<String, dynamic>(
+            k, List<dynamic>.from(v.map((x) => x.toJson())))),
       };
 }

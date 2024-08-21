@@ -74,20 +74,10 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
     return true;
   }
 
-  // Future<Directory?> _getDownloadDirectory() async {
-  //   if (Platform.isAndroid) {
-  //     return Directory('/storage/emulated/0/Download');
-  //   } else {
-  //     return await getDownloadsDirectory();
-  //   }
-  // }
-
   Future<Directory?> _getDownloadDirectory() async {
     if (Platform.isAndroid) {
       const storagePath = '/storage/emulated/0/Download';
       final directory = await Directory(storagePath).create();
-      AppUtils.logApp('DIRECTORY ::: $storagePath');
-      AppUtils.logApp('LIST DIRECTORY ::: $directory');
       return directory;
     } else {
       return await getDownloadsDirectory();

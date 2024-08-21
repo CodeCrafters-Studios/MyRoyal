@@ -28,7 +28,7 @@ class EditProfileController extends GetxController {
   final PatchEditProfile patchEditProfileUseCase;
   final AppDialog appDialog;
   Profile argumentData = Get.arguments[0];
-  final String id = Get.arguments[1];
+  final int id = Get.arguments[1];
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -57,10 +57,6 @@ class EditProfileController extends GetxController {
     'K1',
     'K2',
     'K3',
-    'K/I/0',
-    'K/I/1',
-    'K/I/2',
-    'K/I/3',
   ];
 
   List<String> listMaritalStatus = [
@@ -148,9 +144,9 @@ class EditProfileController extends GetxController {
     final r = await patchEditProfileUseCase(
       ParamsEditProfile(
         employeeParams: EmployeeParamsModel(
-          employeeId: int.parse(id),
+          employeeId: id,
           firstName: firstName.value.isEmpty
-              ? argumentData.data.personal.fullName
+              ? argumentData.data.personal.firstName
               : firstName.value,
           lastName: lastName.value.isEmpty
               ? argumentData.data.personal.lastName

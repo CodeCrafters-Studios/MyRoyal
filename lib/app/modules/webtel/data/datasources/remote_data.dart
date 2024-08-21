@@ -1,10 +1,12 @@
 import 'package:iroyal/app/modules/webtel/data/models/webtel_model.dart';
+import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
 import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class WebtelRemoteDataSources {
-  Future<List<WebtelModel>> getWebtel();
+  Future<Webtel> getWebtel();
 }
 
 class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
@@ -12,23 +14,25 @@ class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
 
   final HttpService httpService;
   @override
-  Future<List<WebtelModel>> getWebtel() async {
+  Future<Webtel> getWebtel() async {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: '/api/v1/list_employee_extensions',
+        enpoint: 'webtel/getAll',
         method: Method.GET,
       );
-
-      if (r is List) {
-        final List<WebtelModel> webtels =
-            r.map((e) => WebtelModel.fromJson(e)).toList();
-        AppUtils.logApp('$webtels');
-        return webtels;
-      } else {
-        throw ApiException('Invalid response format');
+      if (r['code'] != 200) {
+        throw ApiException(r['message']);
       }
-    } on ApiException {
+      final response = WebtelModel.fromJson(r);
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
       rethrow;
     }
   }

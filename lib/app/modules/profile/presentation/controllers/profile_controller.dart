@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
-import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/profile/data/models/personal.dart';
 import 'package:iroyal/app/modules/profile/data/models/professional.dart';
@@ -33,59 +32,20 @@ class ProfileController extends GetxController {
 
   final RxBool isLoading = false.obs;
 
-  RxString id = ''.obs;
+  RxInt id = 0.obs;
 
   String getIdState = '';
   String profileState = '';
 
   final Rx<Profile> profileData = Profile(
-      status: false,
       code: 0,
       message: '',
       data: ProfileDataModel(
-          personal: PersonalModel(
-            fullName: '',
-            firstName: '',
-            lastName: '',
-            birthdate: DateTime(0),
-            gender: '',
-            maritalStatus: '',
-            nickname: '',
-            birthplace: '',
-            instagram: '',
-            linkedin: '',
-            npwp: '',
-            npwpStatus: '',
-            personalEmail: '',
-          ),
-          professional: const ProfessionalModel(
-            idCard: '',
-            employeeNumber: '',
-            reaminingLeave: '',
-            bpjsKesehatan: '',
-            bpjsKetenagakerjaan: '',
-            workEmail: '',
-            position: '',
-            department: '',
-            joinDate: '',
-            reportTo: '',
-          ))).obs;
-
-  final Rx<User> userData = const User(
-      status: false,
-      code: 0,
-      message: '',
-      data: UserDataModel(
-        employeeId: 0,
-        email: '',
-        fullName: '',
-        employeeNumber: '',
-        position: '',
-        department: '',
-        joinDate: '',
-        initialName: '',
-        profilePicture: '',
+        personal: PersonalModel(),
+        professional: const ProfessionalModel(),
       )).obs;
+
+  final Rx<UserDataModel> userData = UserDataModel.empty().obs;
 
   @override
   void onInit() async {
@@ -118,9 +78,8 @@ class ProfileController extends GetxController {
     }, (r) {
       isLoading.value = false;
       AppUtils.logApp('RESPONSE CACHE USER :::: $r');
-      AppUtils.logApp('ID CACHE USER :::: ${r.data.employeeId}');
       userData.value = r;
-      id.value = r.data.employeeId.toString();
+      id.value = r.employeeId;
     });
   }
 

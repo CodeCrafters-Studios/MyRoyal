@@ -86,19 +86,21 @@ class HomeUserStatus extends GetView<HomeController> {
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
-                            child: const HomeUserCard(
+                            child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
-                              title: "Today's Check In",
-                              subtitle: '00:00:00',
-                              // controller.userData.value.attendance
-                              //         .todayCheckin.isEmpty
-                              //     ? "00:00:00"
-                              //     : controller
-                              //         .userData.value.attendance.todayCheckin
-                              //         .split(' ')[1]
-                              //         .substring(0, 8),
-                              isThridLine: false,
+                              title: "Last Check In",
+                              subtitle: controller.userData.value.data
+                                      .absentStartDay.isNotEmpty
+                                  ? controller
+                                      .userData.value.data.absentStartDay
+                                  : '-',
+                              thridLineTitle: controller.userData.value.data
+                                      .absentStartTime.isNotEmpty
+                                  ? controller
+                                      .userData.value.data.absentStartTime
+                                  : '00:00:00',
+                              isThridLine: true,
                               textColor: white,
                               backgroundColor: white,
                               borderSideColor: greyHint,
@@ -111,19 +113,19 @@ class HomeUserStatus extends GetView<HomeController> {
                           outlineColor: black,
                           child: SizedBox(
                             width: 155.w,
-                            child: const HomeUserCard(
+                            child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
                               title: 'Last Check Out',
-                              subtitle: '00:00:00',
-                              // controller.userData.value.attendance
-                              //         .yesterdayCheckout.isEmpty
-                              //     ? "00:00:00"
-                              //     : controller.userData.value.attendance
-                              //         .yesterdayCheckout
-                              //         .split(' ')[1]
-                              //         .substring(0, 8),
-                              isThridLine: false,
+                              subtitle: controller.userData.value.data
+                                      .absentEndDay.isNotEmpty
+                                  ? controller.userData.value.data.absentEndDay
+                                  : '-',
+                              thridLineTitle: controller.userData.value.data
+                                      .absentEndTime.isNotEmpty
+                                  ? controller.userData.value.data.absentEndTime
+                                  : '00:00:00',
+                              isThridLine: true,
                               textColor: white,
                               backgroundColor: white,
                               borderSideColor: greyHint,

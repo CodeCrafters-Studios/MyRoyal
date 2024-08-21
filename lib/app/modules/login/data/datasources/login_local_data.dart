@@ -19,8 +19,12 @@ abstract class LoginLocalDataSource {
   Future<void> cacheUserLogin(CacheUserLoginModel user);
   Future<CacheUserLogin> getCacheUserLogin();
   Future<LoginParamsModel> getLoginParams({
+    required String grantType,
+    required String clientId,
+    required String clientSecret,
     required String username,
     required String password,
+    required String scope,
   });
   Future<bool> authBiometrics();
   Future<void> saveLoginToken(String token);
@@ -79,20 +83,16 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
 
   @override
   Future<LoginParamsModel> getLoginParams({
+    required String grantType,
+    required String clientId,
+    required String clientSecret,
     required String username,
     required String password,
+    required String scope,
   }) async {
     if (username.isEmpty || password.isEmpty) {
       throw LocalDataException('Username or Password cannot be empty');
     }
-
-    // return loginParam(
-    //   grantType,
-    //   username,
-    //   password,
-    //   clientId,
-    //   clientSecret,
-    // );
     final permissionStatus = await appLocation.permission;
     if (permissionStatus == LocationPermission.denied ||
         permissionStatus == LocationPermission.unableToDetermine) {
@@ -104,7 +104,14 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
         final result = await appLocation.requestPermission();
         if (result == LocationPermission.whileInUse ||
             result == LocationPermission.always) {
-          return loginParam(username, password);
+          return loginParam(
+            grantType,
+            clientId,
+            clientSecret,
+            username,
+            password,
+            scope,
+          );
         } else {
           throw LocalDataException('Permission Denied');
         }
@@ -116,8 +123,12 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     } else if (permissionStatus == LocationPermission.always ||
         permissionStatus == LocationPermission.whileInUse) {
       return loginParam(
+        grantType,
+        clientId,
+        clientSecret,
         username,
         password,
+        scope,
       );
     } else {
       throw LocalDataException('Permission Denied');
@@ -146,14 +157,24 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
   }
 
   Future<LoginParamsModel> loginParam(
-      final String username, final String password) async {
+    final String grantType,
+    final String clientId,
+    final String clientSecret,
+    final String username,
+    final String password,
+    final String scope,
+  ) async {
     // final info = await deviceInfo.info();
     // final position = await appLocation.position;
     // final latlong = '${position.latitude}, ${position.longitude}';
 
     return LoginParamsModel(
+      grantType: grantType,
+      clientId: clientId,
+      clientSecret: clientSecret,
       username: username,
       password: password,
+      scope: scope,
     );
   }
 

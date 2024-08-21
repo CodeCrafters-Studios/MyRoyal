@@ -1,5 +1,6 @@
 import 'package:alice/alice.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -15,8 +16,10 @@ import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
 import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/services/http_service.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
 // ignore: unused_import
 import 'package:iroyal/base/utils/location/app_location.dart';
@@ -27,6 +30,7 @@ import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/utils/token/app_token.dart';
 import 'package:iroyal/firebase_options.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// This is the main entry point of the app which performs any setups before
 /// running the app.
@@ -61,6 +65,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
   AppConfig.environment = envConfig;
 
   final box = await Hive.openBox(IROYAL_STORAGE);
+  final deviceInfoPlugin = DeviceInfoPlugin();
+  final packageInfo = await PackageInfo.fromPlatform();
   final auth = LocalAuthentication();
   final dio = Dio();
   final alice = Alice(showNotification: false);
@@ -71,6 +77,12 @@ Future configureApp(EnvironmentConfig envConfig) async {
     ..put(alice)
     ..put(dio)
     ..put(AppStorage(box: box))
+    ..put(
+      DeviceInfo(
+        deviceInfoPlugin: deviceInfoPlugin,
+        packageInfo: packageInfo,
+      ),
+    )
     ..put(NetworkInfoImpl(internetConnectionChecker))
     ..put(AppLocationImpl())
     ..put(appDialogImpl)
@@ -102,7 +114,13 @@ Future configureApp(EnvironmentConfig envConfig) async {
 
 /// Configures Firebase notifications
 Future<void> _setupNotifications() async {
+  RxString fcmToken = ''.obs;
+
   await FirebaseMessaging.instance.requestPermission();
+  await FirebaseMessaging.instance.getToken().then((token) {
+    fcmToken.value = token.toString();
+    AppUtils.logApp('FCM TOKEN :::: ${fcmToken.value}');
+  });
 
   if (!kIsWeb) {
     await FirebaseMessaging.instance

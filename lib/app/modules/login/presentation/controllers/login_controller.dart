@@ -36,8 +36,12 @@ class LoginController extends GetxController {
 
   Rx<LoginParamsModel> loginParams = const LoginParamsModel().obs;
 
+  RxString grantType = ''.obs;
+  RxString clientId = ''.obs;
+  RxString clientSecret = ''.obs;
   RxString username = ''.obs;
   RxString password = ''.obs;
+  RxString scope = ''.obs;
 
   RxBool isValidForm = false.obs;
   RxBool isLoading = false.obs;
@@ -120,8 +124,12 @@ class LoginController extends GetxController {
     isLoading(true);
     final r = await getLoginParams(
       ParamsLogin(
+        grantType: 'password',
+        clientId: '9cc6d49b-8065-429c-bdb8-4229011a4e48',
+        clientSecret: 'EY8LBVvA7frgeHQQrdJLaRXR3v7e4Lp43KOfzI5a',
         username: username(),
         password: password(),
+        scope: '*',
       ),
     );
     r.fold((l) {
@@ -130,12 +138,14 @@ class LoginController extends GetxController {
       appDialog.showErrorDialog();
     }, (r) {
       loginState = 'getParamsSuccess';
-      loginParams(
-        LoginParamsModel(
-          username: r.username,
-          password: r.password,
-        ),
-      );
+      loginParams(LoginParamsModel(
+        grantType: r.grantType,
+        clientId: r.clientId,
+        clientSecret: r.clientSecret,
+        username: r.username,
+        password: r.password,
+        scope: r.scope,
+      ));
       login();
     });
   }
@@ -227,8 +237,12 @@ class LoginController extends GetxController {
     final r = await getCacheUserLogin(NoParams());
     r.fold((l) => loginState = 'biometricsRejected', (r) {
       loginState = 'biometricsSuccess';
+      grantType(r.grantType);
+      clientId(r.clientId);
+      clientSecret(r.clientSecret);
       username(r.username);
       password(r.password);
+      scope(r.scope);
       validateForm();
       getParams();
     });

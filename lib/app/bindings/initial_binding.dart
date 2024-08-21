@@ -17,10 +17,8 @@ class InitialBinding extends Bindings {
       ..put(GlobalLocalDataImpl(appStorage: Get.find()))
       ..put(
         GlobalRemoteDataImpl(
-          // commonParam: Get.find<CommonParamsImpl>(),
           http: Get.find(),
           appStorage: Get.find(),
-          // deviceInfo: Get.find(),
         ),
       )
       ..put(
@@ -30,8 +28,5 @@ class InitialBinding extends Bindings {
         ),
       )
       ..put(GetCacheLogin(Get.find<GlobalRepositoryImpl>()));
-    // ..put(VerifyToken(Get.find<GlobalRepositoryImpl>()))
-    // ..put(GetRefreshToken(Get.find<GlobalRepositoryImpl>()))
-    // ..put(GetLanguage(Get.find<GlobalRepositoryImpl>()))
   }
 }

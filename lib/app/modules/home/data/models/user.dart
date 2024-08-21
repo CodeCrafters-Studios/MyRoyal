@@ -3,21 +3,18 @@ import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({
-    required super.status,
     required super.code,
     required super.message,
     required super.data,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        status: json["status"],
         code: json["code"],
         message: json["message"],
         data: UserDataModel.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
         "code": code,
         "message": message,
         "data": data.toJson(),

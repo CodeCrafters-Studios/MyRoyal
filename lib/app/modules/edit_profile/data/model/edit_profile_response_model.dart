@@ -2,7 +2,6 @@ import 'package:iroyal/app/modules/edit_profile/domain/entities/edit_profile_res
 
 class EditProfileResponseModel extends EditProfileResponse {
   const EditProfileResponseModel({
-    required super.status,
     required super.code,
     required super.message,
     required super.data,
@@ -10,16 +9,14 @@ class EditProfileResponseModel extends EditProfileResponse {
 
   factory EditProfileResponseModel.fromJson(Map<String, dynamic> json) =>
       EditProfileResponseModel(
-        status: json["status"],
         code: json["code"],
         message: json["message"],
-        data: json["data"],
+        data: List<dynamic>.from(json["data"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
         "code": code,
         "message": message,
-        "data": data,
+        "data": List<dynamic>.from(data.map((x) => x)),
       };
 }

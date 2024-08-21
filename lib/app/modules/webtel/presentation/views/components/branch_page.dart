@@ -71,6 +71,8 @@ class BranchPage extends StatelessWidget {
         return primaryColor.withOpacity(0.3);
       case 'PT ACA':
         return Colors.pink.withOpacity(0.3);
+      case 'PT BCP':
+        return Colors.orange.withOpacity(0.3);
       default:
         return Colors.green.withOpacity(0.3);
     }
@@ -110,11 +112,12 @@ class BranchPage extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   final d = data[index];
+
                   return EPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListTile(
                       title: SearchHighlightText(
-                        d.fullname,
+                        d.fullName,
                         softWrap: true,
                         style: TS.labelLarge.copyWith(color: black),
                         highlightStyle: TS.labelLarge.copyWith(color: red),
@@ -122,13 +125,13 @@ class BranchPage extends StatelessWidget {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          d.workEmail != ''
+                          d.workEmail != '' || d.workEmail.isNull
                               ? SearchHighlightText(
                                   d.workEmail,
                                   softWrap: true,
                                   style: TS.bodyMedium.copyWith(color: black),
                                   highlightStyle:
-                                      TS.labelLarge.copyWith(color: red),
+                                      TS.bodyMedium.copyWith(color: red),
                                 )
                               : Text(
                                   "-",
@@ -139,10 +142,7 @@ class BranchPage extends StatelessWidget {
                           SearchHighlightText(
                             d.departmentName,
                             softWrap: true,
-                            style: TS.labelLarge.copyWith(
-                              color: black,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TS.labelLarge.copyWith(color: black),
                             highlightStyle: TS.labelLarge.copyWith(color: red),
                           ),
                         ],
@@ -172,6 +172,8 @@ class BranchPage extends StatelessWidget {
       return controller.searchB;
     } else if (title == 'PT ACA') {
       return controller.searchA;
+    } else if (title == 'PT BCP') {
+      return controller.searchBC;
     } else {
       return controller.searchC;
     }
@@ -184,6 +186,8 @@ class BranchPage extends StatelessWidget {
       return const Key('search-BmBranch');
     } else if (title == 'PT ACA') {
       return const Key('search-AcaBranch');
+    } else if (title == 'PT BCP') {
+      return const Key('search-BcpBranch');
     } else {
       return const Key('search-CamBranch');
     }
@@ -196,6 +200,8 @@ class BranchPage extends StatelessWidget {
       return controller.onChangedB;
     } else if (title == 'PT ACA') {
       return controller.onChangedA;
+    } else if (title == 'PT BCP') {
+      return controller.onChangedBC;
     } else {
       return controller.onChangedC;
     }
