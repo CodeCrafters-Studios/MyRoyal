@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
@@ -19,14 +18,13 @@ class CustomButtomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardApp(
-      width: 380.w,
-      height: 75.h,
-      radius: 0,
+      radius: 30,
       isShadow: true,
-      shadows: Shadows.up,
-      padding: REdgeInsets.symmetric(vertical: 12, horizontal: 20),
+      shadows: Shadows.universal,
+      margin: REdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      padding: REdgeInsets.symmetric(vertical: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: listBottomNav,
       ),
@@ -38,13 +36,11 @@ class IconTab extends StatelessWidget {
   const IconTab({
     super.key,
     required this.icon,
-    required this.name,
     required this.isSelected,
     this.onTap,
   });
   final Function()? onTap;
   final String icon;
-  final String name;
   final bool isSelected;
 
   @override
@@ -54,18 +50,10 @@ class IconTab extends StatelessWidget {
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
         opacity: isSelected ? 1 : .25,
-        child: Column(
-          children: [
-            SvgPicture.asset(
-              icon,
-              width: 28.w,
-              height: 28.h,
-            ),
-            Text(
-              name,
-              style: TS.caption.copyWith(color: primary),
-            ),
-          ],
+        child: SvgPicture.asset(
+          icon,
+          width: 28.w,
+          height: 28.h,
         ),
       ),
     );

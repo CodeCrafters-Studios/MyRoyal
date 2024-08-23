@@ -81,11 +81,13 @@ class HomeUserStatus extends GetView<HomeController> {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CardApp(
-                          color: green,
-                          outlineColor: black,
-                          child: SizedBox(
-                            width: 155.w,
+                        SizedBox(
+                          width: 170.w,
+                          child: CardApp(
+                            color: green,
+                            outlineColor: black,
+                            isShadow: true,
+                            shadows: Shadows.universal,
                             child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
@@ -108,11 +110,11 @@ class HomeUserStatus extends GetView<HomeController> {
                             ),
                           ),
                         ),
-                        CardApp(
-                          color: secondary10,
-                          outlineColor: black,
-                          child: SizedBox(
-                            width: 155.w,
+                        SizedBox(
+                          width: 170.w,
+                          child: CardApp(
+                            color: secondary10,
+                            outlineColor: black,
                             child: HomeUserCard(
                               shapeBorder: true,
                               isAvatarPicture: false,
@@ -151,7 +153,10 @@ class HomeUserStatus extends GetView<HomeController> {
           Text('Leave Summary', style: TS.titleMedium),
           InkWellTap(
             onTap: () => Get.toNamed(Routes.LEAVE_SUMMARY),
-            child: const Icon(Icons.arrow_forward_rounded),
+            child: const Icon(
+              Icons.arrow_forward_ios,
+              color: secondary,
+            ),
           ),
         ],
       ),

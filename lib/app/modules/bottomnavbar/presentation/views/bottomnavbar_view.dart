@@ -27,8 +27,10 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
             controller.bottomnavbarMenu.length,
             (index) => Expanded(
               child: IconTab(
-                icon: controller.bottomnavbarMenu[index].icon,
-                name: controller.bottomnavbarMenu[index].name,
+                icon: controller.isSelected(index)
+                    ? controller.bottomnavbarMenu[index].selectedIcon
+                    : controller.bottomnavbarMenu[index].icon,
+                // name: controller.bottomnavbarMenu[index].name,
                 isSelected: controller.isSelected(index),
                 onTap: () {
                   controller.selectMenu(index);
