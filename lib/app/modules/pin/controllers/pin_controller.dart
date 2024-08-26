@@ -16,7 +16,7 @@ class PinController extends GetxController {
     // Check if the pin is '000000'
     if (pin.value == '000000' && pin.value.length == 6) {
       outlineColor.value = grey;
-      Get.offAndToNamed(Routes.PAYROLL);
+      Get.offNamed(Routes.PAYROLL);
     } else if (pin.value.length == 6) {
       pin.value = '';
       outlineColor.value = red;

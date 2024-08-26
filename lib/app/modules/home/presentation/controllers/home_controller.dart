@@ -59,11 +59,11 @@ class HomeController extends GetxController {
     //   name: 'My Teams',
     //   isVisible: true,
     // ),
-    const Menu(
-      code: 'ic_others',
-      name: 'Others',
-      isVisible: true,
-    ),
+    // const Menu(
+    //   code: 'ic_others',
+    //   name: 'Others',
+    //   isVisible: true,
+    // ),
   ];
 
   List<HomeSlider> homeSLider = <HomeSlider>[

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
@@ -22,7 +23,7 @@ class CustomButtomBar extends StatelessWidget {
       isShadow: true,
       shadows: Shadows.universal,
       margin: REdgeInsets.symmetric(vertical: 15, horizontal: 20),
-      padding: REdgeInsets.symmetric(vertical: 15),
+      padding: REdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
@@ -35,11 +36,13 @@ class CustomButtomBar extends StatelessWidget {
 class IconTab extends StatelessWidget {
   const IconTab({
     super.key,
+    this.name,
     required this.icon,
     required this.isSelected,
     this.onTap,
   });
   final Function()? onTap;
+  final String? name;
   final String icon;
   final bool isSelected;
 
@@ -50,11 +53,28 @@ class IconTab extends StatelessWidget {
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
         opacity: isSelected ? 1 : .25,
-        child: SvgPicture.asset(
-          icon,
-          width: 28.w,
-          height: 28.h,
-        ),
+        child: isSelected
+            ? Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    icon,
+                    width: 25.w,
+                    height: 25.h,
+                  ),
+                  Text(
+                    name ?? '',
+                    style: TS.bodyMini
+                        .copyWith(color: primary, fontWeight: FontWeight.bold),
+                  )
+                ],
+              )
+            : SvgPicture.asset(
+                icon,
+                width: 25.w,
+                height: 25.h,
+              ),
       ),
     );
   }

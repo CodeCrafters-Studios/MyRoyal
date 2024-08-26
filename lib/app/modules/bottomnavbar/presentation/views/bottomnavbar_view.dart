@@ -22,6 +22,7 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
         centeredTitle: true,
         showIconBack: false,
         resizeInsetsBottom: false,
+        bottomBarDecoration: const BoxDecoration(color: Colors.transparent),
         bottomBar: CustomButtomBar(
           listBottomNav: List.generate(
             controller.bottomnavbarMenu.length,
@@ -30,7 +31,9 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
                 icon: controller.isSelected(index)
                     ? controller.bottomnavbarMenu[index].selectedIcon
                     : controller.bottomnavbarMenu[index].icon,
-                // name: controller.bottomnavbarMenu[index].name,
+                name: controller.isSelected(index)
+                    ? controller.bottomnavbarMenu[index].name
+                    : null,
                 isSelected: controller.isSelected(index),
                 onTap: () {
                   controller.selectMenu(index);
