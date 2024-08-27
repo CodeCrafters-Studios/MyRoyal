@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -72,6 +73,35 @@ Future<void> onMessageOpenedFromBackground(
   RemoteMessage message,
 ) async {
   log('Message opened from background.');
+  // switch (menu.name) {
+  //         case 'My Teams':
+  //           Get.toNamed(Routes.MY_TEAMS);
+  //           break;
+  //         case 'Webtel':
+  //           Get.toNamed(Routes.WEBTEL);
+  //           break;
+  //         case 'Tracking Documents':
+  //           Get.toNamed(Routes.TRACKING_DOCUMENT);
+  //           break;
+  //         case 'Tasks':
+  //           Get.toNamed(Routes.TASKS);
+  //           break;
+  //         case 'Payroll':
+  //           Get.toNamed(Routes.PIN);
+  //           break;
+  //         case 'Dashboard':
+  //           Get.toNamed(Routes.DASHBOARD);
+  //           break;
+  //         case 'Visit':
+  //           Get.toNamed(Routes.VISIT);
+  //           break;
+  //         default:
+  //           Get.to(() => const ComingSoonScreen());
+  //           break;
+  //       }
+  // String route = message.data.type;
+
+  // Get.toNamed(route);
 }
 
 /// If the application has been opened from a terminated state via a remote

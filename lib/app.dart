@@ -71,11 +71,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   Future<void> _requestNotificationPermissions() async {
     // Initialize flutter_local_notifications
-    const androidSettings = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const initializationSettings = InitializationSettings(android: androidSettings);
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/launcher_icon');
+    const initializationSettings =
+        InitializationSettings(android: androidSettings);
 
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestNotificationsPermission();
   }
 
   @override
