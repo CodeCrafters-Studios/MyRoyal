@@ -24,15 +24,6 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         return ios;
-      case TargetPlatform.macOS:
-        return macos;
-      case TargetPlatform.windows:
-        return windows;
-      case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -51,38 +42,19 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAM0kzGTB7toppqEDg7j1SSFEV26ORvh0k',
-    appId: '1:1045027803262:android:d51c5193158dd78a39882f',
-    messagingSenderId: '1045027803262',
-    projectId: 'iroyal-91744',
-    storageBucket: 'iroyal-91744.appspot.com',
+    apiKey: 'AIzaSyDOfroxveXhJ1UIV_g7QutTrKXFZLNxXSo',
+    appId: '1:830784728566:android:f578563b96f2ed0bbfebd7',
+    messagingSenderId: '830784728566',
+    projectId: 'iroyal-14dea',
+    storageBucket: 'iroyal-14dea.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDEcxUnZwOuTNAUJjWXfmSK7JdjnPUL4qU',
-    appId: '1:1045027803262:ios:d43ab58f13e9673539882f',
-    messagingSenderId: '1045027803262',
-    projectId: 'iroyal-91744',
-    storageBucket: 'iroyal-91744.appspot.com',
+    apiKey: 'AIzaSyCd_69P7bWeHbFH33VB-YVAOvSBKpzBSLc',
+    appId: '1:830784728566:ios:437dd743e3463d26bfebd7',
+    messagingSenderId: '830784728566',
+    projectId: 'iroyal-14dea',
+    storageBucket: 'iroyal-14dea.appspot.com',
     iosBundleId: 'com.example.iroyal',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDEcxUnZwOuTNAUJjWXfmSK7JdjnPUL4qU',
-    appId: '1:1045027803262:ios:d43ab58f13e9673539882f',
-    messagingSenderId: '1045027803262',
-    projectId: 'iroyal-91744',
-    storageBucket: 'iroyal-91744.appspot.com',
-    iosBundleId: 'com.example.iroyal',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDWhs8oIS_6yebct45c15mzkKE10y94FFY',
-    appId: '1:1045027803262:web:f03a8895c267c5a339882f',
-    messagingSenderId: '1045027803262',
-    projectId: 'iroyal-91744',
-    authDomain: 'iroyal-91744.firebaseapp.com',
-    storageBucket: 'iroyal-91744.appspot.com',
-    measurementId: 'G-Y1S0P5E8MB',
   );
 }
