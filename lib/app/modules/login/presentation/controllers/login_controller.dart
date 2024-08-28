@@ -8,6 +8,7 @@ import 'package:iroyal/app/modules/login/domain/usecases/get_cache_user_login.da
 import 'package:iroyal/app/modules/login/domain/usecases/get_login_param.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -42,6 +43,7 @@ class LoginController extends GetxController {
   RxString username = ''.obs;
   RxString password = ''.obs;
   RxString scope = ''.obs;
+  RxString fcmToken = ''.obs;
 
   RxBool isValidForm = false.obs;
   RxBool isLoading = false.obs;
@@ -121,16 +123,19 @@ class LoginController extends GetxController {
       loginState = 'getParamsRejected';
       return;
     }
+    final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
+    AppUtils.logApp('$cacheFcmToken');
+
     isLoading(true);
     final r = await getLoginParams(
       ParamsLogin(
-        grantType: 'password',
-        clientId: '9cc6d49b-8065-429c-bdb8-4229011a4e48',
-        clientSecret: 'EY8LBVvA7frgeHQQrdJLaRXR3v7e4Lp43KOfzI5a',
-        username: username(),
-        password: password(),
-        scope: '*',
-      ),
+          grantType: 'password',
+          clientId: '9cc6d49b-8065-429c-bdb8-4229011a4e48',
+          clientSecret: 'EY8LBVvA7frgeHQQrdJLaRXR3v7e4Lp43KOfzI5a',
+          username: username(),
+          password: password(),
+          scope: '*',
+          fcmToken: cacheFcmToken.toString()),
     );
     r.fold((l) {
       isLoading(false);
@@ -145,6 +150,7 @@ class LoginController extends GetxController {
         username: r.username,
         password: r.password,
         scope: r.scope,
+        fcmToken: r.fcmToken,
       ));
       login();
     });
@@ -243,6 +249,7 @@ class LoginController extends GetxController {
       username(r.username);
       password(r.password);
       scope(r.scope);
+      fcmToken(r.fcmToken);
       validateForm();
       getParams();
     });

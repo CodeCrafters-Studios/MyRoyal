@@ -8,6 +8,7 @@ class LoginParamsModel extends LoginParams {
     super.username = '',
     super.password = '',
     super.scope = '',
+    super.fcmToken = '',
   });
 
   factory LoginParamsModel.fromLoginParams(LoginParams json) =>
@@ -18,6 +19,7 @@ class LoginParamsModel extends LoginParams {
         username: json.username,
         password: json.password,
         scope: json.scope,
+        fcmToken: json.fcmToken,
       );
 
   Map<String, dynamic> toJson() => {
@@ -27,5 +29,6 @@ class LoginParamsModel extends LoginParams {
         'username': username,
         'password': password,
         'scope': scope,
+        'fcm_token': fcmToken,
       };
 }

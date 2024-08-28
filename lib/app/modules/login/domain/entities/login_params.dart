@@ -8,6 +8,7 @@ class LoginParams extends Equatable {
     required this.username,
     required this.password,
     required this.scope,
+    required this.fcmToken,
   });
 
   final String grantType;
@@ -16,6 +17,7 @@ class LoginParams extends Equatable {
   final String username;
   final String password;
   final String scope;
+  final String fcmToken;
 
   @override
   List<Object?> get props => [
@@ -25,5 +27,6 @@ class LoginParams extends Equatable {
         username,
         password,
         scope,
+        fcmToken,
       ];
 }

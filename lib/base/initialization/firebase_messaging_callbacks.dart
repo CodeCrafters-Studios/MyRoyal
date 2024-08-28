@@ -115,5 +115,8 @@ Future<void> onInitialMessageOpened(
 
 /// Callback triggered once a new FCM token is generated
 Future<void> onFCMTokenRefresh(BuildContext context, String token) async {
+  // final box = await Hive.openBox(IROYAL_STORAGE);
+  // AppStorage appStorage = AppStorage(box: box);
+  // await appStorage.write(CACHE_FCM_TOKEN, token);
   log('New FCM token: $token');
 }

@@ -167,27 +167,28 @@ void showPopUpFailed({
             if (title != null)
               Text(
                 title,
-                style: TS.titleMedium,
+                style: TS.titleMedium.copyWith(color: red),
                 textAlign: TextAlign.center,
               ),
-            const Icon(Icons.close, color: Colors.red),
-            24.verticalSpace,
+            10.verticalSpace,
             Text(
               description ?? '',
               style: TS.bodyLarge,
               textAlign: TextAlign.center,
             ),
+            25.verticalSpace,
             ButtonPrimary(
-              isOutline: true,
-              outlineColor: Colors.transparent,
-              textColor: primaryColor,
+              margin: REdgeInsets.only(bottom: 10),
+              color: Colors.red,
+              textColor: white,
               onPressed: () {
+                Get.back();
                 Get.back();
                 if (onPress != null) {
                   onPress();
                 }
               },
-              text: labelButton ?? 'TUTUP',
+              text: labelButton ?? 'Close',
               fullWidth: true,
             ),
           ],

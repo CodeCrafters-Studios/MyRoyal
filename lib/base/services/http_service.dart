@@ -64,6 +64,8 @@ class HttpService extends getx.GetxService {
         },
         onError: (err, handler) {
           AppUtils.logApp('Error Status Code[${err.response?.statusCode}]');
+          errorSystem = err.response?.data['message'] ?? '';
+          AppUtils.logApp("ERROR MESSAGE :::: $errorSystem");
           return handler.next(err);
         },
       ),
@@ -246,6 +248,8 @@ class HttpService extends getx.GetxService {
       } else if (response.statusCode == 401) {
         catchError('Unauthorized', showPopUp: showPopUp);
         Routes.LOGIN;
+      } else if (response.statusCode == 422) {
+        catchError('Error System', showPopUp: showPopUp);
       } else if (response.statusCode == 500) {
         catchError('Internal Server Error', showPopUp: showPopUp);
       } else {
@@ -282,7 +286,12 @@ class HttpService extends getx.GetxService {
 
   static void catchError(String message, {bool showPopUp = true}) {
     if (showPopUp) {
-      if (message == "We'll be back soon") {
+      if (message.isNotEmpty) {
+        showPopUpFailed(
+          title: 'Error System',
+          description: message,
+        );
+      } else if (message == "Error System") {
         showPopUpFailed(
           title: 'System is Under Maintenance',
           description: message,
@@ -296,5 +305,5 @@ class HttpService extends getx.GetxService {
 
   static String errorLogin =
       "Incorrect username or password. Please try again.";
-  static String errorSystem = "We'll be back soon";
+  static String errorSystem = "Error System";
 }

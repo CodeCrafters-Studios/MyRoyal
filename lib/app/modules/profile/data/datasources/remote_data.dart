@@ -20,6 +20,7 @@ class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
         withToken: true,
         enpoint: 'oauth/profile',
         method: Method.GET,
+        showPopUp: true,
       );
       if (r['code'] != 200) {
         throw ApiException(r['message']);

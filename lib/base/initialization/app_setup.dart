@@ -60,8 +60,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await _setupNotifications();
   await Hive.initFlutter();
+  await _setupNotifications();
   AppConfig.environment = envConfig;
 
   final box = await Hive.openBox(IROYAL_STORAGE);
@@ -114,12 +114,15 @@ Future configureApp(EnvironmentConfig envConfig) async {
 
 /// Configures Firebase notifications
 Future<void> _setupNotifications() async {
-  RxString fcmToken = ''.obs;
+  final box = await Hive.openBox(IROYAL_STORAGE);
+  AppStorage appStorage = AppStorage(box: box);
 
   await FirebaseMessaging.instance.requestPermission();
-  await FirebaseMessaging.instance.getToken().then((token) {
-    fcmToken.value = token.toString();
-    AppUtils.logApp('FCM TOKEN :::: ${fcmToken.value}');
+  await FirebaseMessaging.instance.getToken().then((token) async {
+    String fcmToken = token.toString();
+    await appStorage.write(CACHE_FCM_TOKEN, fcmToken);
+
+    AppUtils.logApp('FCM TOKEN :::: $fcmToken');
   });
 
   if (!kIsWeb) {
