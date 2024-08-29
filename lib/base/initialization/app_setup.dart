@@ -14,7 +14,6 @@ import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
-import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
@@ -133,8 +132,4 @@ Future<void> _setupNotifications() async {
       sound: true,
     );
   }
-
-  // In order to receive notifications when the app is in background or
-  // terminated, you need to pass a callback to onBackgroundMessage method
-  FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
 }
