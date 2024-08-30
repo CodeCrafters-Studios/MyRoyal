@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -50,7 +51,14 @@ Future<void> setupAndRunApp(
   final appWidget = appBuilder(environment);
 
   // Finally run the widget
+  FirebaseMessaging.onBackgroundMessage(remoteMessageHandler);
+
   runApp(appWidget);
+}
+
+Future<void> remoteMessageHandler(RemoteMessage message) async {
+  AppUtils.logApp('REMOTE MESSAGE HANDLER');
+  AppUtils.logApp('${message.data}');
 }
 
 /// Configures application tools and packages before running the app. Services

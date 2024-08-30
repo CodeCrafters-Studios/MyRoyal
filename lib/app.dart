@@ -47,7 +47,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         statusBarIconBrightness: Brightness.dark,
       ),
     );
-
     _configureFCM();
     _requestNotificationPermissions();
 
@@ -57,10 +56,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   Future<void> _configureFCM() async {
     /// Initialize the FCM callbacks
-    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (!mounted) return;
-    await onInitialMessageOpened(context, initialMessage);
-
+    await FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.instance.subscribeToTopic('All');
     FirebaseMessaging.instance.onTokenRefresh
         .listen((token) => onFCMTokenRefresh(context, token));
     FirebaseMessaging.onMessage
