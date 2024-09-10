@@ -33,7 +33,7 @@ class AttendanceController extends GetxController {
   void onInit() {
     super.onInit();
     _startTimer();
-    getCurrentLocation();
+    _getCurrentLocation();
   }
 
   @override
@@ -42,10 +42,11 @@ class AttendanceController extends GetxController {
     _timer.cancel();
   }
 
-  Future<void> getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
+        forceAndroidLocationManager: true,
         timeLimit: const Duration(seconds: 15),
       );
       currentPosition.value = LatLng(position.latitude, position.longitude);
