@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class NotificationsCard extends StatelessWidget {
@@ -10,50 +11,44 @@ class NotificationsCard extends StatelessWidget {
     required this.title,
     required this.description,
     required this.date,
-    required this.isNew,
+    required this.isRead,
+    required this.onTap,
   });
 
   final String title;
   final String description;
   final String date;
-  final bool isNew;
+  final bool isRead;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: 14),
-      color: isNew ? greySecond.withOpacity(0.2) : white,
-      child: ListTile(
-        leading: Badge(
-          smallSize: 14.dm,
-          isLabelVisible: isNew,
-          child: const CircleAvatar(),
-        ),
-        title: EPadding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Text(
-            title,
-            style: TS.labelLarge,
+    return InkWellTap(
+      onTap: onTap,
+      child: Container(
+        padding: REdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        color: isRead ? white : primary.withOpacity(0.1),
+        child: ListTile(
+          title: EPadding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Text(
+              title,
+              style: TS.labelLarge,
+            ),
+          ),
+          subtitle: Text(
+            description,
+            style: TS.bodyMedium,
+          ),
+          isThreeLine: true,
+          trailing: Text(
+            date,
+            style: TS.bodySmall.copyWith(
+              color: greyText,
+            ),
+            textAlign: TextAlign.start,
           ),
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              description,
-              style: TS.bodyMedium,
-            ),
-            5.verticalSpace,
-            Text(
-              date,
-              style: TS.bodyMedium.copyWith(
-                color: greyText,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ],
-        ),
-        isThreeLine: true,
       ),
     );
   }

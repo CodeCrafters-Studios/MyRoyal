@@ -140,7 +140,8 @@ class LoginController extends GetxController {
     r.fold((l) {
       isLoading(false);
       loginState = 'getParamsFailed';
-      appDialog.showErrorDialog();
+      final m = l.properties[0] as ApiException;
+      appDialog.showErrorDialog(description: m.message);
     }, (r) {
       loginState = 'getParamsSuccess';
       loginParams(LoginParamsModel(

@@ -6,6 +6,10 @@ import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
+import 'package:iroyal/app/modules/notifications/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/notifications/data/repositories/notifications_repository_impl.dart';
+import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:iroyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
@@ -73,7 +77,28 @@ class HomeBinding extends Bindings {
 
       // Notifications
       ..lazyPut<NotificationsController>(
-        () => NotificationsController(),
+        () => NotificationsController(
+            getNotifications: Get.find(), tapNotification: Get.find()),
+      )
+      ..lazyPut<NotificationsRemoteDataSourcesImpl>(
+        () => NotificationsRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<NotificationsRepositoryImpl>(
+        () => NotificationsRepositoryImpl(
+          remoteData: Get.find<NotificationsRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetNotifications(
+          Get.find<NotificationsRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => TapNotification(
+          Get.find<NotificationsRepositoryImpl>(),
+        ),
       )
 
       // Help & Support

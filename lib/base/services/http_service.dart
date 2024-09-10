@@ -18,11 +18,11 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/show_dialog.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
@@ -287,17 +287,17 @@ class HttpService extends getx.GetxService {
   static void catchError(String message, {bool showPopUp = true}) {
     if (showPopUp) {
       if (message.isNotEmpty) {
-        showPopUpFailed(
+        AppDialogImpl().showErrorDialog(
           title: 'Error System',
           description: message,
         );
       } else if (message == "Error System") {
-        showPopUpFailed(
+        AppDialogImpl().showErrorDialog(
           title: 'System is Under Maintenance',
           description: message,
         );
       } else {
-        showPopUpFailed(title: 'Failed', description: message);
+        AppDialogImpl().showErrorDialog(title: 'Failed', description: message);
       }
     }
     throw ApiException(message);

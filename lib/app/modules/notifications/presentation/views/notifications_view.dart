@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
 import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
@@ -28,39 +30,47 @@ class NotificationsViewImpl extends StatelessWidget {
     return PageBase(
       showBackground: false,
       title: 'Notifications',
-      child: controller.notifDummy.isEmpty
-          ? const NoNotificationsView()
-          : SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  const AppbarSpacer(),
-                  _buildNotificationsList(),
-                ],
-              ),
-            ),
+      child: Obx(
+        () => controller.notificationsDataList.isEmpty
+            ? const NoNotificationsView()
+            : controller.isLoading.value
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: primary,
+                    ),
+                  )
+                : Column(
+                    children: [
+                      const AppbarSpacer(),
+                      Expanded(
+                        child: _buildNotificationsList(),
+                      ),
+                    ],
+                  ),
+      ),
     );
   }
 
   Widget _buildNotificationsList() {
-    return SizedBox(
-      height: Get.height,
-      child: Obx(
-        () => ListView.builder(
-          shrinkWrap: true,
-          padding: REdgeInsets.only(bottom: 100),
-          itemCount: controller.notifDummy.length,
-          itemBuilder: (_, index) {
-            final notification = controller.notifDummy[index];
-            return NotificationsCard(
-              title: notification.title,
-              description: notification.description,
-              date: notification.date,
-              isNew: notification.isNew,
-            );
-          },
-        ),
-      ),
+    return ListView.builder(
+      controller: controller.scrollController,
+      padding: REdgeInsets.only(bottom: 100),
+      itemCount: controller.notificationsDataList.length +
+          (controller.isLoadMore.value ? 1 : 0),
+      itemBuilder: (_, index) {
+        if (controller.isLoadMore.value &&
+            index == controller.notificationsDataList.length) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final notification = controller.notificationsDataList[index];
+        return NotificationsCard(
+          title: notification.title,
+          description: notification.body,
+          date: DateFormat('hh:mm a').format(notification.createdAt),
+          isRead: notification.isRead,
+          onTap: () => controller.onTapNotification(notification.id),
+        );
+      },
     );
   }
 }

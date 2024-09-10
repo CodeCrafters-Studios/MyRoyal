@@ -53,13 +53,7 @@ class HomeView extends GetView<HomeController> {
       () => Badge(
         label: Text(controller.filterNewNotif.length.toString()),
         child: InkWellTap(
-          onTap: () => Get.toNamed(
-            Routes.NOTIFICATIONS,
-            arguments: {
-              'filterNewNotif': controller.filterNewNotif,
-              'notifDummy': controller.notifDummy,
-            },
-          ),
+          onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
           child: Icon(
             Icons.notifications,
             color: secondary,

@@ -144,11 +144,11 @@ class AppDialogImpl implements AppDialog {
   }
 
   @override
-  Future<void> showErrorDialog({
+  Future<void> showSuccessDialog({
     String? imagePath,
-    String title = 'Error',
+    String title = 'Success',
     String? description,
-    String textButton = 'Ok',
+    String textButton = 'Continue',
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -169,18 +169,18 @@ class AppDialogImpl implements AppDialog {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Image.asset(
+                imagePath ?? 'assets/icons/ic_success.png',
+                height: 50.w,
+                width: 50.w,
+              ),
+              10.verticalSpace,
               Text(
                 title,
-                style: TS.titleMedium,
+                style: TS.titleMedium.copyWith(color: green),
                 textAlign: TextAlign.center,
               ),
-              if (imagePath != null)
-                Image.asset(
-                  imagePath,
-                  height: 150.w,
-                  width: 150.w,
-                ),
-              12.verticalSpace,
+              10.verticalSpace,
               if (description != null)
                 Text(
                   description,
@@ -192,6 +192,67 @@ class AppDialogImpl implements AppDialog {
                 onPressed: onPress ?? Get.back,
                 text: textButton,
                 fullWidth: true,
+                color: green,
+              ),
+              16.verticalSpace,
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showErrorDialog({
+    String? imagePath,
+    String title = 'Error!',
+    String? description = 'Please try again to complete the request',
+    String textButton = 'Try Again',
+    Function()? onPress,
+  }) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 40),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            Insets.med,
+            Insets.xl,
+            Insets.med,
+            Insets.xs,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                imagePath ?? 'assets/icons/ic_error.png',
+                height: 50.w,
+                width: 50.w,
+              ),
+              10.verticalSpace,
+              Text(
+                title,
+                style: TS.titleMedium.copyWith(color: red),
+                textAlign: TextAlign.center,
+              ),
+              10.verticalSpace,
+              if (description != null)
+                Text(
+                  description,
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              28.verticalSpace,
+              ButtonPrimary(
+                onPressed: onPress ?? Get.back,
+                text: textButton,
+                fullWidth: true,
+                color: redPrimary,
               ),
               16.verticalSpace,
             ],
@@ -269,11 +330,13 @@ class AppDialogImpl implements AppDialog {
   }
 
   @override
-  Future<void> showSuccessDialog({
+  Future<void> showInfoDialog({
     String? imagePath,
-    String title = 'Success',
+    String? title,
     String? description,
-    String textButton = 'Okay',
+    String? textButton,
+    double? height,
+    double? width,
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -294,17 +357,18 @@ class AppDialogImpl implements AppDialog {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (imagePath != null)
+                SvgPicture.asset(
+                  imagePath,
+                  height: height ?? 40.w,
+                  width: width ?? 40.w,
+                ),
+              description == null ? 28.verticalSpace : 5.verticalSpace,
               Text(
-                title,
+                title ?? 'Information',
                 style: TS.titleMedium,
                 textAlign: TextAlign.center,
               ),
-              if (imagePath != null)
-                Image.asset(
-                  imagePath,
-                  height: 150.w,
-                  width: 150.w,
-                ),
               12.verticalSpace,
               if (description != null)
                 Text(
@@ -315,7 +379,7 @@ class AppDialogImpl implements AppDialog {
               28.verticalSpace,
               ButtonPrimary(
                 onPressed: onPress ?? Get.back,
-                text: textButton,
+                text: textButton ?? 'Okay',
                 fullWidth: true,
               ),
               16.verticalSpace,
@@ -421,68 +485,6 @@ class AppDialogImpl implements AppDialog {
       titleText: const SizedBox(),
       padding: REdgeInsets.all(12),
       dismissDirection: DismissDirection.vertical,
-    );
-  }
-
-  @override
-  Future<void> showInfoDialog({
-    String? imagePath,
-    String? title,
-    String? description,
-    String? textButton,
-    double? height,
-    double? width,
-    Function()? onPress,
-  }) async {
-    await Get.dialog(
-      Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: REdgeInsets.symmetric(horizontal: 40),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(
-            Insets.med,
-            Insets.xl,
-            Insets.med,
-            Insets.xs,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: Corners.smBorder,
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (imagePath != null)
-                SvgPicture.asset(
-                  imagePath,
-                  height: height ?? 40.w,
-                  width: width ?? 40.w,
-                ),
-              description == null ? 28.verticalSpace : 5.verticalSpace,
-              Text(
-                title ?? 'Information',
-                style: TS.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-              12.verticalSpace,
-              if (description != null)
-                Text(
-                  description,
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              28.verticalSpace,
-              ButtonPrimary(
-                onPressed: onPress ?? Get.back,
-                text: textButton ?? 'Okay',
-                fullWidth: true,
-              ),
-              16.verticalSpace,
-            ],
-          ),
-        ),
-      ),
-      barrierDismissible: false,
     );
   }
 

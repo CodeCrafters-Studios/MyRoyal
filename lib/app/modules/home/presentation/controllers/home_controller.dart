@@ -5,11 +5,15 @@ import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
+import 'package:iroyal/app/modules/notifications/data/models/notification_data_list_model.dart';
+import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/notification_dummy.dart';
+import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
+import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 class HomeController extends GetxController {
-  HomeController({required this.getUser});
+  HomeController({required this.getUser, required this.getNotifications});
 
   String userState = '';
   RxString id = ''.obs;
@@ -21,7 +25,8 @@ class HomeController extends GetxController {
   RxInt indexSlider = 0.obs;
 
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
-  RxList<NotificationsDummy> filterNewNotif = <NotificationsDummy>[].obs;
+  RxList<NotificationDataListModel> filterNewNotif =
+      <NotificationDataListModel>[].obs;
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
@@ -154,7 +159,14 @@ class HomeController extends GetxController {
   Rx<User> userData =
       User(code: 0, message: '', data: UserDataModel.empty()).obs;
 
+  final Rx<NotificationEntities> notificationsData = const NotificationEntities(
+          code: 0,
+          message: '',
+          data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
+      .obs;
+
   final GetUser getUser;
+  final GetNotifications getNotifications;
 
   @override
   void onInit() {
@@ -165,7 +177,8 @@ class HomeController extends GetxController {
   void _initial() async {
     await _getUserData();
     _getAllMenu();
-    _filterNewNotifications(notifDummy);
+    await _getNotifications();
+    _filterNewNotifications(notificationsData().data.data);
   }
 
   Future<void> _getAllMenu() async {
@@ -238,8 +251,28 @@ class HomeController extends GetxController {
     );
   }
 
-  void _filterNewNotifications(List<NotificationsDummy> allNotif) {
-    filterNewNotif.assignAll(allNotif.where((e) => e.isNew).toList());
-    filterNewNotif.refresh();
+  Future<void> _getNotifications() async {
+    isLoading.value = true;
+
+    final result = await getNotifications(1);
+
+    result.fold(
+      (l) {
+        isLoading.value = false;
+      },
+      (r) {
+        isLoading.value = false;
+        notificationsData.value = r;
+      },
+    );
+  }
+
+  List<NotificationDataListModel> _filterNewNotifications(
+      List<NotificationDataListModel> getNewNotifications) {
+    filterNewNotif.clear();
+    filterNewNotif.addAll(
+        getNewNotifications.where((notif) => notif.isRead == false).toList());
+
+    return filterNewNotif;
   }
 }
