@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/pin/views/components/pin_keyboard.dart';
 import 'package:iroyal/app/modules/pin/views/components/pin_text_view.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
@@ -36,8 +37,10 @@ class PinView extends GetView<PinController> {
                 48.verticalSpace,
                 TextButton(
                   onPressed: controller.forgotPin,
-                  child: const Text(
+                  child: Text(
                     'Forgot PIN?',
+                    style: TS.bodySmall.copyWith(
+                        fontWeight: FontWeight.bold, color: secondary),
                   ),
                 ),
               ],
