@@ -37,7 +37,7 @@ class TrackingDocumentImplView extends StatelessWidget {
             const AppbarSpacer(),
             _buildCardApproval(
               title: 'Approval',
-              itemCount: controller.trackingDocData.length,
+              itemCount: controller.trackingDocOnProgressData().data.length,
               color: white.withOpacity(0.8),
               onTap: () => Get.to(() => ApprovalView(controller: controller)),
             ),
@@ -110,29 +110,46 @@ class TrackingDocumentImplView extends StatelessWidget {
                       Row(
                         children: [
                           _statusContainer(
-                              icon: Icons.info,
-                              label: 'OVERDUE',
-                              color: primary50),
+                            icon: Icons.info,
+                            label: 'ON TIME',
+                            color: primary50,
+                          ),
                           5.horizontalSpace,
                           Text(
-                            '0',
+                            controller.listDataStatusOnTime.length.toString(),
                             style: TS.bodyMedium.copyWith(color: primary50),
                           ),
                         ],
                       ),
-                      65.horizontalSpace,
+                      75.horizontalSpace,
                       Row(
                         children: [
                           _statusContainer(
-                              icon: Icons.bolt,
-                              label: 'URGENT',
-                              color: secondary),
+                            icon: Icons.warning,
+                            label: 'OVERDUE',
+                            color: red,
+                          ),
                           5.horizontalSpace,
                           Text(
-                            '0',
-                            style: TS.bodyMedium.copyWith(color: secondary),
+                            controller.listDataStatusOverdue.length.toString(),
+                            style: TS.bodyMedium.copyWith(color: red),
                           ),
                         ],
+                      ),
+                    ],
+                  ),
+                  15.verticalSpace,
+                  Row(
+                    children: [
+                      _statusContainer(
+                        icon: Icons.bolt,
+                        label: 'URGENT',
+                        color: urgentColor,
+                      ),
+                      5.horizontalSpace,
+                      Text(
+                        controller.listDataStatusUrgent.length.toString(),
+                        style: TS.bodyMedium.copyWith(color: urgentColor),
                       ),
                     ],
                   ),
@@ -211,7 +228,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      55.horizontalSpace,
+                      50.horizontalSpace,
                       Row(
                         children: [
                           _statusContainer(
@@ -241,7 +258,7 @@ class TrackingDocumentImplView extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      padding: REdgeInsets.only(right: 10),
+      padding: REdgeInsets.only(left: 4, right: 10),
       decoration: BoxDecoration(
         border: Border.all(color: color),
         color: color.withOpacity(0.3),

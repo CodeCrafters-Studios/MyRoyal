@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/tracking_document/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/repositories/tracking_document_repositories.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
@@ -11,9 +11,10 @@ class TrackingDocumentRepositoriesImpl extends TrackingDocumentRepository {
   final TrackingDocumentRemoteDataSources remoteData;
 
   @override
-  Future<Either<Failure, List<TrackingDocument>>> getTrackingDocument() async {
+  Future<Either<Failure, TrackingDocumentOnProgress>>
+      getTrackingDocumentOnProgress() async {
     try {
-      final r = await remoteData.getTrackingDocument();
+      final r = await remoteData.getTrackingDocumentOnProgress();
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());

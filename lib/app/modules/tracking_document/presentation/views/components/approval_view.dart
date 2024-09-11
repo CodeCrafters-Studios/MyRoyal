@@ -5,15 +5,15 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
-import 'package:iroyal/base/widgets/others/no_result_widget.dart';
-import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:iroyal/base/widgets/padding.dart';
+import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
+import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/design/colors.dart';
 
 class ApprovalView extends StatelessWidget {
   const ApprovalView({super.key, required this.controller});
@@ -32,38 +32,33 @@ class ApprovalView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const AppbarSpacer(),
-            EPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: _buildInputPrimary(),
-            ),
-            Obx(
-              () => controller.filterDoc.isNotEmpty
-                  ? _buildListView()
-                  : SizedBox(
-                      height: 500.h,
-                      child: const NoResultWidget(),
-                    ),
-            ),
+            _buildSearchBar(),
+            Obx(() => controller.filterData.isEmpty
+                ? SizedBox(height: 500.h, child: const NoResultWidget())
+                : _buildDocumentList()),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInputPrimary() {
-    return InputPrimary(
-      controller: controller.searchDoc,
-      key: const Key('search-trackDoc'),
-      label: '',
-      hint: 'Search',
-      onChanged: controller.onChangedD,
-      color: white,
-      outlineColor: primary,
-      prefixIcon: _buildPrefixIcon(),
+  Widget _buildSearchBar() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: InputPrimary(
+        controller: controller.searchDoc,
+        key: const Key('search-trackDoc'),
+        label: '',
+        hint: 'Search',
+        onChanged: controller.onSearchChanged,
+        color: white,
+        outlineColor: primary,
+        prefixIcon: _buildSearchIcon(),
+      ),
     );
   }
 
-  Widget _buildPrefixIcon() {
+  Widget _buildSearchIcon() {
     return EPadding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: SvgPicture.asset(
@@ -74,25 +69,24 @@ class ApprovalView extends StatelessWidget {
     );
   }
 
-  Widget _buildListView() {
-    return SearchTextInheritedWidget(
-      searchText: RegExp.escape(controller.searchDoc.text),
-      child: SizedBox(
-        height: Get.height,
-        child: ListView.separated(
-          separatorBuilder: (_, __) => 15.verticalSpace,
-          padding: REdgeInsets.fromLTRB(16, 10, 16, 10),
-          itemCount: controller.filterDoc.length,
-          itemBuilder: (context, index) {
-            final d = controller.filterDoc[index];
-            return _buildCard(d);
-          },
-        ),
-      ),
-    );
+  Widget _buildDocumentList() {
+    return Obx(() => SizedBox(
+          height: Get.height,
+          child: ListView.separated(
+            separatorBuilder: (_, __) => 15.verticalSpace,
+            padding: REdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            itemCount: controller.filterData.length,
+            itemBuilder: (context, index) {
+              final doc = controller.filterData[index];
+              return SearchTextInheritedWidget(
+                  searchText: RegExp.escape(controller.searchDoc.text),
+                  child: _buildDocumentCard(doc));
+            },
+          ),
+        ));
   }
 
-  Widget _buildCard(dynamic d) {
+  Widget _buildDocumentCard(dynamic doc) {
     return CardApp(
       onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT),
       padding: REdgeInsets.symmetric(vertical: 10),
@@ -108,101 +102,76 @@ class ApprovalView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildTitleRow(d),
+            _buildInfoRow(doc.serialNumber, doc.createdAt),
             10.verticalSpace,
-            _buildTitleText(d),
+            _buildInfoText('${doc.departmentName} - ${doc.companyName}'),
+            10.verticalSpace,
+            _buildInfoText('${doc.title} ${doc.locationName}'),
             20.verticalSpace,
-            _buildStatusList(d),
+            _buildStatus(doc),
             20.verticalSpace,
-            _buildUserInfoRow(d),
-            5.verticalSpace,
+            _buildLastApprovalInfo(doc),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTitleRow(dynamic d) {
-    return SizedBox(
-      width: Get.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SearchHighlightText(
-            '${d.department.name} - ${d.company.name}',
-            style: TS.labelMedium.copyWith(
-              color: greyText,
-              fontWeight: FontWeight.w400,
-              height: 2,
-            ),
-            highlightStyle: TS.labelLarge.copyWith(color: red),
-          ),
-          Row(
-            children: [
-              Icon(Icons.attach_file, size: 15.dm),
-              Text('2', style: TS.bodyLarge),
-            ],
-          ),
-        ],
-      ),
+  Widget _buildInfoRow(String serialNumber, String date) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SearchHighlightText(
+          serialNumber,
+          style:
+              TS.labelLarge.copyWith(color: black, fontWeight: FontWeight.bold),
+          highlightStyle: TS.labelLarge.copyWith(color: red),
+        ),
+        SearchHighlightText(
+          date,
+          style: TS.labelMedium
+              .copyWith(color: black, fontWeight: FontWeight.w500),
+          highlightStyle: TS.labelLarge.copyWith(color: red),
+        ),
+      ],
     );
   }
 
-  Widget _buildTitleText(dynamic d) {
+  Widget _buildInfoText(String text) {
     return SearchHighlightText(
-      d.title,
-      style: TS.labelLarge.copyWith(color: black),
+      text,
+      style:
+          TS.labelMedium.copyWith(color: greyText, fontWeight: FontWeight.w400),
       highlightStyle: TS.labelLarge.copyWith(color: red),
     );
   }
 
-  Widget _buildStatusList(dynamic d) {
-    return SizedBox(
-      width: Get.width,
-      height: 30.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: controller.listStatus.length,
-        itemBuilder: (context, index) {
-          final f = controller.listStatus[index];
-          return StatusApproval(
-            borderColor: f.borderColor,
-            decorationColor: f.decorationColor,
-            icon: f.icon,
-            iconColor: f.iconColor,
-            status: f.status,
-            statusColor: f.statusColor,
-            isIcon: f.isIcon,
-          );
-        },
-      ),
+  Widget _buildStatus(dynamic doc) {
+    final isOnTime = doc.stateTargetCompletionDate == 'On Time';
+    final isUrgent = doc.stateTargetCompletionDate == 'Urgent';
+    final color = isOnTime ? primary50 : (isUrgent ? urgentColor : red);
+
+    return StatusApproval(
+      borderColor: color,
+      decorationColor: color,
+      icon: isOnTime ? Icons.info : (isUrgent ? Icons.bolt : Icons.warning),
+      iconColor: color,
+      status: doc.stateTargetCompletionDate.toUpperCase(),
+      statusColor: color,
     );
   }
 
-  Widget _buildUserInfoRow(dynamic d) {
-    return SizedBox(
-      width: Get.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                height: 20.h,
-                width: 20.w,
-                child: const CircleAvatar(),
-              ),
-              5.horizontalSpace,
-              Text('Anonymous', style: TS.bodySmall.copyWith(color: black)),
-            ],
-          ),
-          SearchHighlightText(
-            d.serialNumber,
-            style: TS.bodySmall.copyWith(color: black),
-            highlightStyle: TS.labelLarge.copyWith(color: red),
-          ),
-        ],
-      ),
+  Widget _buildLastApprovalInfo(dynamic doc) {
+    return Row(
+      children: [
+        Text('Last Approval By:', style: TS.bodySmall.copyWith(color: black)),
+        5.horizontalSpace,
+        SearchHighlightText(
+          doc.lastApprovalBy,
+          style: TS.bodySmall.copyWith(color: black),
+          highlightStyle: TS.labelLarge.copyWith(color: red),
+        ),
+      ],
     );
   }
 }

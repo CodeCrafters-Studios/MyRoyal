@@ -1,210 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/approval_document.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/status_approval_entities.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_on_progress_model.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_on_progress.dart';
 
 class TrackingDocumentController extends GetxController {
-  TrackingDocumentController({required this.getTrackingDocument});
+  final GetTrackingDocumentOnProgress getTrackingDocumentOnProgress;
+
+  TrackingDocumentController({
+    required this.getTrackingDocumentOnProgress,
+  });
 
   TextEditingController searchDoc = TextEditingController();
+  RxList<TrackingDocumentListOnProgressModel> filterData =
+      <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListOnProgressModel> listDataApproval =
+      <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListOnProgressModel> listDataStatusOnTime =
+      <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListOnProgressModel> listDataStatusUrgent =
+      <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListOnProgressModel> listDataStatusOverdue =
+      <TrackingDocumentListOnProgressModel>[].obs;
 
-  RxList<ApprovalDocument> statusOverdue = <ApprovalDocument>[].obs;
-  RxList<ApprovalDocument> statusUrgent = <ApprovalDocument>[].obs;
-  RxList<TrackingDocument> trackingDocData = <TrackingDocument>[].obs;
-  RxList<TrackingDocument> filterDoc = <TrackingDocument>[].obs;
-
-  final GetTrackingDocument getTrackingDocument;
-
+  Rx<TrackingDocumentOnProgress> trackingDocOnProgressData =
+      const TrackingDocumentOnProgress(0, '', []).obs;
   RxBool isLoading = false.obs;
-
-  String trackingDocumentState = '';
   RxString valueListener = ''.obs;
 
-  List<ApprovalDocument> listApproval = <ApprovalDocument>[
-    ApprovalDocument(
-      title: 'Request for man power replacement',
-      body: 'body',
-      status: [
-        StatusApprovalEntity(
-          borderColor: primary50,
-          decorationColor: primary50,
-          icon: '!',
-          iconColor: primary50,
-          isIcon: false,
-          status: 'OVERDUE',
-          statusColor: primary50,
-        ),
-        StatusApprovalEntity(
-          borderColor: secondary,
-          decorationColor: secondary,
-          icon: '',
-          iconColor: secondary,
-          isIcon: true,
-          status: 'URGENT',
-          statusColor: secondary,
-        ),
-      ],
-      date: '08.05.2021',
-      attachment: 2,
-    ),
-    ApprovalDocument(
-      title: 'Request for man power replacement',
-      body: 'body',
-      status: [
-        StatusApprovalEntity(
-          borderColor: primary50,
-          decorationColor: primary50,
-          icon: '!',
-          iconColor: primary50,
-          isIcon: false,
-          status: 'OVERDUE',
-          statusColor: primary50,
-        ),
-      ],
-      date: '08.05.2021',
-      attachment: 2,
-    ),
-    ApprovalDocument(
-      title: 'Request for man power replacement',
-      body: 'body',
-      status: [
-        StatusApprovalEntity(
-          borderColor: secondary,
-          decorationColor: secondary,
-          icon: '',
-          iconColor: secondary,
-          isIcon: true,
-          status: 'URGENT',
-          statusColor: secondary,
-        ),
-      ],
-      date: '08.05.2021',
-      attachment: 2,
-    ),
-    ApprovalDocument(
-      title: 'Request for man power replacement',
-      body: 'body',
-      status: [],
-      date: '08.05.2021',
-      attachment: 2,
-    ),
-  ];
-
-  List<StatusApprovalEntity> listStatus = <StatusApprovalEntity>[
-    StatusApprovalEntity(
-      borderColor: primary50,
-      decorationColor: primary50,
-      icon: '!',
-      iconColor: primary50,
-      isIcon: false,
-      status: 'OVERDUE',
-      statusColor: primary50,
-    ),
-    StatusApprovalEntity(
-      borderColor: secondary,
-      decorationColor: secondary,
-      icon: '',
-      iconColor: secondary,
-      isIcon: true,
-      status: 'URGENT',
-      statusColor: secondary,
-    ),
-  ];
   @override
-  void onInit() {
-    _filterStatusApproval();
-    _getDataTrackingDocument();
+  void onInit() async {
     super.onInit();
+    await _loadTrackingDocuments();
   }
 
-  Future<void> _getDataTrackingDocument() async {
+  Future<void> _loadTrackingDocuments() async {
     isLoading.value = true;
 
-    final r = await getTrackingDocument();
-    isLoading.value = false;
-    r.fold(
-      (l) => trackingDocumentState = 'getTrackDocFailed',
+    final result = await getTrackingDocumentOnProgress();
+    result.fold(
+      (l) {
+        isLoading.value = false;
+      },
       (r) {
-        trackingDocumentState = 'getTrackDocSuccess';
-        trackingDocData.value = r;
-        filterDoc.value = r;
+        isLoading.value = false;
+        trackingDocOnProgressData.value = r;
+        listDataApproval.value = r.data;
+        _filterByStatus();
+        _filterData();
       },
     );
   }
 
-  void _filterStatusApproval() {
-    statusOverdue.value = generateOverdue();
-    statusUrgent.value = generateUrgent();
+  void _filterByStatus() {
+    listDataStatusOnTime.value = _filterListByStatus('On Time');
+    listDataStatusUrgent.value = _filterListByStatus('Urgent');
+    listDataStatusOverdue.value = _filterListByStatus('Overdue');
   }
 
-  List<ApprovalDocument> generateOverdue() {
-    final urgent = <ApprovalDocument>[];
-
-    for (var data in listApproval) {
-      if (data.status.any((status) => status.status == 'OVERDUE')) {
-        AppUtils.logApp('OVERDUE ::::${data.status.length}');
-        urgent.add(data);
-      }
-    }
-
-    AppUtils.logApp('${urgent.length}');
-    return urgent;
+  List<TrackingDocumentListOnProgressModel> _filterListByStatus(String status) {
+    return listDataApproval
+        .where((doc) => doc.stateTargetCompletionDate == status)
+        .toList();
   }
 
-  List<ApprovalDocument> generateUrgent() {
-    final urgent = <ApprovalDocument>[];
-
-    for (var menu in listApproval) {
-      if (menu.status.any((status) => status.status == 'URGENT')) {
-        AppUtils.logApp('URGENT ::::${menu.status.length}');
-        urgent.add(menu);
-      }
-    }
-
-    AppUtils.logApp('${urgent.length}');
-    return urgent;
-  }
-
-  void clear() {
-    searchDoc.clear();
-    filterDoc(trackingDocData);
-    valueListener.value = '';
-  }
-
-  void onChangedD(String value) {
+  void onSearchChanged(String value) {
     valueListener.value = value;
-    _filterData(value, trackingDocData, filterDoc);
+    _filterData();
   }
 
-  void _filterData(String value, RxList<TrackingDocument> data,
-      RxList<TrackingDocument> filterData) {
-    if (value.isEmpty) {
-      filterData.value = data;
-      AppUtils.logApp('${filterData.length}');
-    } else {
-      filterData.value = data
-          .where(
-            (e) =>
-                e.title.toLowerCase().contains(value.toLowerCase()) ||
-                e.department
-                    .toString()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                e.serialNumber
-                    .toString()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()) ||
-                e.company
-                    .toString()
-                    .toLowerCase()
-                    .contains(value.toLowerCase()),
-          )
-          .toList();
-      AppUtils.logApp('${filterData.length}');
-    }
+  void _filterData() {
+    filterData.value = listDataApproval.where((doc) {
+      final query = valueListener.value.toLowerCase();
+      return doc.title.toLowerCase().contains(query) ||
+          doc.departmentName.toLowerCase().contains(query) ||
+          doc.serialNumber.toLowerCase().contains(query) ||
+          doc.companyName.toLowerCase().contains(query) ||
+          doc.createdAt.toLowerCase().contains(query) ||
+          doc.stateTargetCompletionDate.toLowerCase().contains(query) ||
+          doc.lastApprovalBy.toLowerCase().contains(query);
+    }).toList();
+  }
+
+  void clearSearch() {
+    searchDoc.clear();
+    valueListener.value = '';
+    filterData.value = listDataApproval;
   }
 }

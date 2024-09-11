@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 
 import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
 import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
-import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/notifications_controller.dart';
@@ -31,14 +32,11 @@ class NotificationsViewImpl extends StatelessWidget {
       showBackground: false,
       title: 'Notifications',
       child: Obx(
-        () => controller.notificationsDataList.isEmpty
-            ? const NoNotificationsView()
-            : controller.isLoading.value
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: primary,
-                    ),
-                  )
+        () => controller.isLoading.value &&
+                controller.notificationsDataList.isEmpty
+            ? _buildLoadingNotificationsList()
+            : controller.notificationsDataList.isEmpty
+                ? const NoNotificationsView()
                 : Column(
                     children: [
                       const AppbarSpacer(),
@@ -48,6 +46,34 @@ class NotificationsViewImpl extends StatelessWidget {
                     ],
                   ),
       ),
+    );
+  }
+
+  Widget _buildLoadingNotificationsList() {
+    return ListView.builder(
+      controller: controller.scrollController,
+      padding: REdgeInsets.only(bottom: 100),
+      itemCount: 10,
+      itemBuilder: (_, index) {
+        return ListTile(
+          title: EPadding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: ShimmerText(
+              height: 15.h,
+              width: 150.w,
+            ),
+          ),
+          subtitle: ShimmerText(
+            height: 15.h,
+            width: 150.w,
+          ),
+          isThreeLine: true,
+          trailing: ShimmerText(
+            height: 15.h,
+            width: 60.w,
+          ),
+        );
+      },
     );
   }
 

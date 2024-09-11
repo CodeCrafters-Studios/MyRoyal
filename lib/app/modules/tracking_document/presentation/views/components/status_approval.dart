@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 
 class StatusApproval extends StatelessWidget {
@@ -11,17 +10,15 @@ class StatusApproval extends StatelessWidget {
     required this.iconColor,
     required this.statusColor,
     required this.borderColor,
-    this.isIcon = false,
     required this.decorationColor,
   });
 
-  final String icon;
+  final IconData icon;
   final String status;
   final Color iconColor;
   final Color statusColor;
   final Color borderColor;
   final Color decorationColor;
-  final bool isIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -36,19 +33,12 @@ class StatusApproval extends StatelessWidget {
           ),
           child: Row(
             children: [
-              isIcon
-                  ? Icon(
-                      applyTextScaling: true,
-                      Icons.bolt,
-                      color: secondary,
-                      size: 20.dm,
-                    )
-                  : Icon(
-                      applyTextScaling: true,
-                      Icons.info,
-                      color: primary50,
-                      size: 20.dm,
-                    ),
+              Icon(
+                applyTextScaling: true,
+                icon,
+                color: iconColor,
+                size: 20.dm,
+              ),
               2.horizontalSpace,
               Text(
                 status,

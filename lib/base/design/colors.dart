@@ -15,6 +15,8 @@ const greyText = Color.fromRGBO(99, 98, 98, 1);
 const green = Color(0xFF369B43);
 const grey50 = Color(0xFFF5F5F5);
 
+const urgentColor = Color(0xFFFF7400);
+
 const primaryColor = Color(0xFF004BBC);
 const primaryDark = Color.fromARGB(255, 0, 99, 16);
 const primaryAccent = Color.fromARGB(255, 156, 18, 220);
