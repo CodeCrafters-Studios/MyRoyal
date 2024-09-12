@@ -1,5 +1,7 @@
-class TrackingDocumentListOnProgress {
-  TrackingDocumentListOnProgress(
+import 'package:equatable/equatable.dart';
+
+class TrackingDocumentListOnProgress extends Equatable {
+  const TrackingDocumentListOnProgress(
     this.createdAt,
     this.id,
     this.title,
@@ -38,4 +40,26 @@ class TrackingDocumentListOnProgress {
   final int locationId;
   final String stateTargetCompletionDate;
   final String lastApprovalBy;
+
+  @override
+  List<Object?> get props => [
+        createdAt,
+        id,
+        title,
+        serialNumber,
+        companyName,
+        departmentName,
+        sectionName,
+        positionName,
+        locationName,
+        state,
+        approvalId,
+        isCompleted,
+        targetCompletionDate,
+        companyId,
+        departmentId,
+        locationId,
+        stateTargetCompletionDate,
+        lastApprovalBy
+      ];
 }

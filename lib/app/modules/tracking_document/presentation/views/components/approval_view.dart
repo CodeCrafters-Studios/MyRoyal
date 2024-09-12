@@ -74,7 +74,7 @@ class ApprovalView extends StatelessWidget {
           height: Get.height,
           child: ListView.separated(
             separatorBuilder: (_, __) => 15.verticalSpace,
-            padding: REdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
             itemCount: controller.filterData.length,
             itemBuilder: (context, index) {
               final doc = controller.filterData[index];
@@ -88,7 +88,7 @@ class ApprovalView extends StatelessWidget {
 
   Widget _buildDocumentCard(dynamic doc) {
     return CardApp(
-      onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT),
+      onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT, arguments: doc),
       padding: REdgeInsets.symmetric(vertical: 10),
       width: 335.w,
       borderWidth: 1,

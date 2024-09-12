@@ -5,11 +5,11 @@ import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_do
 import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_on_progress.dart';
 
 class TrackingDocumentController extends GetxController {
-  final GetTrackingDocumentOnProgress getTrackingDocumentOnProgress;
-
   TrackingDocumentController({
     required this.getTrackingDocumentOnProgress,
   });
+
+  final GetTrackingDocumentOnProgress getTrackingDocumentOnProgress;
 
   TextEditingController searchDoc = TextEditingController();
   RxList<TrackingDocumentListOnProgressModel> filterData =

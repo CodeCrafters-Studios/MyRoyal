@@ -2,7 +2,7 @@ import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_do
 
 class TrackingDocumentListOnProgressModel
     extends TrackingDocumentListOnProgress {
-  TrackingDocumentListOnProgressModel(
+  const TrackingDocumentListOnProgressModel(
     super.createdAt,
     super.id,
     super.title,
@@ -23,6 +23,10 @@ class TrackingDocumentListOnProgressModel
     super.lastApprovalBy,
   );
 
+  factory TrackingDocumentListOnProgressModel.empty() {
+    return const TrackingDocumentListOnProgressModel(
+        '', 0, '', '', '', '', '', '', '', '', 0, false, 0, 0, 0, 0, '', '');
+  }
   factory TrackingDocumentListOnProgressModel.fromJson(
           Map<String, dynamic> json) =>
       TrackingDocumentListOnProgressModel(
