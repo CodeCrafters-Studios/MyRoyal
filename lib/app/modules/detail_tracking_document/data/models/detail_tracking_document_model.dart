@@ -1,6 +1,5 @@
 import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_ptk_model.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_data_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/user_created_model.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_entity.dart';
 
 class DetailTrackingDocumentModel extends DetailTrackingDocumentEntity {
@@ -12,7 +11,6 @@ class DetailTrackingDocumentModel extends DetailTrackingDocumentEntity {
         message: '',
         data: DetailTrackingDocumentDataModel(
           detailPtk: DetailPtkModel.empty(),
-          detailUserCreated: DetailUserCreatedModel.empty(),
           detailProgress: const [],
         ),
       );

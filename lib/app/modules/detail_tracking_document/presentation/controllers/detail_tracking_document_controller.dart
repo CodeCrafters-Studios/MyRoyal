@@ -58,8 +58,11 @@ class DetailTrackingDocumentController extends GetxController {
   void _initializeStepperData() {
     stepperData.value = detailTrackingDocDataModel.value.data.detailProgress
         .map((progressItem) {
-      String initials =
-          "${progressItem.firstName[0]}${progressItem.lastName?[0] ?? ''}";
+      String firstName = progressItem.fullName.split(' ').first[0];
+      String lastName = progressItem.fullName.split(' ').last.isNotEmpty
+          ? progressItem.fullName.split(' ').last[0]
+          : '';
+      String initials = firstName + lastName;
       Color iconColor;
 
       switch (progressItem.forLabel) {
@@ -75,7 +78,7 @@ class DetailTrackingDocumentController extends GetxController {
 
       return StepperData(
         title: StepperText(
-          "${progressItem.firstName} ${progressItem.lastName}\n${progressItem.positionName} ${progressItem.sectionName}",
+          "${progressItem.fullName}\n${progressItem.positionName} ${progressItem.sectionName}",
           textStyle: TS.titleSmall.copyWith(fontWeight: FontWeight.w600),
         ),
         subtitle: StepperText(

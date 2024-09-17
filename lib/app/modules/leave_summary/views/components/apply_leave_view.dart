@@ -20,7 +20,7 @@ class ApplyLeaveView extends StatelessWidget {
     return PageBase(
       showBackground: false,
       resizeInsetsBottom: false,
-      title: 'Apply a Leave',
+      title: 'Create New',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
         child: Obx(

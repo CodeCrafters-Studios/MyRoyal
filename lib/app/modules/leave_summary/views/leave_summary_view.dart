@@ -39,29 +39,27 @@ class LeaveSummaryViewImpl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Column(
-          children: [
-            const AppbarSpacer(),
-            _buildLeaveRequestSection(),
-            20.verticalSpace,
-          ],
-        ),
+      child: Column(
+        children: [
+          const AppbarSpacer(),
+          _buildLeaveRequestSection(),
+          20.verticalSpace,
+        ],
       ),
     );
   }
 
   Widget _buildTypesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Types", style: TS.bodyLarge),
-        10.verticalSpace,
-        _buildTypeRow("Casual", 0.5, "05/08"),
-        10.verticalSpace,
-        _buildTypeRow("Sick", 0.3, "03/08"),
-      ],
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTypeRow("Casual", 0.5, "05/08"),
+          10.verticalSpace,
+          _buildTypeRow("Sick", 0.3, "03/08"),
+        ],
+      ),
     );
   }
 
@@ -69,7 +67,7 @@ class LeaveSummaryViewImpl extends StatelessWidget {
     return Row(
       children: [
         Text(type, style: TS.bodyMedium),
-        10.horizontalSpace,
+        type == "Casual" ? 10.horizontalSpace : 28.horizontalSpace,
         Expanded(
           child: LinearProgressIndicator(
             color: type == "Casual" ? primary : secondary,
@@ -88,7 +86,7 @@ class LeaveSummaryViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildLeaveRequestHeader(),
-        5.verticalSpace,
+        10.verticalSpace,
         _buildTypesSection(),
         25.verticalSpace,
         _buildLeaveRequestTabs(),
@@ -99,63 +97,70 @@ class LeaveSummaryViewImpl extends StatelessWidget {
   }
 
   Widget _buildLeaveRequestHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('Leave Request', style: TS.titleMedium),
-        ButtonPrimary(
-          margin: REdgeInsets.only(top: 5),
-          color: white,
-          borderSide: const BorderSide(color: primary),
-          fullWidth: false,
-          onPressed: () => Get.to(() => ApplyLeaveView(controller: controller)),
-          child: Row(
-            children: [
-              Icon(Icons.add, size: 20.dm, color: primary),
-              5.horizontalSpace,
-              Text(
-                'Create',
-                style: TS.bodyMedium.copyWith(
-                  color: primary,
-                  fontWeight: FontWeight.w600,
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Leave Request', style: TS.titleMedium),
+          ButtonPrimary(
+            borderRadius: Corners.xxl,
+            margin: REdgeInsets.only(top: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            color: urgentColor,
+            borderSide: const BorderSide(color: urgentColor),
+            onPressed: () =>
+                Get.to(() => ApplyLeaveView(controller: controller)),
+            child: Row(
+              children: [
+                Icon(Icons.add, size: 18.dm, color: white),
+                5.horizontalSpace,
+                Text(
+                  'Create New',
+                  style: TS.bodySmall.copyWith(
+                    color: white,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLeaveRequestTabs() {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: grey),
-        borderRadius: BorderRadius.circular(Corners.slg),
-        color: white,
-      ),
-      child: TabBar(
-        controller: controller.tabController,
-        indicator: BoxDecoration(
-          borderRadius: BorderRadius.circular(Corners.slg),
-          color: primary,
-        ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: TS.bodyMedium.copyWith(color: white),
-        unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-        unselectedLabelColor: primary,
-        tabs: const [
-          Tab(text: 'All'),
-          Tab(text: 'Casual'),
-          Tab(text: 'Sick'),
         ],
       ),
     );
   }
 
+  Widget _buildLeaveRequestTabs() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: grey),
+          borderRadius: BorderRadius.circular(Corners.xxl),
+          color: white,
+        ),
+        child: TabBar(
+          controller: controller.tabController,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(Corners.xxl),
+            color: primary,
+          ),
+          indicatorSize: TabBarIndicatorSize.tab,
+          labelStyle: TS.bodyMedium.copyWith(color: white),
+          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+          unselectedLabelColor: primary,
+          tabs: const [
+            Tab(text: 'All'),
+            Tab(text: 'Casual'),
+            Tab(text: 'Sick'),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildLeaveRequestTabViews() {
-    return Container(
-      padding: REdgeInsets.symmetric(horizontal: 14),
+    return SizedBox(
       width: Get.width,
       height: 500.h,
       child: TabBarView(

@@ -19,6 +19,7 @@ class TabAllLeaveRequest extends StatelessWidget {
             onTap: () {},
             date: r.date,
             status: r.status,
+            iconStatus: r.iconStatus,
             description: r.description,
             statusColor: r.statusColor,
             types: r.types,

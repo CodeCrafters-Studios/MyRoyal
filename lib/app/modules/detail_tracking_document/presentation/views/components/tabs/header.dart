@@ -53,8 +53,6 @@ class HeaderDocumentView extends StatelessWidget {
   Widget _buildHeaders() {
     final trackingDocument = controller.trackingDocumentListOnProgressData;
     final detailPtk = controller.detailTrackingDocDataModel().data.detailPtk;
-    final userCreated =
-        controller.detailTrackingDocDataModel().data.detailUserCreated;
 
     return Column(
       children: [
@@ -68,11 +66,6 @@ class HeaderDocumentView extends StatelessWidget {
         _buildDetailRow('Company:', trackingDocument.companyName),
         _buildDetailRow('Status Contract:', detailPtk.employmentStatusesName),
         _buildDetailRow('Status Approval:', detailPtk.state),
-        _buildDivider(),
-        _buildDetailRow('Requested by:', userCreated.fullName.toString()),
-        _buildDetailRow('Position:', userCreated.positionName.toString()),
-        _buildDetailRow('Section:', userCreated.sectionName.toString()),
-        _buildDivider(),
       ],
     );
   }
@@ -90,16 +83,6 @@ class HeaderDocumentView extends StatelessWidget {
                 style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w600)),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
-      child: Divider(
-        color: Colors.grey.withOpacity(0.2),
-        thickness: 2,
       ),
     );
   }
