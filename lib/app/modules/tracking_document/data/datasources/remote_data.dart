@@ -1,4 +1,6 @@
+import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_history_model.dart';
 import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_on_progress_model.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
@@ -7,6 +9,7 @@ import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class TrackingDocumentRemoteDataSources {
   Future<TrackingDocumentOnProgress> getTrackingDocumentOnProgress();
+  Future<TrackingDocumentHistory> getTrackingDocumentHistory();
 }
 
 class TrackingDocumentRemoteDataSourcesImpl
@@ -28,6 +31,31 @@ class TrackingDocumentRemoteDataSourcesImpl
         throw ApiException(r['message']);
       }
       final response = TrackingDocumentOnProgressModel.fromJson(r);
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TrackingDocumentHistory> getTrackingDocumentHistory() async {
+    try {
+      final r = await httpService.request(
+        withToken: true,
+        enpoint: 'ptk/allPtkComplete',
+        method: Method.GET,
+        showPopUp: true,
+      );
+      if (r['code'] != 200) {
+        throw ApiException(r['message']);
+      }
+      final response = TrackingDocumentHistoryModel.fromJson(r);
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');

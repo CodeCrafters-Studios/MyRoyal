@@ -5,18 +5,18 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/others/no_result_widget.dart';
+import 'package:iroyal/base/widgets/padding.dart';
+import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/design/colors.dart';
 
-class ApprovalView extends StatelessWidget {
-  const ApprovalView({super.key, required this.controller});
+class HistoryView extends StatelessWidget {
+  const HistoryView({super.key, required this.controller});
 
   final TrackingDocumentController controller;
 
@@ -24,7 +24,7 @@ class ApprovalView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Approval',
+      title: 'History',
       textStyle: TS.titleMedium,
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
@@ -33,7 +33,7 @@ class ApprovalView extends StatelessWidget {
           children: [
             const AppbarSpacer(),
             _buildSearchBar(),
-            Obx(() => controller.filterDataOnProgress.isEmpty
+            Obx(() => controller.filterDataHistory.isEmpty
                 ? SizedBox(height: 500.h, child: const NoResultWidget())
                 : _buildDocumentList()),
           ],
@@ -46,11 +46,11 @@ class ApprovalView extends StatelessWidget {
     return EPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: InputPrimary(
-        controller: controller.searchDocOnProgress,
-        key: const Key('search-trackDocOnProgress'),
+        controller: controller.searchDocHistory,
+        key: const Key('search-trackDocHistory'),
         label: '',
         hint: 'Search',
-        onChanged: controller.onSearchChangedOnProgress,
+        onChanged: controller.onSearchChangedOnHistory,
         color: white,
         outlineColor: primary,
         prefixIcon: _buildSearchIcon(),
@@ -75,12 +75,11 @@ class ApprovalView extends StatelessWidget {
           child: ListView.separated(
             separatorBuilder: (_, __) => 15.verticalSpace,
             padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
-            itemCount: controller.filterDataOnProgress.length,
+            itemCount: controller.filterDataHistory.length,
             itemBuilder: (context, index) {
-              final doc = controller.filterDataOnProgress[index];
+              final doc = controller.filterDataHistory[index];
               return SearchTextInheritedWidget(
-                  searchText:
-                      RegExp.escape(controller.searchDocOnProgress.text),
+                  searchText: RegExp.escape(controller.searchDocHistory.text),
                   child: _buildDocumentCard(doc));
             },
           ),
@@ -90,7 +89,7 @@ class ApprovalView extends StatelessWidget {
   Widget _buildDocumentCard(dynamic doc) {
     return CardApp(
       onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT,
-          arguments: [doc, 'Approval']),
+          arguments: [doc, 'History']),
       padding: REdgeInsets.symmetric(vertical: 10),
       width: 335.w,
       borderWidth: 1,
@@ -149,16 +148,15 @@ class ApprovalView extends StatelessWidget {
   }
 
   Widget _buildStatus(dynamic doc) {
-    final isOnTime = doc.stateTargetCompletionDate == 'On Time';
-    final isUrgent = doc.stateTargetCompletionDate == 'Urgent';
-    final color = isOnTime ? primary50 : (isUrgent ? urgentColor : red);
+    final isApproved = doc.state == 'Approved';
+    final color = isApproved ? green : red;
 
     return StatusApproval(
       borderColor: color,
       decorationColor: color,
-      icon: isOnTime ? Icons.info : (isUrgent ? Icons.bolt : Icons.warning),
+      icon: isApproved ? Icons.check : Icons.close,
       iconColor: color,
-      status: doc.stateTargetCompletionDate.toUpperCase(),
+      status: doc.state.toUpperCase(),
       statusColor: color,
     );
   }

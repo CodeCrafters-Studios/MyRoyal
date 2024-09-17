@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/approval_view.dart';
+import 'package:iroyal/app/modules/tracking_document/presentation/views/components/history_view.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -43,10 +44,10 @@ class TrackingDocumentImplView extends StatelessWidget {
             ),
             15.verticalSpace,
             _buildCardHistory(
-              title: 'History',
-              itemCount: 0,
-              color: white.withOpacity(0.8),
-            ),
+                title: 'History',
+                itemCount: controller.trackingDocHistoryData().data.length,
+                color: white.withOpacity(0.8),
+                onTap: () => Get.to(() => HistoryView(controller: controller))),
           ],
         ),
       ),
@@ -223,7 +224,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                           5.horizontalSpace,
                           Text(
-                            '0',
+                            controller.listDataStatusApproved.length.toString(),
                             style: TS.bodyMedium.copyWith(color: green),
                           ),
                         ],
@@ -238,7 +239,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                           5.horizontalSpace,
                           Text(
-                            '0',
+                            controller.listDataStatusRejected.length.toString(),
                             style: TS.bodyMedium.copyWith(color: red),
                           ),
                         ],

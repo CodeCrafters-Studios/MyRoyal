@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_model.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/get_detail_tracking_document.dart';
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_on_progress_model.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
@@ -14,8 +13,8 @@ class DetailTrackingDocumentController extends GetxController {
       {required this.getDetailTrackingDocumentUseCase});
 
   late final TabController tabController;
-  TrackingDocumentListOnProgressModel trackingDocumentListOnProgressData =
-      Get.arguments;
+  String checkRoutes = Get.arguments[1];
+  late dynamic trackingDocumentListData;
 
   RxBool isLoading = false.obs;
 
@@ -27,7 +26,8 @@ class DetailTrackingDocumentController extends GetxController {
   void onInit() {
     super.onInit();
     tabController = TabController(length: 3, vsync: TicckerProvider());
-    _getDetailDocument(trackingDocumentListOnProgressData.id);
+    _checkRoutes();
+    _getDetailDocument(trackingDocumentListData.id);
   }
 
   @override
@@ -37,6 +37,14 @@ class DetailTrackingDocumentController extends GetxController {
   }
 
   final GetDetailTrackingDocument getDetailTrackingDocumentUseCase;
+
+  void _checkRoutes() {
+    if (checkRoutes == 'Approval') {
+      trackingDocumentListData = Get.arguments[0];
+    } else {
+      trackingDocumentListData = Get.arguments[0];
+    }
+  }
 
   Future<void> _getDetailDocument(int id) async {
     isLoading.value = true;
@@ -58,7 +66,9 @@ class DetailTrackingDocumentController extends GetxController {
   void _initializeStepperData() {
     stepperData.value = detailTrackingDocDataModel.value.data.detailProgress
         .map((progressItem) {
-      String firstName = progressItem.fullName.split(' ').first[0];
+      String firstName = progressItem.fullName.split(' ').first.isNotEmpty
+          ? progressItem.fullName.split(' ').first[0]
+          : '';
       String lastName = progressItem.fullName.split(' ').last.isNotEmpty
           ? progressItem.fullName.split(' ').last[0]
           : '';
@@ -69,8 +79,15 @@ class DetailTrackingDocumentController extends GetxController {
         case "Approved":
           iconColor = Colors.green;
           break;
+        case "Rejected":
+          iconColor = Colors.red;
+          break;
         case "Waiting For Approval":
           iconColor = Colors.grey;
+          break;
+        case "Done":
+          iconColor = Colors.blue;
+          break;
         default:
           iconColor = Colors.brown;
           break;
@@ -78,15 +95,21 @@ class DetailTrackingDocumentController extends GetxController {
 
       return StepperData(
         title: StepperText(
-          "${progressItem.fullName}\n${progressItem.positionName} ${progressItem.sectionName}",
-          textStyle: TS.titleSmall.copyWith(fontWeight: FontWeight.w600),
+          progressItem.fullName.isNotEmpty
+              ? "${progressItem.fullName}\n${progressItem.positionName} ${progressItem.sectionName}"
+              : progressItem.forLabel.toUpperCase(),
+          textStyle: TS.titleSmall.copyWith(
+              fontWeight: FontWeight.w600,
+              color: progressItem.fullName.isNotEmpty ? black : Colors.blue),
         ),
-        subtitle: StepperText(
-          progressItem.forLabel.toUpperCase(),
-          textStyle: TS.bodySmall.copyWith(
-            color: iconColor,
-          ),
-        ),
+        subtitle: progressItem.fullName.isNotEmpty
+            ? StepperText(
+                progressItem.forLabel.toUpperCase(),
+                textStyle: TS.bodySmall.copyWith(
+                  color: iconColor,
+                ),
+              )
+            : null,
         iconWidget: Container(
           padding: REdgeInsets.all(6),
           decoration: BoxDecoration(
@@ -96,14 +119,18 @@ class DetailTrackingDocumentController extends GetxController {
             ),
           ),
           child: Center(
-            child: Text(
-              initials,
-              style: TS.labelMedium.copyWith(
-                color: white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
+              child: progressItem.fullName.isNotEmpty
+                  ? Text(
+                      initials,
+                      style: TS.labelMedium.copyWith(
+                        color: white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.flag,
+                      color: Colors.white,
+                    )),
         ),
       );
     }).toList();

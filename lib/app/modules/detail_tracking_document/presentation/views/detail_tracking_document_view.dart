@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/details.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/status.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/header.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -40,81 +41,216 @@ class DetailTrackingDocumentView
             surfaceTintColor: white,
             flexibleSpace: EPadding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    controller.trackingDocumentListOnProgressData.title,
-                    style: TS.titleLarge.copyWith(
-                      color: black,
-                    ),
-                  ),
-                  15.verticalSpace,
-                  StatusApproval(
-                    borderColor: controller.trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? primary50
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? urgentColor
-                            : red,
-                    decorationColor: controller
-                                .trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? primary50
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? urgentColor
-                            : red,
-                    icon: controller.trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? Icons.info
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? Icons.bolt
-                            : Icons.warning,
-                    iconColor: controller.trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? primary50
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? urgentColor
-                            : red,
-                    status: controller.trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? 'ON TIME'
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? 'URGENT'
-                            : 'OVERDUE',
-                    statusColor: controller.trackingDocumentListOnProgressData
-                                .stateTargetCompletionDate ==
-                            'On Time'
-                        ? primary50
-                        : controller.trackingDocumentListOnProgressData
-                                    .stateTargetCompletionDate ==
-                                'Urgent'
-                            ? urgentColor
-                            : red,
-                  ),
-                ],
+              child: Obx(
+                () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    controller.isLoading.value
+                        ? ShimmerText(
+                            width: 300,
+                            height: controller
+                                        .trackingDocumentListData.title.length >
+                                    30
+                                ? 50.h
+                                : 20.h,
+                          )
+                        : Text(
+                            controller.trackingDocumentListData.title,
+                            style: TS.titleLarge.copyWith(
+                              color: black,
+                            ),
+                          ),
+                    15.verticalSpace,
+                    controller.isLoading.value
+                        ? ShimmerText(
+                            width: 100.w,
+                            height: 20.h,
+                          )
+                        : StatusApproval(
+                            borderColor: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? green
+                                    : red
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? primary50
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? urgentColor
+                                        : red,
+                            decorationColor: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? green
+                                    : red
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? primary50
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? urgentColor
+                                        : red,
+                            icon: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? Icons.check
+                                    : Icons.close
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? Icons.info
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? Icons.bolt
+                                        : Icons.warning,
+                            iconColor: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? green
+                                    : red
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? primary50
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? urgentColor
+                                        : red,
+                            status: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? 'APPROVED'
+                                    : 'REJECTED'
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? 'ON TIME'
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? 'URGENT'
+                                        : 'OVERDUE',
+                            statusColor: controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'reject'
+                                ? controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'approved'
+                                    ? green
+                                    : red
+                                : controller.trackingDocumentListData
+                                            .stateTargetCompletionDate ==
+                                        'On Time'
+                                    ? primary50
+                                    : controller.trackingDocumentListData
+                                                .stateTargetCompletionDate ==
+                                            'Urgent'
+                                        ? urgentColor
+                                        : red,
+                          ),
+                  ],
+                ),
               ),
             ),
             automaticallyImplyLeading: false,
             pinned: true,
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(
-                controller.trackingDocumentListOnProgressData.title.length > 30
+                controller.trackingDocumentListData.title.length > 30
                     ? 100.h
                     : 65.h,
               ),

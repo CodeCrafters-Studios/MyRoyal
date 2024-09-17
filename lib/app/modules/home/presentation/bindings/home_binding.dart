@@ -20,6 +20,7 @@ import 'package:iroyal/app/modules/profile/presentation/controllers/profile_cont
 import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
 import 'package:iroyal/app/modules/tracking_document/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/tracking_document/data/repositories/tracking_document_repositories_impl.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_history.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_on_progress.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
@@ -56,6 +57,7 @@ class HomeBinding extends Bindings {
       ..lazyPut<TrackingDocumentController>(
         () => TrackingDocumentController(
           getTrackingDocumentOnProgress: Get.find(),
+          getTrackingDocumentHistory: Get.find(),
         ),
       )
       ..lazyPut<TrackingDocumentRemoteDataSourcesImpl>(
@@ -70,6 +72,11 @@ class HomeBinding extends Bindings {
       )
       ..lazyPut(
         () => GetTrackingDocumentOnProgress(
+          Get.find<TrackingDocumentRepositoriesImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetTrackingDocumentHistory(
           Get.find<TrackingDocumentRepositoriesImpl>(),
         ),
       )

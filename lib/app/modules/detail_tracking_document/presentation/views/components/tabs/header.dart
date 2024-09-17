@@ -51,7 +51,7 @@ class HeaderDocumentView extends StatelessWidget {
   }
 
   Widget _buildHeaders() {
-    final trackingDocument = controller.trackingDocumentListOnProgressData;
+    final trackingDocument = controller.trackingDocumentListData;
     final detailPtk = controller.detailTrackingDocDataModel().data.detailPtk;
 
     return Column(
@@ -65,7 +65,8 @@ class HeaderDocumentView extends StatelessWidget {
         _buildDetailRow('Department:', trackingDocument.departmentName),
         _buildDetailRow('Company:', trackingDocument.companyName),
         _buildDetailRow('Status Contract:', detailPtk.employmentStatusesName),
-        _buildDetailRow('Status Approval:', detailPtk.state),
+        _buildDetailRow(
+            'Status Approval:', detailPtk.state.capitalizeFirst.toString()),
       ],
     );
   }

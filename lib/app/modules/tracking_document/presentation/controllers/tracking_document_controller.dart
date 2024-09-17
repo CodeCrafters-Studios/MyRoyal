@@ -1,32 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_history_model.dart';
 import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_on_progress_model.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
+import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_history.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_on_progress.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 
 class TrackingDocumentController extends GetxController {
   TrackingDocumentController({
     required this.getTrackingDocumentOnProgress,
+    required this.getTrackingDocumentHistory,
   });
 
   final GetTrackingDocumentOnProgress getTrackingDocumentOnProgress;
+  final GetTrackingDocumentHistory getTrackingDocumentHistory;
 
-  TextEditingController searchDoc = TextEditingController();
-  RxList<TrackingDocumentListOnProgressModel> filterData =
+  TextEditingController searchDocOnProgress = TextEditingController();
+  TextEditingController searchDocHistory = TextEditingController();
+
+  RxList<TrackingDocumentListOnProgressModel> filterDataOnProgress =
       <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListHistoryModel> filterDataHistory =
+      <TrackingDocumentListHistoryModel>[].obs;
   RxList<TrackingDocumentListOnProgressModel> listDataApproval =
       <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListHistoryModel> listDataHistory =
+      <TrackingDocumentListHistoryModel>[].obs;
   RxList<TrackingDocumentListOnProgressModel> listDataStatusOnTime =
       <TrackingDocumentListOnProgressModel>[].obs;
   RxList<TrackingDocumentListOnProgressModel> listDataStatusUrgent =
       <TrackingDocumentListOnProgressModel>[].obs;
   RxList<TrackingDocumentListOnProgressModel> listDataStatusOverdue =
       <TrackingDocumentListOnProgressModel>[].obs;
+  RxList<TrackingDocumentListHistoryModel> listDataStatusApproved =
+      <TrackingDocumentListHistoryModel>[].obs;
+  RxList<TrackingDocumentListHistoryModel> listDataStatusRejected =
+      <TrackingDocumentListHistoryModel>[].obs;
 
   Rx<TrackingDocumentOnProgress> trackingDocOnProgressData =
       const TrackingDocumentOnProgress(0, '', []).obs;
+
+  Rx<TrackingDocumentHistory> trackingDocHistoryData =
+      const TrackingDocumentHistory(code: 0, message: '', data: []).obs;
   RxBool isLoading = false.obs;
-  RxString valueListener = ''.obs;
+  RxString valueListenerOnProgress = ''.obs;
+  RxString valueListenerHistory = ''.obs;
 
   @override
   void onInit() async {
@@ -37,8 +57,10 @@ class TrackingDocumentController extends GetxController {
   Future<void> _loadTrackingDocuments() async {
     isLoading.value = true;
 
-    final result = await getTrackingDocumentOnProgress();
-    result.fold(
+    final resultOnProgress = await getTrackingDocumentOnProgress();
+    final resultHistory = await getTrackingDocumentHistory();
+
+    resultOnProgress.fold(
       (l) {
         isLoading.value = false;
       },
@@ -47,31 +69,72 @@ class TrackingDocumentController extends GetxController {
         trackingDocOnProgressData.value = r;
         listDataApproval.value = r.data;
         _filterByStatus();
-        _filterData();
+        _filterDataOnProgress();
+      },
+    );
+
+    resultHistory.fold(
+      (l) {
+        isLoading.value = false;
+      },
+      (r) {
+        isLoading.value = false;
+        trackingDocHistoryData.value = r;
+        listDataHistory.value = r.data;
+        _filterByStatus();
+        _filterDataHistory();
       },
     );
   }
 
   void _filterByStatus() {
-    listDataStatusOnTime.value = _filterListByStatus('On Time');
-    listDataStatusUrgent.value = _filterListByStatus('Urgent');
-    listDataStatusOverdue.value = _filterListByStatus('Overdue');
+    listDataStatusOnTime.value = _filterListByStatusOnProgress('On Time');
+    listDataStatusUrgent.value = _filterListByStatusOnProgress('Urgent');
+    listDataStatusOverdue.value = _filterListByStatusOnProgress('Overdue');
+    listDataStatusApproved.value = _filterListByStatusHistory('Approved');
+    listDataStatusRejected.value = _filterListByStatusHistory('Rejected');
   }
 
-  List<TrackingDocumentListOnProgressModel> _filterListByStatus(String status) {
+  List<TrackingDocumentListOnProgressModel> _filterListByStatusOnProgress(
+      String status) {
     return listDataApproval
         .where((doc) => doc.stateTargetCompletionDate == status)
         .toList();
   }
 
-  void onSearchChanged(String value) {
-    valueListener.value = value;
-    _filterData();
+  List<TrackingDocumentListHistoryModel> _filterListByStatusHistory(
+      String status) {
+    AppUtils.logApp(
+        'STATUS ${listDataHistory.where((doc) => doc.state == status).toList()}');
+    return listDataHistory.where((doc) => doc.state == status).toList();
   }
 
-  void _filterData() {
-    filterData.value = listDataApproval.where((doc) {
-      final query = valueListener.value.toLowerCase();
+  void onSearchChangedOnProgress(String value) {
+    valueListenerOnProgress.value = value;
+    _filterDataOnProgress();
+  }
+
+  void onSearchChangedOnHistory(String value) {
+    valueListenerHistory.value = value;
+    _filterDataHistory();
+  }
+
+  void _filterDataOnProgress() {
+    filterDataOnProgress.value = listDataApproval.where((doc) {
+      final query = valueListenerOnProgress.value.toLowerCase();
+      return doc.title.toLowerCase().contains(query) ||
+          doc.departmentName.toLowerCase().contains(query) ||
+          doc.serialNumber.toLowerCase().contains(query) ||
+          doc.companyName.toLowerCase().contains(query) ||
+          doc.createdAt.toLowerCase().contains(query) ||
+          doc.stateTargetCompletionDate.toLowerCase().contains(query) ||
+          doc.lastApprovalBy.toLowerCase().contains(query);
+    }).toList();
+  }
+
+  void _filterDataHistory() {
+    filterDataHistory.value = listDataHistory.where((doc) {
+      final query = valueListenerHistory.value.toLowerCase();
       return doc.title.toLowerCase().contains(query) ||
           doc.departmentName.toLowerCase().contains(query) ||
           doc.serialNumber.toLowerCase().contains(query) ||
@@ -83,8 +146,11 @@ class TrackingDocumentController extends GetxController {
   }
 
   void clearSearch() {
-    searchDoc.clear();
-    valueListener.value = '';
-    filterData.value = listDataApproval;
+    searchDocOnProgress.clear();
+    searchDocHistory.clear();
+    valueListenerOnProgress.value = '';
+    valueListenerHistory.value = '';
+    filterDataOnProgress.value = listDataApproval;
+    filterDataHistory.value = listDataHistory;
   }
 }

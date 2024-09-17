@@ -82,19 +82,19 @@ class ApplyLeaveView extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildLeaveTypeButton(
             'Casual',
             controller.isCasual.value,
             controller.selectCasualType,
-            horizontalPadding: 49,
+            horizontalPadding: 50,
           ),
-          12.horizontalSpace,
           _buildLeaveTypeButton(
             'Sick',
             controller.isSick.value,
             controller.selectSickType,
-            horizontalPadding: 58,
+            horizontalPadding: 55,
           ),
         ],
       ),
@@ -105,12 +105,12 @@ class ApplyLeaveView extends StatelessWidget {
     String text,
     bool isSelected,
     VoidCallback onPressed, {
-    required double horizontalPadding,
+    double? horizontalPadding,
   }) {
     return ButtonPrimary(
       margin: REdgeInsets.only(top: 5),
-      padding:
-          REdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 8),
+      padding: REdgeInsets.symmetric(
+          horizontal: horizontalPadding ?? 0, vertical: 8),
       color: isSelected ? primary : white,
       borderSide: const BorderSide(color: primary),
       fullWidth: false,
@@ -130,13 +130,14 @@ class ApplyLeaveView extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildDateButton(
             'Start Date',
             controller.selectedStartDate.value,
             () => controller.selectStartDate(context),
+            horizontalPadding: 18,
           ),
-          12.horizontalSpace,
           _buildDateButton(
             'End Date',
             controller.selectedEndDate.value,
@@ -150,8 +151,9 @@ class ApplyLeaveView extends StatelessWidget {
   Widget _buildDateButton(
     String label,
     String selectedDate,
-    VoidCallback onPressed,
-  ) {
+    VoidCallback onPressed, {
+    double? horizontalPadding,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -160,7 +162,7 @@ class ApplyLeaveView extends StatelessWidget {
         ButtonPrimary(
           margin: REdgeInsets.only(top: 5),
           padding: REdgeInsets.symmetric(
-            horizontal: selectedDate == 'Select date' ? 15 : 10,
+            horizontal: horizontalPadding ?? 15,
             vertical: 5,
           ),
           color: white,
