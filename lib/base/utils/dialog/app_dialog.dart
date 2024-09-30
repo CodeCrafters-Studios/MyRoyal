@@ -15,6 +15,7 @@ abstract class AppDialog {
     String textYes = 'Yes',
     String textNo = 'No',
   });
+
   Future<void> showErrorDialog({
     String? imagePath,
     String title = 'Error',
@@ -37,6 +38,8 @@ abstract class AppDialog {
     String? description,
     String? textYes,
     String? textNo,
+    Function()? onPressedYes,
+    Function()? onPressedNo,
   });
 
   Future<void> showErrorSnackBar({

@@ -3,20 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_model.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/action_tracking_document.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/get_detail_tracking_document.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
 class DetailTrackingDocumentController extends GetxController {
-  DetailTrackingDocumentController(
-      {required this.getDetailTrackingDocumentUseCase});
+  DetailTrackingDocumentController({
+    required this.getDetailTrackingDocumentUseCase,
+    required this.postActionTrackingDocument,
+  });
 
   late final TabController tabController;
   String checkRoutes = Get.arguments[1];
   late dynamic trackingDocumentListData;
+  TextEditingController reason = TextEditingController();
 
   RxBool isLoading = false.obs;
+  RxString reasonText = ''.obs;
 
   Rx<DetailTrackingDocumentModel> detailTrackingDocDataModel =
       DetailTrackingDocumentModel.empty().obs;
@@ -37,6 +45,7 @@ class DetailTrackingDocumentController extends GetxController {
   }
 
   final GetDetailTrackingDocument getDetailTrackingDocumentUseCase;
+  final ActionTrackingDocument postActionTrackingDocument;
 
   void _checkRoutes() {
     if (checkRoutes == 'Approval') {
@@ -134,5 +143,28 @@ class DetailTrackingDocumentController extends GetxController {
         ),
       );
     }).toList();
+  }
+
+  Future<void> postActionDocument(
+      int laborId, String type, String feedback) async {
+    isLoading.value = true;
+
+    final result = await postActionTrackingDocument({
+      'labor_id': laborId,
+      'type': type,
+      'feedback': feedback,
+    });
+
+    result.fold(
+      (l) {
+        isLoading.value = false;
+        final m = l.properties[0] as ApiException;
+        AppDialogImpl().showErrorDialog(description: m.message);
+      },
+      (r) {
+        isLoading.value = false;
+        Get.offAllNamed(Routes.BOTTOMNAVBAR);
+      },
+    );
   }
 }

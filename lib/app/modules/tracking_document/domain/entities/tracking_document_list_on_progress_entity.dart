@@ -19,6 +19,7 @@ class TrackingDocumentListOnProgress extends Equatable {
     this.departmentId,
     this.locationId,
     this.stateTargetCompletionDate,
+    this.needApproval,
     this.lastApprovalBy,
   );
 
@@ -39,6 +40,7 @@ class TrackingDocumentListOnProgress extends Equatable {
   final int departmentId;
   final int locationId;
   final String stateTargetCompletionDate;
+  final bool needApproval;
   final String lastApprovalBy;
 
   @override
@@ -60,6 +62,7 @@ class TrackingDocumentListOnProgress extends Equatable {
         departmentId,
         locationId,
         stateTargetCompletionDate,
+        needApproval,
         lastApprovalBy
       ];
 }

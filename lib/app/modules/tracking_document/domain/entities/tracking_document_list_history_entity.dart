@@ -1,25 +1,27 @@
 import 'package:equatable/equatable.dart';
 
 class TrackingDocumentListHistoryEntity extends Equatable {
-  const TrackingDocumentListHistoryEntity(
-      {required this.createdAt,
-      required this.id,
-      required this.title,
-      required this.serialNumber,
-      required this.companyName,
-      required this.departmentName,
-      required this.sectionName,
-      required this.positionName,
-      required this.locationName,
-      required this.state,
-      required this.approvalId,
-      required this.isCompleted,
-      required this.targetCompletionDate,
-      required this.companyId,
-      required this.departmentId,
-      required this.locationId,
-      required this.stateTargetCompletionDate,
-      required this.lastApprovalBy});
+  const TrackingDocumentListHistoryEntity({
+    required this.createdAt,
+    required this.id,
+    required this.title,
+    required this.serialNumber,
+    required this.companyName,
+    required this.departmentName,
+    required this.sectionName,
+    required this.positionName,
+    required this.locationName,
+    required this.state,
+    required this.approvalId,
+    required this.isCompleted,
+    required this.targetCompletionDate,
+    required this.companyId,
+    required this.departmentId,
+    required this.locationId,
+    required this.stateTargetCompletionDate,
+    required this.needApproval,
+    required this.lastApprovalBy,
+  });
 
   final String createdAt;
   final int id;
@@ -38,6 +40,7 @@ class TrackingDocumentListHistoryEntity extends Equatable {
   final int departmentId;
   final int locationId;
   final String stateTargetCompletionDate;
+  final bool needApproval;
   final String lastApprovalBy;
 
   @override
@@ -60,6 +63,7 @@ class TrackingDocumentListHistoryEntity extends Equatable {
         locationId,
         locationId,
         stateTargetCompletionDate,
+        needApproval,
         lastApprovalBy,
       ];
 }

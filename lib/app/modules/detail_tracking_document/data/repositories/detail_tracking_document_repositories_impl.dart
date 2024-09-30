@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/action_tracking_document_entity.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_entity.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/repositories/detail_tracking_document_repository.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -16,6 +17,17 @@ class DetailTrackingDocumentRepositoriesImpl
       getDetailTrackingDocument(params) async {
     try {
       final r = await remoteData.getDetailTrackingDocument(params);
+      return Right(r);
+    } on ApiException {
+      return const Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, ActionTrackingDocumentEntity>>
+      postActionDetailTrackingDocument(Map<String, dynamic> params) async {
+    try {
+      final r = await remoteData.actionDetailTrackingDocument(params);
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());

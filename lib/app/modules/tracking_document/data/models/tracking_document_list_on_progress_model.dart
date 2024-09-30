@@ -20,12 +20,13 @@ class TrackingDocumentListOnProgressModel
     super.departmentId,
     super.locationId,
     super.stateTargetCompletionDate,
+    super.needApproval,
     super.lastApprovalBy,
   );
 
   factory TrackingDocumentListOnProgressModel.empty() {
-    return const TrackingDocumentListOnProgressModel(
-        '', 0, '', '', '', '', '', '', '', '', 0, false, 0, 0, 0, 0, '', '');
+    return const TrackingDocumentListOnProgressModel('', 0, '', '', '', '', '',
+        '', '', '', 0, false, 0, 0, 0, 0, '', false, '');
   }
 
   factory TrackingDocumentListOnProgressModel.fromJson(
@@ -48,6 +49,7 @@ class TrackingDocumentListOnProgressModel
         json["department_id"],
         json["location_id"],
         json["state_target_completion_date"],
+        json["need_approval"],
         json["last_approval_by"],
       );
 
@@ -69,6 +71,7 @@ class TrackingDocumentListOnProgressModel
         "department_id": departmentId,
         "location_id": locationId,
         "state_target_completion_date": stateTargetCompletionDate,
+        "need_approval": needApproval,
         "last_approval_by": lastApprovalBy,
       };
 }

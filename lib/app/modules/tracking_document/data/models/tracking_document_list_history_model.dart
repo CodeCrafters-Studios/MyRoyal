@@ -20,6 +20,7 @@ class TrackingDocumentListHistoryModel
     required super.departmentId,
     required super.locationId,
     required super.stateTargetCompletionDate,
+    required super.needApproval,
     required super.lastApprovalBy,
   });
 
@@ -42,6 +43,7 @@ class TrackingDocumentListHistoryModel
       departmentId: 0,
       locationId: 0,
       stateTargetCompletionDate: '',
+      needApproval: false,
       lastApprovalBy: '',
     );
   }
@@ -66,6 +68,7 @@ class TrackingDocumentListHistoryModel
         departmentId: json["department_id"],
         locationId: json["location_id"],
         stateTargetCompletionDate: json["state_target_completion_date"],
+        needApproval: json["need_approval"],
         lastApprovalBy: json["last_approval_by"],
       );
 
@@ -87,6 +90,7 @@ class TrackingDocumentListHistoryModel
         "department_id": departmentId,
         "location_id": locationId,
         "state_target_completion_date": stateTargetCompletionDate,
+        "need_approval": needApproval,
         "last_approval_by": lastApprovalBy,
       };
 }
