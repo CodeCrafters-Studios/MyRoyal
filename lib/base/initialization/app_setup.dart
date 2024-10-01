@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -39,6 +40,10 @@ Future<void> setupAndRunApp(
 }) async {
   // enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(
+    debug: true,
+    ignoreSsl: true,
+  );
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -134,7 +139,7 @@ Future<void> _setupNotifications() async {
   if (!kIsWeb) {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
+      alert: true,
       badge: true,
       sound: true,
     );

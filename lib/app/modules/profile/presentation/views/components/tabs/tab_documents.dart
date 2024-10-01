@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:iroyal/app/modules/profile/presentation/views/components/file_view.dart';
+import 'package:iroyal/app/modules/profile/presentation/views/components/pdf_view.dart';
 import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -14,49 +17,28 @@ class TabDocumentsView extends StatelessWidget {
     return SingleChildScrollView(
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Column(
-          children: [
-            ItemMenuSettings(
-              assetSvg: 'assets/icons/ic_download_doc.svg',
-              text: 'Salary Slip',
-              textStyle: TS.bodyMedium,
-              icon: Icons.download,
-              withTrailing: true,
-              onTap: controller.downloadPdf,
-            ),
-            ItemMenuSettings(
-              assetSvg: 'assets/icons/ic_download_doc.svg',
-              text: 'Offer Letter',
-              textStyle: TS.bodyMedium,
-              icon: Icons.download,
-              withTrailing: true,
-              onTap: () {},
-            ),
-            ItemMenuSettings(
-              assetSvg: 'assets/icons/ic_download_doc.svg',
-              text: 'Bond Agreement',
-              textStyle: TS.bodyMedium,
-              icon: Icons.download,
-              withTrailing: true,
-              onTap: () {},
-            ),
-            ItemMenuSettings(
-              assetSvg: 'assets/icons/ic_download_doc.svg',
-              text: 'Appraisal Letter',
-              textStyle: TS.bodyMedium,
-              icon: Icons.download,
-              withTrailing: true,
-              onTap: () {},
-            ),
-            ItemMenuSettings(
-              assetSvg: 'assets/icons/ic_download_doc.svg',
-              text: 'Appointment Letter',
-              textStyle: TS.bodyMedium,
-              icon: Icons.download,
-              withTrailing: true,
-              onTap: () {},
-            ),
-          ],
+        child: SizedBox(
+          height: Get.height,
+          child: ListView.builder(
+              padding: EdgeInsets.zero,
+              itemCount: controller.profileData().data.documents.length,
+              itemBuilder: (context, index) {
+                final data = controller.profileData().data.documents[index];
+                return ItemMenuSettings(
+                  assetSvg: 'assets/icons/ic_download_doc.svg',
+                  text: data.type.capitalize.toString(),
+                  textStyle: TS.bodyMedium,
+                  icon: Icons.download,
+                  withTrailing: true,
+                  onTap: () => data.ext == '.jpeg'
+                      ? Get.to(() => FileView(title: data.name, url: data.url))
+                      : Get.to(() => PDFView(
+                            title: data.name,
+                            url: data.url,
+                          )),
+                  onTapIcon: () => controller.downloadPdf(data.url, data.name),
+                );
+              }),
         ),
       ),
     );

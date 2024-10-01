@@ -43,6 +43,7 @@ class ProfileController extends GetxController {
       data: ProfileDataModel(
         personal: PersonalModel(),
         professional: const ProfessionalModel(),
+        documents: const [],
       )).obs;
 
   final Rx<UserDataModel> userData = UserDataModel.empty().obs;
@@ -101,18 +102,19 @@ class ProfileController extends GetxController {
     );
   }
 
-  Future<void> downloadPdf() async {
+  Future<void> downloadPdf(String url, String fileName) async {
     isLoading(true);
-    const url = 'https://www.tutorialspoint.com/flutter/flutter_tutorial.pdf';
-    final result = await downloadFile(url);
+    final result = await downloadFile(
+      ParamsDownload(url: url, fileName: fileName),
+    );
     isLoading(false);
 
     await result.fold(
       (failure) =>
-          appDialog.showErrorSnackBar(description: 'failed_download_pdf'.tr),
+          appDialog.showErrorSnackBar(description: 'Failed Download Document'),
       (success) async {
         await appDialog.showSuccessSnackBar(
-          description: 'success_download_pdf',
+          description: 'Success Download Document',
         );
       },
     );

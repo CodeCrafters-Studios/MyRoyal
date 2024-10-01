@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/profile/domain/entities/download_params.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/domain/repositories/profile_repository.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -26,9 +27,10 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> downloadFile(String url) async {
+  Future<Either<Failure, DownloadParams>> downloadFile(
+      {required String url, required String fileName}) async {
     try {
-      final r = await localData.downloadFile(url);
+      final r = await localData.downloadFile(url: url, fileName: fileName);
       return Right(r);
     } catch (e) {
       return const Left(LocalDataFailure());

@@ -35,7 +35,6 @@ class NotificationService {
   }
 
   void createNotification(int count, int i, int id, String filePath) {
-    //show the notifications.
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'progress channel',
       'progress channel',

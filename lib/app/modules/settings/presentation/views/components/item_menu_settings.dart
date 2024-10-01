@@ -16,6 +16,7 @@ class ItemMenuSettings extends StatelessWidget {
     this.withTrailing = false,
     this.icon,
     this.onTap,
+    this.onTapIcon,
     this.withDivider = true,
   });
   final String assetSvg;
@@ -24,6 +25,7 @@ class ItemMenuSettings extends StatelessWidget {
   final IconData? icon;
   final bool withTrailing;
   final Function()? onTap;
+  final Function()? onTapIcon;
   final bool withDivider;
 
   @override
@@ -42,9 +44,12 @@ class ItemMenuSettings extends StatelessWidget {
                   child: Text(text, style: textStyle ?? TS.labelLarge),
                 ),
                 withTrailing
-                    ? Icon(
-                        icon ?? Icons.arrow_forward_ios_rounded,
-                        color: primary,
+                    ? InkWell(
+                        onTap: onTapIcon,
+                        child: Icon(
+                          icon ?? Icons.arrow_forward_ios_rounded,
+                          color: primary,
+                        ),
                       )
                     : emptyBox,
               ],
