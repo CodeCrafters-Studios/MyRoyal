@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/dropdown/dropdown_primary.dart';
@@ -90,60 +89,6 @@ class EditProfileView extends GetView<EditProfileController> {
                     FormLoginValue.nickname,
                     value,
                   ),
-                ),
-                20.verticalSpace,
-                InputPrimary(
-                  keyboardType: TextInputType.number,
-                  maxLength: 15,
-                  label: 'NPWP',
-                  color: white,
-                  outlineColor: grey,
-                  hint: controller.argumentData.data.personal.npwp.isNotEmpty
-                      ? controller.argumentData.data.personal.npwp
-                      : 'Enter your NPWP',
-                  hintStyle: TS.bodyMedium.copyWith(
-                    color: grey,
-                  ),
-                  validation: (value) {
-                    AppUtils.logApp('HERE ${controller.npwp.value}');
-                    if (value!.length < 15 && value.isNotEmpty) {
-                      return 'Password must be at least 15 characters long';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => controller.setEditProfileValue(
-                    FormLoginValue.npwp,
-                    value,
-                  ),
-                ),
-                20.verticalSpace,
-                DropDownPrimary(
-                  label: 'NPWP Status',
-                  hintText: 'Please choose a NPWP status',
-                  items: controller.listNpwpStatus
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      alignment: Alignment.centerLeft,
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TS.bodyMedium,
-                      ),
-                    );
-                  }).toList(),
-                  icon: controller.npwpStatus.value.isNotEmpty
-                      ? IconButton(
-                          onPressed: controller.clearNpwpStatus,
-                          icon: Icon(
-                            Icons.close,
-                            size: 20.r,
-                          ),
-                        )
-                      : const Icon(Icons.arrow_drop_down),
-                  value: controller.npwpStatus.value.isEmpty
-                      ? null
-                      : controller.npwpStatus.value,
-                  onChanged: (value) => controller.setNpwpStatus(value!),
                 ),
                 20.verticalSpace,
                 InputPrimary(

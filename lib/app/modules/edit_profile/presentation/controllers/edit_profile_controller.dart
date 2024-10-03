@@ -11,8 +11,6 @@ enum FormLoginValue {
   firstName,
   lastName,
   nickname,
-  npwp,
-  npwpStatus,
   email,
   instagram,
   linkedin,
@@ -41,8 +39,6 @@ class EditProfileController extends GetxController {
   RxString firstName = ''.obs;
   RxString lastName = ''.obs;
   RxString nickname = ''.obs;
-  RxString npwp = ''.obs;
-  RxString npwpStatus = ''.obs;
   RxString email = ''.obs;
   RxString instagram = ''.obs;
   RxString linkedIn = ''.obs;
@@ -71,19 +67,13 @@ class EditProfileController extends GetxController {
   }
 
   void validatorButton() {
-    if (npwp.value.length == 15 || npwp.value.isEmpty) {
-      enableButton.value = firstName.value.isNotEmpty ||
-          lastName.value.isNotEmpty ||
-          nickname.value.isNotEmpty ||
-          npwp.value.length == 15 ||
-          npwpStatus.value.isNotEmpty ||
-          email.value.isNotEmpty ||
-          instagram.value.isNotEmpty ||
-          linkedIn.value.isNotEmpty ||
-          maritalStatus.value.isNotEmpty;
-    } else if (npwp.value.length < 15) {
-      enableButton.value = false;
-    }
+    enableButton.value = firstName.value.isNotEmpty ||
+        lastName.value.isNotEmpty ||
+        nickname.value.isNotEmpty ||
+        email.value.isNotEmpty ||
+        instagram.value.isNotEmpty ||
+        linkedIn.value.isNotEmpty ||
+        maritalStatus.value.isNotEmpty;
     AppUtils.logApp('${enableButton.value}');
   }
 
@@ -101,14 +91,7 @@ class EditProfileController extends GetxController {
         nickname(value);
         AppUtils.logApp(nickname.value);
         break;
-      case FormLoginValue.npwp:
-        npwp(value);
-        AppUtils.logApp(npwp.value);
-        break;
-      case FormLoginValue.npwpStatus:
-        npwpStatus(value);
-        AppUtils.logApp(npwpStatus.value);
-        break;
+
       case FormLoginValue.email:
         email(value);
         AppUtils.logApp(email.value);
@@ -134,8 +117,6 @@ class EditProfileController extends GetxController {
     AppUtils.logApp(firstName.value);
     AppUtils.logApp(lastName.value);
     AppUtils.logApp(nickname.value);
-    AppUtils.logApp(npwp.value);
-    AppUtils.logApp(npwpStatus.value);
     AppUtils.logApp(email.value);
     AppUtils.logApp(instagram.value);
     AppUtils.logApp(linkedIn.value);
@@ -154,11 +135,6 @@ class EditProfileController extends GetxController {
           nickname: nickname.value.isEmpty
               ? argumentData.data.personal.nickname
               : nickname.value,
-          npwp:
-              npwp.value.isEmpty ? argumentData.data.personal.npwp : npwp.value,
-          npwpStatus: npwpStatus.value.isEmpty
-              ? argumentData.data.personal.npwpStatus
-              : npwpStatus.value,
           email: email.value.isEmpty
               ? argumentData.data.personal.personalEmail
               : email.value,
@@ -176,7 +152,7 @@ class EditProfileController extends GetxController {
     );
     r.fold((l) {
       isLoading(false);
-      AppUtils.logApp('Failure');
+      AppUtils.logApp(l.toString());
     }, (r) {
       isLoading(false);
       AppUtils.logApp('Success');
@@ -185,18 +161,6 @@ class EditProfileController extends GetxController {
       appDialog.showSuccessSnackBar(
           description: 'Profile changes saved successfully');
     });
-  }
-
-  void setNpwpStatus(String value) {
-    npwpStatus.value = value;
-    validatorButton();
-    AppUtils.logApp(npwpStatus.value);
-  }
-
-  void clearNpwpStatus() {
-    npwpStatus.value = '';
-    validatorButton();
-    AppUtils.logApp(npwpStatus.value);
   }
 
   void setMaritalStatus(String value) {

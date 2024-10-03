@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/controllers/attendance_controller.dart';
-import 'package:iroyal/app/modules/dashboard/controllers/dashboard_controller.dart';
+import 'package:iroyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
+import 'package:iroyal/app/modules/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
@@ -9,6 +12,10 @@ import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.d
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
+import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
+import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
@@ -246,11 +253,33 @@ class BottomnavbarBinding extends Bindings {
       )
 
       // Dashboard
+      ..lazyPut<DashboardRemoteDataSourceImpl>(
+          () => DashboardRemoteDataSourceImpl(httpService: Get.find()))
+      ..lazyPut<DashboardRepositoryImpl>(() => DashboardRepositoryImpl(
+          remoteData: Get.find<DashboardRemoteDataSourceImpl>()))
+      ..lazyPut<GetDashboardUsecase>(
+          () => GetDashboardUsecase(Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
-          getMyTeams: Get.find(),
           getUser: Get.find(),
+          getDashboard: Get.find(),
         ),
+      )
+
+      // Leave Summary
+      ..lazyPut<LeaveRemoteDataSourcesImpl>(
+        () => LeaveRemoteDataSourcesImpl(httpService: Get.find()),
+      )
+      ..lazyPut<LeaveRepositoryImpl>(
+        () => LeaveRepositoryImpl(
+            remoteData: Get.find<LeaveRemoteDataSourcesImpl>()),
+      )
+      ..lazyPut<GetLeaveUsecase>(
+        () => GetLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
+      )
+      ..lazyPut<LeaveSummaryController>(
+        () => LeaveSummaryController(
+            getLeaveUsecase: Get.find<GetLeaveUsecase>()),
       );
   }
 }

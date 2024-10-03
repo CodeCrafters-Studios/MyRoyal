@@ -6,8 +6,6 @@ class EmployeeParams extends Equatable {
     required this.firstName,
     required this.lastName,
     required this.nickname,
-    required this.npwp,
-    required this.npwpStatus,
     required this.email,
     required this.instagram,
     required this.linkedIn,
@@ -18,8 +16,6 @@ class EmployeeParams extends Equatable {
   final String firstName;
   final String lastName;
   final String nickname;
-  final String npwp;
-  final String npwpStatus;
   final String email;
   final String instagram;
   final String linkedIn;
@@ -30,8 +26,6 @@ class EmployeeParams extends Equatable {
         firstName,
         // lastName,
         nickname,
-        npwp,
-        npwpStatus,
         email,
         instagram,
         linkedIn,

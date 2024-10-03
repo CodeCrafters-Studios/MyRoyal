@@ -34,12 +34,12 @@ class AttendanceCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: TS.titleSmall,
+            style: TS.titleMedium,
           ),
-          8.verticalSpace,
           Text(
             subTitle,
             style: TS.bodyLarge.copyWith(

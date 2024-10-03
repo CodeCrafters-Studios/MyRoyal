@@ -95,7 +95,7 @@ class WebtelController extends GetxController {
     final r = await getWebtel();
     isLoading(false);
     r.fold(
-      (l) => webtelState = 'getPromFailed',
+      (l) => AppUtils.logApp(l.toString()),
       (r) {
         webtelState = 'getPromSuccess';
         webtelData(r);
