@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/edit_profile/data/model/employee_params_model.dart';
 import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profile.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -15,6 +20,10 @@ enum FormLoginValue {
   instagram,
   linkedin,
   maritalStatus,
+  birthplace,
+  birthdate,
+  gender,
+  profilePicture,
 }
 
 class EditProfileController extends GetxController {
@@ -27,6 +36,7 @@ class EditProfileController extends GetxController {
   final AppDialog appDialog;
   Profile argumentData = Get.arguments[0];
   final int id = Get.arguments[1];
+  UserDataModel userData = Get.arguments[2];
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -43,17 +53,12 @@ class EditProfileController extends GetxController {
   RxString instagram = ''.obs;
   RxString linkedIn = ''.obs;
   RxString maritalStatus = ''.obs;
+  RxString selectedDate = 'Select date'.obs;
 
-  List<String> listNpwpStatus = [
-    'TK',
-    'TK1',
-    'TK2',
-    'TK3',
-    'K0',
-    'K1',
-    'K2',
-    'K3',
-  ];
+  DateTime selectDate = DateTime.now();
+  final ImagePicker _picker = ImagePicker();
+
+  Rx<File?> selectedImage = Rx<File?>(null);
 
   List<String> listMaritalStatus = [
     'Single',
@@ -73,11 +78,12 @@ class EditProfileController extends GetxController {
         email.value.isNotEmpty ||
         instagram.value.isNotEmpty ||
         linkedIn.value.isNotEmpty ||
-        maritalStatus.value.isNotEmpty;
+        maritalStatus.value.isNotEmpty ||
+        selectedImage.value != null;
     AppUtils.logApp('${enableButton.value}');
   }
 
-  void setEditProfileValue(FormLoginValue key, String value) {
+  void setEditProfileValue(FormLoginValue key, dynamic value) {
     switch (key) {
       case FormLoginValue.firstName:
         firstName(value);
@@ -91,7 +97,6 @@ class EditProfileController extends GetxController {
         nickname(value);
         AppUtils.logApp(nickname.value);
         break;
-
       case FormLoginValue.email:
         email(value);
         AppUtils.logApp(email.value);
@@ -108,6 +113,22 @@ class EditProfileController extends GetxController {
         maritalStatus(value);
         AppUtils.logApp(maritalStatus.value);
         break;
+      case FormLoginValue.birthdate:
+        argumentData.data.personal.birthdate.toString();
+        AppUtils.logApp('${argumentData.data.personal.birthdate}');
+        break;
+      case FormLoginValue.birthplace:
+        argumentData.data.personal.birthplace;
+        AppUtils.logApp(argumentData.data.personal.birthplace);
+        break;
+      case FormLoginValue.gender:
+        argumentData.data.personal.gender;
+        AppUtils.logApp(argumentData.data.personal.gender);
+        break;
+      case FormLoginValue.profilePicture:
+        selectedImage(value);
+        AppUtils.logApp('${selectedImage.value}');
+        break;
     }
     validatorButton();
   }
@@ -120,36 +141,46 @@ class EditProfileController extends GetxController {
     AppUtils.logApp(email.value);
     AppUtils.logApp(instagram.value);
     AppUtils.logApp(linkedIn.value);
+    AppUtils.logApp(maritalStatus.value);
+    AppUtils.logApp('${argumentData.data.personal.birthdate}');
+    AppUtils.logApp(argumentData.data.personal.birthplace);
+    AppUtils.logApp(argumentData.data.personal.gender);
+    AppUtils.logApp('${selectedImage.value}');
 
     isLoading(true);
+
     final r = await patchEditProfileUseCase(
-      ParamsEditProfile(
-        employeeParams: EmployeeParamsModel(
-          employeeId: id,
-          firstName: firstName.value.isEmpty
-              ? argumentData.data.personal.firstName
-              : firstName.value,
-          lastName: lastName.value.isEmpty
-              ? argumentData.data.personal.lastName
-              : lastName.value,
-          nickname: nickname.value.isEmpty
-              ? argumentData.data.personal.nickname
-              : nickname.value,
-          email: email.value.isEmpty
-              ? argumentData.data.personal.personalEmail
-              : email.value,
-          instagram: instagram.value.isEmpty
-              ? argumentData.data.personal.instagram
-              : instagram.value,
-          linkedIn: linkedIn.value.isEmpty
-              ? argumentData.data.personal.linkedin
-              : linkedIn.value,
-          maritalStatus: maritalStatus.value.isEmpty
-              ? argumentData.data.personal.maritalStatus.toString()
-              : maritalStatus.value,
-        ),
+      EmployeeParamsModel(
+        employeeId: id,
+        firstName: firstName.value.isEmpty
+            ? argumentData.data.personal.firstName
+            : firstName.value,
+        lastName: lastName.value.isEmpty
+            ? argumentData.data.personal.lastName
+            : lastName.value,
+        nickname: nickname.value.isEmpty
+            ? argumentData.data.personal.nickname
+            : nickname.value,
+        email: email.value.isEmpty
+            ? argumentData.data.personal.personalEmail
+            : email.value,
+        instagram: instagram.value.isEmpty
+            ? argumentData.data.personal.instagram
+            : instagram.value,
+        linkedIn: linkedIn.value.isEmpty
+            ? argumentData.data.personal.linkedin
+            : linkedIn.value,
+        maritalStatus: maritalStatus.value.isEmpty
+            ? argumentData.data.personal.maritalStatus.toString()
+            : maritalStatus.value,
+        birthPlace: argumentData.data.personal.birthplace,
+        birthDate:
+            DateFormat('dd-MM-y').format(argumentData.data.personal.birthdate),
+        gender: argumentData.data.personal.gender,
+        profilePicture: selectedImage.value!.path,
       ),
     );
+
     r.fold((l) {
       isLoading(false);
       AppUtils.logApp(l.toString());
@@ -173,5 +204,36 @@ class EditProfileController extends GetxController {
     maritalStatus.value = '';
     validatorButton();
     AppUtils.logApp(maritalStatus.value);
+  }
+
+  // Future<void> selectBirthDate(BuildContext context) async {
+  //   DateTime? d = await showDatePicker(
+  //     context: context,
+  //     initialDate:
+  //         selectedDate.value == 'Select date' ? DateTime.now() : selectDate,
+  //     firstDate: DateTime.now(),
+  //     lastDate: DateTime(2025),
+  //   );
+  //   if (d != null) {
+  //     selectedDate.value = DateFormat.yMMMd("en_US").format(d);
+  //     selectDate = d;
+  //     AppUtils.logApp('Selected Date: $selectDate');
+  //   }
+  // }
+
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+    if (pickedFile != null) {
+      selectedImage.value = File(pickedFile.path);
+      validatorButton();
+      AppUtils.logApp('Image selected: ${selectedImage.value}');
+    } else {
+      AppUtils.logApp('No image selected.');
+      validatorButton();
+    }
+  }
+
+  void clearImage() {
+    selectedImage.value = null;
   }
 }

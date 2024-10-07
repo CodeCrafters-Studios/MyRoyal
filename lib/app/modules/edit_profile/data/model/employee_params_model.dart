@@ -10,6 +10,10 @@ class EmployeeParamsModel extends EmployeeParams {
     required super.instagram,
     required super.linkedIn,
     required super.maritalStatus,
+    required super.birthPlace,
+    required super.birthDate,
+    required super.gender,
+    required super.profilePicture,
   });
 
   factory EmployeeParamsModel.fromJson(Map<String, dynamic> json) =>
@@ -22,6 +26,10 @@ class EmployeeParamsModel extends EmployeeParams {
         instagram: json["instagram"],
         linkedIn: json["linkedin"],
         maritalStatus: json["marital_status"],
+        birthPlace: json["birthplace"],
+        birthDate: json["date_of_birth"],
+        gender: json["gender"],
+        profilePicture: json["profile_picture"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -33,5 +41,9 @@ class EmployeeParamsModel extends EmployeeParams {
         "instagram": instagram,
         "linkedin": linkedIn,
         "marital_status": maritalStatus,
+        "birthplace": birthPlace,
+        "date_of_birth": birthDate,
+        "gender": gender,
+        "profile_picture": profilePicture,
       };
 }

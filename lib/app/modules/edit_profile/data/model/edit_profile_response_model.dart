@@ -11,12 +11,12 @@ class EditProfileResponseModel extends EditProfileResponse {
       EditProfileResponseModel(
         code: json["code"],
         message: json["message"],
-        data: List<dynamic>.from(json["data"].map((x) => x)),
+        data: Data.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "code": code,
         "message": message,
-        "data": List<dynamic>.from(data.map((x) => x)),
+        "data": data.toJson(),
       };
 }

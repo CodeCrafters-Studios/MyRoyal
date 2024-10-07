@@ -9,7 +9,7 @@ class EditProfileResponse extends Equatable {
 
   final int code;
   final String message;
-  final List<dynamic> data;
+  final Data data;
 
   @override
   List<Object?> get props => [
@@ -17,4 +17,20 @@ class EditProfileResponse extends Equatable {
         message,
         data,
       ];
+}
+
+class Data {
+  final int id;
+
+  Data({
+    required this.id,
+  });
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        id: json["id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+      };
 }

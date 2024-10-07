@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -38,6 +40,75 @@ class EditProfileView extends GetView<EditProfileController> {
                   style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400),
                 ),
                 30.verticalSpace,
+                Center(
+                  child: Stack(
+                    children: [
+                      Obx(() => CircleAvatar(
+                            backgroundColor: primary,
+                            radius: 40,
+                            backgroundImage:
+                                controller.userData.profilePicture.isNotEmpty
+                                    ? CachedNetworkImageProvider(
+                                        controller.argumentData.data.personal
+                                            .profilePicture,
+                                      )
+                                    : null,
+                            child: controller.selectedImage.value != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: Image.file(
+                                      controller.selectedImage.value!,
+                                      fit: BoxFit.cover,
+                                      width: 80.w,
+                                      height: 80.h,
+                                    ),
+                                  )
+                                : controller.userData.profilePicture.isEmpty
+                                    ? Text(
+                                        controller.userData.initialName,
+                                        style: TS.titleLarge,
+                                      )
+                                    : null,
+                          )),
+                      Positioned(
+                        left: 48.w,
+                        top: 48.h,
+                        child: CircleAvatar(
+                          backgroundColor: secondary,
+                          radius: 15,
+                          child: IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  scrollControlDisabledMaxHeightRatio: 0.2,
+                                  context: context,
+                                  builder: (_) {
+                                    return EPadding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: ListTile(
+                                        leading:
+                                            const Icon(Icons.photo_library),
+                                        title:
+                                            const Text('Choose from gallery'),
+                                        onTap: () {
+                                          controller
+                                              .pickImage(ImageSource.gallery);
+                                          Get.back();
+                                        },
+                                      ),
+                                    );
+                                  });
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 15,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                20.verticalSpace,
                 InputPrimary(
                   controller: controller.firstNameController,
                   label: 'First Name',
@@ -172,6 +243,7 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 50.verticalSpace,
                 ButtonPrimary(
+                  isLoading: controller.isLoading.value,
                   enable: controller.enableButton.value,
                   fullWidth: true,
                   margin: REdgeInsets.only(left: 16, bottom: 20, right: 16),

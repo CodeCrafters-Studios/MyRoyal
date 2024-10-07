@@ -10,6 +10,10 @@ class EmployeeParams extends Equatable {
     required this.instagram,
     required this.linkedIn,
     required this.maritalStatus,
+    required this.birthDate,
+    required this.birthPlace,
+    required this.gender,
+    required this.profilePicture,
   });
 
   final int employeeId;
@@ -20,15 +24,23 @@ class EmployeeParams extends Equatable {
   final String instagram;
   final String linkedIn;
   final String maritalStatus;
+  final String birthPlace;
+  final String birthDate;
+  final String gender;
+  final String profilePicture;
 
   @override
   List<Object?> get props => [
         firstName,
-        // lastName,
+        lastName,
         nickname,
         email,
         instagram,
         linkedIn,
         maritalStatus,
+        birthPlace,
+        birthDate,
+        gender,
+        profilePicture,
       ];
 }

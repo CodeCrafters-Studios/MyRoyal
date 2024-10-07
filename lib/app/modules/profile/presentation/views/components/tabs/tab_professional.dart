@@ -66,18 +66,6 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Email Address',
-              value: controller
-                      .profileData()
-                      .data
-                      .professional
-                      .workEmail
-                      .isNotEmpty
-                  ? controller.profileData().data.professional.workEmail
-                  : '-',
-              controller: controller,
-            ),
-            ProfileInformation(
               label: 'Position',
               value:
                   controller.profileData().data.professional.position.isNotEmpty

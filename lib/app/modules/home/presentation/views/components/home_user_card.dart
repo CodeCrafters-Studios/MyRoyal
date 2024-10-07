@@ -50,24 +50,16 @@ class HomeUserCard extends StatelessWidget {
           isAvatarPicture
               ? CircleAvatar(
                   backgroundColor: isImageAvailable ? null : secondary,
+                  backgroundImage: isImageAvailable
+                      ? CachedNetworkImageProvider(
+                          avatarPicture.isNotEmpty
+                              ? avatarPicture
+                              : 'https://via.placeholder.com/150',
+                        )
+                      : null,
                   radius: 30,
                   child: isImageAvailable
-                      ? ClipRRect(
-                          child: CachedNetworkImage(
-                            imageUrl: avatarPicture.isNotEmpty
-                                ? avatarPicture
-                                : 'https://via.placeholder.com/150', // Replace with your default image URL
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                              child: CircularProgressIndicator(
-                                value: downloadProgress.progress,
-                              ),
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        )
+                      ? emptyBox
                       : Text(
                           initial ?? '',
                           style: TS.titleLarge,

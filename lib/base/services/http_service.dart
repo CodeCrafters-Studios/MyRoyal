@@ -154,6 +154,7 @@ class HttpService extends getx.GetxService {
     Method method = Method.POST,
     Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
+    FormData? paramsImg,
     bool withToken = false,
     bool showPopUp = false,
   }) async {
@@ -227,7 +228,7 @@ class HttpService extends getx.GetxService {
       if (method == Method.POST) {
         response = await dio.post(
           newUrl,
-          data: params,
+          data: paramsImg ?? params,
         );
       } else if (method == Method.DELETE) {
         response = await dio.delete(newUrl);

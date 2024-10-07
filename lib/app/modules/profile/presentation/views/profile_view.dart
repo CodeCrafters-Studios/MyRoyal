@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,31 +22,37 @@ class ProfileView extends GetView<ProfileController> {
     return PageBase(
       showBackground: false,
       title: 'Profile',
-      actions: [
-        EPadding(
-          padding: const EdgeInsets.only(right: 10),
-          child: TextButton(
-            child: Text(
-              'Edit Profile',
-              style: TS.bodyMedium.copyWith(
-                color: secondary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            onPressed: () async {
-              await Get.toNamed(
-                Routes.EDIT_PROFILE,
-                arguments: [controller.profileData(), controller.id.value],
-              )?.then((value) {
-                if (value == true) {
-                  controller.refreshProfile();
-                }
-              });
-            },
-          ),
-        )
-      ],
+      actions: [_editProfile()],
       child: ProfileViewImpl(controller: controller),
+    );
+  }
+
+  Widget _editProfile() {
+    return EPadding(
+      padding: const EdgeInsets.only(right: 10),
+      child: TextButton(
+        child: Text(
+          'Edit Profile',
+          style: TS.bodyMedium.copyWith(
+            color: secondary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        onPressed: () async {
+          await Get.toNamed(
+            Routes.EDIT_PROFILE,
+            arguments: [
+              controller.profileData(),
+              controller.id.value,
+              controller.userData()
+            ],
+          )?.then((value) {
+            if (value == true) {
+              controller.refreshProfile();
+            }
+          });
+        },
+      ),
     );
   }
 }
@@ -61,12 +68,47 @@ class ProfileViewImpl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const AppbarSpacer(),
+        _buildProfilePicture(),
         _buildTabBar(),
         _buildTabBarView(),
       ],
+    );
+  }
+
+  Widget _buildProfilePicture() {
+    return Obx(
+      () => ListTile(
+        horizontalTitleGap: 5,
+        leading: CircleAvatar(
+          backgroundColor: primary,
+          radius: 35,
+          backgroundImage: controller.userData().profilePicture.isNotEmpty
+              ? CachedNetworkImageProvider(
+                  controller.profileData().data.personal.profilePicture,
+                )
+              : null,
+          child: controller.userData().profilePicture.isEmpty
+              ? Text(
+                  controller.userData().initialName,
+                  style: TS.titleLarge,
+                )
+              : null,
+        ),
+        title: Text(
+          controller.profileData().data.personal.fullName.isNotEmpty
+              ? controller.profileData().data.personal.fullName
+              : '',
+          style: TS.titleSmall,
+        ),
+        subtitle: Text(
+          controller.profileData().data.professional.workEmail.isNotEmpty
+              ? controller.profileData().data.professional.workEmail
+              : '',
+          style: TS.bodyMedium,
+        ),
+      ),
     );
   }
 

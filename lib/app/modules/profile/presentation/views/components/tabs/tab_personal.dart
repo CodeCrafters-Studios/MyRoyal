@@ -19,14 +19,6 @@ class TabPersonalView extends StatelessWidget {
           () => Column(
             children: [
               ProfileInformation(
-                label: 'Full Name',
-                value:
-                    controller.profileData().data.personal.fullName.isNotEmpty
-                        ? controller.profileData().data.personal.fullName
-                        : '',
-                controller: controller,
-              ),
-              ProfileInformation(
                 label: 'First Name',
                 value:
                     controller.profileData().data.personal.firstName.isNotEmpty

@@ -15,6 +15,7 @@ class PersonalModel extends Personal {
     super.personalEmail = '',
     super.instagram = '',
     super.linkedin = '',
+    super.profilePicture = '',
   }) : super(birthdate: birthdate ?? DateTime(0));
 
   factory PersonalModel.fromJson(Map<String, dynamic> json) => PersonalModel(
@@ -33,6 +34,7 @@ class PersonalModel extends Personal {
         personalEmail: json["personal_email"],
         instagram: json["instagram"],
         linkedin: json["linkedin"],
+        profilePicture: json["profile_picture"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +52,6 @@ class PersonalModel extends Personal {
         "personal_email": personalEmail,
         "instagram": instagram,
         "linkedin": linkedin,
+        "profile_picture": profilePicture,
       };
 }
