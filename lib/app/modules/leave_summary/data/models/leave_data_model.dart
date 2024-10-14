@@ -7,20 +7,19 @@ class LeaveDataModel extends LeaveDataEntity {
       {required super.yearlyLeaveCount, required super.dataLeave});
 
   factory LeaveDataModel.empty() => LeaveDataModel(
-      yearlyLeaveCount: YearLeaveCountModel.empty(),
-      dataLeave: DataLeaveModel.empty());
+        yearlyLeaveCount: YearLeaveCountModel.empty(),
+        dataLeave: const [],
+      );
 
   factory LeaveDataModel.fromJson(Map<String, dynamic> json) => LeaveDataModel(
-        yearlyLeaveCount: json["yearly_leave_count"] == null
-            ? null
-            : YearLeaveCountModel.fromJson(json["yearly_leave_count"]),
-        dataLeave: json["data_leave"] == null
-            ? null
-            : DataLeaveModel.fromJson(json["data_leave"]),
+        yearlyLeaveCount:
+            YearLeaveCountModel.fromJson(json["yearly_leave_count"]),
+        dataLeave: List<DataLeaveModel>.from(
+            json["data_leave"].map((x) => DataLeaveModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "yearly_leave_count": yearlyLeaveCount?.toJson(),
-        "data_leave": dataLeave?.toJson(),
+        "yearly_leave_count": yearlyLeaveCount!.toJson(),
+        "data_leave": List<dynamic>.from(dataLeave!.map((x) => x.toJson())),
       };
 }

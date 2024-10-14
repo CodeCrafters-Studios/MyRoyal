@@ -82,7 +82,7 @@ class HomeUserStatus extends GetView<HomeController> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
-                          width: 170.w,
+                          width: 160.w,
                           child: CardApp(
                             color: green,
                             outlineColor: black,
@@ -111,7 +111,7 @@ class HomeUserStatus extends GetView<HomeController> {
                           ),
                         ),
                         SizedBox(
-                          width: 170.w,
+                          width: 160.w,
                           child: CardApp(
                             color: secondary10,
                             outlineColor: black,

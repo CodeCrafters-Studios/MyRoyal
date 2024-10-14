@@ -4,13 +4,13 @@ import 'package:iroyal/app/modules/home/domain/repositories/home_repository.dart
 import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 
-class GetCacheUser implements UseCase<UserDataModel, NoParams> {
+class GetCacheUser implements UseCaseNoParams {
   GetCacheUser(this.homeRepository);
 
   final HomeRepository homeRepository;
 
   @override
-  Future<Either<Failure, UserDataModel>> call(NoParams params) {
+  Future<Either<Failure, UserDataModel>> call() {
     return homeRepository.getCacheUser();
   }
 }

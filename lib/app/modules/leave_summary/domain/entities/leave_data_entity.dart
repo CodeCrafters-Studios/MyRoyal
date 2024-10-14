@@ -7,7 +7,7 @@ class LeaveDataEntity extends Equatable {
       {required this.yearlyLeaveCount, required this.dataLeave});
 
   final YearLeaveCountModel? yearlyLeaveCount;
-  final DataLeaveModel? dataLeave;
+  final List<DataLeaveModel>? dataLeave;
 
   @override
   List<Object?> get props => [yearlyLeaveCount, dataLeave];

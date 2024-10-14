@@ -203,7 +203,7 @@ class HttpService extends getx.GetxService {
           newUrl,
         );
       } catch (e) {
-        //
+        AppUtils.logApp('ERROR ENCODE $e');
       }
     }
 

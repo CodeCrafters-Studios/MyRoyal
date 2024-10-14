@@ -3,13 +3,13 @@ import 'package:iroyal/app/modules/leave_summary/domain/repositories/leave_repos
 import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 
-class GetLeaveUsecase implements UseCaseNoParams {
-  GetLeaveUsecase(this.repository);
+class GetLeaveApprovalUsecase implements UseCaseNoParams {
+  GetLeaveApprovalUsecase(this.repository);
 
   final LeaveRepository repository;
 
   @override
   Future<Either<Failure, dynamic>> call() {
-    return repository.getLeave();
+    return repository.getLeaveApproval();
   }
 }

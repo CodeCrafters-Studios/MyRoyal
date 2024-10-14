@@ -10,7 +10,6 @@ import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
-import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
@@ -72,7 +71,7 @@ class ProfileController extends GetxController {
 
   Future<void> _getCacheUser() async {
     isLoading.value = true;
-    final r = await getCacheUser(NoParams());
+    final r = await getCacheUser();
     r.fold((l) {
       isLoading.value = false;
       AppUtils.logApp(l.toString());

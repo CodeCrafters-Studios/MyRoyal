@@ -52,7 +52,7 @@ class HomeUserInfo extends GetView<HomeController> {
                   isShadow: true,
                   shadows: Shadows.small,
                   padding: REdgeInsets.all(8),
-                  margin: REdgeInsets.fromLTRB(16, 10, 16, 15),
+                  margin: REdgeInsets.fromLTRB(12, 10, 12, 15),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

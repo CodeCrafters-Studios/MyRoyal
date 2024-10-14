@@ -7,6 +7,7 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 import '../controllers/settings_controller.dart';
@@ -74,17 +75,19 @@ class SettingsViewImpl extends StatelessWidget {
           },
         ),
         ItemMenuSettings(
-          assetSvg: 'assets/icons/ic_change_password.svg',
-          text: 'Change Password',
-          withTrailing: true,
-          onTap: () => Get.toNamed(Routes.CHANGE_PASSWORD),
-        ),
+            assetSvg: 'assets/icons/ic_change_password.svg',
+            text: 'Change Password',
+            withTrailing: true,
+            onTap: () => Get.to(() => const ComingSoonScreen())
+            // Get.toNamed(Routes.CHANGE_PASSWORD),
+            ),
         ItemMenuSettings(
-          assetSvg: 'assets/icons/ic_change_pin.svg',
-          text: 'Change PIN',
-          withTrailing: true,
-          onTap: () => Get.toNamed(Routes.CHANGE_PIN),
-        ),
+            assetSvg: 'assets/icons/ic_change_pin.svg',
+            text: 'Change PIN',
+            withTrailing: true,
+            onTap: () => Get.to(() => const ComingSoonScreen())
+            // Get.toNamed(Routes.CHANGE_PIN),
+            ),
       ],
     );
   }

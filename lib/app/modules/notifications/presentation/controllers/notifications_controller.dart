@@ -164,28 +164,35 @@ class NotificationsController extends GetxController {
       (r) {
         isLoading.value = false;
         AppUtils.logApp('Success');
+        _getNotifications();
         tapNotificationData.value = r;
         switch (tapNotificationData.value.data.route) {
           case 'My Teams':
             Get.toNamed(Routes.MY_TEAMS);
             break;
           case 'Webtel':
-            Get.toNamed(Routes.WEBTEL);
+            Get.offAndToNamed(Routes.WEBTEL);
             break;
           case 'Tracking Documents':
-            Get.toNamed(Routes.TRACKING_DOCUMENT);
+            Get.offAndToNamed(Routes.TRACKING_DOCUMENT);
+            break;
+          case 'Leave Summary':
+            Get.offAndToNamed(Routes.LEAVE_SUMMARY);
             break;
           case 'Tasks':
-            Get.toNamed(Routes.TASKS);
+            Get.offAndToNamed(Routes.TASKS);
             break;
           case 'Payroll':
-            Get.toNamed(Routes.PIN);
+            Get.offAndToNamed(Routes.PIN);
             break;
           case 'Dashboard':
-            Get.toNamed(Routes.DASHBOARD);
+            Get.offAndToNamed(Routes.DASHBOARD);
             break;
           case 'Visit':
-            Get.toNamed(Routes.VISIT);
+            Get.offAndToNamed(Routes.VISIT);
+            break;
+          case 'Bottom Navbar':
+            Get.offAllNamed(Routes.BOTTOMNAVBAR);
             break;
           default:
             null;

@@ -1,96 +1,104 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/data_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_data_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/entities.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/leave_approval_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
 class LeaveSummaryController extends GetxController {
-  LeaveSummaryController({required this.getLeaveUsecase});
-
-  List<LeaveRequestDummyData> listAllLeaveRequestDummy =
-      <LeaveRequestDummyData>[
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description:
-          'Lorem Ipsum dolor sit amet, consecture adipiscing elit. Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Approved',
-      iconStatus: 'assets/icons/ic_approved_summary.svg',
-      types: 'Sick',
-      statusColor: green,
-    ),
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Pending',
-      iconStatus: 'assets/icons/ic_pending_summary.svg',
-      types: 'Sick',
-      statusColor: Colors.orangeAccent,
-    ),
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Rejected',
-      iconStatus: 'assets/icons/ic_rejected_summar.svg',
-      types: 'Casual',
-      statusColor: Colors.red,
-    ),
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Approved',
-      iconStatus: 'assets/icons/ic_approved_summary.svg',
-      types: 'Sick',
-      statusColor: green,
-    ),
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description:
-          'Lorem Ipsum dolor sit amet, consecture adipiscing elit.Lorem Ipsum dolor sit amet, consecture adipiscing elit.Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Pending',
-      types: 'Sick',
-      iconStatus: 'assets/icons/ic_pending_summary.svg',
-      statusColor: Colors.orangeAccent,
-    ),
-    LeaveRequestDummyData(
-      date: '17, May 2024',
-      description: 'Lorem Ipsum dolor sit amet, consecture adipiscing elit.',
-      status: 'Rejected',
-      types: 'Casual',
-      iconStatus: 'assets/icons/ic_rejected_summar.svg',
-      statusColor: Colors.red,
-    ),
-  ];
-
-  List<LeaveRequestDummyData> listCasualDummy = <LeaveRequestDummyData>[];
-  List<LeaveRequestDummyData> listSickDummy = <LeaveRequestDummyData>[];
+  LeaveSummaryController({
+    required this.getLeaveUsecase,
+    required this.getSubtituteEmployeeUsecase,
+    required this.createFormLeaveUsecase,
+    required this.cancelFormLeaveUsecase,
+    required this.getLeaveApprovalUsecase,
+    required this.getCacheUser,
+  });
 
   late final TabController tabController;
+  TextEditingController search = TextEditingController();
+
+  final config = CalendarDatePicker2Config(
+    firstDate: DateTime.now().add(const Duration(days: 3)),
+    dayModeScrollDirection: Axis.horizontal,
+    calendarType: CalendarDatePicker2Type.multi,
+    selectedDayHighlightColor: Colors.indigo,
+    dayTextStyle: TS.bodySmall,
+    monthTextStyle: TS.bodySmall,
+    yearTextStyle: TS.bodySmall,
+    nextMonthIcon: const Icon(
+      size: 15,
+      Icons.arrow_forward_ios_rounded,
+      color: primary,
+    ),
+    lastMonthIcon: const Icon(
+      size: 15,
+      Icons.arrow_back_ios_new_rounded,
+      color: primary,
+    ),
+    selectedYearTextStyle: TS.bodyLarge,
+  );
 
   RxBool isCasual = false.obs;
   RxBool isSick = false.obs;
   RxBool isLoading = false.obs;
 
   RxString selectedStartDate = 'Select date'.obs;
-  RxString selectedEndDate = 'Select date'.obs;
+  RxString selectedSubtituteEmployee = ''.obs;
+  RxString reason = ''.obs;
+  RxString valueListener = ''.obs;
 
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  RxInt selectedSubtituteEmployeeId = 0.obs;
 
-  Rx<LeaveModel> leaveModeRes =
+  Rx<LeaveModel> leaveModelRes =
       LeaveModel(code: 0, message: '', data: LeaveDataModel.empty()).obs;
+  Rx<CreateFormLeaveEntity> createFormRes =
+      const CreateFormLeaveEntity(id: 0, codeNo: '').obs;
+  Rx<CancelFormLeaveEntity> cancelFormRes =
+      const CancelFormLeaveEntity(id: 0, codeNo: '').obs;
+  final Rx<UserDataModel> userData = UserDataModel.empty().obs;
+
+  RxList<DataLeaveModel> yearlyLeaveModelRes = <DataLeaveModel>[].obs;
+  RxList<DataLeaveModel> filterData = <DataLeaveModel>[].obs;
+  RxList<Employee> subtituteEmployeeListRes = <Employee>[].obs;
+  RxList<DateTime> multiDatePickerValueWithDefaultValue = <DateTime>[].obs;
+  RxList<LeaveApprovalEntity> listLeaveApprovalRes =
+      <LeaveApprovalEntity>[].obs;
+  RxList<LeaveApprovalEntity> filterApprovalData = <LeaveApprovalEntity>[].obs;
 
   final GetLeaveUsecase getLeaveUsecase;
+  final GetSubtituteEmployeeUsecase getSubtituteEmployeeUsecase;
+  final CreateFormLeaveUsecase createFormLeaveUsecase;
+  final CancelFormLeaveUsecase cancelFormLeaveUsecase;
+  final GetLeaveApprovalUsecase getLeaveApprovalUsecase;
+  final GetCacheUser getCacheUser;
 
   @override
-  void onInit() {
-    tabController = TabController(length: 3, vsync: TicckerProvider());
-    filterTypesLeaveRequest();
+  void onInit() async {
+    tabController = TabController(length: 2, vsync: TicckerProvider());
+    await _getCacheUser();
     _getLeaveSummary();
+    _getLeaveApprovalSummary();
+    _getSubtituteEmployees();
     super.onInit();
   }
 
@@ -110,57 +118,17 @@ class LeaveSummaryController extends GetxController {
     isCasual.value = false;
   }
 
-  Future<void> selectStartDate(BuildContext context) async {
-    DateTime? d = await showDatePicker(
-      context: context,
-      initialDate:
-          selectedStartDate.value == 'Select date' ? DateTime.now() : startDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2025),
-    );
-    if (d != null) {
-      selectedStartDate.value = DateFormat.yMMMd("en_US").format(d);
-      startDate = d;
-      if (selectedEndDate.value != 'Select date' &&
-          startDate.isAfter(endDate)) {
-        selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
-        endDate = d;
-      }
-      AppUtils.logApp('Selected start date: $startDate');
-    }
-  }
-
-  Future<void> selectEndDate(BuildContext context) async {
-    DateTime? d = await showDatePicker(
-      context: context,
-      initialDate: startDate,
-      firstDate: startDate,
-      lastDate: DateTime(2025),
-    );
-    if (d != null) {
-      selectedEndDate.value = DateFormat.yMMMd("en_US").format(d);
-      endDate = d;
-      AppUtils.logApp('Selected end date: $endDate');
-    }
-  }
-
-  void filterTypesLeaveRequest() {
-    // Clear the existing lists
-    listSickDummy.clear();
-    listCasualDummy.clear();
-
-    // Iterate over the listAllLeaveRequestDummy and add items to respective lists
-    for (var element in listAllLeaveRequestDummy) {
-      if (element.types == 'Sick') {
-        listSickDummy.add(element);
-      } else if (element.types == 'Casual') {
-        listCasualDummy.add(element);
-      }
-    }
-
-    // Log the lengths of the lists for verification
-    AppUtils.logApp('Sick Leaves Count: ${listSickDummy.length}');
-    AppUtils.logApp('Casual Leaves Count: ${listCasualDummy.length}');
+  Future<void> _getCacheUser() async {
+    isLoading.value = true;
+    final r = await getCacheUser();
+    r.fold((l) {
+      isLoading.value = false;
+      AppUtils.logApp(l.toString());
+    }, (r) {
+      isLoading.value = false;
+      AppUtils.logApp('RESPONSE CACHE USER :::: $r');
+      userData.value = r;
+    });
   }
 
   Future<void> _getLeaveSummary() async {
@@ -173,7 +141,187 @@ class LeaveSummaryController extends GetxController {
       AppUtils.logApp(l.toString());
     }, (r) {
       isLoading.value = false;
-      leaveModeRes.value = r;
+      leaveModelRes.value = r;
+      yearlyLeaveModelRes.value = leaveModelRes().data!.dataLeave!;
+      filterData.value = yearlyLeaveModelRes;
+    });
+  }
+
+  Future<void> _getLeaveApprovalSummary() async {
+    isLoading.value = true;
+
+    final r = await getLeaveApprovalUsecase();
+
+    r.fold((l) {
+      isLoading.value = false;
+      AppUtils.logApp(l.toString());
+    }, (r) {
+      isLoading.value = false;
+      listLeaveApprovalRes.value = r;
+      filterApprovalData.value = listLeaveApprovalRes;
+    });
+  }
+
+  Future<void> _getSubtituteEmployees() async {
+    isLoading.value = true;
+
+    final r = await getSubtituteEmployeeUsecase();
+
+    r.fold((l) {
+      isLoading.value = false;
+      AppUtils.logApp(l.toString());
+    }, (r) {
+      isLoading.value = false;
+      subtituteEmployeeListRes.value = r.employees;
+      AppUtils.logApp('$subtituteEmployeeListRes');
+    });
+  }
+
+  void setSubtituteEmployee(String value, int id) {
+    selectedSubtituteEmployee.value = value;
+    selectedSubtituteEmployeeId.value = id;
+  }
+
+  void clearSubtituteEmployee() {
+    selectedSubtituteEmployee.value = '';
+  }
+
+  Future<void> createFormLeave() async {
+    AppUtils.logApp(selectedSubtituteEmployee.value);
+    AppUtils.logApp(selectedSubtituteEmployeeId.value.toString());
+    AppUtils.logApp(reason.value);
+
+    final List<DateTime> dataLeaveList = multiDatePickerValueWithDefaultValue;
+
+    final List<String> formattedDates =
+        dataLeaveList.map((date) => date.toIso8601String()).toList();
+
+    AppUtils.logApp('$formattedDates');
+
+    isLoading.value = true;
+
+    final r = await createFormLeaveUsecase(
+      CreateFormLeaveParamsEntity(
+        dateLeave: formattedDates,
+        reason: reason.value,
+        substituteId: selectedSubtituteEmployeeId.value,
+      ),
+    );
+
+    r.fold((l) {
+      isLoading(false);
+      final m = l.properties[0] as ApiException;
+      AppUtils.logApp('${m.message}');
+    }, (r) {
+      isLoading(false);
+      createFormRes.value = r;
+      multiDatePickerValueWithDefaultValue.value = [];
+      selectedSubtituteEmployee.value = '';
+      selectedSubtituteEmployeeId.value = 0;
+      reason.value = '';
+      Get.back();
+      AppDialogImpl()
+          .showSuccessSnackBar(description: 'Success Create Form Leave');
+      _getLeaveSummary();
+    });
+  }
+
+  Future<void> cancelFormLeave(String codeNo) async {
+    isLoading.value = true;
+
+    final r = await cancelFormLeaveUsecase(CancelFormLeaveParamsEntity(
+        type: 'canceled', level: 0, codeNo: codeNo));
+
+    r.fold((l) {
+      Get.back();
+      isLoading(false);
+      final m = l.properties[0] as ApiException;
+      AppDialogImpl().showErrorDialog(description: m.message);
+    }, (r) {
+      Get.back();
+      isLoading(false);
+      _getLeaveSummary();
+      cancelFormRes.value = r;
+      AppDialogImpl().showSuccessSnackBar(description: 'Form Leave Canceled');
+    });
+  }
+
+  void onChanged(String value) {
+    valueListener.value = value;
+    _filterData(value, yearlyLeaveModelRes, filterData);
+    _filterApprovalData(value, listLeaveApprovalRes, filterApprovalData);
+  }
+
+  void clear() {
+    search.clear();
+    valueListener.value = '';
+  }
+
+  void _filterData(String value, RxList<DataLeaveModel> data,
+      RxList<DataLeaveModel> filterData) {
+    if (value.isEmpty) {
+      filterData.value = data;
+      AppUtils.logApp('${filterData.length}');
+    } else {
+      filterData.value = data
+          .where((e) =>
+              e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
+              e.periode.start
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.periode.end
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.status.toString().toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterData.length}');
+    }
+  }
+
+  void _filterApprovalData(String value, RxList<LeaveApprovalEntity> data,
+      RxList<LeaveApprovalEntity> filterApprovalData) {
+    if (value.isEmpty) {
+      filterApprovalData.value = data;
+      AppUtils.logApp('${filterApprovalData.length}');
+    } else {
+      filterApprovalData.value = data
+          .where((e) =>
+              e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
+              e.periode.start
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.periode.end
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.status.toString().toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterApprovalData.length}');
+    }
+  }
+
+  Future<void> actionFormLeave(String codeNo, String type) async {
+    isLoading.value = true;
+
+    final r = await cancelFormLeaveUsecase(
+      CancelFormLeaveParamsEntity(type: type, level: 0, codeNo: codeNo),
+    );
+
+    r.fold((l) {
+      Get.back();
+      isLoading(false);
+      final m = l.properties[0] as ApiException;
+      AppDialogImpl().showErrorDialog(description: m.message);
+    }, (r) {
+      Get.back();
+      isLoading(false);
+      _getLeaveApprovalSummary();
+      cancelFormRes.value = r;
+      AppDialogImpl().showSuccessSnackBar(
+          description: 'Form Leave ${type.capitalizeFirst}');
     });
   }
 }

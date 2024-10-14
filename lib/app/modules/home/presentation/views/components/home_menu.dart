@@ -19,8 +19,20 @@ class HomeMenu extends StatelessWidget {
     return InkWellTap(
       onTap: () {
         switch (menu.name) {
-          case 'My Teams':
-            Get.toNamed(Routes.MY_TEAMS);
+          case 'Dashboard':
+            Get.toNamed(Routes.DASHBOARD);
+            break;
+          case 'Tasks':
+            Get.to(() => const ComingSoonScreen());
+            // Get.toNamed(Routes.TASKS);
+            break;
+          case 'Payroll':
+            Get.to(() => const ComingSoonScreen());
+            // Get.toNamed(Routes.PIN);
+            break;
+          case 'Visit':
+            Get.to(() => const ComingSoonScreen());
+            // Get.toNamed(Routes.VISIT);
             break;
           case 'Webtel':
             Get.toNamed(Routes.WEBTEL);
@@ -28,17 +40,8 @@ class HomeMenu extends StatelessWidget {
           case 'Tracking Documents':
             Get.toNamed(Routes.TRACKING_DOCUMENT);
             break;
-          case 'Tasks':
-            Get.toNamed(Routes.TASKS);
-            break;
-          case 'Payroll':
-            Get.toNamed(Routes.PIN);
-            break;
-          case 'Dashboard':
-            Get.toNamed(Routes.DASHBOARD);
-            break;
-          case 'Visit':
-            Get.toNamed(Routes.VISIT);
+          case 'My Teams':
+            Get.toNamed(Routes.MY_TEAMS);
             break;
           default:
             Get.to(() => const ComingSoonScreen());

@@ -72,7 +72,7 @@ class HomeUserCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TS.labelLarge.copyWith(
+                  style: TS.labelMedium.copyWith(
                     color: textColor ?? white,
                   ),
                 ),

@@ -1,11 +1,14 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
+import 'package:iroyal/base/widgets/dropdown/dropdown_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
@@ -28,11 +31,11 @@ class ApplyLeaveView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const AppbarSpacer(),
-              _buildLabel('Type of leave'),
-              5.verticalSpace,
-              _buildLeaveTypeButtons(),
+              _buildLabel('Select Subtitute Employee'),
+              10.verticalSpace,
+              _buildSubtituteEmployeeDropdown(),
               20.verticalSpace,
-              _buildDateSelection(context),
+              _buildMultiDateSelection(context),
               20.verticalSpace,
               _buildLabel('Reason for Leave'),
               5.verticalSpace,
@@ -43,12 +46,15 @@ class ApplyLeaveView extends StatelessWidget {
                 outlineColor: primary,
                 key: const Key('inputTaskDesc'),
                 hint: 'Type here..',
-                onChanged: (value) {},
+                hintStyle: TS.bodySmall.copyWith(color: greyHint),
+                onChanged: (value) {
+                  controller.reason.value = value;
+                },
                 validation: (value) =>
                     value?.isEmpty ?? false ? 'Cannot be empty' : null,
               ),
               const Spacer(),
-              _buildApplyButton(context),
+              _buildApplyButton(),
             ],
           ),
         ),
@@ -78,102 +84,99 @@ class ApplyLeaveView extends StatelessWidget {
     );
   }
 
-  Widget _buildLeaveTypeButtons() {
-    return SizedBox(
-      width: Get.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildLeaveTypeButton(
-            'Casual',
-            controller.isCasual.value,
-            controller.selectCasualType,
-            horizontalPadding: 50,
+  Widget _buildSubtituteEmployeeDropdown() {
+    return DropDownPrimary(
+      label: '',
+      hintText: 'Please choose subtitute employee',
+      hintTextStyle: TS.bodySmall.copyWith(color: greyHint),
+      borderColor: primary,
+      items: controller
+          .subtituteEmployeeListRes()
+          .map<DropdownMenuItem<String>>((Employee value) {
+        return DropdownMenuItem<String>(
+          alignment: Alignment.centerLeft,
+          value: value.fullName,
+          child: Text(
+            '${value.fullName} - ${value.employeeNumber}',
+            style: TS.bodySmall,
+            overflow: TextOverflow.ellipsis,
           ),
-          _buildLeaveTypeButton(
-            'Sick',
-            controller.isSick.value,
-            controller.selectSickType,
-            horizontalPadding: 55,
-          ),
-        ],
-      ),
+        );
+      }).toList(),
+      icon: controller.selectedSubtituteEmployee.value.isNotEmpty
+          ? IconButton(
+              onPressed: controller.clearSubtituteEmployee,
+              icon: Icon(
+                Icons.close,
+                size: 20.r,
+              ),
+            )
+          : const Icon(Icons.arrow_drop_down),
+      value: controller.selectedSubtituteEmployee.value.isEmpty
+          ? null
+          : controller.selectedSubtituteEmployee.value,
+      onChanged: (value) {
+        final selectedSubtituteEmployeeId =
+            controller.subtituteEmployeeListRes.firstWhere(
+          (employee) => employee.fullName == value,
+        );
+
+        controller.setSubtituteEmployee(
+          value!,
+          selectedSubtituteEmployeeId.employeeId,
+        );
+      },
     );
   }
 
-  Widget _buildLeaveTypeButton(
-    String text,
-    bool isSelected,
-    VoidCallback onPressed, {
-    double? horizontalPadding,
-  }) {
-    return ButtonPrimary(
-      margin: REdgeInsets.only(top: 5),
-      padding: REdgeInsets.symmetric(
-          horizontal: horizontalPadding ?? 0, vertical: 8),
-      color: isSelected ? primary : white,
-      borderSide: const BorderSide(color: primary),
-      fullWidth: false,
-      onPressed: onPressed,
-      child: Center(
-        child: Text(
-          text,
-          style: TS.bodyMedium.copyWith(
-            color: isSelected ? white : primary,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDateSelection(BuildContext context) {
+  Widget _buildMultiDateSelection(BuildContext context) {
     return SizedBox(
       width: Get.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildDateButton(
-            'Start Date',
-            controller.selectedStartDate.value,
-            () => controller.selectStartDate(context),
-            horizontalPadding: 18,
+      child: _buildDateButton(
+          'Select Date',
+          controller.multiDatePickerValueWithDefaultValue.isEmpty
+              ? 'Select Date'
+              : _getValueText(
+                  controller.config.calendarType,
+                  controller.multiDatePickerValueWithDefaultValue,
+                ),
+          () => showModalBottomSheet(
+              context: context,
+              builder: (_) {
+                return ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 0.8 * Get.height),
+                    child: _buildMultiDatePickerWithValue());
+              })
+          // controller.selectStartDate(context),
           ),
-          _buildDateButton(
-            'End Date',
-            controller.selectedEndDate.value,
-            () => controller.selectEndDate(context),
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildDateButton(
     String label,
     String selectedDate,
-    VoidCallback onPressed, {
-    double? horizontalPadding,
-  }) {
+    VoidCallback onTap,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildLabel(label),
         3.verticalSpace,
-        ButtonPrimary(
-          margin: REdgeInsets.only(top: 5),
-          padding: REdgeInsets.symmetric(
-            horizontal: horizontalPadding ?? 15,
-            vertical: 5,
-          ),
-          color: white,
-          borderSide: const BorderSide(color: primary),
-          fullWidth: false,
-          onPressed: onPressed,
-          suffixIcon: const Icon(Icons.calendar_today, color: primary),
-          child: Text(
-            selectedDate,
-            style: TS.bodyMedium.copyWith(
-              color: primary,
+        InkWell(
+          onTap: onTap,
+          child: Container(
+            width: Get.width,
+            padding: REdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: primary)),
+            child: Text(
+              selectedDate,
+              style: TS.bodySmall.copyWith(
+                color: controller.multiDatePickerValueWithDefaultValue.isEmpty
+                    ? greyHint
+                    : black,
+              ),
             ),
           ),
         ),
@@ -181,81 +184,89 @@ class ApplyLeaveView extends StatelessWidget {
     );
   }
 
-  Widget _buildApplyButton(BuildContext context) {
-    return ButtonPrimary(
-      fullWidth: true,
-      margin: REdgeInsets.symmetric(vertical: 20),
-      text: 'Apply',
-      onPressed: () {
-        showModalBottomSheet(
-          enableDrag: false,
-          isDismissible: false,
-          context: context,
-          builder: (context) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25.r),
-                  topRight: Radius.circular(25.r),
-                ),
-                color: white,
-              ),
-              height: 500.h,
-              width: Get.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  10.verticalSpace,
-                  Center(
-                    child: Container(
-                      width: 80.w,
-                      height: 5.h,
-                      decoration: BoxDecoration(
-                          color: grey,
-                          borderRadius: BorderRadius.circular(40.r)),
-                    ),
-                  ),
-                  20.verticalSpace,
-                  EPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Text(
-                      'Request Pending',
-                      style: TS.titleMedium,
-                    ),
-                  ),
-                  40.verticalSpace,
-                  Center(
-                    child: Container(
-                      height: 150.h,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: Image.asset(
-                        'assets/images/img_bg_request_pending.png',
-                      ),
-                    ),
-                  ),
-                  40.verticalSpace,
-                  EPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    child: Text(
-                      'Your request has been received and we will let you know as soon as possible.',
-                      style: TS.bodyMedium.copyWith(color: greyText),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  50.verticalSpace,
-                  ButtonPrimary(
-                    fullWidth: true,
-                    margin: REdgeInsets.symmetric(horizontal: 14),
-                    text: 'Continue',
-                    onPressed: () => Get.back(),
-                  )
-                ],
-              ),
-            );
-          },
-        );
-      },
+  Widget _buildApplyButton() {
+    return Obx(
+      () => ButtonPrimary(
+        isLoading: controller.isLoading.value,
+        fullWidth: true,
+        margin: REdgeInsets.symmetric(vertical: 20),
+        text: 'Apply',
+        onPressed: controller.createFormLeave,
+      ),
     );
+  }
+
+  Widget _buildMultiDatePickerWithValue() {
+    return Container(
+      padding: REdgeInsets.only(left: 5, top: 10, right: 5),
+      height: 500.h,
+      width: Get.width,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Center(
+            child: Container(
+              width: 80.w,
+              height: 5.h,
+              decoration: BoxDecoration(
+                  color: grey, borderRadius: BorderRadius.circular(40.r)),
+            ),
+          ),
+          20.verticalSpace,
+          Container(
+            margin: REdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                border: Border.all(color: primary),
+                borderRadius: BorderRadius.circular(8)),
+            child: CalendarDatePicker2(
+              config: controller.config,
+              value: controller.multiDatePickerValueWithDefaultValue,
+              onValueChanged: (dates) =>
+                  controller.multiDatePickerValueWithDefaultValue.value = dates,
+            ),
+          ),
+          const Spacer(),
+          ButtonPrimary(
+            fullWidth: true,
+            margin: REdgeInsets.fromLTRB(14, 0, 14, 20),
+            text: 'Done',
+            textColor: white,
+            onPressed: () => Get.back(),
+            color: primary,
+          )
+        ],
+      ),
+    );
+  }
+
+  String _getValueText(
+    CalendarDatePicker2Type datePickerType,
+    List<DateTime?> values,
+  ) {
+    values =
+        values.map((e) => e != null ? DateUtils.dateOnly(e) : null).toList();
+    var valueText = (values.isNotEmpty ? values[0] : null)
+        .toString()
+        .replaceAll('00:00:00.000', '');
+
+    if (datePickerType == CalendarDatePicker2Type.multi) {
+      valueText = values.isNotEmpty
+          ? values
+              .map((v) => v.toString().replaceAll('00:00:00.000', ''))
+              .join(', ')
+          : 'null';
+    } else if (datePickerType == CalendarDatePicker2Type.range) {
+      if (values.isNotEmpty) {
+        final startDate = values[0].toString().replaceAll('00:00:00.000', '');
+        final endDate = values.length > 1
+            ? values[1].toString().replaceAll('00:00:00.000', '')
+            : 'null';
+        valueText = '$startDate to $endDate';
+      } else {
+        return 'null';
+      }
+    }
+
+    return valueText;
   }
 }

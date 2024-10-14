@@ -54,22 +54,40 @@ class DashboardView extends GetView<DashboardController> {
             alignment: Alignment.topLeft,
             child: ShimmerText(width: 150.w),
           ),
-          // 20.verticalSpace,
-          // _buildContainer('', '', 500.w, 250.h),
           20.verticalSpace,
           Align(
             alignment: Alignment.topLeft,
             child: ShimmerText(width: 180.w),
           ),
           20.verticalSpace,
-          // Column(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     _buildContainer('Average Age', '0', 175, 80),
-          //     20.verticalSpace,
-          //     _buildContainer('', '', 500.w, 250.h),
-          //   ],
-          // ),
+          _buildAttendanceGrid(),
+          25.verticalSpace,
+          PieChart(
+            chartRadius: 150.r,
+            centerWidget: Text(
+              controller.remainingLeave.toString(),
+              style: TS.headlineLarge,
+            ),
+            legendOptions: LegendOptions(
+              legendTextStyle: TS.bodyLarge,
+              legendPosition: LegendPosition.bottom,
+              showLegendsInRow: true,
+            ),
+            dataMap: const {"balance": 0.0, "used": 0.0},
+            chartType: ChartType.ring,
+            baseChartColor: black.withOpacity(0.15),
+            colorList: controller.colorList,
+            chartValuesOptions: ChartValuesOptions(
+              showChartValuesInPercentage: false,
+              decimalPlaces: 0,
+              showChartValuesOutside: true,
+              showChartValueBackground: false,
+              chartValueStyle: TS.titleMedium.copyWith(color: black),
+            ),
+            totalValue: controller.remainingLeave.value.toDouble(),
+          ),
+          25.verticalSpace,
+          _buildTaskComplianceRatio(),
         ],
       ),
     );
@@ -175,6 +193,53 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
+  Widget _buildTaskComplianceRatio() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Task Compliance Ratio', style: TS.titleMedium),
+        // 20.verticalSpace,
+        // Align(
+        //   alignment: Alignment.center,
+        //   child: _buildContainer(
+        //     'Immediate Action\nRequired Task',
+        //     '20',
+        //     175,
+        //     114,
+        //   ),
+        // ),
+        5.verticalSpace,
+        Column(
+          children: [
+            SizedBox(
+              height: 200.r,
+              child: CustomizePieChart(
+                sections: controller.showingSectionsData(),
+              ),
+            ),
+            15.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Indicator(
+                  color: Colors.blue,
+                  text: 'Task 1',
+                  isSquare: true,
+                ),
+                12.horizontalSpace,
+                const Indicator(
+                  color: Colors.green,
+                  text: 'Task 2',
+                  isSquare: true,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   // Widget _buildMyTeamsSection() {
   //   return Column(
   //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,53 +298,6 @@ class DashboardView extends GetView<DashboardController> {
   //     ),
   //   );
   // }
-
-  Widget _buildTaskComplianceRatio() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Task Compliance Ratio', style: TS.titleMedium),
-        // 20.verticalSpace,
-        // Align(
-        //   alignment: Alignment.center,
-        //   child: _buildContainer(
-        //     'Immediate Action\nRequired Task',
-        //     '20',
-        //     175,
-        //     114,
-        //   ),
-        // ),
-        5.verticalSpace,
-        Column(
-          children: [
-            SizedBox(
-              height: 200.r,
-              child: CustomizePieChart(
-                sections: controller.showingSectionsData(),
-              ),
-            ),
-            15.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Indicator(
-                  color: Colors.blue,
-                  text: 'Task 1',
-                  isSquare: true,
-                ),
-                12.horizontalSpace,
-                const Indicator(
-                  color: Colors.green,
-                  text: 'Task 2',
-                  isSquare: true,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
   // Widget _buildGenderRatio() {
   //   return Column(

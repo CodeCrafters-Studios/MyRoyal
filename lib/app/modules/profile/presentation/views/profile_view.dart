@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
 import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
@@ -11,6 +13,7 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../controllers/profile_controller.dart';
 
@@ -79,37 +82,57 @@ class ProfileViewImpl extends StatelessWidget {
 
   Widget _buildProfilePicture() {
     return Obx(
-      () => ListTile(
-        horizontalTitleGap: 5,
-        leading: CircleAvatar(
-          backgroundColor: primary,
-          radius: 35,
-          backgroundImage: controller.userData().profilePicture.isNotEmpty
-              ? CachedNetworkImageProvider(
-                  controller.profileData().data.personal.profilePicture,
-                )
-              : null,
-          child: controller.userData().profilePicture.isEmpty
-              ? Text(
-                  controller.userData().initialName,
-                  style: TS.titleLarge,
-                )
-              : null,
-        ),
-        title: Text(
-          controller.profileData().data.personal.fullName.isNotEmpty
-              ? controller.profileData().data.personal.fullName
-              : '',
-          style: TS.titleSmall,
-        ),
-        subtitle: Text(
-          controller.profileData().data.professional.workEmail.isNotEmpty
-              ? controller.profileData().data.professional.workEmail
-              : '',
-          style: TS.bodyMedium,
-        ),
+      () => controller.isLoading.value
+          ? _loadingShimmerProfilePicture()
+          : _loadedProfilePicture(),
+    );
+  }
+
+  Widget _loadedProfilePicture() {
+    return ListTile(
+      horizontalTitleGap: 5,
+      leading: CircleAvatar(
+        backgroundColor: primary,
+        radius: 35,
+        backgroundImage: controller.userData().profilePicture.isNotEmpty
+            ? CachedNetworkImageProvider(
+                controller.profileData().data.personal.profilePicture,
+              )
+            : null,
+        child: controller.userData().profilePicture.isEmpty
+            ? Text(
+                controller.userData().initialName,
+                style: TS.titleLarge,
+              )
+            : null,
+      ),
+      title: Text(
+        controller.profileData().data.personal.fullName.isNotEmpty
+            ? controller.profileData().data.personal.fullName
+            : '',
+        style: TS.titleSmall,
+      ),
+      subtitle: Text(
+        controller.profileData().data.professional.workEmail.isNotEmpty
+            ? controller.profileData().data.professional.workEmail
+            : '',
+        style: TS.bodyMedium,
       ),
     );
+  }
+
+  Widget _loadingShimmerProfilePicture() {
+    return ListTile(
+        horizontalTitleGap: 5,
+        leading: Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: const CircleAvatar(
+            radius: 35,
+          ),
+        ),
+        title: ShimmerText(width: 100.w),
+        subtitle: ShimmerText(width: 100.w));
   }
 
   Widget _buildTabBar() {

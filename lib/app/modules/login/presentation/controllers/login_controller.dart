@@ -130,8 +130,8 @@ class LoginController extends GetxController {
     final r = await getLoginParams(
       ParamsLogin(
           grantType: 'password',
-          clientId: '9cc6d49b-8065-429c-bdb8-4229011a4e48',
-          clientSecret: 'EY8LBVvA7frgeHQQrdJLaRXR3v7e4Lp43KOfzI5a',
+          clientId: '9d257196-4a49-413a-9b3d-1ab5f14c8b64',
+          clientSecret: 'cUL9sZA4Oz6Ufvv1myO0c0brsoFs3nzSNGpJSVgE',
           username: username(),
           password: password(),
           scope: '*',

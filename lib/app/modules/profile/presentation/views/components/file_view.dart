@@ -41,7 +41,10 @@ class FileView extends StatelessWidget {
           style: TS.titleSmall,
         ),
       ),
-      body: WebViewWidget(controller: controllerWebView),
+      body: InteractiveViewer(
+          maxScale: 5.0,
+          minScale: 0.01,
+          child: WebViewWidget(controller: controllerWebView)),
     );
   }
 }

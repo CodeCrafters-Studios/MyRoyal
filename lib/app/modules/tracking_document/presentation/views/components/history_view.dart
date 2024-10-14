@@ -162,10 +162,10 @@ class HistoryView extends StatelessWidget {
   }
 
   Widget _buildLastApprovalInfo(dynamic doc) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Last Approval By:', style: TS.bodySmall.copyWith(color: black)),
-        5.horizontalSpace,
         SearchHighlightText(
           doc.lastApprovalBy,
           style: TS.bodySmall.copyWith(color: black),

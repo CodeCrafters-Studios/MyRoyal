@@ -19,42 +19,64 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
   @override
   Future<bool> editProfile(EmployeeParamsModel editProfileParams) async {
     try {
-      var formData = FormData.fromMap({
-        "employee_id": editProfileParams.employeeId,
-        "first_name": editProfileParams.firstName,
-        "last_name": editProfileParams.lastName,
-        "nickname": editProfileParams.nickname,
-        "personal_email": editProfileParams.email,
-        "instagram": editProfileParams.instagram,
-        "linkedin": editProfileParams.linkedIn,
-        "marital_status": editProfileParams.maritalStatus,
-        "birthplace": editProfileParams.birthPlace,
-        "date_of_birth": editProfileParams.birthDate,
-        "gender": editProfileParams.gender,
-        "profile_picture": await MultipartFile.fromFile(
-          editProfileParams.profilePicture,
-          contentType: MediaType("image", "jpeg"),
-        ),
-      });
+      if (editProfileParams.profilePicture.isNotEmpty) {
+        var formData = FormData.fromMap({
+          "employee_id": editProfileParams.employeeId,
+          "first_name": editProfileParams.firstName,
+          "last_name": editProfileParams.lastName,
+          "nickname": editProfileParams.nickname,
+          "personal_email": editProfileParams.email,
+          "instagram": editProfileParams.instagram,
+          "linkedin": editProfileParams.linkedIn,
+          "marital_status": editProfileParams.maritalStatus,
+          "birthplace": editProfileParams.birthPlace,
+          "date_of_birth": editProfileParams.birthDate,
+          "gender": editProfileParams.gender,
+          "profile_picture": await MultipartFile.fromFile(
+            editProfileParams.profilePicture,
+            contentType: MediaType("image", "jpeg"),
+          ),
+        });
 
-      AppUtils.logApp(
-          'FORMDATA FILE ::: ${formData.files.first.value.filename}');
-      for (var entry in formData.fields) {
-        AppUtils.logApp('Field: ${entry.key} Value: ${entry.value}');
-      }
-      for (var file in formData.files) {
         AppUtils.logApp(
-            'File Field: ${file.key} Filename: ${file.value.filename}');
+            'FORMDATA FILE ::: ${formData.files.first.value.filename}');
+        for (var entry in formData.fields) {
+          AppUtils.logApp('Field: ${entry.key} Value: ${entry.value}');
+        }
+        for (var file in formData.files) {
+          AppUtils.logApp(
+              'File Field: ${file.key} Filename: ${file.value.filename}');
+        }
+        final response = await httpService.request(
+          withToken: true,
+          paramsImg: formData,
+          enpoint: 'oauth/updateProfile',
+        );
+
+        return response;
+      } else {
+        final response = await httpService.request(
+          withToken: true,
+          params: {
+            "employee_id": editProfileParams.employeeId,
+            "first_name": editProfileParams.firstName,
+            "last_name": editProfileParams.lastName,
+            "nickname": editProfileParams.nickname,
+            "personal_email": editProfileParams.email,
+            "instagram": editProfileParams.instagram,
+            "linkedin": editProfileParams.linkedIn,
+            "marital_status": editProfileParams.maritalStatus,
+            "birthplace": editProfileParams.birthPlace,
+            "date_of_birth": editProfileParams.birthDate,
+            "gender": editProfileParams.gender,
+            "profile": editProfileParams.profilePicture,
+          },
+          enpoint: 'oauth/updateProfile',
+        );
+        AppUtils.logApp("RESPONSE: ${response['data']}");
+
+        return true;
       }
-      final response = await httpService.request(
-        withToken: true,
-        paramsImg: formData,
-        enpoint: 'oauth/updateProfile',
-      );
-
-      AppUtils.logApp("RESPONSE: ${response['data']}");
-
-      return true;
     } catch (e) {
       AppUtils.logApp('Edit profile error: ${e.toString()}');
       throw ServerFailure(properties: [e]);

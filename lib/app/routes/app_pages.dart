@@ -161,7 +161,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TERMS_AND_POLICIES,
-      page: () => const TermsAndPoliciesView(),
+      page: () => TermsAndPoliciesView(),
       binding: TermsAndPoliciesBinding(),
     ),
     GetPage(

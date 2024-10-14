@@ -6,11 +6,14 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
 class ComingSoonScreen extends StatelessWidget {
-  const ComingSoonScreen({super.key});
+  const ComingSoonScreen({super.key, this.enableBackImpl});
+
+  final bool? enableBackImpl;
 
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showIconBack: enableBackImpl ?? true,
       title: 'Coming Soon',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

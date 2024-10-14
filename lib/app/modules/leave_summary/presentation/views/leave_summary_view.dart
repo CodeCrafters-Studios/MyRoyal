@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_approval_request_view.dart';
 
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/apply_leave_view.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/tabs/tab_all_leave_req.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/tabs/tab_casual_leave_req.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/tabs/tab_sick_leave_req.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 
 import '../controllers/leave_summary_controller.dart';
 
@@ -39,11 +42,11 @@ class LeaveSummaryViewImpl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           const AppbarSpacer(),
           _buildLeaveRequestSection(),
-          20.verticalSpace,
         ],
       ),
     );
@@ -52,10 +55,21 @@ class LeaveSummaryViewImpl extends StatelessWidget {
   Widget _buildTypesSection() {
     return EPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: _buildTypeRow(
-          "Year Leave Used",
-          controller.leaveModeRes().data!.yearlyLeaveCount!.used!.toDouble(),
-          "${controller.leaveModeRes().data!.yearlyLeaveCount!.used!}/${controller.leaveModeRes().data!.yearlyLeaveCount!.max!}"),
+      child: Obx(
+        () => controller.isLoading.value
+            ? ShimmerText(width: Get.width)
+            : _buildTypeRow(
+                "Year Leave Used",
+                controller
+                        .leaveModelRes()
+                        .data!
+                        .yearlyLeaveCount!
+                        .used!
+                        .toDouble() /
+                    10,
+                "${controller.leaveModelRes().data!.yearlyLeaveCount!.used!}/${controller.leaveModelRes().data!.yearlyLeaveCount!.max!}",
+              ),
+      ),
     );
   }
 
@@ -85,10 +99,32 @@ class LeaveSummaryViewImpl extends StatelessWidget {
         25.verticalSpace,
         _buildTypesSection(),
         25.verticalSpace,
-        _buildLeaveRequestTabs(),
+        _buildSearch(),
         20.verticalSpace,
-        _buildLeaveRequestTabViews(),
+        _buildAllLeaveRequestView(),
+        20.verticalSpace,
+        controller.userData.value.position != 'Staff'
+            ? _buildLeaveRequestTabViews()
+            : emptyBox
       ],
+    );
+  }
+
+  Widget _buildSearch() {
+    return Obx(
+      () => EPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: InputPrimary(
+          controller: controller.search,
+          label: '',
+          hint: 'Search',
+          onChanged: controller.onChanged,
+          color: white,
+          outlineColor: primary,
+          prefixIcon: _buildPrefixIcon(),
+          suffixIcon: _buildSuffixIcon(),
+        ),
+      ),
     );
   }
 
@@ -126,33 +162,34 @@ class LeaveSummaryViewImpl extends StatelessWidget {
     );
   }
 
-  Widget _buildLeaveRequestTabs() {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: grey),
-          borderRadius: BorderRadius.circular(Corners.xxl),
-          color: white,
-        ),
-        child: TabBar(
-          controller: controller.tabController,
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(Corners.xxl),
-            color: primary,
-          ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          labelStyle: TS.bodyMedium.copyWith(color: white),
-          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-          unselectedLabelColor: primary,
-          tabs: const [
-            Tab(text: 'All'),
-            Tab(text: 'Casual'),
-            Tab(text: 'Sick'),
-          ],
-        ),
-      ),
-    );
+  Widget _buildAllLeaveRequestView() {
+    return controller.userData.value.position != 'Staff'
+        ? EPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: grey),
+                borderRadius: BorderRadius.circular(Corners.xxl),
+                color: white,
+              ),
+              child: TabBar(
+                controller: controller.tabController,
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Corners.xxl),
+                  color: primary,
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: TS.bodyMedium.copyWith(color: white),
+                unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+                unselectedLabelColor: primary,
+                tabs: const [
+                  Tab(text: 'All'),
+                  Tab(text: 'Need Approval'),
+                ],
+              ),
+            ),
+          )
+        : AllLeaveRequestView(controller: controller);
   }
 
   Widget _buildLeaveRequestTabViews() {
@@ -162,11 +199,31 @@ class LeaveSummaryViewImpl extends StatelessWidget {
       child: TabBarView(
         controller: controller.tabController,
         children: [
-          TabAllLeaveRequest(controller: controller),
-          TabCasualLeaveRequest(controller: controller),
-          TabSickLeaveRequest(controller: controller),
+          AllLeaveRequestView(controller: controller),
+          AllApprovalRequestView(controller: controller),
         ],
       ),
     );
+  }
+
+  Widget _buildPrefixIcon() {
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: SvgPicture.asset(
+        'assets/icons/ic_search.svg',
+        width: 20.w,
+        height: 20.w,
+      ),
+    );
+  }
+
+  Widget? _buildSuffixIcon() {
+    final valueListener = controller.valueListener.value;
+    return valueListener.isNotEmpty
+        ? IconButton(
+            onPressed: controller.clear,
+            icon: const Icon(Icons.clear),
+          )
+        : null;
   }
 }

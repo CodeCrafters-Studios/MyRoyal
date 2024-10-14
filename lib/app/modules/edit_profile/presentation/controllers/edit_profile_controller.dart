@@ -177,7 +177,8 @@ class EditProfileController extends GetxController {
         birthDate:
             DateFormat('dd-MM-y').format(argumentData.data.personal.birthdate),
         gender: argumentData.data.personal.gender,
-        profilePicture: selectedImage.value!.path,
+        profilePicture:
+            selectedImage.value == null ? '' : selectedImage.value!.path,
       ),
     );
 
