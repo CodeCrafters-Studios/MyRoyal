@@ -1,4 +1,4 @@
-package com.example.iroyal
+package com.iroyal
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
