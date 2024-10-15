@@ -34,6 +34,7 @@ class AllLeaveRequestView extends StatelessWidget {
                   itemBuilder: (_, __) {
                     return LeaveRequestCard(
                       onTap: () {},
+                      fullname: '',
                       code: '',
                       date: '',
                       status: '',
@@ -116,13 +117,50 @@ class AllLeaveRequestView extends StatelessWidget {
                                                       'Date',
                                                       style: TS.titleSmall,
                                                     ),
-                                                    subtitle: Text(
-                                                      '${r.periode.start.substring(0, 2)}-${r.periode.end}',
-                                                      style: TS.bodyMedium
-                                                          .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
+                                                    subtitle: Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: DropdownButton<
+                                                              String>(
+                                                            items: r.listPeriode.map<
+                                                                DropdownMenuItem<
+                                                                    String>>((String
+                                                                value) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: value,
+                                                                child:
+                                                                    Text(value),
+                                                              );
+                                                            }).toList(),
+                                                            value: r
+                                                                .listPeriode[0],
+                                                            onChanged: (String?
+                                                                newValue) {
+                                                              // Handle the value change
+                                                            },
+                                                            icon: const Icon(Icons
+                                                                .arrow_drop_down),
+                                                          ),
+                                                          //  Text(
+                                                          //             r.listPeriode
+                                                          //                         .length ==
+                                                          //                     1
+                                                          //                 ? r.listPeriode[
+                                                          //                     0]
+                                                          //                 : r.listPeriode
+                                                          //                             .length ==
+                                                          //                         2
+                                                          //                     ? '${r.listPeriode[0]} - ${r.listPeriode[1]}'
+                                                          //                     : '${r.listPeriode[0].substring(0, 6)}, ${r.listPeriode[1]}, etc',
+                                                          //             style: TS.bodyMedium
+                                                          //                 .copyWith(
+                                                          //                     fontWeight:
+                                                          //                         FontWeight
+                                                          //                             .w300),
+                                                          //           ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
@@ -187,38 +225,128 @@ class AllLeaveRequestView extends StatelessWidget {
                                             ),
                                             const Spacer(),
                                             Obx(
-                                              () => ButtonPrimary(
-                                                isLoading:
-                                                    controller.isLoading.value,
-                                                fullWidth: true,
-                                                margin: REdgeInsets.fromLTRB(
-                                                    14, 0, 14, 20),
-                                                text: r.canCancel
-                                                    ? 'Cancel'
-                                                    : 'Close',
-                                                textColor: r.canCancel
-                                                    ? white
-                                                    : primary,
-                                                onPressed: () => AppDialogImpl()
-                                                    .showChoiceDialog(
-                                                        description:
-                                                            'Are you sure want to cancel this form?',
-                                                        onPressedNo: Get.back,
-                                                        onPressedYes: () =>
-                                                            controller
-                                                                .cancelFormLeave(
-                                                              r.codeNo,
-                                                            )),
-                                                color: r.canCancel
-                                                    ? secondary
-                                                    : Colors.transparent,
-                                                borderSide: BorderSide(
-                                                  color: r.canCancel
-                                                      ? secondary
-                                                      : primary,
-                                                ),
-                                              ),
-                                            )
+                                              () => controller.isLoading.value
+                                                  ? Shimmer.fromColors(
+                                                      baseColor: Colors.grey,
+                                                      highlightColor:
+                                                          Colors.grey.shade400,
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                          14,
+                                                                          0,
+                                                                          14,
+                                                                          20),
+                                                              text: '',
+                                                              textColor:
+                                                                  primary,
+                                                              onPressed: null,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                          14,
+                                                                          0,
+                                                                          14,
+                                                                          20),
+                                                              text: '',
+                                                              textColor: white,
+                                                              onPressed: null,
+                                                              color:
+                                                                  Colors.grey,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : r.canCancel
+                                                      ? Row(children: [
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                          14,
+                                                                          0,
+                                                                          14,
+                                                                          20),
+                                                              text: 'Close',
+                                                              textColor: white,
+                                                              onPressed:
+                                                                  Get.back,
+                                                              color: primary,
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                color: primary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                          14,
+                                                                          0,
+                                                                          14,
+                                                                          20),
+                                                              text: 'Cancel',
+                                                              textColor: white,
+                                                              onPressed: () => AppDialogImpl()
+                                                                  .showChoiceDialog(
+                                                                      description:
+                                                                          'Are you sure want to cancel this form?',
+                                                                      onPressedNo: Get
+                                                                          .back,
+                                                                      onPressedYes:
+                                                                          () {
+                                                                        Get.back();
+                                                                        controller
+                                                                            .cancelFormLeave(
+                                                                          r.codeNo,
+                                                                        );
+                                                                      }),
+                                                              color: secondary,
+                                                              borderSide:
+                                                                  const BorderSide(
+                                                                color:
+                                                                    secondary,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ])
+                                                      : ButtonPrimary(
+                                                          fullWidth: true,
+                                                          margin: REdgeInsets
+                                                              .fromLTRB(14, 0,
+                                                                  14, 20),
+                                                          text: 'Close',
+                                                          textColor: white,
+                                                          onPressed: Get.back,
+                                                          color: primary,
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color: primary,
+                                                          ),
+                                                        ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -226,18 +354,25 @@ class AllLeaveRequestView extends StatelessWidget {
                                   },
                                 );
                               },
+                              fullname: '',
                               code: r.codeNo,
-                              date: '${r.periode.start} - ${r.periode.end}',
+                              date: r.listPeriode.length > 2
+                                  ? '${r.listPeriode[0].substring(0, 6)}, ${r.listPeriode[1]} and more'
+                                  : r.listPeriode.length == 1
+                                      ? r.listPeriode[0]
+                                      : '${r.listPeriode[0]} - ${r.listPeriode[1]}',
                               status: r.status,
                               iconStatus: r.status == 'pending'
                                   ? 'assets/icons/ic_pending_summary.svg'
-                                  : r.status == 'cancel'
+                                  : r.status == 'cancel' ||
+                                          r.status == 'rejected'
                                       ? 'assets/icons/ic_rejected_summar.svg'
                                       : 'assets/icons/ic_approved_summary.svg',
                               description: r.reason,
                               statusColor: r.status == 'pending'
                                   ? Colors.orangeAccent
-                                  : r.status == 'cancel'
+                                  : r.status == 'cancel' ||
+                                          r.status == 'rejected'
                                       ? Colors.red
                                       : green,
                             );
@@ -246,7 +381,7 @@ class AllLeaveRequestView extends StatelessWidget {
                       ),
                     )
                   : const NoResultFoundWidget()
-              : const EmptyDataWidget(),
+              : const Center(child: EmptyDataWidget()),
     );
   }
 }

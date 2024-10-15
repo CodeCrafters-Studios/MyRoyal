@@ -92,21 +92,23 @@ class LeaveSummaryViewImpl extends StatelessWidget {
   }
 
   Widget _buildLeaveRequestSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLeaveRequestHeader(),
-        25.verticalSpace,
-        _buildTypesSection(),
-        25.verticalSpace,
-        _buildSearch(),
-        20.verticalSpace,
-        _buildAllLeaveRequestView(),
-        20.verticalSpace,
-        controller.userData.value.position != 'Staff'
-            ? _buildLeaveRequestTabViews()
-            : emptyBox
-      ],
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildLeaveRequestHeader(),
+          25.verticalSpace,
+          _buildTypesSection(),
+          25.verticalSpace,
+          _buildSearch(),
+          20.verticalSpace,
+          _buildAllLeaveRequestView(),
+          20.verticalSpace,
+          controller.userData.value.position != 'Staff'
+              ? _buildLeaveRequestTabViews()
+              : emptyBox
+        ],
+      ),
     );
   }
 
@@ -135,26 +137,49 @@ class LeaveSummaryViewImpl extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('Leave Request', style: TS.titleMedium),
-          ButtonPrimary(
-            borderRadius: Corners.xxl,
-            margin: REdgeInsets.only(top: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            color: urgentColor,
-            borderSide: const BorderSide(color: urgentColor),
-            onPressed: () =>
-                Get.to(() => ApplyLeaveView(controller: controller)),
-            child: Row(
-              children: [
-                Icon(Icons.add, size: 18.dm, color: white),
-                5.horizontalSpace,
-                Text(
-                  'Create New',
-                  style: TS.bodySmall.copyWith(
-                    color: white,
-                    fontWeight: FontWeight.w600,
+          Obx(
+            () => ButtonPrimary(
+              enable: controller
+                      .leaveModelRes()
+                      .data!
+                      .yearlyLeaveCount!
+                      .remaining! >
+                  0,
+              borderRadius: Corners.xxl,
+              margin: REdgeInsets.only(top: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              color: controller
+                          .leaveModelRes()
+                          .data!
+                          .yearlyLeaveCount!
+                          .remaining ==
+                      0
+                  ? grey
+                  : urgentColor,
+              borderSide: BorderSide(
+                  color: controller
+                              .leaveModelRes()
+                              .data!
+                              .yearlyLeaveCount!
+                              .remaining ==
+                          0
+                      ? grey
+                      : urgentColor),
+              onPressed: () =>
+                  Get.to(() => ApplyLeaveView(controller: controller)),
+              child: Row(
+                children: [
+                  Icon(Icons.add, size: 18.dm, color: white),
+                  5.horizontalSpace,
+                  Text(
+                    'Create New',
+                    style: TS.bodySmall.copyWith(
+                      color: white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

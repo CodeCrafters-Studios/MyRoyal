@@ -7,9 +7,12 @@ import 'package:iroyal/app/modules/leave_summary/presentation/views/components/l
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/no_result_found.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
+import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -33,6 +36,7 @@ class AllApprovalRequestView extends StatelessWidget {
                   itemBuilder: (_, __) {
                     return LeaveRequestCard(
                       onTap: () {},
+                      fullname: '',
                       code: '',
                       date: '',
                       status: '',
@@ -51,7 +55,7 @@ class AllApprovalRequestView extends StatelessWidget {
                       child: SizedBox(
                         height: Get.height,
                         child: ListView.builder(
-                          padding: REdgeInsets.only(bottom: 280),
+                          padding: REdgeInsets.only(bottom: 350),
                           itemCount: controller.filterApprovalData.length,
                           itemBuilder: (_, index) {
                             final r = controller.filterApprovalData[index];
@@ -84,10 +88,12 @@ class AllApprovalRequestView extends StatelessWidget {
                                                 width: 80.w,
                                                 height: 5.h,
                                                 decoration: BoxDecoration(
-                                                    color: grey,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40.r)),
+                                                  color: grey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    40.r,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                             20.verticalSpace,
@@ -185,62 +191,204 @@ class AllApprovalRequestView extends StatelessWidget {
                                               ),
                                             ),
                                             const Spacer(),
-                                            Obx(() => Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: ButtonPrimary(
-                                                        isLoading: controller
-                                                            .isLoading.value,
-                                                        fullWidth: true,
-                                                        margin: REdgeInsets
-                                                            .fromLTRB(
-                                                          15,
-                                                          0,
-                                                          10,
-                                                          20,
-                                                        ),
-                                                        text: 'Reject',
-                                                        textColor: white,
-                                                        onPressed: () =>
-                                                            controller
-                                                                .actionFormLeave(
-                                                                    r.codeNo,
-                                                                    'rejected'),
-                                                        color: red,
-                                                        borderSide:
-                                                            const BorderSide(
-                                                          color: red,
-                                                        ),
+                                            Obx(
+                                              () => controller.isLoading.value
+                                                  ? Shimmer.fromColors(
+                                                      baseColor: Colors.grey,
+                                                      highlightColor:
+                                                          Colors.grey.shade400,
+                                                      child: Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                15,
+                                                                0,
+                                                                10,
+                                                                20,
+                                                              ),
+                                                              text: '',
+                                                              textColor: grey,
+                                                              onPressed: null,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child:
+                                                                ButtonPrimary(
+                                                              fullWidth: true,
+                                                              margin:
+                                                                  REdgeInsets
+                                                                      .fromLTRB(
+                                                                10,
+                                                                0,
+                                                                15,
+                                                                20,
+                                                              ),
+                                                              text: '',
+                                                              textColor: grey,
+                                                              onPressed: null,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ),
-                                                    Expanded(
-                                                      child: ButtonPrimary(
-                                                        isLoading: controller
-                                                            .isLoading.value,
-                                                        fullWidth: true,
-                                                        margin: REdgeInsets
-                                                            .fromLTRB(
-                                                          10,
-                                                          0,
-                                                          15,
-                                                          20,
+                                                    )
+                                                  : Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: ButtonPrimary(
+                                                            isLoading:
+                                                                controller
+                                                                    .isLoading
+                                                                    .value,
+                                                            fullWidth: true,
+                                                            margin: REdgeInsets
+                                                                .fromLTRB(
+                                                              15,
+                                                              0,
+                                                              10,
+                                                              20,
+                                                            ),
+                                                            text: 'Reject',
+                                                            textColor: white,
+                                                            onPressed: () => AppDialogImpl()
+                                                                .showChoiceDialog(
+                                                                    description:
+                                                                        'Are you sure want to Reject this form?',
+                                                                    onPressedNo:
+                                                                        Get
+                                                                            .back,
+                                                                    onPressedYes:
+                                                                        () {
+                                                                      Get.dialog(
+                                                                        Dialog(
+                                                                          insetPadding:
+                                                                              REdgeInsets.symmetric(horizontal: 40),
+                                                                          child:
+                                                                              Container(
+                                                                            padding:
+                                                                                EdgeInsets.fromLTRB(
+                                                                              Insets.xl,
+                                                                              Insets.xl,
+                                                                              Insets.xl,
+                                                                              Insets.xs,
+                                                                            ),
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              borderRadius: Corners.smBorder,
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                            child:
+                                                                                Column(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              children: [
+                                                                                Text(
+                                                                                  'Reason',
+                                                                                  style: TS.titleMedium,
+                                                                                  textAlign: TextAlign.center,
+                                                                                ),
+                                                                                20.verticalSpace,
+                                                                                InputPrimary(
+                                                                                  controller: controller.reasonRejected,
+                                                                                  maxLength: 1000,
+                                                                                  maxLines: 5,
+                                                                                  color: white,
+                                                                                  outlineColor: primary,
+                                                                                  hint: 'Type here..',
+                                                                                  validation: (value) => value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                                                                                  onChanged: (value) {
+                                                                                    controller.reasonText.value = value;
+                                                                                    AppUtils.logApp(controller.reasonText.value);
+                                                                                  },
+                                                                                ),
+                                                                                28.verticalSpace,
+                                                                                Row(
+                                                                                  children: [
+                                                                                    Expanded(
+                                                                                      child: ButtonPrimary(
+                                                                                        onPressed: () => Get.back(),
+                                                                                        text: 'Cancel',
+                                                                                        color: redPrimary,
+                                                                                        fullWidth: true,
+                                                                                      ),
+                                                                                    ),
+                                                                                    12.horizontalSpace,
+                                                                                    Obx(
+                                                                                      () => Expanded(
+                                                                                        child: ButtonPrimary(
+                                                                                          enable: controller.reasonText.value.isNotEmpty,
+                                                                                          onPressed: () {
+                                                                                            AppUtils.logApp(controller.reasonText.value);
+                                                                                            Get.back();
+                                                                                            Get.back();
+                                                                                            controller.actionFormLeave(
+                                                                                              r.codeNo,
+                                                                                              'rejected',
+                                                                                              r.level,
+                                                                                              controller.reasonText.value,
+                                                                                            );
+                                                                                          },
+                                                                                          text: 'Submit',
+                                                                                          color: green,
+                                                                                          fullWidth: true,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                                16.verticalSpace,
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                      );
+                                                                    }),
+                                                            color: red,
+                                                            borderSide:
+                                                                const BorderSide(
+                                                              color: red,
+                                                            ),
+                                                          ),
                                                         ),
-                                                        text: 'Approve',
-                                                        textColor: white,
-                                                        onPressed: () =>
-                                                            controller
-                                                                .actionFormLeave(
-                                                                    r.codeNo,
-                                                                    'approved'),
-                                                        color: green,
-                                                        borderSide:
-                                                            const BorderSide(
-                                                          color: green,
+                                                        Expanded(
+                                                          child: ButtonPrimary(
+                                                            isLoading:
+                                                                controller
+                                                                    .isLoading
+                                                                    .value,
+                                                            fullWidth: true,
+                                                            margin: REdgeInsets
+                                                                .fromLTRB(
+                                                              10,
+                                                              0,
+                                                              15,
+                                                              20,
+                                                            ),
+                                                            text: 'Approve',
+                                                            textColor: white,
+                                                            onPressed: () =>
+                                                                controller
+                                                                    .actionFormLeave(
+                                                              r.codeNo,
+                                                              'approved',
+                                                              r.level,
+                                                              '',
+                                                            ),
+                                                            color: green,
+                                                            borderSide:
+                                                                const BorderSide(
+                                                              color: green,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ))
+                                            )
                                           ],
                                         ),
                                       ),
@@ -248,6 +396,7 @@ class AllApprovalRequestView extends StatelessWidget {
                                   },
                                 );
                               },
+                              fullname: r.fullName,
                               code: r.codeNo,
                               date:
                                   '${r.periode.start.substring(0, 2)}-${r.periode.end}',

@@ -11,6 +11,7 @@ import 'package:search_highlight_text/search_highlight_text.dart';
 class LeaveRequestCard extends StatelessWidget {
   const LeaveRequestCard({
     super.key,
+    required this.fullname,
     required this.code,
     required this.date,
     required this.status,
@@ -22,6 +23,7 @@ class LeaveRequestCard extends StatelessWidget {
     this.onTap,
   });
 
+  final String fullname;
   final String code;
   final String date;
   final String status;
@@ -45,8 +47,9 @@ class LeaveRequestCard extends StatelessWidget {
           isShadow: true,
           shadows: Shadows.small,
           child: EPadding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,11 +78,21 @@ class LeaveRequestCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                ListTile(
-                  title: SearchHighlightText(
+                EPadding(
+                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  child: SearchHighlightText(
+                    textAlign: TextAlign.start,
                     date,
-                    style: titleStyle ?? TS.bodyMedium.copyWith(color: black),
+                    style: titleStyle ?? TS.bodySmall.copyWith(color: black),
                     highlightStyle: TS.labelLarge.copyWith(color: black),
+                  ),
+                ),
+                ListTile(
+                  minTileHeight: 0,
+                  title: SearchHighlightText(
+                    fullname,
+                    style: titleStyle ?? TS.titleSmall.copyWith(color: black),
+                    highlightStyle: TS.labelLarge.copyWith(color: red),
                   ),
                   subtitle: Text(
                     description,
@@ -88,7 +101,7 @@ class LeaveRequestCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

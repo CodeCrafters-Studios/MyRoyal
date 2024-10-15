@@ -116,6 +116,9 @@ class DashboardController extends GetxController {
       (r) {
         isLoading.value = false;
         dashboardData.value = r;
+        AppUtils.logApp(
+            'DASHBOARD ${dashboardData().data!.leaveBalance!.balance!.toDouble()}');
+        AppUtils.logApp('DASHBOARD ${dashboardData.value}');
         // totalValueGender.value = myTeamsData.value.genderDistribution.female +
         //     myTeamsData.value.genderDistribution.male;
       },

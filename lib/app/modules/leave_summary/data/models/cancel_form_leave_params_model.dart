@@ -5,6 +5,7 @@ class CancelFormLeaveParamsModel extends CancelFormLeaveParamsEntity {
     required super.type,
     required super.codeNo,
     required super.level,
+    required super.feedback,
   });
 
   factory CancelFormLeaveParamsModel.fromJson(Map<String, dynamic> json) =>
@@ -12,11 +13,13 @@ class CancelFormLeaveParamsModel extends CancelFormLeaveParamsEntity {
         type: json["type"],
         level: json["level"],
         codeNo: json["code_no"],
+        feedback: json["feedback"],
       );
 
   Map<String, dynamic> toJson() => {
         "type": type,
         "code_no": codeNo,
         "level": level,
+        "feedback": feedback,
       };
 }

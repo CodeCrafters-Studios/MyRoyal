@@ -100,6 +100,10 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  Future<void> onRefresh() async {
+    _initial();
+  }
+
   void _initial() async {
     await _getUserData();
     _getAllMenu();

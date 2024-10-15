@@ -94,12 +94,13 @@ class ProfileViewImpl extends StatelessWidget {
       leading: CircleAvatar(
         backgroundColor: primary,
         radius: 35,
-        backgroundImage: controller.userData().profilePicture.isNotEmpty
-            ? CachedNetworkImageProvider(
-                controller.profileData().data.personal.profilePicture,
-              )
-            : null,
-        child: controller.userData().profilePicture.isEmpty
+        backgroundImage:
+            controller.profileData().data.personal.profilePicture.isNotEmpty
+                ? CachedNetworkImageProvider(
+                    controller.profileData().data.personal.profilePicture,
+                  )
+                : null,
+        child: controller.profileData().data.personal.profilePicture.isEmpty
             ? Text(
                 controller.userData().initialName,
                 style: TS.titleLarge,

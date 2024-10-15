@@ -36,6 +36,7 @@ class LeaveSummaryController extends GetxController {
 
   late final TabController tabController;
   TextEditingController search = TextEditingController();
+  TextEditingController reasonRejected = TextEditingController();
 
   final config = CalendarDatePicker2Config(
     firstDate: DateTime.now().add(const Duration(days: 3)),
@@ -65,6 +66,7 @@ class LeaveSummaryController extends GetxController {
   RxString selectedStartDate = 'Select date'.obs;
   RxString selectedSubtituteEmployee = ''.obs;
   RxString reason = ''.obs;
+  RxString reasonText = ''.obs;
   RxString valueListener = ''.obs;
 
   RxInt selectedSubtituteEmployeeId = 0.obs;
@@ -229,8 +231,14 @@ class LeaveSummaryController extends GetxController {
   Future<void> cancelFormLeave(String codeNo) async {
     isLoading.value = true;
 
-    final r = await cancelFormLeaveUsecase(CancelFormLeaveParamsEntity(
-        type: 'canceled', level: 0, codeNo: codeNo));
+    final r = await cancelFormLeaveUsecase(
+      CancelFormLeaveParamsEntity(
+        type: 'canceled',
+        level: 0,
+        codeNo: codeNo,
+        feedback: '',
+      ),
+    );
 
     r.fold((l) {
       Get.back();
@@ -288,6 +296,7 @@ class LeaveSummaryController extends GetxController {
     } else {
       filterApprovalData.value = data
           .where((e) =>
+              e.fullName.toLowerCase().contains(value.toLowerCase()) ||
               e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
               e.periode.start
                   .toString()
@@ -303,11 +312,17 @@ class LeaveSummaryController extends GetxController {
     }
   }
 
-  Future<void> actionFormLeave(String codeNo, String type) async {
+  Future<void> actionFormLeave(
+      String codeNo, String type, int level, String reasonRejected) async {
     isLoading.value = true;
 
     final r = await cancelFormLeaveUsecase(
-      CancelFormLeaveParamsEntity(type: type, level: 0, codeNo: codeNo),
+      CancelFormLeaveParamsEntity(
+        type: type,
+        level: level,
+        codeNo: codeNo,
+        feedback: reasonRejected,
+      ),
     );
 
     r.fold((l) {
@@ -318,6 +333,7 @@ class LeaveSummaryController extends GetxController {
     }, (r) {
       Get.back();
       isLoading(false);
+      reasonText.value = '';
       _getLeaveApprovalSummary();
       cancelFormRes.value = r;
       AppDialogImpl().showSuccessSnackBar(

@@ -210,13 +210,13 @@ class HomeBinding extends Bindings {
       )
       ..lazyPut<LeaveSummaryController>(
         () => LeaveSummaryController(
-          getLeaveUsecase: Get.find<GetLeaveUsecase>(),
-          getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
-          createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
-          cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
-          getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
-          getCacheUser: Get.find<GetCacheUser>(),
-        ),
+            getLeaveUsecase: Get.find<GetLeaveUsecase>(),
+            getSubtituteEmployeeUsecase:
+                Get.find<GetSubtituteEmployeeUsecase>(),
+            createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
+            cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
+            getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
+            getCacheUser: Get.find<GetCacheUser>()),
       );
   }
 }

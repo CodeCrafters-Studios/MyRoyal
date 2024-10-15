@@ -114,44 +114,52 @@ class DashboardView extends GetView<DashboardController> {
         25.verticalSpace,
         _buildAttendanceGrid(),
         25.verticalSpace,
-        PieChart(
-          chartRadius: 150.r,
-          centerWidget: Text(
-            controller.remainingLeave.toString(),
-            style: TS.headlineLarge,
+        Obx(
+          () => PieChart(
+            chartRadius: 150.r,
+            centerWidget: Text(
+              controller.dashboardData().data!.leaveBalance!.used.toString(),
+              style: TS.headlineLarge,
+            ),
+            legendOptions: LegendOptions(
+              legendTextStyle: TS.bodyLarge,
+              legendPosition: LegendPosition.bottom,
+              showLegendsInRow: true,
+            ),
+            dataMap: controller.dashboardData().data!.leaveBalance != null
+                ? {
+                    "balance": controller
+                        .dashboardData()
+                        .data!
+                        .leaveBalance!
+                        .balance!
+                        .toDouble(),
+                    "used": controller
+                        .dashboardData()
+                        .data!
+                        .leaveBalance!
+                        .used!
+                        .toDouble(),
+                  }
+                : {"balance": 8.0, "used": 0.0},
+            chartType: ChartType.ring,
+            baseChartColor: black.withOpacity(0.15),
+            colorList: controller.colorList,
+            chartValuesOptions: ChartValuesOptions(
+              showChartValuesInPercentage: false,
+              decimalPlaces: 0,
+              showChartValuesOutside: true,
+              showChartValueBackground: false,
+              chartValueStyle: TS.titleMedium.copyWith(color: black),
+            ),
+            totalValue: controller
+                    .dashboardData()
+                    .data!
+                    .leaveBalance!
+                    .balance!
+                    .toDouble() +
+                controller.dashboardData().data!.leaveBalance!.used!.toDouble(),
           ),
-          legendOptions: LegendOptions(
-            legendTextStyle: TS.bodyLarge,
-            legendPosition: LegendPosition.bottom,
-            showLegendsInRow: true,
-          ),
-          dataMap: controller.dashboardData().data!.leaveBalance != null
-              ? {
-                  "balance": controller
-                      .dashboardData()
-                      .data!
-                      .leaveBalance!
-                      .balance!
-                      .toDouble(),
-                  "used": controller
-                      .dashboardData()
-                      .data!
-                      .leaveBalance!
-                      .used!
-                      .toDouble(),
-                }
-              : {"balance": 0.0, "used": 0.0},
-          chartType: ChartType.ring,
-          baseChartColor: black.withOpacity(0.15),
-          colorList: controller.colorList,
-          chartValuesOptions: ChartValuesOptions(
-            showChartValuesInPercentage: false,
-            decimalPlaces: 0,
-            showChartValuesOutside: true,
-            showChartValueBackground: false,
-            chartValueStyle: TS.titleMedium.copyWith(color: black),
-          ),
-          totalValue: controller.remainingLeave.value.toDouble(),
         ),
       ],
     );

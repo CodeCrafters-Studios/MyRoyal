@@ -9,8 +9,10 @@ import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profi
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/permission/app_permission.dart';
 
 enum FormLoginValue {
   firstName,
@@ -29,10 +31,12 @@ enum FormLoginValue {
 class EditProfileController extends GetxController {
   EditProfileController({
     required this.patchEditProfileUseCase,
+    required this.appPermission,
     required this.appDialog,
   });
 
   final PatchEditProfile patchEditProfileUseCase;
+  final AppPermission appPermission;
   final AppDialog appDialog;
   Profile argumentData = Get.arguments[0];
   final int id = Get.arguments[1];
@@ -185,6 +189,8 @@ class EditProfileController extends GetxController {
     r.fold((l) {
       isLoading(false);
       AppUtils.logApp(l.toString());
+      final m = l.properties[0] as ApiException;
+      appDialog.showErrorDialog(description: m.message);
     }, (r) {
       isLoading(false);
       AppUtils.logApp('Success');
@@ -222,7 +228,21 @@ class EditProfileController extends GetxController {
   //   }
   // }
 
+  Future<bool> _requestStoragePermission() async {
+    final status = await appPermission.requestStorage();
+    if (!status) {
+      AppUtils.logApp('Storage permission denied');
+      return false;
+    }
+    return true;
+  }
+
   Future<void> pickImage(ImageSource source) async {
+    final haspermission = await _requestStoragePermission();
+    if (!haspermission) {
+      throw Exception('Storage permission denied');
+    }
+
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       selectedImage.value = File(pickedFile.path);

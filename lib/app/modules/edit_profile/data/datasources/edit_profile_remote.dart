@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:iroyal/app/modules/edit_profile/data/model/employee_params_model.dart';
+import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -12,7 +13,9 @@ abstract class EditProfileRemoteDataSource {
 }
 
 class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
-  EditProfileRemoteSourceImpl({required this.httpService});
+  EditProfileRemoteSourceImpl({
+    required this.httpService,
+  });
 
   final HttpService httpService;
 
@@ -47,15 +50,20 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
           AppUtils.logApp(
               'File Field: ${file.key} Filename: ${file.value.filename}');
         }
-        final response = await httpService.request(
+        final r = await httpService.request(
           withToken: true,
           paramsImg: formData,
           enpoint: 'oauth/updateProfile',
+          showPopUp: true,
         );
+        if (r['code'] != 200) {
+          throw ApiException(r['message']);
+        }
+        AppUtils.logApp("RESPONSE: ${r['data']}");
 
-        return response;
+        return true;
       } else {
-        final response = await httpService.request(
+        final r = await httpService.request(
           withToken: true,
           params: {
             "employee_id": editProfileParams.employeeId,
@@ -73,13 +81,21 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
           },
           enpoint: 'oauth/updateProfile',
         );
-        AppUtils.logApp("RESPONSE: ${response['data']}");
+        if (r['code'] != 200) {
+          throw ApiException(r['message']);
+        }
+        AppUtils.logApp("RESPONSE: ${r['data']}");
 
         return true;
       }
-    } catch (e) {
-      AppUtils.logApp('Edit profile error: ${e.toString()}');
-      throw ServerFailure(properties: [e]);
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      rethrow;
     }
   }
 }

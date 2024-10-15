@@ -46,13 +46,13 @@ class EditProfileView extends GetView<EditProfileController> {
                       Obx(() => CircleAvatar(
                             backgroundColor: primary,
                             radius: 40,
-                            backgroundImage:
-                                controller.userData.profilePicture.isNotEmpty
-                                    ? CachedNetworkImageProvider(
-                                        controller.argumentData.data.personal
-                                            .profilePicture,
-                                      )
-                                    : null,
+                            backgroundImage: controller.argumentData.data
+                                    .personal.profilePicture.isNotEmpty
+                                ? CachedNetworkImageProvider(
+                                    controller.argumentData.data.personal
+                                        .profilePicture,
+                                  )
+                                : null,
                             child: controller.selectedImage.value != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(40),
@@ -63,7 +63,8 @@ class EditProfileView extends GetView<EditProfileController> {
                                       height: 80.h,
                                     ),
                                   )
-                                : controller.userData.profilePicture.isEmpty
+                                : controller.argumentData.data.personal
+                                        .profilePicture.isEmpty
                                     ? Text(
                                         controller.userData.initialName,
                                         style: TS.titleLarge,
