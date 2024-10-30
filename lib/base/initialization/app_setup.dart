@@ -15,6 +15,7 @@ import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
+import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
@@ -40,10 +41,6 @@ Future<void> setupAndRunApp(
 }) async {
   // enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(
-    debug: true,
-    ignoreSsl: true,
-  );
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -56,6 +53,11 @@ Future<void> setupAndRunApp(
 
   // Finally run the widget
   FirebaseMessaging.onBackgroundMessage(remoteMessageHandler);
+
+  await FlutterDownloader.initialize(
+    debug: true,
+    ignoreSsl: true,
+  );
 
   runApp(appWidget);
 }
@@ -71,6 +73,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await MellotippetFirebaseRemoteConfig.initialize();
   await Hive.initFlutter();
   await _setupNotifications();
   AppConfig.environment = envConfig;
@@ -84,6 +87,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final internetConnectionChecker = InternetConnectionChecker();
   final appDialogImpl = AppDialogImpl();
   final Connectivity connectivity = Connectivity();
+  final firebaseRemoteConfig = MellotippetFirebaseRemoteConfig();
+
   Get
     ..put(alice)
     ..put(dio)
@@ -119,7 +124,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
         http: Get.find(),
       ),
     )
-    ..put(connectivity);
+    ..put(connectivity)
+    ..put(firebaseRemoteConfig);
   // ..put(CommonParamsImpl(appToken: Get.find<AppTokenImpl>()));
 }
 

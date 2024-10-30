@@ -3,12 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -25,18 +22,7 @@ class HomeUserStatus extends GetView<HomeController> {
           padding: const EdgeInsets.only(bottom: 15),
           child: Column(
             children: [
-              controller.isLoading.value
-                  ? Align(
-                      alignment: Alignment.topLeft,
-                      child: EPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 18),
-                        child: ShimmerText(
-                          width: 150.w,
-                        ),
-                      ),
-                    )
-                  : _buildLeaveSummary(),
-              15.verticalSpace,
+              10.verticalSpace,
               controller.isLoading.value
                   ? Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
@@ -84,7 +70,7 @@ class HomeUserStatus extends GetView<HomeController> {
                         SizedBox(
                           width: 160.w,
                           child: CardApp(
-                            color: green,
+                            color: primary2,
                             outlineColor: black,
                             isShadow: true,
                             shadows: Shadows.universal,
@@ -113,7 +99,7 @@ class HomeUserStatus extends GetView<HomeController> {
                         SizedBox(
                           width: 160.w,
                           child: CardApp(
-                            color: secondary10,
+                            color: secondary,
                             outlineColor: black,
                             child: HomeUserCard(
                               shapeBorder: true,
@@ -140,25 +126,6 @@ class HomeUserStatus extends GetView<HomeController> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLeaveSummary() {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 21),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Leave Summary', style: TS.titleMedium),
-          InkWellTap(
-            onTap: () => Get.toNamed(Routes.LEAVE_SUMMARY),
-            child: const Icon(
-              Icons.arrow_forward_ios,
-              color: secondary,
-            ),
-          ),
-        ],
       ),
     );
   }

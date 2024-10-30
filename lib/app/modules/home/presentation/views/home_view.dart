@@ -24,7 +24,7 @@ class HomeView extends GetView<HomeController> {
       appBar: AppBar(
         centerTitle: false,
         scrolledUnderElevation: 0.0,
-        backgroundColor: white,
+        backgroundColor: primary,
         automaticallyImplyLeading: false,
         toolbarHeight: 70.h,
         title: _buildTitle(),
@@ -60,8 +60,8 @@ class HomeView extends GetView<HomeController> {
         child: InkWellTap(
           onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
           child: Icon(
-            Icons.notifications,
-            color: secondary,
+            Icons.notifications_rounded,
+            color: white,
             size: 32.dm,
           ),
         ),
@@ -76,8 +76,8 @@ class HomeView extends GetView<HomeController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Welcome Back!👋",
-            style: TS.bodyMedium,
+            "Hi.. Welcome Back!👋",
+            style: TS.bodyMedium.copyWith(color: white),
           ),
           Obx(
             () => controller.isLoading.value
@@ -110,8 +110,7 @@ class HomeView extends GetView<HomeController> {
   Widget _buildLoadedText() {
     return Text(
       controller.userData().data.fullName,
-      style:
-          TS.labelLarge.copyWith(color: primary, fontWeight: FontWeight.bold),
+      style: TS.labelLarge.copyWith(color: white, fontWeight: FontWeight.bold),
     );
   }
 }

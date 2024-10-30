@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
@@ -14,6 +15,7 @@ import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ApprovalView extends StatelessWidget {
   const ApprovalView({super.key, required this.controller});
@@ -33,11 +35,36 @@ class ApprovalView extends StatelessWidget {
           children: [
             const AppbarSpacer(),
             _buildSearchBar(),
-            Obx(() => controller.filterDataOnProgress.isEmpty
-                ? SizedBox(height: 500.h, child: const NoResultWidget())
-                : _buildDocumentList()),
+            Obx(() => controller.isLoading.value
+                ? _buildLoadingDocumentList()
+                : controller.filterDataOnProgress.isEmpty
+                    ? SizedBox(height: 500.h, child: const NoResultWidget())
+                    : _buildDocumentList()),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingDocumentList() {
+    return SizedBox(
+      height: Get.height,
+      child: ListView.separated(
+        separatorBuilder: (_, __) => 15.verticalSpace,
+        padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
+        itemCount: 10,
+        itemBuilder: (_, __) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: CardApp(
+              height: 150.h,
+              onTap: null,
+              width: 335.w,
+              child: emptyBox,
+            ),
+          );
+        },
       ),
     );
   }
@@ -70,27 +97,34 @@ class ApprovalView extends StatelessWidget {
   }
 
   Widget _buildDocumentList() {
-    return Obx(() => SizedBox(
-          height: Get.height,
-          child: ListView.separated(
-            separatorBuilder: (_, __) => 15.verticalSpace,
-            padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
-            itemCount: controller.filterDataOnProgress.length,
-            itemBuilder: (context, index) {
-              final doc = controller.filterDataOnProgress[index];
-              return SearchTextInheritedWidget(
-                  searchText:
-                      RegExp.escape(controller.searchDocOnProgress.text),
-                  child: _buildDocumentCard(doc));
-            },
+    return Obx(() => RefreshIndicator(
+          backgroundColor: white,
+          color: primary,
+          onRefresh: controller.onRefresh,
+          child: SizedBox(
+            height: Get.height,
+            child: ListView.separated(
+              separatorBuilder: (_, __) => 15.verticalSpace,
+              padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
+              itemCount: controller.filterDataOnProgress.length,
+              itemBuilder: (context, index) {
+                final doc = controller.filterDataOnProgress[index];
+                return SearchTextInheritedWidget(
+                    searchText:
+                        RegExp.escape(controller.searchDocOnProgress.text),
+                    child: _buildDocumentCard(doc));
+              },
+            ),
           ),
         ));
   }
 
   Widget _buildDocumentCard(dynamic doc) {
     return CardApp(
-      onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT,
-          arguments: [doc, 'Approval']),
+      onTap: () => Get.toNamed(
+        Routes.DETAIL_TRACKING_DOCUMENT,
+        arguments: doc,
+      ),
       padding: REdgeInsets.symmetric(vertical: 10),
       width: 335.w,
       borderWidth: 1,

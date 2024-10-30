@@ -3,22 +3,24 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 class SplashController extends GetxController {
-  SplashController({required this.appStorage});
+  SplashController({required this.appStorage, required this.deviceInfo});
 
   final AppStorage appStorage;
+  final DeviceInfo deviceInfo;
   final RxBool isLoading = false.obs;
 
   @override
   onInit() {
-    iniData();
+    _initData();
     super.onInit();
   }
 
-  Future<void> iniData() async {
+  Future<void> _initData() async {
     final everLogin = await appStorage.read('ever-login');
 
     isLoading.value = true;

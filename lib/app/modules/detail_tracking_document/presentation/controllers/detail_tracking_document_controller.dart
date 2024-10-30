@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_model.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/action_tracking_document.dart';
 import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/get_detail_tracking_document.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -19,9 +19,10 @@ class DetailTrackingDocumentController extends GetxController {
   });
 
   late final TabController tabController;
-  String checkRoutes = Get.arguments[1];
-  late dynamic trackingDocumentListData;
+  dynamic trackingDocumentListData = Get.arguments;
   TextEditingController reason = TextEditingController();
+  final TrackingDocumentController controllerTrackingDocument =
+      Get.find<TrackingDocumentController>();
 
   RxBool isLoading = false.obs;
   RxString reasonText = ''.obs;
@@ -34,7 +35,6 @@ class DetailTrackingDocumentController extends GetxController {
   void onInit() {
     super.onInit();
     tabController = TabController(length: 3, vsync: TicckerProvider());
-    _checkRoutes();
     _getDetailDocument(trackingDocumentListData.id);
   }
 
@@ -46,14 +46,6 @@ class DetailTrackingDocumentController extends GetxController {
 
   final GetDetailTrackingDocument getDetailTrackingDocumentUseCase;
   final ActionTrackingDocument postActionTrackingDocument;
-
-  void _checkRoutes() {
-    if (checkRoutes == 'Approval') {
-      trackingDocumentListData = Get.arguments[0];
-    } else {
-      trackingDocumentListData = Get.arguments[0];
-    }
-  }
 
   Future<void> _getDetailDocument(int id) async {
     isLoading.value = true;
@@ -94,7 +86,7 @@ class DetailTrackingDocumentController extends GetxController {
         case "Waiting For Approval":
           iconColor = Colors.grey;
           break;
-        case "Done":
+        case "Closed":
           iconColor = Colors.blue;
           break;
         default:
@@ -163,7 +155,14 @@ class DetailTrackingDocumentController extends GetxController {
       },
       (r) {
         isLoading.value = false;
-        Get.offAllNamed(Routes.BOTTOMNAVBAR);
+        Get.back();
+        Get.back();
+        AppDialogImpl().showSuccessSnackBar(
+          description: type == 'approve'
+              ? 'Document Successfully Approved'
+              : 'Document Successfully Rejected',
+        );
+        controllerTrackingDocument.loadTrackingDocuments();
       },
     );
   }

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/leave_request_card.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/no_result_found.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
@@ -21,50 +22,75 @@ class AllLeaveRequestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => controller.isLoading.value && controller.filterData.isEmpty
-          ? Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: SizedBox(
-                height: Get.height,
-                child: ListView.builder(
-                  padding: REdgeInsets.only(bottom: 280),
-                  itemCount: 10,
-                  itemBuilder: (_, __) {
-                    return LeaveRequestCard(
-                      onTap: () {},
-                      fullname: '',
-                      code: '',
-                      date: '',
-                      status: '',
-                      iconStatus: 'assets/icons/ic_pending_summary.svg',
-                      description: '',
-                      statusColor: Colors.red,
-                    );
-                  },
-                ),
+    return Obx(() => controller.isLoading.value && controller.leaveData.isEmpty
+        ? Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: SizedBox(
+              height: Get.height,
+              child: ListView.builder(
+                padding: REdgeInsets.only(bottom: 280),
+                itemCount: 10,
+                itemBuilder: (_, __) {
+                  return LeaveRequestCard(
+                    onTap: () {},
+                    fullname: '',
+                    code: '',
+                    date: '',
+                    status: '',
+                    iconStatus: 'assets/icons/ic_pending_summary.svg',
+                    description: '',
+                    statusColor: Colors.red,
+                  );
+                },
               ),
-            )
-          : controller.yearlyLeaveModelRes.isNotEmpty
-              ? controller.filterData.isNotEmpty
-                  ? SearchTextInheritedWidget(
-                      searchText: RegExp.escape(controller.search.text),
-                      child: SizedBox(
-                        height: Get.height,
+            ),
+          )
+        : controller.leaveData.isEmpty
+            ? const Center(child: EmptyDataWidget())
+            : controller.filterLeaveData.isNotEmpty
+                ? SearchTextInheritedWidget(
+                    searchText: RegExp.escape(controller.search.text),
+                    child: SizedBox(
+                      height: Get.height,
+                      child: RefreshIndicator(
+                        backgroundColor: white,
+                        color: primary,
+                        onRefresh: controller.onRefresh,
                         child: ListView.builder(
                           padding: REdgeInsets.only(bottom: 280),
-                          itemCount: controller.filterData.length,
+                          itemCount: controller.filterLeaveData.length,
                           itemBuilder: (_, index) {
-                            final r = controller.filterData[index];
+                            final r = controller.filterLeaveData[index];
                             return LeaveRequestCard(
+                              fullname: '',
+                              code: r.codeNo,
+                              date: r.listPeriode.length > 2
+                                  ? '${r.listPeriode[0].substring(0, 6)}, ${r.listPeriode[1]} and more'
+                                  : r.listPeriode.length == 1
+                                      ? r.listPeriode[0]
+                                      : '${r.listPeriode[0]} - ${r.listPeriode[1]}',
+                              status: r.status,
+                              iconStatus: r.status == 'pending'
+                                  ? 'assets/icons/ic_pending_summary.svg'
+                                  : r.status == 'cancel' ||
+                                          r.status == 'rejected'
+                                      ? 'assets/icons/ic_rejected_summar.svg'
+                                      : 'assets/icons/ic_approved_summary.svg',
+                              description: r.reason,
+                              statusColor: r.status == 'pending'
+                                  ? Colors.orangeAccent
+                                  : r.status == 'cancel' ||
+                                          r.status == 'rejected'
+                                      ? Colors.red
+                                      : green,
                               onTap: () {
                                 showModalBottomSheet(
                                   context: context,
                                   builder: (context) {
                                     return ConstrainedBox(
                                       constraints: BoxConstraints(
-                                          maxHeight: 0.5 * Get.height),
+                                          maxHeight: 0.8 * Get.height),
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
@@ -77,7 +103,7 @@ class AllLeaveRequestView extends StatelessWidget {
                                         width: Get.width,
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                              CrossAxisAlignment.start,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             10.verticalSpace,
@@ -120,45 +146,56 @@ class AllLeaveRequestView extends StatelessWidget {
                                                     subtitle: Row(
                                                       children: [
                                                         Expanded(
-                                                          child: DropdownButton<
-                                                              String>(
-                                                            items: r.listPeriode.map<
-                                                                DropdownMenuItem<
-                                                                    String>>((String
-                                                                value) {
-                                                              return DropdownMenuItem<
-                                                                  String>(
-                                                                value: value,
-                                                                child:
-                                                                    Text(value),
-                                                              );
-                                                            }).toList(),
-                                                            value: r
-                                                                .listPeriode[0],
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              // Handle the value change
-                                                            },
-                                                            icon: const Icon(Icons
-                                                                .arrow_drop_down),
-                                                          ),
-                                                          //  Text(
-                                                          //             r.listPeriode
-                                                          //                         .length ==
-                                                          //                     1
-                                                          //                 ? r.listPeriode[
-                                                          //                     0]
-                                                          //                 : r.listPeriode
-                                                          //                             .length ==
-                                                          //                         2
-                                                          //                     ? '${r.listPeriode[0]} - ${r.listPeriode[1]}'
-                                                          //                     : '${r.listPeriode[0].substring(0, 6)}, ${r.listPeriode[1]}, etc',
-                                                          //             style: TS.bodyMedium
-                                                          //                 .copyWith(
-                                                          //                     fontWeight:
-                                                          //                         FontWeight
-                                                          //                             .w300),
-                                                          //           ),
+                                                          child: r.listPeriode
+                                                                      .length >
+                                                                  1
+                                                              ? DropdownButtonHideUnderline(
+                                                                  child:
+                                                                      DropdownButton<
+                                                                          String>(
+                                                                    dropdownColor:
+                                                                        white,
+                                                                    items: r.listPeriode.map<
+                                                                        DropdownMenuItem<
+                                                                            String>>((String
+                                                                        value) {
+                                                                      return DropdownMenuItem<
+                                                                          String>(
+                                                                        value:
+                                                                            value,
+                                                                        child: Text(
+                                                                            value),
+                                                                      );
+                                                                    }).toList(),
+                                                                    value:
+                                                                        r.listPeriode[
+                                                                            0],
+                                                                    style: TS
+                                                                        .bodyMedium
+                                                                        .copyWith(
+                                                                      color:
+                                                                          black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w300,
+                                                                    ),
+                                                                    onChanged:
+                                                                        (String?
+                                                                            newValue) {},
+                                                                    icon: const Icon(
+                                                                        Icons
+                                                                            .arrow_drop_down),
+                                                                  ),
+                                                                )
+                                                              : Text(
+                                                                  r.listPeriode[
+                                                                      0],
+                                                                  style: TS
+                                                                      .bodyMedium
+                                                                      .copyWith(
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                ),
                                                         ),
                                                       ],
                                                     ),
@@ -173,7 +210,10 @@ class AllLeaveRequestView extends StatelessWidget {
                                                       width: 35.h,
                                                       r.status == 'cancel'
                                                           ? 'assets/icons/ic_status_canceled.svg'
-                                                          : 'assets/icons/ic_date_status.svg',
+                                                          : r.status ==
+                                                                  'approved'
+                                                              ? 'assets/icons/ic_approved_detail_summary.svg'
+                                                              : 'assets/icons/ic_date_status.svg',
                                                     ),
                                                     title: Text(
                                                       'Status',
@@ -184,9 +224,9 @@ class AllLeaveRequestView extends StatelessWidget {
                                                           .toString(),
                                                       style: TS.bodyMedium
                                                           .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
                                                     ),
                                                   ),
                                                 )
@@ -197,6 +237,8 @@ class AllLeaveRequestView extends StatelessWidget {
                                             10.verticalSpace,
                                             SingleChildScrollView(
                                               child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Center(
                                                     child: Text(
@@ -220,6 +262,40 @@ class AllLeaveRequestView extends StatelessWidget {
                                                           TextAlign.start,
                                                     ),
                                                   ),
+                                                  r.revisionReject!.isEmpty
+                                                      ? emptyBox
+                                                      : 25.verticalSpace,
+                                                  r.revisionReject!.isEmpty
+                                                      ? emptyBox
+                                                      : Center(
+                                                          child: Text(
+                                                            'Reason of Rejection',
+                                                            style:
+                                                                TS.titleSmall,
+                                                          ),
+                                                        ),
+                                                  r.revisionReject!.isEmpty
+                                                      ? emptyBox
+                                                      : 10.verticalSpace,
+                                                  r.revisionReject!.isEmpty
+                                                      ? emptyBox
+                                                      : EPadding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 14,
+                                                          ),
+                                                          child: Text(
+                                                            r.revisionReject
+                                                                .toString(),
+                                                            style: TS.bodyMedium
+                                                                .copyWith(
+                                                              color: greyText,
+                                                            ),
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                          ),
+                                                        ),
                                                 ],
                                               ),
                                             ),
@@ -354,34 +430,12 @@ class AllLeaveRequestView extends StatelessWidget {
                                   },
                                 );
                               },
-                              fullname: '',
-                              code: r.codeNo,
-                              date: r.listPeriode.length > 2
-                                  ? '${r.listPeriode[0].substring(0, 6)}, ${r.listPeriode[1]} and more'
-                                  : r.listPeriode.length == 1
-                                      ? r.listPeriode[0]
-                                      : '${r.listPeriode[0]} - ${r.listPeriode[1]}',
-                              status: r.status,
-                              iconStatus: r.status == 'pending'
-                                  ? 'assets/icons/ic_pending_summary.svg'
-                                  : r.status == 'cancel' ||
-                                          r.status == 'rejected'
-                                      ? 'assets/icons/ic_rejected_summar.svg'
-                                      : 'assets/icons/ic_approved_summary.svg',
-                              description: r.reason,
-                              statusColor: r.status == 'pending'
-                                  ? Colors.orangeAccent
-                                  : r.status == 'cancel' ||
-                                          r.status == 'rejected'
-                                      ? Colors.red
-                                      : green,
                             );
                           },
                         ),
                       ),
-                    )
-                  : const NoResultFoundWidget()
-              : const Center(child: EmptyDataWidget()),
-    );
+                    ),
+                  )
+                : const Center(child: NoResultFoundWidget()));
   }
 }

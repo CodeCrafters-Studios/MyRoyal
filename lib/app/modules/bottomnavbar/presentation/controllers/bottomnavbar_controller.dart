@@ -4,6 +4,7 @@ import 'package:iroyal/app/modules/bottomnavbar/domain/entities/bottomnavbar_men
 
 class BottomnavbarController extends GetxController {
   final tabController = PageController();
+
   RxInt currentIndex = 0.obs;
 
   List<BottomnavbarMenu> bottomnavbarMenu = <BottomnavbarMenu>[

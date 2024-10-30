@@ -4,29 +4,29 @@ import 'package:iroyal/app/modules/help_and_support/entities/popular_questions.d
 class HelpAndSupportController extends GetxController {
   List<PopularQuestions> listPopularQuestions = <PopularQuestions>[
     PopularQuestions(
-      title: 'What is i-Royal Mobile Apps?',
+      title: 'What is MyRoyal Mobile Apps?',
       description:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          'MyRoyal application is designed to address these issues by providing an integrated platform that simplifies the management of various daily activities for both Managers or HR and Employees. This application offers 15 core features as part of its MVP (Minimum Viable Product), aimed at reducing complexity and enhancing operational efficiency.',
     ),
     PopularQuestions(
       title: 'I forgot my password when logging in. What should I do?',
       description:
-          'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+          'If you forgot your password when logging in, please contact our helpdesk for assistance 0811-2465-515 or 0811-2000-5071.',
     ),
     PopularQuestions(
       title: 'Is it possible to access two accounts on different devices?',
       description:
-          'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+          'Yes, it is possible to access two accounts on different devices. Each account can be logged in separately on its respective device without any issues.',
     ),
     PopularQuestions(
       title: 'Can I change my password?',
       description:
-          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          'If you want to change your password when logging in, please contact our helpdesk for assistance 0811-2465-515 or 0811-2000-5071.',
     ),
     PopularQuestions(
       title: 'How do I change my profile picture?',
       description:
-          'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+          'Go to settings → Profile → Edit Profile → Tap Profile Picture → Choose from Gallery or Camera → Tap Continue Button',
     ),
   ];
 }

@@ -141,10 +141,11 @@ class ApplyLeaveView extends StatelessWidget {
                   controller.multiDatePickerValueWithDefaultValue,
                 ),
           () => showModalBottomSheet(
+              isScrollControlled: true,
               context: context,
               builder: (_) {
-                return ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: 0.8 * Get.height),
+                return FractionallySizedBox(
+                    heightFactor: 0.65,
                     child: _buildMultiDatePickerWithValue());
               })
           // controller.selectStartDate(context),
@@ -187,6 +188,9 @@ class ApplyLeaveView extends StatelessWidget {
   Widget _buildApplyButton() {
     return Obx(
       () => ButtonPrimary(
+        enable: controller.selectedSubtituteEmployee.isNotEmpty &&
+            controller.multiDatePickerValueWithDefaultValue.isNotEmpty &&
+            controller.reason.value.isNotEmpty,
         isLoading: controller.isLoading.value,
         fullWidth: true,
         margin: REdgeInsets.symmetric(vertical: 20),

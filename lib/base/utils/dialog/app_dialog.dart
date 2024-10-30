@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
@@ -55,14 +56,27 @@ abstract class AppDialog {
 
   Future<void> showInfoDialog({
     String? imagePath,
-    String title,
+    String? title,
     String? description,
-    String textButton,
+    String? textButton,
+    double? height,
+    double? width,
     Function()? onPress,
   });
 
   Future<void> showSuccessSnackBar({
     required String description,
+  });
+
+  Future<void> showAppVersionInfoDialog({
+    String? title,
+    String description,
+    String? textButton,
+    double? height,
+    double? width,
+    bool isForceUpdateVersion,
+    Function()? onPressLater,
+    Function()? onPressUpdate,
   });
 }
 
@@ -528,6 +542,101 @@ class AppDialogImpl implements AppDialog {
       titleText: const SizedBox(),
       padding: REdgeInsets.all(12),
       dismissDirection: DismissDirection.vertical,
+    );
+  }
+
+  @override
+  Future<void> showAppVersionInfoDialog({
+    String? title,
+    String description = '',
+    String? textButton,
+    double? height,
+    double? width,
+    bool isForceUpdateVersion = false,
+    Function()? onPressLater,
+    Function()? onPressUpdate,
+  }) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 40),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            Insets.med,
+            Insets.xl,
+            Insets.med,
+            Insets.xs,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title ?? 'Information',
+                style: TS.titleMedium,
+              ),
+              15.verticalSpace,
+              Text(
+                description,
+                style: TS.bodyMedium,
+              ),
+              28.verticalSpace,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  isForceUpdateVersion
+                      ? emptyBox
+                      : TextButton(
+                          onPressed: onPressLater,
+                          child: Text(
+                            'Later',
+                            style: TS.titleSmall.copyWith(color: red),
+                          ),
+                        ),
+                  15.horizontalSpace,
+                  InkWell(
+                    onTap: onPressUpdate,
+                    child: Container(
+                      padding: REdgeInsets.fromLTRB(12, 8, 12, 8),
+                      decoration: BoxDecoration(
+                          color: primary,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      child: Text(
+                        'Update',
+                        style: TS.titleSmall.copyWith(color: white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              5.verticalSpace,
+              const Divider(color: grey),
+              5.verticalSpace,
+              Row(
+                children: [
+                  Image.asset(
+                    height: 30.w,
+                    'assets/images/img_googleplay.png',
+                  ),
+                  10.horizontalSpace,
+                  Text(
+                    'Google Play',
+                    style: TS.titleMedium.copyWith(
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                ],
+              ),
+              16.verticalSpace,
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
     );
   }
 }

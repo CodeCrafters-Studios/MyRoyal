@@ -82,16 +82,27 @@ class SplashView extends GetView<SplashController> {
                         begin: const Offset(0, 3),
                       ),
                   Positioned(
-                    bottom: .05.sh,
+                    bottom: .04.sh,
                     right: 0,
                     left: 0,
                     child: EPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
-                        'Copyright @ 2024 Royal Corporation.\nAll Right Reserved.',
-                        style:
-                            TS.bodySmall.copyWith(fontWeight: FontWeight.w200),
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Copyright @ 2024 Royal Corporation.\nAll Right Reserved.',
+                            style: TS.bodySmall
+                                .copyWith(fontWeight: FontWeight.w200),
+                            textAlign: TextAlign.center,
+                          ),
+                          10.verticalSpace,
+                          Text(
+                            'Version ${controller.deviceInfo.packageInfo.version}',
+                            style: TS.bodySmall
+                                .copyWith(fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   )

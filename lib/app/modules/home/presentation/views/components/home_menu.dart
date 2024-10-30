@@ -43,6 +43,9 @@ class HomeMenu extends StatelessWidget {
           case 'My Teams':
             Get.toNamed(Routes.MY_TEAMS);
             break;
+          case 'Leaves':
+            Get.toNamed(Routes.LEAVE_SUMMARY);
+            break;
           default:
             Get.to(() => const ComingSoonScreen());
             break;

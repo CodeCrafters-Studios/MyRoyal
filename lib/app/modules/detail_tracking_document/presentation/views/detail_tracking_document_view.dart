@@ -78,7 +78,13 @@ class DetailTrackingDocumentView
                                             .data
                                             .detailPtk
                                             .state ==
-                                        'reject'
+                                        'reject' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'Closed'
                                 ? controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -86,7 +92,14 @@ class DetailTrackingDocumentView
                                             .state ==
                                         'approved'
                                     ? green
-                                    : red
+                                    : controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject'
+                                        ? red
+                                        : greyText
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
@@ -107,7 +120,13 @@ class DetailTrackingDocumentView
                                             .data
                                             .detailPtk
                                             .state ==
-                                        'reject'
+                                        'reject' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'Closed'
                                 ? controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -115,7 +134,14 @@ class DetailTrackingDocumentView
                                             .state ==
                                         'approved'
                                     ? green
-                                    : red
+                                    : controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject'
+                                        ? red
+                                        : greyText
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
@@ -125,35 +151,49 @@ class DetailTrackingDocumentView
                                             'Urgent'
                                         ? urgentColor
                                         : red,
-                            icon: controller
-                                            .detailTrackingDocDataModel()
-                                            .data
-                                            .detailPtk
-                                            .state ==
-                                        'approved' ||
-                                    controller
-                                            .detailTrackingDocDataModel()
-                                            .data
-                                            .detailPtk
-                                            .state ==
-                                        'reject'
-                                ? controller
-                                            .detailTrackingDocDataModel()
-                                            .data
-                                            .detailPtk
-                                            .state ==
-                                        'approved'
-                                    ? Icons.check
-                                    : Icons.close
-                                : controller.trackingDocumentListData
-                                            .stateTargetCompletionDate ==
-                                        'On Time'
-                                    ? Icons.info
+                            icon:
+                                controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'approved' ||
+                                        controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject' ||
+                                        controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'Closed'
+                                    ? controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'approved'
+                                        ? Icons.check
+                                        : controller
+                                                    .detailTrackingDocDataModel()
+                                                    .data
+                                                    .detailPtk
+                                                    .state ==
+                                                'reject'
+                                            ? Icons.close
+                                            : Icons.block
                                     : controller.trackingDocumentListData
                                                 .stateTargetCompletionDate ==
-                                            'Urgent'
-                                        ? Icons.bolt
-                                        : Icons.warning,
+                                            'On Time'
+                                        ? Icons.info
+                                        : controller.trackingDocumentListData
+                                                    .stateTargetCompletionDate ==
+                                                'Urgent'
+                                            ? Icons.bolt
+                                            : Icons.warning,
                             iconColor: controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -165,7 +205,13 @@ class DetailTrackingDocumentView
                                             .data
                                             .detailPtk
                                             .state ==
-                                        'reject'
+                                        'reject' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'Closed'
                                 ? controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -173,7 +219,14 @@ class DetailTrackingDocumentView
                                             .state ==
                                         'approved'
                                     ? green
-                                    : red
+                                    : controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject'
+                                        ? red
+                                        : greyText
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
@@ -194,7 +247,13 @@ class DetailTrackingDocumentView
                                             .data
                                             .detailPtk
                                             .state ==
-                                        'reject'
+                                        'reject' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'Closed'
                                 ? controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -202,7 +261,14 @@ class DetailTrackingDocumentView
                                             .state ==
                                         'approved'
                                     ? 'APPROVED'
-                                    : 'REJECTED'
+                                    : controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject'
+                                        ? 'REJECTED'
+                                        : 'CLOSED'
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
@@ -223,7 +289,13 @@ class DetailTrackingDocumentView
                                             .data
                                             .detailPtk
                                             .state ==
-                                        'reject'
+                                        'reject' ||
+                                    controller
+                                            .detailTrackingDocDataModel()
+                                            .data
+                                            .detailPtk
+                                            .state ==
+                                        'Closed'
                                 ? controller
                                             .detailTrackingDocDataModel()
                                             .data
@@ -231,7 +303,14 @@ class DetailTrackingDocumentView
                                             .state ==
                                         'approved'
                                     ? green
-                                    : red
+                                    : controller
+                                                .detailTrackingDocDataModel()
+                                                .data
+                                                .detailPtk
+                                                .state ==
+                                            'reject'
+                                        ? red
+                                        : greyText
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'

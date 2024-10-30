@@ -10,11 +10,14 @@ import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum FormLoginValue { username, password }
 
@@ -27,6 +30,8 @@ class LoginController extends GetxController {
     required this.authBiometricsLogin,
     required this.appStorage,
     required this.authBiometrics,
+    required this.deviceInfo,
+    required this.firebaseRemoteConfig,
   });
 
   final FocusNode focusNodeUsername = FocusNode();
@@ -59,6 +64,8 @@ class LoginController extends GetxController {
   final AuthBiometricsLogin authBiometricsLogin;
   final AppStorage appStorage;
   final AuthBiometrics authBiometrics;
+  final DeviceInfo deviceInfo;
+  final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
 
   @override
   void onInit() async {
@@ -76,6 +83,7 @@ class LoginController extends GetxController {
       null;
     }
     super.onInit();
+    checkVersion();
   }
 
   @override
@@ -91,6 +99,65 @@ class LoginController extends GetxController {
     } else {
       isFocus(true);
     }
+  }
+
+  void checkVersion() {
+    // Get the current app version
+    final appVersion =
+        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+
+    // Get the required min version from Firebase Remote Config
+    final requiredMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRequiredMinimumVersion());
+
+    // Get the recommended min version from Firebase Remote Config
+    final recommendedMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRecommendedMinimumVersion());
+
+    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+
+    AppUtils.logApp('APP VERSION :::: $appVersion');
+    AppUtils.logApp('APP VERSION REQUIRED :::: $requiredMinVersion');
+    AppUtils.logApp('APP VERSION RECOMMENDED :::: $recommendedMinVersion');
+    AppUtils.logApp('APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
+    // Compare the versions and display a dialog if the app version is lower than
+    // the required or recommended version
+    if (appVersion < requiredMinVersion) {
+      _showUpdateVersionDialog(forceUpdateVersion);
+    } else if (appVersion < recommendedMinVersion) {
+      _showUpdateVersionDialog(forceUpdateVersion);
+    } else {
+      emptyBox;
+    }
+  }
+
+  // Helper method to compare two semver versions.
+  int _getExtendedVersionNumber(String version) {
+    List<String> versionCells = version.split('.');
+    List<int> versionNumbers = versionCells.map((i) => int.parse(i)).toList();
+
+    return versionNumbers[0] * 100000 +
+        versionNumbers[1] * 1000 +
+        versionNumbers[2];
+  }
+
+  void _showUpdateVersionDialog(bool isForceUpdateVersion) {
+    appDialog.showAppVersionInfoDialog(
+        isForceUpdateVersion: isForceUpdateVersion,
+        title: 'New version available',
+        description:
+            'There is a new version available in the Google Play Store. Would you like to update?',
+        onPressLater: Get.back,
+        onPressUpdate: () async {
+          String url =
+              "https://play.google.com/store/apps/details?id=com.iroyal";
+          if (await canLaunchUrl(Uri.parse(url))) {
+            await launchUrl(Uri.parse(url),
+                mode: LaunchMode.externalApplication);
+          } else {
+            throw 'Could not launch $url';
+          }
+        });
   }
 
   void validateForm() {
@@ -285,7 +352,7 @@ class LoginController extends GetxController {
     appDialog.showInfoDialog(
       imagePath: 'assets/icons/ic_information.svg',
       description:
-          'Please contact the IT Department\nfor further assistance.\n\nCall 021-2345-6789',
+          'Please contact the IT Department\nfor further assistance.\n\nCall 0811-2465-515 or 0811-2000-5071',
       textButton: 'Continue',
     );
   }

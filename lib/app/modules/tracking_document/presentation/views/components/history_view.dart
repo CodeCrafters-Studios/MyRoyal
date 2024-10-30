@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -14,6 +15,7 @@ import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 import 'package:search_highlight_text/search_highlight_text.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HistoryView extends StatelessWidget {
   const HistoryView({super.key, required this.controller});
@@ -33,11 +35,36 @@ class HistoryView extends StatelessWidget {
           children: [
             const AppbarSpacer(),
             _buildSearchBar(),
-            Obx(() => controller.filterDataHistory.isEmpty
-                ? SizedBox(height: 500.h, child: const NoResultWidget())
-                : _buildDocumentList()),
+            Obx(() => controller.isLoading.value
+                ? _buildLoadingDocumentList()
+                : controller.filterDataHistory.isEmpty
+                    ? SizedBox(height: 500.h, child: const NoResultWidget())
+                    : _buildDocumentList()),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingDocumentList() {
+    return SizedBox(
+      height: Get.height,
+      child: ListView.separated(
+        separatorBuilder: (_, __) => 15.verticalSpace,
+        padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
+        itemCount: 10,
+        itemBuilder: (_, __) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: CardApp(
+              height: 150.h,
+              onTap: null,
+              width: 335.w,
+              child: emptyBox,
+            ),
+          );
+        },
       ),
     );
   }
@@ -70,26 +97,33 @@ class HistoryView extends StatelessWidget {
   }
 
   Widget _buildDocumentList() {
-    return Obx(() => SizedBox(
-          height: Get.height,
-          child: ListView.separated(
-            separatorBuilder: (_, __) => 15.verticalSpace,
-            padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
-            itemCount: controller.filterDataHistory.length,
-            itemBuilder: (context, index) {
-              final doc = controller.filterDataHistory[index];
-              return SearchTextInheritedWidget(
-                  searchText: RegExp.escape(controller.searchDocHistory.text),
-                  child: _buildDocumentCard(doc));
-            },
+    return Obx(() => RefreshIndicator(
+          backgroundColor: white,
+          color: primary,
+          onRefresh: controller.onRefresh,
+          child: SizedBox(
+            height: Get.height,
+            child: ListView.separated(
+              separatorBuilder: (_, __) => 15.verticalSpace,
+              padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
+              itemCount: controller.filterDataHistory.length,
+              itemBuilder: (context, index) {
+                final doc = controller.filterDataHistory[index];
+                return SearchTextInheritedWidget(
+                    searchText: RegExp.escape(controller.searchDocHistory.text),
+                    child: _buildDocumentCard(doc));
+              },
+            ),
           ),
         ));
   }
 
   Widget _buildDocumentCard(dynamic doc) {
     return CardApp(
-      onTap: () => Get.toNamed(Routes.DETAIL_TRACKING_DOCUMENT,
-          arguments: [doc, 'History']),
+      onTap: () => Get.toNamed(
+        Routes.DETAIL_TRACKING_DOCUMENT,
+        arguments: doc,
+      ),
       padding: REdgeInsets.symmetric(vertical: 10),
       width: 335.w,
       borderWidth: 1,
@@ -148,15 +182,26 @@ class HistoryView extends StatelessWidget {
   }
 
   Widget _buildStatus(dynamic doc) {
-    final isApproved = doc.state == 'Approved';
-    final color = isApproved ? green : red;
+    final String status = doc.state.toUpperCase();
+    final bool isApproved = doc.state == 'Approved';
+    final bool isRejected = doc.state == 'Rejected';
+    final Color color = isApproved
+        ? green
+        : isRejected
+            ? red
+            : greyText;
+    final IconData icon = isApproved
+        ? Icons.check
+        : isRejected
+            ? Icons.close
+            : Icons.block;
 
     return StatusApproval(
       borderColor: color,
       decorationColor: color,
-      icon: isApproved ? Icons.check : Icons.close,
+      icon: icon,
       iconColor: color,
-      status: doc.state.toUpperCase(),
+      status: status,
       statusColor: color,
     );
   }

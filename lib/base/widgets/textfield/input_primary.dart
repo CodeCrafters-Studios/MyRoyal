@@ -15,6 +15,7 @@ class InputPrimary extends StatefulWidget {
   const InputPrimary({
     super.key,
     this.label = '',
+    this.initialValue,
     this.prefixIcon,
     this.suffixIcon,
     this.color,
@@ -59,6 +60,7 @@ class InputPrimary extends StatefulWidget {
   });
 
   final String label;
+  final String? initialValue;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final Color? color;
@@ -159,6 +161,7 @@ class _InputPrimary extends State<InputPrimary> {
             4.verticalSpace,
           ],
           TextFormField(
+            initialValue: widget.initialValue,
             focusNode: _internalFocusNode,
             scrollPadding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4,
@@ -216,7 +219,7 @@ class _InputPrimary extends State<InputPrimary> {
             obscureText: widget.obsecureText,
             onTapOutside: (event) => AppUtils.dismissKeyboard(),
             readOnly: widget.readOnly,
-            style: widget.textStyle ?? TS.labelLarge,
+            style: widget.textStyle ?? TS.labelMedium,
             textAlign: widget.textAlign,
             textInputAction: widget.action,
             validator: widget.validation,

@@ -1,5 +1,5 @@
 name: iroyal
-version: 1.0.0+5
+version: 1.0.0+9
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -26,13 +26,13 @@ dependencies:
   firebase_analytics: ^10.10.5
   firebase_core: ^2.31.0
   firebase_messaging: ^14.9.2
+  firebase_remote_config: ^4.4.7
   fl_chart: ^0.67.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
   flutter_cached_pdfview: ^0.4.2
   flutter_downloader: ^1.11.8
-  flutter_file_downloader: ^2.0.0
   flutter_jailbreak_detection: ^1.10.0
   flutter_launcher_icons: ^0.13.1
   flutter_local_notifications: ^16.1.0
@@ -60,6 +60,7 @@ dependencies:
   share_plus: ^7.2.2
   shimmer: ^3.0.0
   tuple: ^2.0.2
+  url_launcher: ^6.3.1
   webview_flutter: ^4.7.0
 
 dev_dependencies:

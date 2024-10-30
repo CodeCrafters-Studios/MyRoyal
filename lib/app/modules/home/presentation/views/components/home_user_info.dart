@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
@@ -48,7 +49,7 @@ class HomeUserInfo extends GetView<HomeController> {
                   ),
                 )
               : CardApp(
-                  color: primary,
+                  color: white,
                   isShadow: true,
                   shadows: Shadows.small,
                   padding: REdgeInsets.all(8),
@@ -56,31 +57,37 @@ class HomeUserInfo extends GetView<HomeController> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      HomeUserCard(
-                        title: controller.userData().data.email.isEmpty
-                            ? '-'
-                            : controller.userData().data.email,
-                        subtitle:
-                            '${controller.userData().data.employeeNumber} | ${controller.userData().data.position} | ${controller.userData().data.department}',
-                        isThridLine: true,
-                        thridLineTitle: controller
-                                .userData()
-                                .data
-                                .joinDate
-                                .isEmpty
-                            ? '-'
-                            : 'Join date: ${controller.userData().data.joinDate}',
-                        isImageAvailable: controller.isImageAvailable.value,
-                        isAvatarPicture: true,
-                        avatarPicture:
-                            controller.userData().data.profilePicture.isNotEmpty
-                                ? controller.userData().data.profilePicture
-                                : '',
-                        initial:
-                            controller.userData().data.initialName.isNotEmpty
-                                ? controller.userData().data.initialName
-                                : '',
-                        suffixIcon: false,
+                      InkWell(
+                        onTap: () => Get.toNamed(Routes.PROFILE),
+                        child: HomeUserCard(
+                          title: controller.userData().data.email.isEmpty
+                              ? '-'
+                              : controller.userData().data.email,
+                          subtitle:
+                              '${controller.userData().data.employeeNumber} | ${controller.userData().data.position} | ${controller.userData().data.department}',
+                          isThridLine: true,
+                          thridLineTitle: controller
+                                  .userData()
+                                  .data
+                                  .joinDate
+                                  .isEmpty
+                              ? '-'
+                              : 'Join date: ${controller.userData().data.joinDate}',
+                          isImageAvailable: controller.isImageAvailable.value,
+                          isAvatarPicture: true,
+                          avatarPicture: controller
+                                  .userData()
+                                  .data
+                                  .profilePicture
+                                  .isNotEmpty
+                              ? controller.userData().data.profilePicture
+                              : '',
+                          initial:
+                              controller.userData().data.initialName.isNotEmpty
+                                  ? controller.userData().data.initialName
+                                  : '',
+                          suffixIcon: true,
+                        ),
                       ),
                     ],
                   ),

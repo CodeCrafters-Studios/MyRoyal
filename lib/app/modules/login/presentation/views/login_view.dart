@@ -134,6 +134,12 @@ class LoginView extends GetView<LoginController> {
               key: const Key('loginNoAccount'),
               onTap: controller.dontHaveAnAccount,
             ),
+            10.verticalSpace,
+            Text(
+              'Version ${controller.deviceInfo.packageInfo.version}',
+              style: TS.bodySmall.copyWith(fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),

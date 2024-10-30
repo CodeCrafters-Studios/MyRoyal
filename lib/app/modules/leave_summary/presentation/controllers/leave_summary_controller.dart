@@ -36,7 +36,6 @@ class LeaveSummaryController extends GetxController {
 
   late final TabController tabController;
   TextEditingController search = TextEditingController();
-  TextEditingController reasonRejected = TextEditingController();
 
   final config = CalendarDatePicker2Config(
     firstDate: DateTime.now().add(const Duration(days: 3)),
@@ -79,13 +78,14 @@ class LeaveSummaryController extends GetxController {
       const CancelFormLeaveEntity(id: 0, codeNo: '').obs;
   final Rx<UserDataModel> userData = UserDataModel.empty().obs;
 
-  RxList<DataLeaveModel> yearlyLeaveModelRes = <DataLeaveModel>[].obs;
-  RxList<DataLeaveModel> filterData = <DataLeaveModel>[].obs;
+  RxList<DataLeaveModel> leaveData = <DataLeaveModel>[].obs;
+  RxList<DataLeaveModel> filterLeaveData = <DataLeaveModel>[].obs;
   RxList<Employee> subtituteEmployeeListRes = <Employee>[].obs;
   RxList<DateTime> multiDatePickerValueWithDefaultValue = <DateTime>[].obs;
   RxList<LeaveApprovalEntity> listLeaveApprovalRes =
       <LeaveApprovalEntity>[].obs;
-  RxList<LeaveApprovalEntity> filterApprovalData = <LeaveApprovalEntity>[].obs;
+  RxList<LeaveApprovalEntity> filterApprovalLeaveData =
+      <LeaveApprovalEntity>[].obs;
 
   final GetLeaveUsecase getLeaveUsecase;
   final GetSubtituteEmployeeUsecase getSubtituteEmployeeUsecase;
@@ -108,6 +108,18 @@ class LeaveSummaryController extends GetxController {
   void onClose() {
     tabController.dispose();
     super.onClose();
+  }
+
+  Future<void> onRefresh() async {
+    filterApprovalLeaveData.value = [];
+    listLeaveApprovalRes.value = [];
+    filterLeaveData.value = [];
+    leaveData.value = [];
+
+    await _getCacheUser();
+    _getLeaveSummary();
+    _getLeaveApprovalSummary();
+    _getSubtituteEmployees();
   }
 
   void selectCasualType() {
@@ -142,10 +154,10 @@ class LeaveSummaryController extends GetxController {
       isLoading.value = false;
       AppUtils.logApp(l.toString());
     }, (r) {
-      isLoading.value = false;
       leaveModelRes.value = r;
-      yearlyLeaveModelRes.value = leaveModelRes().data!.dataLeave!;
-      filterData.value = yearlyLeaveModelRes;
+      leaveData.value = leaveModelRes().data!.dataLeave!;
+      filterLeaveData.value = leaveData;
+      isLoading.value = false;
     });
   }
 
@@ -158,9 +170,9 @@ class LeaveSummaryController extends GetxController {
       isLoading.value = false;
       AppUtils.logApp(l.toString());
     }, (r) {
-      isLoading.value = false;
       listLeaveApprovalRes.value = r;
-      filterApprovalData.value = listLeaveApprovalRes;
+      filterApprovalLeaveData.value = listLeaveApprovalRes;
+      isLoading.value = false;
     });
   }
 
@@ -256,16 +268,19 @@ class LeaveSummaryController extends GetxController {
 
   void onChanged(String value) {
     valueListener.value = value;
-    _filterData(value, yearlyLeaveModelRes, filterData);
-    _filterApprovalData(value, listLeaveApprovalRes, filterApprovalData);
+    _filterLeaveData(value, leaveData, filterLeaveData);
+    _filterApprovalLeaveData(
+        value, listLeaveApprovalRes, filterApprovalLeaveData);
   }
 
   void clear() {
     search.clear();
     valueListener.value = '';
+    filterLeaveData.value = leaveData;
+    filterApprovalLeaveData.value = listLeaveApprovalRes;
   }
 
-  void _filterData(String value, RxList<DataLeaveModel> data,
+  void _filterLeaveData(String value, RxList<DataLeaveModel> data,
       RxList<DataLeaveModel> filterData) {
     if (value.isEmpty) {
       filterData.value = data;
@@ -288,13 +303,13 @@ class LeaveSummaryController extends GetxController {
     }
   }
 
-  void _filterApprovalData(String value, RxList<LeaveApprovalEntity> data,
-      RxList<LeaveApprovalEntity> filterApprovalData) {
+  void _filterApprovalLeaveData(String value, RxList<LeaveApprovalEntity> data,
+      RxList<LeaveApprovalEntity> filterApprovalLeaveData) {
     if (value.isEmpty) {
-      filterApprovalData.value = data;
-      AppUtils.logApp('${filterApprovalData.length}');
+      filterApprovalLeaveData.value = data;
+      AppUtils.logApp('${filterApprovalLeaveData.length}');
     } else {
-      filterApprovalData.value = data
+      filterApprovalLeaveData.value = data
           .where((e) =>
               e.fullName.toLowerCase().contains(value.toLowerCase()) ||
               e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
@@ -308,7 +323,7 @@ class LeaveSummaryController extends GetxController {
                   .contains(value.toLowerCase()) ||
               e.status.toString().toLowerCase().contains(value.toLowerCase()))
           .toList();
-      AppUtils.logApp('${filterApprovalData.length}');
+      AppUtils.logApp('${filterApprovalLeaveData.length}');
     }
   }
 
@@ -328,6 +343,7 @@ class LeaveSummaryController extends GetxController {
     r.fold((l) {
       Get.back();
       isLoading(false);
+      reasonText.value = '';
       final m = l.properties[0] as ApiException;
       AppDialogImpl().showErrorDialog(description: m.message);
     }, (r) {

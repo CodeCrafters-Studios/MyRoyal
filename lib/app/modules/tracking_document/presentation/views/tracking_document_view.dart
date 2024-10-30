@@ -246,6 +246,21 @@ class TrackingDocumentImplView extends StatelessWidget {
                       )
                     ],
                   ),
+                  15.verticalSpace,
+                  Row(
+                    children: [
+                      _statusContainer(
+                        icon: Icons.block,
+                        label: 'Closed',
+                        color: greyText,
+                      ),
+                      5.horizontalSpace,
+                      Text(
+                        controller.listDataStatusClosed.length.toString(),
+                        style: TS.bodyMedium.copyWith(color: greyText),
+                      ),
+                    ],
+                  ),
                   5.verticalSpace,
                 ],
               ),

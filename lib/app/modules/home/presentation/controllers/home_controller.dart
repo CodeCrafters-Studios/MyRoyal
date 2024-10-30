@@ -9,10 +9,21 @@ import 'package:iroyal/app/modules/notifications/data/models/notification_data_l
 import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
-  HomeController({required this.getUser, required this.getNotifications});
+  HomeController({
+    required this.getUser,
+    required this.getNotifications,
+    required this.deviceInfo,
+    required this.firebaseRemoteConfig,
+    required this.appDialog,
+  });
 
   String userState = '';
   RxString id = ''.obs;
@@ -58,6 +69,11 @@ class HomeController extends GetxController {
       name: 'Tracking Documents',
       isVisible: true,
     ),
+    const Menu(
+      code: 'ic_leaves',
+      name: 'Leaves',
+      isVisible: true,
+    ),
     // const Menu(
     //   code: 'ic_teams',
     //   name: 'My Teams',
@@ -85,7 +101,7 @@ class HomeController extends GetxController {
   Rx<User> userData =
       User(code: 0, message: '', data: UserDataModel.empty()).obs;
 
-  final Rx<NotificationEntities> notificationsData = const NotificationEntities(
+  Rx<NotificationEntities> notificationsData = const NotificationEntities(
           code: 0,
           message: '',
           data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
@@ -93,6 +109,9 @@ class HomeController extends GetxController {
 
   final GetUser getUser;
   final GetNotifications getNotifications;
+  final DeviceInfo deviceInfo;
+  final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
+  final AppDialog appDialog;
 
   @override
   void onInit() {
@@ -109,6 +128,70 @@ class HomeController extends GetxController {
     _getAllMenu();
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
+    checkVersion();
+  }
+
+  void checkVersion() {
+    // Get the current app version
+    final appVersion =
+        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+
+    // Get the required min version from Firebase Remote Config
+    final requiredMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRequiredMinimumVersion());
+
+    // Get the recommended min version from Firebase Remote Config
+    final recommendedMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRecommendedMinimumVersion());
+
+    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+
+    AppUtils.logApp('APP VERSION :::: $appVersion');
+    AppUtils.logApp('APP VERSION REQUIRED :::: $requiredMinVersion');
+    AppUtils.logApp('APP VERSION RECOMMENDED :::: $recommendedMinVersion');
+    AppUtils.logApp('APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
+    // Compare the versions and display a dialog if the app version is lower than
+    // the required or recommended version
+    if (appVersion < requiredMinVersion) {
+      _showUpdateVersionDialog(
+          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
+    } else if (appVersion < recommendedMinVersion) {
+      _showUpdateVersionDialog(forceUpdateVersion,
+          firebaseRemoteConfig.getRecommendedMinimumVersion());
+    } else {
+      emptyBox;
+    }
+  }
+
+  // Helper method to compare two semver versions.
+  int _getExtendedVersionNumber(String version) {
+    List<String> versionCells = version.split('.');
+    List<int> versionNumbers = versionCells.map((i) => int.parse(i)).toList();
+
+    return versionNumbers[0] * 100000 +
+        versionNumbers[1] * 1000 +
+        versionNumbers[2];
+  }
+
+  void _showUpdateVersionDialog(
+      bool isForceUpdateVersion, String recommendedMinVersion) {
+    appDialog.showAppVersionInfoDialog(
+        isForceUpdateVersion: isForceUpdateVersion,
+        title: 'New version available',
+        description:
+            'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
+        onPressLater: Get.back,
+        onPressUpdate: () async {
+          Get.back();
+          String url =
+              "https://play.google.com/store/apps/details?id=com.iroyal";
+          if (await canLaunchUrl(Uri.parse(url))) {
+            await launchUrl(Uri.parse(url),
+                mode: LaunchMode.externalApplication);
+          } else {
+            throw 'Could not launch $url';
+          }
+        });
   }
 
   Future<void> _getAllMenu() async {

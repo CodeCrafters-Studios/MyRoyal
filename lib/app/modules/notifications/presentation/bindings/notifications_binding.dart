@@ -45,8 +45,10 @@ import 'package:iroyal/app/modules/webtel/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
 import 'package:iroyal/app/modules/webtel/presentation/controllers/webtel_controller.dart';
+import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
@@ -91,6 +93,9 @@ class NotificationsBinding extends Bindings {
         () => HomeController(
           getUser: Get.find(),
           getNotifications: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
+          deviceInfo: Get.find<DeviceInfo>(),
+          firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
         ),
       )
       ..lazyPut<HomeLocalDataSourceImpl>(

@@ -111,14 +111,14 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  controller: controller.firstNameController,
                   label: 'First Name',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.data.personal.fullName.isNotEmpty
-                          ? controller.argumentData.data.personal.fullName
-                          : 'Firstname',
+                  initialValue: controller.argumentData.data.personal.firstName,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.firstName.value.isEmpty
+                      ? 'Enter your First Name'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -129,14 +129,14 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  controller: controller.lastNameController,
                   label: 'Last Name',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.data.personal.lastName.isNotEmpty
-                          ? controller.argumentData.data.personal.lastName
-                          : 'Lastname',
+                  initialValue: controller.argumentData.data.personal.lastName,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.lastName.value.isEmpty
+                      ? 'Enter your Last Name'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -150,10 +150,11 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Nickname',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.data.personal.nickname.isNotEmpty
-                          ? controller.argumentData.data.personal.nickname
-                          : 'Nickname',
+                  initialValue: controller.argumentData.data.personal.nickname,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.nickname.value.isEmpty
+                      ? 'Enter your Nickname'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -167,10 +168,12 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Personal Email',
                   color: white,
                   outlineColor: grey,
-                  hint: controller
-                          .argumentData.data.personal.personalEmail.isNotEmpty
-                      ? controller.argumentData.data.personal.personalEmail
-                      : 'Enter your email',
+                  initialValue:
+                      controller.argumentData.data.personal.personalEmail,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.email.value.isEmpty
+                      ? 'Enter your Personal Email Address'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -184,10 +187,11 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'Instagram',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.data.personal.instagram.isNotEmpty
-                          ? controller.argumentData.data.personal.instagram
-                          : 'Enter your instagram',
+                  initialValue: controller.argumentData.data.personal.instagram,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.instagram.value.isEmpty
+                      ? 'Enter your Instagram'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),
@@ -201,10 +205,11 @@ class EditProfileView extends GetView<EditProfileController> {
                   label: 'LinkedIn',
                   color: white,
                   outlineColor: grey,
-                  hint:
-                      controller.argumentData.data.personal.linkedin.isNotEmpty
-                          ? controller.argumentData.data.personal.linkedin
-                          : 'Enter your linkedin',
+                  initialValue: controller.argumentData.data.personal.linkedin,
+                  textStyle: TS.bodyMedium,
+                  hint: controller.linkedIn.value.isEmpty
+                      ? 'Enter your LinkedIn'
+                      : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
                   ),

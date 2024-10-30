@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:iroyal/app/modules/login/data/models/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/data/models/login_params.dart';
 import 'package:iroyal/app/modules/login/data/models/login_response.dart';
@@ -94,57 +95,48 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     if (username.isEmpty || password.isEmpty) {
       throw LocalDataException('Username or Password cannot be empty');
     }
-    // final permissionStatus = await appLocation.permission;
-    // if (permissionStatus == LocationPermission.denied ||
-    //     permissionStatus == LocationPermission.unableToDetermine) {
-    //   final showDialogPermission = await appDialog.showPermissionDialog(
-    //     description: 'App request to access device Location',
-    //   );
+    final permissionStatus = await appLocation.permission;
+    if (permissionStatus == LocationPermission.denied ||
+        permissionStatus == LocationPermission.unableToDetermine) {
+      final showDialogPermission = await appDialog.showPermissionDialog(
+        description: 'App request to access device Location',
+      );
 
-    //   if (showDialogPermission) {
-    //     final result = await appLocation.requestPermission();
-    //     if (result == LocationPermission.whileInUse ||
-    //         result == LocationPermission.always) {
-    //       return loginParam(
-    //         grantType,
-    //         clientId,
-    //         clientSecret,
-    //         username,
-    //         password,
-    //         scope,
-    //         fcmToken,
-    //       );
-    //     } else {
-    //       throw LocalDataException('Permission Denied');
-    //     }
-    //   } else {
-    //     throw LocalDataException('Permission Denied');
-    //   }
-    // } else if (permissionStatus == LocationPermission.deniedForever) {
-    //   throw LocalDataException('Permission Denied');
-    // } else if (permissionStatus == LocationPermission.always ||
-    //     permissionStatus == LocationPermission.whileInUse) {
-    //   return loginParam(
-    //     grantType,
-    //     clientId,
-    //     clientSecret,
-    //     username,
-    //     password,
-    //     scope,
-    //     fcmToken,
-    //   );
-    // } else {
-    //   throw LocalDataException('Permission Denied');
-    // }
-    return loginParam(
-      grantType,
-      clientId,
-      clientSecret,
-      username,
-      password,
-      scope,
-      fcmToken,
-    );
+      if (showDialogPermission) {
+        final result = await appLocation.requestPermission();
+        if (result == LocationPermission.whileInUse ||
+            result == LocationPermission.always) {
+          return loginParam(
+            grantType,
+            clientId,
+            clientSecret,
+            username,
+            password,
+            scope,
+            fcmToken,
+          );
+        } else {
+          throw LocalDataException('Permission Denied');
+        }
+      } else {
+        throw LocalDataException('Permission Denied');
+      }
+    } else if (permissionStatus == LocationPermission.deniedForever) {
+      throw LocalDataException('Permission Denied');
+    } else if (permissionStatus == LocationPermission.always ||
+        permissionStatus == LocationPermission.whileInUse) {
+      return loginParam(
+        grantType,
+        clientId,
+        clientSecret,
+        username,
+        password,
+        scope,
+        fcmToken,
+      );
+    } else {
+      throw LocalDataException('Permission Denied');
+    }
   }
 
   @override

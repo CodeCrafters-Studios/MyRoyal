@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -73,13 +74,13 @@ class HomeUserCard extends StatelessWidget {
                 Text(
                   title,
                   style: TS.labelMedium.copyWith(
-                    color: textColor ?? white,
+                    color: textColor ?? primary,
                   ),
                 ),
                 Text(
                   subtitle,
                   style: TS.labelMedium.copyWith(
-                    color: textColor ?? white,
+                    color: textColor ?? primary,
                     height: 2,
                   ),
                 ),
@@ -87,7 +88,7 @@ class HomeUserCard extends StatelessWidget {
                     ? Text(
                         thridLineTitle ?? "No. Badge | Jabatan",
                         style: TS.labelMedium.copyWith(
-                          color: textColor ?? white,
+                          color: textColor ?? primary,
                         ),
                       )
                     : emptyBox,
@@ -95,11 +96,14 @@ class HomeUserCard extends StatelessWidget {
             ),
           ),
           suffixIcon == true
-              ? const EPadding(
-                  padding: EdgeInsets.only(left: 45, top: 20),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.black,
+              ? EPadding(
+                  padding: const EdgeInsets.only(right: 15),
+                  child: SvgPicture.asset(
+                    height: 30.h,
+                    width: 30.w,
+                    'assets/icons/ic_arrow_profile.svg',
+                    colorFilter:
+                        const ColorFilter.mode(secondary, BlendMode.srcIn),
                   ),
                 )
               : emptyBox,

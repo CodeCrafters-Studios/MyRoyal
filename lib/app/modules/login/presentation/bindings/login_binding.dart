@@ -8,8 +8,10 @@ import 'package:iroyal/app/modules/login/domain/usecases/auth_biometrics_login.d
 import 'package:iroyal/app/modules/login/domain/usecases/get_cache_user_login.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/get_login_param.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
+import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/location/app_location.dart';
 
 import '../controllers/login_controller.dart';
@@ -41,13 +43,16 @@ class LoginBinding extends Bindings {
       ..lazyPut(() => AuthBiometricsLogin(Get.find<LoginRepositoryImpl>()))
       ..lazyPut(
         () => LoginController(
-            getLoginParams: Get.find(),
-            loginApp: Get.find(),
-            getCacheUserLogin: Get.find(),
-            authBiometricsLogin: Get.find(),
-            appDialog: Get.find<AppDialogImpl>(),
-            appStorage: Get.find(),
-            authBiometrics: Get.find<AuthBiometricsImpl>()),
+          getLoginParams: Get.find(),
+          loginApp: Get.find(),
+          getCacheUserLogin: Get.find(),
+          authBiometricsLogin: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
+          appStorage: Get.find(),
+          authBiometrics: Get.find<AuthBiometricsImpl>(),
+          deviceInfo: Get.find<DeviceInfo>(),
+          firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
+        ),
       );
   }
 }

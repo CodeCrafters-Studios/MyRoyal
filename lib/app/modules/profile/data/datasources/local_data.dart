@@ -6,6 +6,8 @@ import 'package:iroyal/app/modules/profile/data/models/download_params_model.dar
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart' as path;
 
 abstract class ProfileLocalDataSources {
   Future<DownloadParamsModel> downloadFile({
@@ -21,27 +23,26 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
   final Dio dio;
 
   Future<bool> _requestStoragePermission() async {
-    final status = await appPermission.requestStorage();
-    if (!status) {
-      AppUtils.logApp('Storage permission denied');
-      return false;
+    if (await Permission.storage.isGranted) {
+      return true;
     }
-    return true;
+    final result = await Permission.storage.request();
+    return result == PermissionStatus.granted;
   }
 
   Future<Directory?> _getDownloadDirectory() async {
     if (Platform.isAndroid) {
-      const storagePath = '/storage/emulated/0/Download';
-      final directory = await Directory(storagePath).create();
-      return directory;
+      return await getExternalStorageDirectory();
     } else {
       return await getDownloadsDirectory();
     }
   }
 
   @override
-  Future<DownloadParamsModel> downloadFile(
-      {required String url, required String fileName}) async {
+  Future<DownloadParamsModel> downloadFile({
+    required String url,
+    required String fileName,
+  }) async {
     final hasPermission = await _requestStoragePermission();
     if (!hasPermission) {
       throw Exception('Storage permission denied');
@@ -50,22 +51,18 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
     try {
       final directory = await _getDownloadDirectory();
       if (directory == null) {
-        AppUtils.logApp('ERROR: External storage directory is null');
         throw Exception('Download directory not available');
       }
 
-      final filePath = directory.path;
-      AppUtils.logApp(filePath);
+      path.join(directory.path, fileName);
 
-      final taskId = await FlutterDownloader.enqueue(
+      await FlutterDownloader.enqueue(
         url: url,
-        savedDir: filePath,
+        savedDir: directory.path,
         fileName: fileName,
         showNotification: true,
         openFileFromNotification: true,
       );
-
-      AppUtils.logApp('Download started with task ID: $taskId');
 
       return DownloadParamsModel(url: url, fileName: fileName);
     } catch (e) {

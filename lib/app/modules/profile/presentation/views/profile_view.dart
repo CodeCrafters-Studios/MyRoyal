@@ -33,28 +33,35 @@ class ProfileView extends GetView<ProfileController> {
   Widget _editProfile() {
     return EPadding(
       padding: const EdgeInsets.only(right: 10),
-      child: TextButton(
-        child: Text(
-          'Edit Profile',
-          style: TS.bodyMedium.copyWith(
-            color: secondary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        onPressed: () async {
-          await Get.toNamed(
-            Routes.EDIT_PROFILE,
-            arguments: [
-              controller.profileData(),
-              controller.id.value,
-              controller.userData()
-            ],
-          )?.then((value) {
-            if (value == true) {
-              controller.refreshProfile();
-            }
-          });
-        },
+      child: Obx(
+        () => controller.isLoading.value
+            ? ShimmerText(
+                height: 20.h,
+                width: 100.w,
+              )
+            : TextButton(
+                child: Text(
+                  'Edit Profile',
+                  style: TS.bodyMedium.copyWith(
+                    color: secondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () async {
+                  await Get.toNamed(
+                    Routes.EDIT_PROFILE,
+                    arguments: [
+                      controller.profileData(),
+                      controller.id.value,
+                      controller.userData()
+                    ],
+                  )?.then((value) {
+                    if (value == true) {
+                      controller.refreshProfile();
+                    }
+                  });
+                },
+              ),
       ),
     );
   }

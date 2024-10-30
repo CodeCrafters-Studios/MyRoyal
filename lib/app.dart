@@ -26,12 +26,14 @@ class BaseApp extends StatelessWidget {
         useInheritedMediaQuery: true,
         designSize: designSize,
         minTextAdapt: true,
-        builder: (context, child) => const App(),
+        builder: (context, child) => App(config: config),
       );
 }
 
 class App extends StatefulWidget {
-  const App({super.key});
+  const App({super.key, required this.config});
+
+  final EnvironmentConfig config;
 
   @override
   State<App> createState() => _AppState();
@@ -128,10 +130,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         return Stack(
           children: [
             child!,
-            OverlayLogButton(
-              onTap: () {
-                Get.find<Alice>().showInspector();
-              },
+            Visibility(
+              visible: widget.config != const EnvironmentConfig.production(),
+              child: OverlayLogButton(
+                onTap: () {
+                  Get.find<Alice>().showInspector();
+                },
+              ),
             ),
           ],
         );

@@ -102,11 +102,9 @@ class ProfileController extends GetxController {
   }
 
   Future<void> downloadPdf(String url, String fileName) async {
-    isLoading(true);
     final result = await downloadFile(
       ParamsDownload(url: url, fileName: fileName),
     );
-    isLoading(false);
 
     await result.fold(
       (failure) =>

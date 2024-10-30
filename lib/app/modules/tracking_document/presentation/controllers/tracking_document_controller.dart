@@ -38,6 +38,8 @@ class TrackingDocumentController extends GetxController {
       <TrackingDocumentListHistoryModel>[].obs;
   RxList<TrackingDocumentListHistoryModel> listDataStatusRejected =
       <TrackingDocumentListHistoryModel>[].obs;
+  RxList<TrackingDocumentListHistoryModel> listDataStatusClosed =
+      <TrackingDocumentListHistoryModel>[].obs;
 
   Rx<TrackingDocumentOnProgress> trackingDocOnProgressData =
       const TrackingDocumentOnProgress(0, '', []).obs;
@@ -49,12 +51,16 @@ class TrackingDocumentController extends GetxController {
   RxString valueListenerHistory = ''.obs;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    await _loadTrackingDocuments();
+    loadTrackingDocuments();
   }
 
-  Future<void> _loadTrackingDocuments() async {
+  Future<void> onRefresh() async {
+    loadTrackingDocuments();
+  }
+
+  Future<void> loadTrackingDocuments() async {
     isLoading.value = true;
 
     final resultOnProgress = await getTrackingDocumentOnProgress();
@@ -93,6 +99,7 @@ class TrackingDocumentController extends GetxController {
     listDataStatusOverdue.value = _filterListByStatusOnProgress('Overdue');
     listDataStatusApproved.value = _filterListByStatusHistory('Approved');
     listDataStatusRejected.value = _filterListByStatusHistory('Rejected');
+    listDataStatusClosed.value = _filterListByStatusHistory('Closed');
   }
 
   List<TrackingDocumentListOnProgressModel> _filterListByStatusOnProgress(
@@ -136,6 +143,7 @@ class TrackingDocumentController extends GetxController {
     filterDataHistory.value = listDataHistory.where((doc) {
       final query = valueListenerHistory.value.toLowerCase();
       return doc.title.toLowerCase().contains(query) ||
+          doc.state.toLowerCase().contains(query) ||
           doc.departmentName.toLowerCase().contains(query) ||
           doc.serialNumber.toLowerCase().contains(query) ||
           doc.companyName.toLowerCase().contains(query) ||

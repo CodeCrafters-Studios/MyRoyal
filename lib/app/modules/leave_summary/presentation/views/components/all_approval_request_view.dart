@@ -23,42 +23,46 @@ class AllApprovalRequestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => controller.isLoading.value && controller.filterApprovalData.isEmpty
-          ? Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
-              child: SizedBox(
-                height: Get.height,
-                child: ListView.builder(
-                  padding: REdgeInsets.only(bottom: 280),
-                  itemCount: 10,
-                  itemBuilder: (_, __) {
-                    return LeaveRequestCard(
-                      onTap: () {},
-                      fullname: '',
-                      code: '',
-                      date: '',
-                      status: '',
-                      iconStatus: 'assets/icons/ic_pending_summary.svg',
-                      description: '',
-                      statusColor: Colors.red,
-                    );
-                  },
-                ),
+    return Obx(() => controller.isLoading.value
+        ? Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: SizedBox(
+              height: Get.height,
+              child: ListView.builder(
+                padding: REdgeInsets.only(bottom: 280),
+                itemCount: 10,
+                itemBuilder: (_, __) {
+                  return LeaveRequestCard(
+                    onTap: () {},
+                    fullname: '',
+                    code: '',
+                    date: '',
+                    status: '',
+                    iconStatus: 'assets/icons/ic_pending_summary.svg',
+                    description: '',
+                    statusColor: Colors.red,
+                  );
+                },
               ),
-            )
-          : controller.listLeaveApprovalRes.isNotEmpty
-              ? controller.filterApprovalData.isNotEmpty
-                  ? SearchTextInheritedWidget(
-                      searchText: RegExp.escape(controller.search.text),
-                      child: SizedBox(
-                        height: Get.height,
+            ),
+          )
+        : controller.listLeaveApprovalRes.isEmpty
+            ? const EmptyDataWidget()
+            : controller.filterApprovalLeaveData.isNotEmpty
+                ? SearchTextInheritedWidget(
+                    searchText: RegExp.escape(controller.search.text),
+                    child: SizedBox(
+                      height: Get.height,
+                      child: RefreshIndicator(
+                        backgroundColor: white,
+                        color: primary,
+                        onRefresh: controller.onRefresh,
                         child: ListView.builder(
                           padding: REdgeInsets.only(bottom: 350),
-                          itemCount: controller.filterApprovalData.length,
+                          itemCount: controller.filterApprovalLeaveData.length,
                           itemBuilder: (_, index) {
-                            final r = controller.filterApprovalData[index];
+                            final r = controller.filterApprovalLeaveData[index];
                             return LeaveRequestCard(
                               onTap: () {
                                 showModalBottomSheet(
@@ -140,7 +144,10 @@ class AllApprovalRequestView extends StatelessWidget {
                                                       width: 35.h,
                                                       r.status == 'cancel'
                                                           ? 'assets/icons/ic_status_canceled.svg'
-                                                          : 'assets/icons/ic_date_status.svg',
+                                                          : r.status ==
+                                                                  'approved'
+                                                              ? 'assets/icons/ic_approved_summary.svg'
+                                                              : 'assets/icons/ic_date_status.svg',
                                                     ),
                                                     title: Text(
                                                       'Status',
@@ -292,7 +299,6 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                                 ),
                                                                                 20.verticalSpace,
                                                                                 InputPrimary(
-                                                                                  controller: controller.reasonRejected,
                                                                                   maxLength: 1000,
                                                                                   maxLines: 5,
                                                                                   color: white,
@@ -309,7 +315,10 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                                   children: [
                                                                                     Expanded(
                                                                                       child: ButtonPrimary(
-                                                                                        onPressed: () => Get.back(),
+                                                                                        onPressed: () {
+                                                                                          controller.reasonText.value = '';
+                                                                                          Get.back();
+                                                                                        },
                                                                                         text: 'Cancel',
                                                                                         color: redPrimary,
                                                                                         fullWidth: true,
@@ -371,14 +380,24 @@ class AllApprovalRequestView extends StatelessWidget {
                                                             ),
                                                             text: 'Approve',
                                                             textColor: white,
-                                                            onPressed: () =>
-                                                                controller
-                                                                    .actionFormLeave(
-                                                              r.codeNo,
-                                                              'approved',
-                                                              r.level,
-                                                              '',
-                                                            ),
+                                                            onPressed: () => AppDialogImpl()
+                                                                .showChoiceDialog(
+                                                                    description:
+                                                                        'Are you sure want to Approve this form?',
+                                                                    onPressedNo:
+                                                                        Get
+                                                                            .back,
+                                                                    onPressedYes:
+                                                                        () {
+                                                                      Get.back();
+                                                                      controller
+                                                                          .actionFormLeave(
+                                                                        r.codeNo,
+                                                                        'approved',
+                                                                        r.level,
+                                                                        '',
+                                                                      );
+                                                                    }),
                                                             color: green,
                                                             borderSide:
                                                                 const BorderSide(
@@ -416,9 +435,8 @@ class AllApprovalRequestView extends StatelessWidget {
                           },
                         ),
                       ),
-                    )
-                  : const NoResultFoundWidget()
-              : const EmptyDataWidget(),
-    );
+                    ),
+                  )
+                : const NoResultFoundWidget());
   }
 }

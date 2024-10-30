@@ -14,13 +14,17 @@ ThemeData appTheme(BuildContext context) {
     scaffoldBackgroundColor: bgColor,
     textTheme: context.textTheme.apply(bodyColor: appTextColor),
     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: primaryColor),
+    dialogTheme: DialogTheme(
+      backgroundColor: white,
+      titleTextStyle: TS.titleLarge.copyWith(color: black),
+      contentTextStyle: TS.bodySmall.copyWith(color: black),
+    ),
   );
 }
 
 ThemeData darkTheme(BuildContext context) {
   return ThemeData(
     platform: TargetPlatform.iOS,
-
     primaryColor: MaterialColor(primaryDark.value, materialColor),
     primarySwatch: MaterialColor(primaryDark.value, materialColor),
     fontFamily: AppConfig.fontFamily,

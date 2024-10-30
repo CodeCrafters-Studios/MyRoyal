@@ -2,9 +2,22 @@ import 'package:intl/intl.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 
 class AppConfig {
-  static EnvironmentConfig get environment =>
-      const EnvironmentConfig.development();
-  static set environment(EnvironmentConfig env) {}
+  static late EnvironmentConfig environment;
+
+  static void loadEnvironment(String env) {
+    switch (env) {
+      case 'staging':
+        environment = const EnvironmentConfig.staging();
+        break;
+      case 'production':
+        environment = const EnvironmentConfig.production();
+        break;
+      case 'development':
+      default:
+        environment = const EnvironmentConfig.development();
+        break;
+    }
+  }
 
   static double get iAppBarHeight => 60;
   static set iAppBarHeight(double v) {}

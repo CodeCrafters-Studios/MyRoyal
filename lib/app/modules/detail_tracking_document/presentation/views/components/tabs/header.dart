@@ -170,20 +170,23 @@ class HeaderDocumentView extends StatelessWidget {
     final trackingDocument = controller.trackingDocumentListData;
     final detailPtk = controller.detailTrackingDocDataModel().data.detailPtk;
 
-    return Column(
-      children: [
-        _buildDetailRow('Posting Date:', trackingDocument.createdAt),
-        _buildDetailRow('PTK No:', trackingDocument.serialNumber),
-        _buildDetailRow('Labor Quantity:', detailPtk.laborQuantity),
-        _buildDetailRow('Position:', trackingDocument.positionName),
-        _buildDetailRow('Location:', trackingDocument.locationName),
-        _buildDetailRow('Section:', trackingDocument.sectionName),
-        _buildDetailRow('Department:', trackingDocument.departmentName),
-        _buildDetailRow('Company:', trackingDocument.companyName),
-        _buildDetailRow('Status Contract:', detailPtk.employmentStatusesName),
-        _buildDetailRow(
-            'Status Approval:', detailPtk.state.capitalizeFirst.toString()),
-      ],
+    return SizedBox(
+      height: Get.height,
+      child: Column(
+        children: [
+          _buildDetailRow('Posting Date:', trackingDocument.createdAt),
+          _buildDetailRow('PTK No:', trackingDocument.serialNumber),
+          _buildDetailRow('Labor Quantity:', detailPtk.laborQuantity),
+          _buildDetailRow('Position:', trackingDocument.positionName),
+          _buildDetailRow('Location:', trackingDocument.locationName),
+          _buildDetailRow('Section:', trackingDocument.sectionName),
+          _buildDetailRow('Department:', trackingDocument.departmentName),
+          _buildDetailRow('Company:', trackingDocument.companyName),
+          _buildDetailRow('Status Contract:', detailPtk.employmentStatusesName),
+          _buildDetailRow(
+              'Status Approval:', detailPtk.state.capitalizeFirst.toString()),
+        ],
+      ),
     );
   }
 
