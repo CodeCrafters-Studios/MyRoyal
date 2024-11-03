@@ -15,8 +15,8 @@ class EnvironmentConfig {
 
   const EnvironmentConfig.production()
       : environment = EnvironmentType.production,
-        androidBaseUrl = '',
-        iosBaseUrl = '';
+        androidBaseUrl = 'https://apiems.royalcorp.co.id/api/v1/',
+        iosBaseUrl = 'https://apiems.royalcorp.co.id/api/v1/';
 
   final EnvironmentType environment;
   final String androidBaseUrl;

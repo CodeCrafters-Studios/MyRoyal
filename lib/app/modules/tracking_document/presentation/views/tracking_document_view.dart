@@ -122,7 +122,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      75.horizontalSpace,
+                      60.horizontalSpace,
                       Row(
                         children: [
                           _statusContainer(
@@ -229,7 +229,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                           ),
                         ],
                       ),
-                      50.horizontalSpace,
+                      35.horizontalSpace,
                       Row(
                         children: [
                           _statusContainer(

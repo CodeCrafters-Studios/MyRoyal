@@ -106,6 +106,15 @@ class SplashView extends GetView<SplashController> {
                       ),
                     ),
                   )
+                      .animate(
+                        delay: const Duration(milliseconds: 1900),
+                      )
+                      .fadeIn()
+                      .slide(
+                        duration: const Duration(milliseconds: 1700),
+                        curve: Curves.ease,
+                        begin: const Offset(0, 3),
+                      ),
                 ],
               ),
       ),

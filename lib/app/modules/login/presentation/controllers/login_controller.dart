@@ -196,13 +196,14 @@ class LoginController extends GetxController {
     isLoading(true);
     final r = await getLoginParams(
       ParamsLogin(
-          grantType: 'password',
-          clientId: '9d257196-4a49-413a-9b3d-1ab5f14c8b64',
-          clientSecret: 'cUL9sZA4Oz6Ufvv1myO0c0brsoFs3nzSNGpJSVgE',
-          username: username(),
-          password: password(),
-          scope: '*',
-          fcmToken: cacheFcmToken.toString()),
+        grantType: 'password',
+        clientId: '9d6240c2-9c30-4b5e-97d2-c0a57a461190 ',
+        clientSecret: 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W',
+        username: username(),
+        password: password(),
+        scope: '*',
+        fcmToken: cacheFcmToken.toString(),
+      ),
     );
     r.fold((l) {
       isLoading(false);
