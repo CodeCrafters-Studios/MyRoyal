@@ -48,7 +48,7 @@ class OnboardingView extends GetView<OnboardingController> {
                         value: controller.currentPageIndex.value == 0
                             ? 0.1
                             : controller.currentPageIndex.value == 1
-                                ? 0.6
+                                ? 0.5
                                 : 1,
                       ),
                     ),
