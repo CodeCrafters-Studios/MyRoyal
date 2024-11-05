@@ -98,26 +98,18 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     final permissionStatus = await appLocation.permission;
     if (permissionStatus == LocationPermission.denied ||
         permissionStatus == LocationPermission.unableToDetermine) {
-      final showDialogPermission = await appDialog.showPermissionDialog(
-        description: 'App request to access device Location',
-      );
-
-      if (showDialogPermission) {
-        final result = await appLocation.requestPermission();
-        if (result == LocationPermission.whileInUse ||
-            result == LocationPermission.always) {
-          return loginParam(
-            grantType,
-            clientId,
-            clientSecret,
-            username,
-            password,
-            scope,
-            fcmToken,
-          );
-        } else {
-          throw LocalDataException('Permission Denied');
-        }
+      final result = await appLocation.requestPermission();
+      if (result == LocationPermission.whileInUse ||
+          result == LocationPermission.always) {
+        return loginParam(
+          grantType,
+          clientId,
+          clientSecret,
+          username,
+          password,
+          scope,
+          fcmToken,
+        );
       } else {
         throw LocalDataException('Permission Denied');
       }

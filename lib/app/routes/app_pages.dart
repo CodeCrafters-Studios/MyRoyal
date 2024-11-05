@@ -28,6 +28,8 @@ import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
 import '../modules/notifications/presentation/bindings/notifications_binding.dart';
 import '../modules/notifications/presentation/views/notifications_view.dart';
+import '../modules/onboarding/bindings/onboarding_binding.dart';
+import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/payroll/bindings/payroll_binding.dart';
 import '../modules/payroll/views/payroll_view.dart';
 import '../modules/pin/bindings/pin_binding.dart';
@@ -178,6 +180,11 @@ class AppPages {
       name: _Paths.EDIT_PROFILE,
       page: () => const EditProfileView(),
       binding: EditProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.ONBOARDING,
+      page: () => const OnboardingView(),
+      binding: OnboardingBinding(),
     ),
   ];
 }

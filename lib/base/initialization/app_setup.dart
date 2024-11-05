@@ -55,7 +55,7 @@ Future<void> setupAndRunApp(
   FirebaseMessaging.onBackgroundMessage(remoteMessageHandler);
 
   await FlutterDownloader.initialize(
-    debug: true,
+    debug: environment == const EnvironmentConfig.production() ? false : true,
     ignoreSsl: true,
   );
 

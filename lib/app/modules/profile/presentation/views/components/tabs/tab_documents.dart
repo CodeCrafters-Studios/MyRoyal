@@ -35,15 +35,17 @@ class TabDocumentsView extends StatelessWidget {
                         textStyle: TS.bodyMedium,
                         icon: Icons.download,
                         withTrailing: true,
-                        onTap: () => data.ext == '.jpeg'
-                            ? Get.to(
-                                () => FileView(title: data.name, url: data.url))
-                            : Get.to(() => PDFView(
+                        onTap: () => data.ext == '.pdf'
+                            ? Get.to(() => PDFView(
+                                  title: data.name,
+                                  url: data.url,
+                                ))
+                            : Get.to(() => FileView(
                                   title: data.name,
                                   url: data.url,
                                 )),
                         onTapIcon: () =>
-                            controller.downloadPdf(data.url, data.name),
+                            controller.downloadFiles(data.url, data.name),
                       );
                     }),
               ),

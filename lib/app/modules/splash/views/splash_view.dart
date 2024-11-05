@@ -65,7 +65,7 @@ class SplashView extends GetView<SplashController> {
                       child: ButtonPrimary(
                         color: primary,
                         key: const Key('splashLoginBtn'),
-                        onPressed: controller.gotoLogin,
+                        onPressed: controller.goToOnBoarding,
                         fullWidth: true,
                         text: 'Continue',
                         textColor: white,

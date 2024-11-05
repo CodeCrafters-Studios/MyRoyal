@@ -52,7 +52,7 @@ class LeaveSummaryViewImpl extends StatelessWidget {
     );
   }
 
-  Widget _buildTypesSection() {
+  Widget _buildLeaveRemainings() {
     return EPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Obx(
@@ -98,7 +98,7 @@ class LeaveSummaryViewImpl extends StatelessWidget {
         children: [
           _buildLeaveRequestHeader(),
           25.verticalSpace,
-          _buildTypesSection(),
+          _buildLeaveRemainings(),
           25.verticalSpace,
           _buildSearch(),
           20.verticalSpace,

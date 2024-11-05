@@ -22,7 +22,7 @@ class AllLeaveRequestView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => controller.isLoading.value && controller.leaveData.isEmpty
+    return Obx(() => controller.isLoading.value
         ? Shimmer.fromColors(
             baseColor: Colors.grey.shade300,
             highlightColor: Colors.grey.shade100,
@@ -155,21 +155,30 @@ class AllLeaveRequestView extends StatelessWidget {
                                                                           String>(
                                                                     dropdownColor:
                                                                         white,
-                                                                    items: r.listPeriode.map<
-                                                                        DropdownMenuItem<
-                                                                            String>>((String
-                                                                        value) {
+                                                                    items: r
+                                                                        .listPeriode
+                                                                        .toSet()
+                                                                        .map<
+                                                                            DropdownMenuItem<
+                                                                                String>>((String
+                                                                            value) {
                                                                       return DropdownMenuItem<
                                                                           String>(
-                                                                        value:
-                                                                            value,
-                                                                        child: Text(
-                                                                            value),
+                                                                        value: value.isNotEmpty
+                                                                            ? value
+                                                                            : null,
+                                                                        child:
+                                                                            Text(
+                                                                          value,
+                                                                        ),
                                                                       );
                                                                     }).toList(),
-                                                                    value:
-                                                                        r.listPeriode[
-                                                                            0],
+                                                                    value: r.listPeriode
+                                                                            .isNotEmpty
+                                                                        ? r.listPeriode
+                                                                            .toSet()
+                                                                            .first
+                                                                        : null,
                                                                     style: TS
                                                                         .bodyMedium
                                                                         .copyWith(

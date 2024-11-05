@@ -101,7 +101,7 @@ class ProfileController extends GetxController {
     );
   }
 
-  Future<void> downloadPdf(String url, String fileName) async {
+  Future<void> downloadFiles(String url, String fileName) async {
     final result = await downloadFile(
       ParamsDownload(url: url, fileName: fileName),
     );

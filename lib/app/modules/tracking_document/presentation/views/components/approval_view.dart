@@ -8,6 +8,7 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/others/no_result_widget.dart';
@@ -32,14 +33,17 @@ class ApprovalView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const AppbarSpacer(),
             _buildSearchBar(),
             Obx(() => controller.isLoading.value
                 ? _buildLoadingDocumentList()
-                : controller.filterDataOnProgress.isEmpty
-                    ? SizedBox(height: 500.h, child: const NoResultWidget())
-                    : _buildDocumentList()),
+                : controller.listDataApproval.isEmpty
+                    ? const EmptyDataWidget()
+                    : controller.filterDataOnProgress.isEmpty
+                        ? SizedBox(height: 500.h, child: const NoResultWidget())
+                        : _buildDocumentList()),
           ],
         ),
       ),

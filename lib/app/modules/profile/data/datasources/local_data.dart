@@ -31,11 +31,29 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
   }
 
   Future<Directory?> _getDownloadDirectory() async {
-    if (Platform.isAndroid) {
-      return await getExternalStorageDirectory();
-    } else {
-      return await getDownloadsDirectory();
+    return await getDownloadsDirectory();
+    // if (Platform.isAndroid) {
+
+    //   return await getExternalStorageDirectory();
+    // } else {
+    //   return await getDownloadsDirectory();
+    // }
+  }
+
+  Future<String> _getUniqueFilePath(
+      String directoryPath, String fileName) async {
+    var filePath = path.join(directoryPath, fileName);
+    var file = File(filePath);
+    int counter = 1;
+
+    while (await file.exists()) {
+      final newFileName =
+          '${path.basenameWithoutExtension(fileName)}($counter)${path.extension(fileName)}';
+      filePath = path.join(directoryPath, newFileName);
+      file = File(filePath);
+      counter++;
     }
+    return filePath;
   }
 
   @override
@@ -54,14 +72,15 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
         throw Exception('Download directory not available');
       }
 
-      path.join(directory.path, fileName);
+      final uniqueFilePath = await _getUniqueFilePath(directory.path, fileName);
 
       await FlutterDownloader.enqueue(
         url: url,
         savedDir: directory.path,
-        fileName: fileName,
+        fileName: path.basename(uniqueFilePath),
         showNotification: true,
         openFileFromNotification: true,
+        saveInPublicStorage: true,
       );
 
       return DownloadParamsModel(url: url, fileName: fileName);

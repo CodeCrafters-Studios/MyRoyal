@@ -14,7 +14,7 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": ["--flavor", "prod", "--debug"]
+      "args": ["--flavor", "prod", "--release"]
     },
     {
       "name": "DEVELOPMENT",
@@ -28,7 +28,7 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main_staging.dart",
-      "args": ["--flavor", "staging", "--release"]
+      "args": ["--flavor", "staging", "--debug"]
     },
     {
       "name": "PRODUCTION IOS",

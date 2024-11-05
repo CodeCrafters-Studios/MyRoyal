@@ -10,6 +10,7 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
@@ -37,9 +38,11 @@ class HistoryView extends StatelessWidget {
             _buildSearchBar(),
             Obx(() => controller.isLoading.value
                 ? _buildLoadingDocumentList()
-                : controller.filterDataHistory.isEmpty
-                    ? SizedBox(height: 500.h, child: const NoResultWidget())
-                    : _buildDocumentList()),
+                : controller.listDataHistory.isEmpty
+                    ? const EmptyDataWidget()
+                    : controller.filterDataHistory.isEmpty
+                        ? SizedBox(height: 500.h, child: const NoResultWidget())
+                        : _buildDocumentList()),
           ],
         ),
       ),
@@ -109,9 +112,12 @@ class HistoryView extends StatelessWidget {
               itemCount: controller.filterDataHistory.length,
               itemBuilder: (context, index) {
                 final doc = controller.filterDataHistory[index];
-                return SearchTextInheritedWidget(
-                    searchText: RegExp.escape(controller.searchDocHistory.text),
-                    child: _buildDocumentCard(doc));
+                return controller.filterDataHistory.isEmpty
+                    ? SizedBox(height: 500.h, child: const NoResultWidget())
+                    : SearchTextInheritedWidget(
+                        searchText:
+                            RegExp.escape(controller.searchDocHistory.text),
+                        child: _buildDocumentCard(doc));
               },
             ),
           ),
