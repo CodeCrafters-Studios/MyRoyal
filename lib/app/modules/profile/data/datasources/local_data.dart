@@ -23,11 +23,15 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
   final Dio dio;
 
   Future<bool> _requestStoragePermission() async {
-    if (await Permission.storage.isGranted) {
-      return true;
+    if (Platform.isAndroid && await Permission.storage.isGranted) {
+      if (Platform.version.compareTo('30') >= 0) {
+        return true;
+      } else {
+        final result = await Permission.storage.request();
+        return result == PermissionStatus.granted;
+      }
     }
-    final result = await Permission.storage.request();
-    return result == PermissionStatus.granted;
+    return true;
   }
 
   Future<Directory?> _getDownloadDirectory() async {
