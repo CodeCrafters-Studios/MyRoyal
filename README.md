@@ -1,4 +1,4 @@
-# iroyal
+# MyRoyal
 
 A new Flutter project.
 
