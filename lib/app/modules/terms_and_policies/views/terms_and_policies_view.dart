@@ -32,7 +32,7 @@ class TermsAndPoliciesView extends GetView<TermsAndPoliciesController> {
           )
           ..loadRequest(
             Uri.parse(
-              'https://www.termsfeed.com/live/e76acafe-8593-47a8-9e07-f6991e9fbf7d',
+              'https://www.termsfeed.com/live/1673324d-5a79-470e-8540-ce7ca746310a',
             ),
           );
 
