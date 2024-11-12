@@ -5,6 +5,7 @@ import 'package:iroyal/app/modules/settings/presentation/views/components/item_m
 import 'package:iroyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
@@ -22,7 +23,7 @@ class SettingsView extends GetView<SettingsController> {
       showIconBack: false,
       centeredTitle: true,
       title: 'Settings',
-      textStyle: TS.headlineSmall,
+      textStyle: TS.headlineSmall.copyWith(color: white),
       child: SettingsViewImpl(controller: controller),
     );
   }
@@ -41,6 +42,7 @@ class SettingsViewImpl extends StatelessWidget {
     return Column(
       children: [
         const AppbarSpacer(),
+        15.verticalSpace,
         Expanded(
           child: ListView(
             padding: REdgeInsets.symmetric(horizontal: 21),

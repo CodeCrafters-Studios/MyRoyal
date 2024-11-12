@@ -84,6 +84,20 @@ class WebtelViewImpl extends StatelessWidget {
         final bcpItems = controller.bcpData.length.toString();
 
         return BranchCard(
+          branchName: data.branchName,
+          branchCode: data.code,
+          logo: data.logo,
+          totalbranch: data.code == 'RAS'
+              ? rasItems
+              : data.code == 'BM'
+                  ? bmItems
+                  : data.code == 'ACA'
+                      ? acaItems
+                      : data.code == 'BCP'
+                          ? bcpItems
+                          : camItems,
+          color: data.color,
+          height: 80,
           onTap: () {
             switch (data.code) {
               case 'RAS':
@@ -133,19 +147,6 @@ class WebtelViewImpl extends StatelessWidget {
                 break;
             }
           },
-          branchName: data.branchName,
-          branchCode: data.code,
-          logo: data.logo,
-          totalbranch: data.code == 'RAS'
-              ? rasItems
-              : data.code == 'BM'
-                  ? bmItems
-                  : data.code == 'ACA'
-                      ? acaItems
-                      : data.code == 'BCP'
-                          ? bcpItems
-                          : camItems,
-          color: data.color,
         );
       },
     );

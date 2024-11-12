@@ -27,32 +27,32 @@ class WebtelController extends GetxController {
     Branch(
       branchName: 'PT Royal Abadi Sejahtera',
       code: 'RAS',
-      color: primaryAccent,
+      color: white,
       logo: 'assets/images/img_logo.png',
     ),
     Branch(
       branchName: 'PT BM',
       code: 'BM',
-      color: primaryColor,
-      logo: 'assets/images/img_logo_bm.png',
+      color: white,
+      logo: 'assets/images/img_logo_bm.JPG',
     ),
     Branch(
       branchName: 'PT ACA',
       code: 'ACA',
-      color: Colors.pink,
-      logo: 'assets/images/img_logo-aca.png.png',
+      color: white,
+      logo: 'assets/images/img_logo_aca.png',
     ),
     Branch(
       branchName: 'PT CAM',
       code: 'CAM',
-      color: Colors.green,
+      color: white,
       logo: 'assets/images/img_logo_cam.png',
     ),
     Branch(
       branchName: 'PT BCP',
       code: 'BCP',
-      color: Colors.orange,
-      logo: 'assets/images/img_logo.png',
+      color: white,
+      logo: 'assets/images/img_logo_bcp.png',
     ),
   ];
 

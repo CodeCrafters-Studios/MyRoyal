@@ -1,6 +1,4 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/dashboard_data_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/dashboard_model.dart';
@@ -28,12 +26,6 @@ class DashboardController extends GetxController {
     Colors.purple,
   ];
 
-  // final Rx<MyTeams> myTeamsData = const MyTeams(
-  //   hasChildren: false,
-  //   averageAge: 0.0,
-  //   genderDistribution: GenderDistributionModel(male: 0.0, female: 0.0),
-  //   children: [],
-  // ).obs;
   final Rx<DashboardModel> dashboardData = const DashboardModel(
           code: 0,
           message: '',
@@ -42,6 +34,13 @@ class DashboardController extends GetxController {
               leaveSummary: LeaveSummaryModel(0, 0, 0),
               ptk: PtkModel(0, 0, 0)))
       .obs;
+
+  // final Rx<MyTeams> myTeamsData = const MyTeams(
+  //   hasChildren: false,
+  //   averageAge: 0.0,
+  //   genderDistribution: GenderDistributionModel(male: 0.0, female: 0.0),
+  //   children: [],
+  // ).obs;
 
   final GetUser getUser;
   final GetDashboardUsecase getDashboard;
@@ -84,26 +83,6 @@ class DashboardController extends GetxController {
     );
   }
 
-  // Future<void> _getMyTeamsData() async {
-  //   isLoading.value = true;
-
-  //   final result = await getMyTeams(id.value);
-
-  //   result.fold(
-  //     (l) {
-  //       isLoading.value = false;
-  //       myTeamsState = 'getMyTeamsFailed';
-  //     },
-  //     (r) {
-  //       myTeamsState = 'getMyTeamsSuccess';
-  //       myTeamsData.value = r;
-  //       totalValueGender.value = myTeamsData.value.genderDistribution.female +
-  //           myTeamsData.value.genderDistribution.male;
-  //       isLoading.value = false;
-  //     },
-  //   );
-  // }
-
   Future<void> _getDashboard() async {
     isLoading.value = true;
 
@@ -125,46 +104,66 @@ class DashboardController extends GetxController {
     );
   }
 
-  List<PieChartSectionData> showingSectionsData() {
-    final double openValue =
-        dashboardData.value.data!.ptk!.open?.toDouble() ?? 1;
-    final double closedValue =
-        dashboardData.value.data!.ptk!.closed?.toDouble() ?? 1;
+  // List<PieChartSectionData> showingSectionsData() {
+  //   final double openValue =
+  //       dashboardData.value.data!.ptk!.open?.toDouble() ?? 1;
+  //   final double closedValue =
+  //       dashboardData.value.data!.ptk!.closed?.toDouble() ?? 1;
 
-    return List.generate(2, (i) {
-      const fontSize = 12.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+  //   return List.generate(2, (i) {
+  //     const fontSize = 12.0;
+  //     const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
 
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.blueAccent,
-            value: openValue == 0 ? 1 : openValue,
-            title: '$openValue%',
-            radius: 80.r,
-            titleStyle: const TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Color(0xffffffff),
-              shadows: shadows,
-            ),
-          );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.red,
-            value: closedValue == 0 ? 1 : openValue,
-            title: '$closedValue%',
-            radius: 80.r,
-            titleStyle: const TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Color(0xffffffff),
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Exception('Invalid index for pie chart section');
-      }
-    });
-  }
+  //     switch (i) {
+  //       case 0:
+  //         return PieChartSectionData(
+  //           color: Colors.blueAccent,
+  //           value: openValue == 0 ? 1 : openValue,
+  //           title: '$openValue%',
+  //           radius: 80.r,
+  //           titleStyle: const TextStyle(
+  //             fontSize: fontSize,
+  //             fontWeight: FontWeight.bold,
+  //             color: Color(0xffffffff),
+  //             shadows: shadows,
+  //           ),
+  //         );
+  //       case 1:
+  //         return PieChartSectionData(
+  //           color: Colors.red,
+  //           value: closedValue == 0 ? 1 : openValue,
+  //           title: '$closedValue%',
+  //           radius: 80.r,
+  //           titleStyle: const TextStyle(
+  //             fontSize: fontSize,
+  //             fontWeight: FontWeight.bold,
+  //             color: Color(0xffffffff),
+  //             shadows: shadows,
+  //           ),
+  //         );
+  //       default:
+  //         throw Exception('Invalid index for pie chart section');
+  //     }
+  //   });
+  // }
+
+  // Future<void> _getMyTeamsData() async {
+  //   isLoading.value = true;
+
+  //   final result = await getMyTeams(id.value);
+
+  //   result.fold(
+  //     (l) {
+  //       isLoading.value = false;
+  //       myTeamsState = 'getMyTeamsFailed';
+  //     },
+  //     (r) {
+  //       myTeamsState = 'getMyTeamsSuccess';
+  //       myTeamsData.value = r;
+  //       totalValueGender.value = myTeamsData.value.genderDistribution.female +
+  //           myTeamsData.value.genderDistribution.male;
+  //       isLoading.value = false;
+  //     },
+  //   );
+  // }
 }

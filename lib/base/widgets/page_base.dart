@@ -22,7 +22,7 @@ class PageBase extends StatelessWidget {
     this.isShowLogoAppbar = true,
     this.drawer,
     this.useTopPadding = false,
-    this.appbarColor,
+    this.appbarColor = primary,
     this.bgColors,
     this.iconColor,
     this.showBackground = true,

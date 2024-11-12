@@ -3,9 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/views/components/attendance_card.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/customize_pie_chart.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/modules/my_teams/presentation/views/components/indicator.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -86,8 +84,8 @@ class DashboardView extends GetView<DashboardController> {
             ),
             totalValue: controller.remainingLeave.value.toDouble(),
           ),
-          25.verticalSpace,
-          _buildTaskComplianceRatio(),
+          // 25.verticalSpace,
+          // _buildTaskComplianceRatio(),
         ],
       ),
     );
@@ -100,8 +98,8 @@ class DashboardView extends GetView<DashboardController> {
         _buildDashboardSection(),
         controller.hasTeams.value ? 20.verticalSpace : emptyBox,
         // controller.hasTeams.value ? _buildMyTeamsSection() : emptyBox,
-        20.verticalSpace,
-        _buildTaskComplianceRatio(),
+        // 20.verticalSpace,
+        // _buildTaskComplianceRatio(),
       ],
     );
   }
@@ -201,52 +199,52 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  Widget _buildTaskComplianceRatio() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Task Compliance Ratio', style: TS.titleMedium),
-        // 20.verticalSpace,
-        // Align(
-        //   alignment: Alignment.center,
-        //   child: _buildContainer(
-        //     'Immediate Action\nRequired Task',
-        //     '20',
-        //     175,
-        //     114,
-        //   ),
-        // ),
-        5.verticalSpace,
-        Column(
-          children: [
-            SizedBox(
-              height: 200.r,
-              child: CustomizePieChart(
-                sections: controller.showingSectionsData(),
-              ),
-            ),
-            15.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Indicator(
-                  color: Colors.blue,
-                  text: 'Task 1',
-                  isSquare: true,
-                ),
-                12.horizontalSpace,
-                const Indicator(
-                  color: Colors.green,
-                  text: 'Task 2',
-                  isSquare: true,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  // Widget _buildTaskComplianceRatio() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text('Task Compliance Ratio', style: TS.titleMedium),
+  //       // 20.verticalSpace,
+  //       // Align(
+  //       //   alignment: Alignment.center,
+  //       //   child: _buildContainer(
+  //       //     'Immediate Action\nRequired Task',
+  //       //     '20',
+  //       //     175,
+  //       //     114,
+  //       //   ),
+  //       // ),
+  //       5.verticalSpace,
+  //       Column(
+  //         children: [
+  //           SizedBox(
+  //             height: 200.r,
+  //             child: CustomizePieChart(
+  //               sections: controller.showingSectionsData(),
+  //             ),
+  //           ),
+  //           15.verticalSpace,
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             children: [
+  //               const Indicator(
+  //                 color: Colors.blue,
+  //                 text: 'Task 1',
+  //                 isSquare: true,
+  //               ),
+  //               12.horizontalSpace,
+  //               const Indicator(
+  //                 color: Colors.green,
+  //                 text: 'Task 2',
+  //                 isSquare: true,
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   // Widget _buildMyTeamsSection() {
   //   return Column(

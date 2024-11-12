@@ -74,7 +74,7 @@ class AppbarDefault extends StatelessWidget {
                       child: Icon(
                         Icons.arrow_back_ios_new_rounded,
                         size: 18.w,
-                        color: iconColor ?? Colors.black,
+                        color: iconColor ?? Colors.white,
                       ),
                     ),
                   ),
@@ -90,7 +90,7 @@ class AppbarDefault extends StatelessWidget {
                         centeredTitle ? Alignment.center : Alignment.centerLeft,
                     child: Text(
                       title,
-                      style: textStyle ?? TS.titleSmall,
+                      style: textStyle ?? TS.titleSmall.copyWith(color: white),
                       textAlign: TextAlign.start,
                     ),
                   ),

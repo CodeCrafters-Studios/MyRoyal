@@ -31,6 +31,7 @@ class HomeUserMenu extends GetView<HomeController> {
                     )
                   : _buildAllFeatures(),
               CardApp(
+                color: Colors.transparent,
                 width: Get.width,
                 padding: REdgeInsets.all(14),
                 child: controller.isLoading.value

@@ -28,7 +28,6 @@ class BranchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
-      appbarColor: _getAppbarColor(),
       showBackground: false,
       title: title,
       textStyle: TS.titleSmall.copyWith(color: white),
@@ -61,21 +60,6 @@ class BranchPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getAppbarColor() {
-    switch (title) {
-      case 'PT Royal Abadi Sejahtera':
-        return primaryAccent.withOpacity(0.3);
-      case 'PT Bestari Mulia':
-        return primaryColor.withOpacity(0.3);
-      case 'PT ACA':
-        return Colors.pink.withOpacity(0.3);
-      case 'PT BCP':
-        return Colors.orange.withOpacity(0.3);
-      default:
-        return Colors.green.withOpacity(0.3);
-    }
   }
 
   Widget _buildInputPrimary() {

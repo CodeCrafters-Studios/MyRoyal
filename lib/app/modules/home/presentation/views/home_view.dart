@@ -34,22 +34,28 @@ class HomeView extends GetView<HomeController> {
           _buildLogo(),
         ],
       ),
-      body: RefreshIndicator(
-        backgroundColor: white,
-        color: primary,
-        onRefresh: controller.onRefresh,
-        child: CustomScrollView(
-          scrollDirection: Axis.vertical,
-          slivers: [
-            const HomeUserInfo(),
-            const HomeUserStatus(),
-            const HomeUserMenu(),
-            HomeSlide(
-              controller: controller,
-            ),
-          ],
+      body: Stack(children: [
+        Image.asset(
+          'assets/images/img_bg_page.png',
+          fit: BoxFit.cover,
         ),
-      ),
+        RefreshIndicator(
+          backgroundColor: white,
+          color: primary,
+          onRefresh: controller.onRefresh,
+          child: CustomScrollView(
+            scrollDirection: Axis.vertical,
+            slivers: [
+              const HomeUserInfo(),
+              const HomeUserStatus(),
+              const HomeUserMenu(),
+              HomeSlide(
+                controller: controller,
+              ),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 

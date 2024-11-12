@@ -13,6 +13,7 @@ class BranchCard extends StatelessWidget {
     required this.totalbranch,
     required this.logo,
     required this.color,
+    this.height = 80,
     required this.onTap,
   });
 
@@ -21,6 +22,7 @@ class BranchCard extends StatelessWidget {
   final String totalbranch;
   final String logo;
   final Color color;
+  final int height;
   final Function() onTap;
 
   @override
@@ -31,52 +33,57 @@ class BranchCard extends StatelessWidget {
         radius: 8.0,
         color: color.withOpacity(0.3),
         onTap: onTap,
-        child: Stack(
-          children: [
-            Positioned(
-              top: 0,
-              child: Container(
-                width: 50.w,
-                height: 30.h,
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.5),
-                  borderRadius: BorderRadius.all(
-                    Corners.smRadius,
+        child: Card(
+          elevation: 2,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 0,
+                child: Container(
+                  width: 50.w,
+                  height: 30.h,
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.5),
+                    borderRadius: BorderRadius.all(
+                      Corners.smRadius,
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    branchCode,
-                    style: TS.titleSmall.copyWith(color: white),
-                    textAlign: TextAlign.center,
+                  child: Center(
+                    child: Text(
+                      branchCode,
+                      style: TS.titleSmall.copyWith(color: white),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  10.verticalSpace,
-                  SizedBox(
-                    width: 70.w,
-                    height: 75.h,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage(logo),
+                  Center(child: Image.asset(height: height.h, logo)),
+                  30.verticalSpace,
+                  EPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          totalbranch,
+                          style: TS.titleMedium,
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Employees',
+                          style: TS.bodySmall,
+                        )
+                      ],
                     ),
-                  ),
-                  10.verticalSpace,
-                  Text(
-                    '$totalbranch\nEmployees',
-                    style: TS.titleSmall,
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
