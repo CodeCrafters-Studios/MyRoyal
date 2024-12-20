@@ -29,6 +29,10 @@ class SplashView extends GetView<SplashController> {
               ))
             : Stack(
                 children: [
+                  Image.asset(
+                    'assets/images/img_bg_page.png',
+                    fit: BoxFit.cover,
+                  ),
                   Center(
                     child: EImages(
                       width: 200.r,

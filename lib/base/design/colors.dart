@@ -11,8 +11,7 @@ const greyHint = Color.fromRGBO(191, 186, 186, 1);
 const greyIcon = Color.fromRGBO(30, 30, 30, .4);
 const borderColor = Color.fromRGBO(217, 217, 217, 0.192);
 const bgMenuColor = Color.fromRGBO(217, 217, 217, 0.658);
-const red = Color.fromRGBO(236, 66, 96, 1);
-const redPrimary = Color(0xFFF44336);
+const red = Color(0xFFE83232);
 const greyText = Color.fromRGBO(99, 98, 98, 1);
 const green = Color(0xFF369B43);
 const grey50 = Color(0xFFF5F5F5);
@@ -24,6 +23,7 @@ const primaryDark = Color.fromARGB(255, 0, 99, 16);
 const primaryAccent = Color.fromARGB(255, 156, 18, 220);
 
 const Color primary10 = Color.fromARGB(255, 83, 85, 126);
+const Color primary20 = Color(0xFF1ABB8C);
 const Color primary30 = Color(0xFF5C8DD7);
 const Color primary50 = Color(0xFF004BBC);
 const Color primary70 = Color(0xFF002D71);
@@ -45,6 +45,7 @@ const Color neutral5 = Color(0xFFFFFFFF);
 
 const bgColor = Color(0xFFFFFFFF);
 const bgColorDark = Color.fromARGB(255, 105, 105, 105);
+const bgColorDropDown = Color(0xFFF1F5F8);
 
 const focusColor = Color.fromARGB(255, 0, 183, 58);
 const errorColor = Color(0xFFFF013E);

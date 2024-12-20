@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -22,7 +21,6 @@ class HomeUserCard extends StatelessWidget {
     this.shapeBorder,
     this.thridLineTitle,
     this.thridLineSubtitle,
-    required this.suffixIcon,
     this.avatarPicture = '',
   });
 
@@ -35,7 +33,6 @@ class HomeUserCard extends StatelessWidget {
   final bool isThridLine;
   final bool isAvatarPicture;
   final bool isImageAvailable;
-  final bool suffixIcon;
   final Color? textColor;
   final Color? backgroundColor;
   final Color? borderSideColor;
@@ -73,7 +70,7 @@ class HomeUserCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TS.labelMedium.copyWith(
+                  style: TS.titleSmall.copyWith(
                     color: textColor ?? primary,
                   ),
                 ),
@@ -95,18 +92,6 @@ class HomeUserCard extends StatelessWidget {
               ],
             ),
           ),
-          suffixIcon == true
-              ? EPadding(
-                  padding: const EdgeInsets.only(right: 15),
-                  child: SvgPicture.asset(
-                    height: 30.h,
-                    width: 30.w,
-                    'assets/icons/ic_arrow_profile.svg',
-                    colorFilter:
-                        const ColorFilter.mode(secondary, BlendMode.srcIn),
-                  ),
-                )
-              : emptyBox,
         ],
       ),
     );

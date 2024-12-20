@@ -150,7 +150,7 @@ class PayrollView extends GetView<PayrollController> {
             title: 'Provident Fund  (0.5%)',
             value: '- 100,000',
             valueStyle: TS.bodyMedium.copyWith(
-              color: redPrimary,
+              color: red,
             ),
             withBackground: true,
           ),
@@ -158,7 +158,7 @@ class PayrollView extends GetView<PayrollController> {
             title: 'Professional Tax  (0.5%)',
             value: '- 100,000',
             valueStyle: TS.bodyMedium.copyWith(
-              color: redPrimary,
+              color: red,
             ),
           ),
           RowDetailsEarningAndDeductions(
@@ -166,7 +166,7 @@ class PayrollView extends GetView<PayrollController> {
             value: '- 1,800,000',
             withBackground: true,
             valueStyle: TS.bodyMedium.copyWith(
-              color: redPrimary,
+              color: red,
             ),
           ),
           10.verticalSpace,

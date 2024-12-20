@@ -38,9 +38,13 @@ class LeaveRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Container(
+          color: Colors.transparent,
+          width: Get.width,
+        ),
         CardApp(
           onTap: onTap,
-          margin: REdgeInsets.fromLTRB(20, 0, 20, 15),
+          margin: REdgeInsets.fromLTRB(25, 0, 25, 15),
           borderWidth: 1,
           isOutlined: true,
           width: Get.width,
@@ -108,7 +112,7 @@ class LeaveRequestCard extends StatelessWidget {
         ),
         Positioned(
           top: 0,
-          right: 15,
+          right: 7,
           bottom: 0,
           child: CircleAvatar(
             backgroundColor: statusColor,

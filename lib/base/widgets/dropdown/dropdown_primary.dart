@@ -48,6 +48,7 @@ class DropDownPrimary extends StatelessWidget {
               border: Border.all(color: borderColor ?? grey)),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
+              isExpanded: true,
               icon: icon,
               menuMaxHeight: 200.h,
               alignment: Alignment.centerLeft,

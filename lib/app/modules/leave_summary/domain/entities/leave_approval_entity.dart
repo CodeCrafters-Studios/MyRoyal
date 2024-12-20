@@ -9,6 +9,7 @@ class LeaveApprovalEntity extends Equatable {
     required this.level,
     required this.status,
     required this.periode,
+    required this.listPeriode,
   });
 
   final String fullName;
@@ -17,7 +18,16 @@ class LeaveApprovalEntity extends Equatable {
   final int level;
   final String status;
   final Periode periode;
+  final List<String> listPeriode;
 
   @override
-  List<Object?> get props => [fullName, codeNo, reason, level, status, periode];
+  List<Object?> get props => [
+        fullName,
+        codeNo,
+        reason,
+        level,
+        status,
+        periode,
+        listPeriode,
+      ];
 }

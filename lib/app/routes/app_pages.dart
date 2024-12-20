@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-
+import 'package:iroyal/app/modules/leave_summary/presentation/views/leaves_request_view.dart';
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
@@ -185,6 +185,11 @@ class AppPages {
       name: _Paths.ONBOARDING,
       page: () => const OnboardingView(),
       binding: OnboardingBinding(),
+    ),
+    GetPage(
+      name: _Paths.LEAVES,
+      page: () => const LeavesRequestView(),
+      binding: LeaveSummaryBinding(),
     ),
   ];
 }

@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alice/alice.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
@@ -28,16 +28,16 @@ enum Method { POST, GET, PUT, DELETE, PATCH }
 
 class HttpService extends getx.GetxService {
   HttpService({
-    required this.alice,
     required this.dio,
+    required this.inspector,
     required this.appStorage,
     required this.networkInfo,
     required this.appEncrypt,
     required this.connectivity,
   });
 
-  final Alice alice;
   final Dio dio;
+  final DioRequestInspector inspector;
   final AppStorage appStorage;
   final NetworkInfo networkInfo;
   final AppEncrypt appEncrypt;
@@ -75,12 +75,12 @@ class HttpService extends getx.GetxService {
 
     final isTest = Platform.environment.containsKey('FLUTTER_TEST');
     if (!isTest) {
-      dio.interceptors.add(alice.getDioInterceptor());
+      dio.interceptors.add(inspector.getDioRequestInterceptor());
     }
   }
 
-  void _updateConnectionStatus(ConnectivityResult connectivityResult) {
-    if (connectivityResult == ConnectivityResult.none) {
+  void _updateConnectionStatus(List<ConnectivityResult> connectivityResult) {
+    if (connectivityResult.isEmpty) {
       connectionStatus.value = "No connection";
       AppUtils.logApp(connectionStatus.value);
       getx.Get.showSnackbar(
@@ -244,7 +244,6 @@ class HttpService extends getx.GetxService {
       }
 
       if (response.statusCode == 200) {
-        alice.addLog(AliceLog(message: jsonEncode(params)));
         return response.data;
       } else if (response.statusCode == 401) {
         catchError('Unauthorized', showPopUp: showPopUp);

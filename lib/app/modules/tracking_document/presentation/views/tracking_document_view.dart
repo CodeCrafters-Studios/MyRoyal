@@ -251,7 +251,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                     children: [
                       _statusContainer(
                         icon: Icons.block,
-                        label: 'Closed',
+                        label: 'CLOSED',
                         color: greyText,
                       ),
                       5.horizontalSpace,

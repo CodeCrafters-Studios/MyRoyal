@@ -42,7 +42,6 @@ class HomeUserInfo extends GetView<HomeController> {
                               controller.userData().data.profilePicture.isEmpty
                                   ? ''
                                   : controller.userData().data.profilePicture,
-                          suffixIcon: false,
                         ),
                       ],
                     ),
@@ -86,7 +85,6 @@ class HomeUserInfo extends GetView<HomeController> {
                               controller.userData().data.initialName.isNotEmpty
                                   ? controller.userData().data.initialName
                                   : '',
-                          suffixIcon: true,
                         ),
                       ),
                     ],

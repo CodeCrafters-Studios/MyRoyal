@@ -7,6 +7,7 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary_outlined.dart';
+import 'package:lottie/lottie.dart';
 
 abstract class AppDialog {
   Future<bool> showPermissionDialog({
@@ -39,6 +40,7 @@ abstract class AppDialog {
     String? description,
     String? textYes,
     String? textNo,
+    Color? buttonColor,
     Function()? onPressedYes,
     Function()? onPressedNo,
   });
@@ -78,6 +80,16 @@ abstract class AppDialog {
     Function()? onPressLater,
     Function()? onPressUpdate,
   });
+
+  Future<void> showCustomInfoDialog({
+    String? imagePath,
+    String? title,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    Function()? onPress,
+  });
 }
 
 class AppDialogImpl implements AppDialog {
@@ -88,13 +100,14 @@ class AppDialogImpl implements AppDialog {
     String? description,
     String? textYes,
     String? textNo,
+    Color? buttonColor,
     Function()? onPressedYes,
     Function()? onPressedNo,
   }) async {
     final r = await Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: REdgeInsets.symmetric(horizontal: 40),
+        insetPadding: REdgeInsets.all(10),
         child: Container(
           padding: EdgeInsets.fromLTRB(
             Insets.xl,
@@ -127,9 +140,18 @@ class AppDialogImpl implements AppDialog {
                   style: TS.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
-              28.verticalSpace,
+              description != null ? 28.verticalSpace : 20.verticalSpace,
               Row(
                 children: [
+                  Expanded(
+                    child: ButtonPrimary(
+                      color: buttonColor ?? primary,
+                      onPressed: onPressedYes ?? () => Get.back(result: true),
+                      text: textYes ?? 'Yes',
+                      fullWidth: true,
+                    ),
+                  ),
+                  12.horizontalSpace,
                   Expanded(
                     child: ButtonPrimaryOutlined(
                       onPressed: onPressedNo ?? () => Get.back(result: false),
@@ -138,14 +160,6 @@ class AppDialogImpl implements AppDialog {
                       isOutline: true,
                       fullWidth: true,
                       outlineColor: primary,
-                    ),
-                  ),
-                  12.horizontalSpace,
-                  Expanded(
-                    child: ButtonPrimary(
-                      onPressed: onPressedYes ?? () => Get.back(result: true),
-                      text: textYes ?? 'Yes',
-                      fullWidth: true,
                     ),
                   ),
                 ],
@@ -269,7 +283,7 @@ class AppDialogImpl implements AppDialog {
                 onPressed: onPress ?? Get.back,
                 text: textButton,
                 fullWidth: true,
-                color: redPrimary,
+                color: red,
               ),
               16.verticalSpace,
             ],
@@ -630,6 +644,65 @@ class AppDialogImpl implements AppDialog {
                     ),
                   )
                 ],
+              ),
+              16.verticalSpace,
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showCustomInfoDialog(
+      {String? imagePath,
+      String? title,
+      String? description,
+      String? textButton,
+      double? height,
+      double? width,
+      Function()? onPress}) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 10),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            Insets.med,
+            Insets.xl,
+            Insets.med,
+            Insets.xs,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title ?? 'Information',
+                style: TS.titleSmall,
+                textAlign: TextAlign.center,
+              ),
+              if (imagePath != null)
+                Lottie.asset(
+                  imagePath,
+                  height: height,
+                  width: width,
+                ),
+              if (description != null) 12.verticalSpace,
+              if (description != null)
+                Text(
+                  description,
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.center,
+                ),
+              ButtonPrimary(
+                onPressed: onPress ?? Get.back,
+                text: textButton ?? 'Okay',
+                fullWidth: true,
               ),
               16.verticalSpace,
             ],

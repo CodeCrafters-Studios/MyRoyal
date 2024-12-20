@@ -24,7 +24,7 @@ class AttendanceView extends GetView<AttendanceController> {
       showIconBack: false,
       centeredTitle: true,
       title: 'Attendance',
-      textStyle: TS.headlineSmall,
+      textStyle: TS.headlineSmall.copyWith(color: white),
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         padding: REdgeInsets.only(bottom: 100),

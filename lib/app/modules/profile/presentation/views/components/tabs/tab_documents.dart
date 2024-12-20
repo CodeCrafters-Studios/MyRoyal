@@ -17,42 +17,48 @@ class TabDocumentsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Obx(
-      () => controller.profileData().data.documents.isNotEmpty
-          ? EPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: SizedBox(
-                height: Get.height,
-                child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: controller.profileData().data.documents.length,
-                    itemBuilder: (context, index) {
-                      final data =
-                          controller.profileData().data.documents[index];
-                      return ItemMenuSettings(
-                        assetSvg: 'assets/icons/ic_download_doc.svg',
-                        text: data.type.capitalize.toString(),
-                        textStyle: TS.bodyMedium,
-                        icon: Icons.download,
-                        withTrailing: true,
-                        onTap: () => data.ext == '.pdf'
-                            ? Get.to(() => PDFView(
-                                  title: data.name,
-                                  url: data.url,
-                                ))
-                            : Get.to(() => FileView(
-                                  title: data.name,
-                                  url: data.url,
-                                )),
-                        onTapIcon: () =>
-                            controller.downloadFiles(data.url, data.name),
-                      );
-                    }),
-              ),
-            )
-          : SizedBox(
-              height: Get.height / 1.5, child: const NoDocumentFoundWidget()),
-    ));
+      child: Obx(
+        () => controller.profileData().data.documents.isNotEmpty
+            ? EPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: SizedBox(
+                  height: Get.height,
+                  child: RepaintBoundary(
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: controller.profileData().data.documents.length,
+                      itemBuilder: (context, index) {
+                        final data =
+                            controller.profileData().data.documents[index];
+                        return ItemMenuSettings(
+                          assetSvg: 'assets/icons/ic_download_doc.svg',
+                          text: data.type.capitalize.toString(),
+                          textStyle: TS.bodyMedium,
+                          icon: Icons.download,
+                          withTrailing: true,
+                          onTap: () => data.ext == '.pdf'
+                              ? Get.to(() => PDFView(
+                                    title: data.name,
+                                    url: data.url,
+                                  ))
+                              : Get.to(
+                                  () => FileView(
+                                    title: data.name,
+                                    url: data.url,
+                                  ),
+                                ),
+                          onTapIcon: () =>
+                              controller.downloadFiles(data.url, data.name),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox(
+                height: Get.height / 1.5, child: const NoDocumentFoundWidget()),
+      ),
+    );
   }
 }
 

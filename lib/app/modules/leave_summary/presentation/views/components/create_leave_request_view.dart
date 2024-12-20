@@ -6,57 +6,49 @@ import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_emplo
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/dropdown/dropdown_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
 
-class ApplyLeaveView extends StatelessWidget {
-  const ApplyLeaveView({super.key, required this.controller});
+class CreateLeaveRequestView extends StatelessWidget {
+  const CreateLeaveRequestView({super.key, required this.controller});
 
   final LeaveSummaryController controller;
 
   @override
   Widget build(BuildContext context) {
-    return PageBase(
-      showBackground: false,
-      resizeInsetsBottom: false,
-      title: 'Create New',
-      child: EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Obx(
-          () => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppbarSpacer(),
-              _buildLabel('Select Subtitute Employee'),
-              10.verticalSpace,
-              _buildSubtituteEmployeeDropdown(),
-              20.verticalSpace,
-              _buildMultiDateSelection(context),
-              20.verticalSpace,
-              _buildLabel('Reason for Leave'),
-              5.verticalSpace,
-              InputPrimary(
-                maxLength: 1000,
-                maxLines: 5,
-                color: white,
-                outlineColor: primary,
-                key: const Key('inputTaskDesc'),
-                hint: 'Type here..',
-                hintStyle: TS.bodySmall.copyWith(color: greyHint),
-                onChanged: (value) {
-                  controller.reason.value = value;
-                },
-                validation: (value) =>
-                    value?.isEmpty ?? false ? 'Cannot be empty' : null,
-              ),
-              const Spacer(),
-              _buildApplyButton(),
-            ],
-          ),
+    return EPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Obx(
+        () => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildLabel('Select Employee`s backup while leave'),
+            _buildSubtituteEmployeeDropdown(),
+            20.verticalSpace,
+            _buildMultiDateSelection(context),
+            20.verticalSpace,
+            _buildLabel('Reason'),
+            5.verticalSpace,
+            InputPrimary(
+              maxLength: 1000,
+              maxLines: 5,
+              color: white,
+              outlineColor: primary,
+              key: const Key('inputTaskDesc'),
+              hint: 'Type here..',
+              hintStyle: TS.bodySmall.copyWith(color: greyHint),
+              onChanged: (value) {
+                controller.reason.value = value;
+              },
+              validation: (value) =>
+                  value?.isEmpty ?? false ? 'Cannot be empty' : null,
+            ),
+            const Spacer(),
+            _buildApplyButton(),
+            const Spacer(),
+          ],
         ),
       ),
     );
@@ -111,7 +103,10 @@ class ApplyLeaveView extends StatelessWidget {
                 size: 20.r,
               ),
             )
-          : const Icon(Icons.arrow_drop_down),
+          : const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              color: secondary,
+            ),
       value: controller.selectedSubtituteEmployee.value.isEmpty
           ? null
           : controller.selectedSubtituteEmployee.value,
@@ -133,21 +128,24 @@ class ApplyLeaveView extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: _buildDateButton(
-          'Select Date',
-          controller.multiDatePickerValueWithDefaultValue.isEmpty
+          'Date Request',
+          controller.multiDatePickerValueleaveRequestWithDefaultValue.isEmpty
               ? 'Select Date'
               : _getValueText(
                   controller.config.calendarType,
-                  controller.multiDatePickerValueWithDefaultValue,
+                  controller.multiDatePickerValueleaveRequestWithDefaultValue,
                 ),
           () => showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (_) {
-                return FractionallySizedBox(
+                isDismissible: false,
+                isScrollControlled: true,
+                context: context,
+                builder: (_) {
+                  return FractionallySizedBox(
                     heightFactor: 0.65,
-                    child: _buildMultiDatePickerWithValue());
-              })
+                    child: _buildMultiDatePickerWithValue(),
+                  );
+                },
+              )
           // controller.selectStartDate(context),
           ),
     );
@@ -174,7 +172,9 @@ class ApplyLeaveView extends StatelessWidget {
             child: Text(
               selectedDate,
               style: TS.bodySmall.copyWith(
-                color: controller.multiDatePickerValueWithDefaultValue.isEmpty
+                color: controller
+                        .multiDatePickerValueleaveRequestWithDefaultValue
+                        .isEmpty
                     ? greyHint
                     : black,
               ),
@@ -189,7 +189,8 @@ class ApplyLeaveView extends StatelessWidget {
     return Obx(
       () => ButtonPrimary(
         enable: controller.selectedSubtituteEmployee.isNotEmpty &&
-            controller.multiDatePickerValueWithDefaultValue.isNotEmpty &&
+            controller
+                .multiDatePickerValueleaveRequestWithDefaultValue.isNotEmpty &&
             controller.reason.value.isNotEmpty,
         isLoading: controller.isLoading.value,
         fullWidth: true,
@@ -224,20 +225,22 @@ class ApplyLeaveView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8)),
             child: CalendarDatePicker2(
               config: controller.config,
-              value: controller.multiDatePickerValueWithDefaultValue,
-              onValueChanged: (dates) =>
-                  controller.multiDatePickerValueWithDefaultValue.value = dates,
+              value:
+                  controller.multiDatePickerValueleaveRequestWithDefaultValue,
+              onValueChanged: (dates) => controller
+                  .multiDatePickerValueleaveRequestWithDefaultValue
+                  .value = dates,
             ),
           ),
           const Spacer(),
           ButtonPrimary(
             fullWidth: true,
             margin: REdgeInsets.fromLTRB(14, 0, 14, 20),
-            text: 'Done',
+            text: 'Apply',
             textColor: white,
             onPressed: () => Get.back(),
             color: primary,
-          )
+          ),
         ],
       ),
     );

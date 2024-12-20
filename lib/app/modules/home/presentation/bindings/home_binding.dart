@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
@@ -10,8 +12,10 @@ import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasou
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
@@ -178,10 +182,16 @@ class HomeBinding extends Bindings {
           remoteData: Get.find<DashboardRemoteDataSourceImpl>()))
       ..lazyPut<GetDashboardUsecase>(
           () => GetDashboardUsecase(Get.find<DashboardRepositoryImpl>()))
+      ..lazyPut<GetDetailLateUsecase>(
+          () => GetDetailLateUsecase(Get.find<DashboardRepositoryImpl>()))
+      ..lazyPut<GetDetailPermitRequestUsecase>(() =>
+          GetDetailPermitRequestUsecase(Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
           getUser: Get.find(),
           getDashboard: Get.find(),
+          getDetailLateUsecase: Get.find(),
+          getDetailPermitRequestUsecase: Get.find(),
         ),
       )
 
@@ -208,15 +218,23 @@ class HomeBinding extends Bindings {
       ..lazyPut<GetLeaveApprovalUsecase>(
         () => GetLeaveApprovalUsecase(Get.find<LeaveRepositoryImpl>()),
       )
+      ..lazyPut<CreateFormPermitUsecase>(
+        () => CreateFormPermitUsecase(Get.find<LeaveRepositoryImpl>()),
+      )
+      ..lazyPut<GetPermitUsecase>(
+        () => GetPermitUsecase(Get.find<LeaveRepositoryImpl>()),
+      )
       ..lazyPut<LeaveSummaryController>(
         () => LeaveSummaryController(
-            getLeaveUsecase: Get.find<GetLeaveUsecase>(),
-            getSubtituteEmployeeUsecase:
-                Get.find<GetSubtituteEmployeeUsecase>(),
-            createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
-            cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
-            getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
-            getCacheUser: Get.find<GetCacheUser>()),
+          getLeaveUsecase: Get.find<GetLeaveUsecase>(),
+          getPermitUsecase: Get.find<GetPermitUsecase>(),
+          getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
+          createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
+          cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
+          getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
+          getCacheUser: Get.find<GetCacheUser>(),
+          createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
+        ),
       );
   }
 }

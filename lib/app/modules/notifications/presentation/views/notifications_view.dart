@@ -78,25 +78,27 @@ class NotificationsViewImpl extends StatelessWidget {
   }
 
   Widget _buildNotificationsList() {
-    return ListView.builder(
-      controller: controller.scrollController,
-      padding: REdgeInsets.only(bottom: 100),
-      itemCount: controller.notificationsDataList.length +
-          (controller.isLoadMore.value ? 1 : 0),
-      itemBuilder: (_, index) {
-        if (controller.isLoadMore.value &&
-            index == controller.notificationsDataList.length) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final notification = controller.notificationsDataList[index];
-        return NotificationsCard(
-          title: notification.title,
-          description: notification.body,
-          date: DateFormat('hh:mm a').format(notification.createdAt),
-          isRead: notification.isRead,
-          onTap: () => controller.onTapNotification(notification.id),
-        );
-      },
+    return RepaintBoundary(
+      child: ListView.builder(
+        controller: controller.scrollController,
+        padding: REdgeInsets.only(bottom: 100),
+        itemCount: controller.notificationsDataList.length +
+            (controller.isLoadMore.value ? 1 : 0),
+        itemBuilder: (_, index) {
+          if (controller.isLoadMore.value &&
+              index == controller.notificationsDataList.length) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final notification = controller.notificationsDataList[index];
+          return NotificationsCard(
+            title: notification.title,
+            description: notification.body,
+            date: DateFormat('hh:mm a').format(notification.createdAt),
+            isRead: notification.isRead,
+            onTap: () => controller.onTapNotification(notification.id),
+          );
+        },
+      ),
     );
   }
 }

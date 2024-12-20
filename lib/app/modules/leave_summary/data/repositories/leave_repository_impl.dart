@@ -2,8 +2,10 @@ import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_approval_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/repositories/leave_repository.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -61,6 +63,27 @@ class LeaveRepositoryImpl implements LeaveRepository {
   Future<Either<Failure, List<LeaveApprovalModel>>> getLeaveApproval() async {
     try {
       final r = await remoteData.getLeaveApproval();
+      return Right(r);
+    } catch (e) {
+      return Left(ServerFailure(properties: [e]));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CreateFormPermitEntity>> createFormPermit(
+      Map<String, dynamic> createFormPermitParams) async {
+    try {
+      final r = await remoteData.createFormPermit(createFormPermitParams);
+      return Right(r);
+    } catch (e) {
+      return Left(ServerFailure(properties: [e]));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PermitModel>> getPermit() async {
+    try {
+      final r = await remoteData.getPermit();
       return Right(r);
     } catch (e) {
       return Left(ServerFailure(properties: [e]));

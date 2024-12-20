@@ -1,21 +1,28 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/data_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_data_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/permit_data_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/leave_approval_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_type_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -27,14 +34,17 @@ import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 class LeaveSummaryController extends GetxController {
   LeaveSummaryController({
     required this.getLeaveUsecase,
+    required this.getPermitUsecase,
     required this.getSubtituteEmployeeUsecase,
     required this.createFormLeaveUsecase,
     required this.cancelFormLeaveUsecase,
     required this.getLeaveApprovalUsecase,
     required this.getCacheUser,
+    required this.createFormPermitUsecase,
   });
 
-  late final TabController tabController;
+  late final TabController tabLeaveController;
+  late final TabController tabPermitController;
   TextEditingController search = TextEditingController();
 
   final config = CalendarDatePicker2Config(
@@ -65,13 +75,31 @@ class LeaveSummaryController extends GetxController {
   RxString selectedStartDate = 'Select date'.obs;
   RxString selectedSubtituteEmployee = ''.obs;
   RxString reason = ''.obs;
+  RxString reasonPermit = ''.obs;
   RxString reasonText = ''.obs;
   RxString valueListener = ''.obs;
+  RxString valueListenerPermit = ''.obs;
+  RxString selectedPermitType = ''.obs;
+  RxString selectedPermitTypeCode = ''.obs;
+  RxString selectedStartTimePermitFormatted = ''.obs;
+  RxString selectedEndTimePermitFormatted = ''.obs;
+
+  Rx<TimeOfDay> selectedStartTime = TimeOfDay(hour: 0, minute: 0).obs;
+  Rx<TimeOfDay> selectedEndTime = TimeOfDay(hour: 0, minute: 0).obs;
+
+  Rx<DateTime> selectedStartDatePermit = DateTime(0).obs;
+  Rx<DateTime> selectedEndDatePermit = DateTime(0).obs;
 
   RxInt selectedSubtituteEmployeeId = 0.obs;
+  RxInt currentTabIndex = 0.obs;
 
   Rx<LeaveModel> leaveModelRes =
       LeaveModel(code: 0, message: '', data: LeaveDataModel.empty()).obs;
+  Rx<PermitModel> permitModelRes = PermitModel(
+    code: 0,
+    message: '',
+    data: [],
+  ).obs;
   Rx<CreateFormLeaveEntity> createFormRes =
       const CreateFormLeaveEntity(id: 0, codeNo: '').obs;
   Rx<CancelFormLeaveEntity> cancelFormRes =
@@ -79,47 +107,90 @@ class LeaveSummaryController extends GetxController {
   final Rx<UserDataModel> userData = UserDataModel.empty().obs;
 
   RxList<DataLeaveModel> leaveData = <DataLeaveModel>[].obs;
+  RxList<PermitDataModel> permitData = <PermitDataModel>[].obs;
   RxList<DataLeaveModel> filterLeaveData = <DataLeaveModel>[].obs;
+  RxList<PermitDataModel> filterPermitData = <PermitDataModel>[].obs;
   RxList<Employee> subtituteEmployeeListRes = <Employee>[].obs;
-  RxList<DateTime> multiDatePickerValueWithDefaultValue = <DateTime>[].obs;
+  RxList<DateTime> multiDatePickerValueleaveRequestWithDefaultValue =
+      <DateTime>[].obs;
   RxList<LeaveApprovalEntity> listLeaveApprovalRes =
       <LeaveApprovalEntity>[].obs;
   RxList<LeaveApprovalEntity> filterApprovalLeaveData =
       <LeaveApprovalEntity>[].obs;
+  List<PermitTypeEntity> permitTypeList = <PermitTypeEntity>[
+    PermitTypeEntity(
+      type: 'Late-in leave permit',
+      typeCode: 'HD',
+      typeTranslate: 'Izin masuk siang',
+    ),
+    PermitTypeEntity(
+      type: 'Early leave permit request',
+      typeCode: 'PC',
+      typeTranslate: 'Izin pulang cepat',
+    ),
+    PermitTypeEntity(
+      type: 'Permit request',
+      typeCode: 'GS',
+      typeTranslate: 'Izin',
+    ),
+    PermitTypeEntity(
+      type: 'Alpha or no reason',
+      typeCode: 'TK',
+      typeTranslate: 'Tanpa keterangan (alpa)',
+    ),
+    PermitTypeEntity(
+      type: 'Cut Leave',
+      typeCode: 'CUT_LEAVE',
+      typeTranslate: 'Izin potong cuti',
+    ),
+  ];
 
   final GetLeaveUsecase getLeaveUsecase;
+  final GetPermitUsecase getPermitUsecase;
   final GetSubtituteEmployeeUsecase getSubtituteEmployeeUsecase;
   final CreateFormLeaveUsecase createFormLeaveUsecase;
   final CancelFormLeaveUsecase cancelFormLeaveUsecase;
   final GetLeaveApprovalUsecase getLeaveApprovalUsecase;
   final GetCacheUser getCacheUser;
+  final CreateFormPermitUsecase createFormPermitUsecase;
 
   @override
   void onInit() async {
-    tabController = TabController(length: 2, vsync: TicckerProvider());
+    tabLeaveController = TabController(length: 2, vsync: TicckerProvider());
+    tabPermitController = TabController(length: 2, vsync: TicckerProvider());
     await _getCacheUser();
     _getLeaveSummary();
-    _getLeaveApprovalSummary();
+    _getPermitSummary();
+    userData.value.position != 'Staff' ? _getLeaveApprovalSummary() : null;
     _getSubtituteEmployees();
     super.onInit();
   }
 
   @override
   void onClose() {
-    tabController.dispose();
+    tabLeaveController.dispose();
+    tabPermitController.dispose();
     super.onClose();
   }
 
   Future<void> onRefresh() async {
     filterApprovalLeaveData.value = [];
     listLeaveApprovalRes.value = [];
-    filterLeaveData.value = [];
     leaveData.value = [];
+    permitData.value = [];
+    filterLeaveData.value = [];
+    filterPermitData.value = [];
 
     await _getCacheUser();
     _getLeaveSummary();
-    _getLeaveApprovalSummary();
+    _getPermitSummary();
+    userData.value.position != 'Staff' ? _getLeaveApprovalSummary() : null;
     _getSubtituteEmployees();
+  }
+
+  bool isTabSelected(int index) {
+    AppUtils.logApp("Current Index $index");
+    return currentTabIndex.value == index;
   }
 
   void selectCasualType() {
@@ -150,15 +221,38 @@ class LeaveSummaryController extends GetxController {
 
     final r = await getLeaveUsecase();
 
-    r.fold((l) {
-      isLoading.value = false;
-      AppUtils.logApp(l.toString());
-    }, (r) {
-      leaveModelRes.value = r;
-      leaveData.value = leaveModelRes().data!.dataLeave!;
-      filterLeaveData.value = leaveData;
-      isLoading.value = false;
-    });
+    r.fold(
+      (l) {
+        isLoading.value = false;
+        AppUtils.logApp(l.toString());
+      },
+      (r) {
+        leaveModelRes.value = r;
+        leaveData.value = leaveModelRes().data!.dataLeave!;
+        filterLeaveData.value = leaveData;
+        isLoading.value = false;
+      },
+    );
+  }
+
+  Future<void> _getPermitSummary() async {
+    isLoading.value = true;
+
+    final r = await getPermitUsecase();
+
+    r.fold(
+      (l) {
+        isLoading.value = false;
+        AppUtils.logApp(l.toString());
+      },
+      (r) {
+        permitModelRes.value = r;
+        permitData.value = permitModelRes().data;
+        AppUtils.logApp('PERMIT DATA ::: ${permitData.length}');
+        filterPermitData.value = permitData;
+        isLoading.value = false;
+      },
+    );
   }
 
   Future<void> _getLeaveApprovalSummary() async {
@@ -196,8 +290,20 @@ class LeaveSummaryController extends GetxController {
     selectedSubtituteEmployeeId.value = id;
   }
 
+  void setPermitType(String value, String typeCode) {
+    selectedPermitType.value = value;
+    selectedPermitTypeCode.value = typeCode;
+    AppUtils.logApp(selectedPermitType.value);
+    AppUtils.logApp(selectedPermitTypeCode.value);
+  }
+
   void clearSubtituteEmployee() {
+    selectedSubtituteEmployeeId.value = 0;
     selectedSubtituteEmployee.value = '';
+  }
+
+  void clearPermitType() {
+    selectedPermitType.value = '';
   }
 
   Future<void> createFormLeave() async {
@@ -205,7 +311,8 @@ class LeaveSummaryController extends GetxController {
     AppUtils.logApp(selectedSubtituteEmployeeId.value.toString());
     AppUtils.logApp(reason.value);
 
-    final List<DateTime> dataLeaveList = multiDatePickerValueWithDefaultValue;
+    final List<DateTime> dataLeaveList =
+        multiDatePickerValueleaveRequestWithDefaultValue;
 
     final List<String> formattedDates =
         dataLeaveList.map((date) => date.toIso8601String()).toList();
@@ -229,7 +336,7 @@ class LeaveSummaryController extends GetxController {
     }, (r) {
       isLoading(false);
       createFormRes.value = r;
-      multiDatePickerValueWithDefaultValue.value = [];
+      multiDatePickerValueleaveRequestWithDefaultValue.value = [];
       selectedSubtituteEmployee.value = '';
       selectedSubtituteEmployeeId.value = 0;
       reason.value = '';
@@ -271,6 +378,11 @@ class LeaveSummaryController extends GetxController {
     _filterLeaveData(value, leaveData, filterLeaveData);
     _filterApprovalLeaveData(
         value, listLeaveApprovalRes, filterApprovalLeaveData);
+  }
+
+  void onChangedPermit(String value) {
+    valueListenerPermit.value = value;
+    _filterPermitData(value, permitData, filterPermitData);
   }
 
   void clear() {
@@ -327,8 +439,31 @@ class LeaveSummaryController extends GetxController {
     }
   }
 
+  void _filterPermitData(String value, RxList<PermitDataModel> data,
+      RxList<PermitDataModel> filterData) {
+    if (value.isEmpty) {
+      filterData.value = data;
+      AppUtils.logApp('${filterData.length}');
+    } else {
+      filterData.value = data
+          .where((e) =>
+              e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
+              e.reason.toString().toLowerCase().contains(value.toLowerCase()) ||
+              e.codeDefine
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterData.length}');
+    }
+  }
+
   Future<void> actionFormLeave(
-      String codeNo, String type, int level, String reasonRejected) async {
+    String codeNo,
+    String type,
+    int level,
+    String reasonRejected,
+  ) async {
     isLoading.value = true;
 
     final r = await cancelFormLeaveUsecase(
@@ -340,20 +475,78 @@ class LeaveSummaryController extends GetxController {
       ),
     );
 
-    r.fold((l) {
-      Get.back();
-      isLoading(false);
-      reasonText.value = '';
-      final m = l.properties[0] as ApiException;
-      AppDialogImpl().showErrorDialog(description: m.message);
-    }, (r) {
-      Get.back();
-      isLoading(false);
-      reasonText.value = '';
-      _getLeaveApprovalSummary();
-      cancelFormRes.value = r;
-      AppDialogImpl().showSuccessSnackBar(
-          description: 'Form Leave ${type.capitalizeFirst}');
-    });
+    r.fold(
+      (l) {
+        isLoading(false);
+        reasonText.value = '';
+        final m = l.properties[0] as ApiException;
+        AppDialogImpl().showErrorDialog(description: m.message);
+      },
+      (r) {
+        isLoading(false);
+        reasonText.value = '';
+        _getLeaveApprovalSummary();
+        cancelFormRes.value = r;
+        AppDialogImpl().showCustomInfoDialog(
+          title: type == 'approved'
+              ? 'Your Approval has been updated!'
+              : 'Request Successfully rejected!',
+          textButton: 'Done',
+          imagePath: type == 'approved'
+              ? 'assets/json/lottie_success_approve.json'
+              : 'assets/json/lottie_success_reject.json',
+          height: 200.h,
+        );
+      },
+    );
+  }
+
+// -- PERMIT FORM -- //
+
+  Future<void> createFormPermit() async {
+    final String formattedStartDate =
+        selectedStartDatePermit.value.toIso8601String();
+    final String formattedEndDate =
+        selectedEndDatePermit.value.toIso8601String();
+
+    AppUtils.logApp(formattedStartDate);
+    AppUtils.logApp(formattedEndDate);
+
+    String formatTimeOfDay(TimeOfDay time) {
+      final now = DateTime.now();
+      final dateTime =
+          DateTime(now.year, now.month, now.day, time.hour, time.minute);
+      return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    }
+
+    final String formattedStartTime = formatTimeOfDay(selectedStartTime.value);
+    final String formattedEndTime = formatTimeOfDay(selectedEndTime.value);
+
+    isLoading.value = true;
+
+    final r = await createFormPermitUsecase(
+      CreateFormPermitParamsEntity(
+        typeCode: selectedPermitTypeCode.value,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        startTime: formattedStartTime,
+        endTime: formattedEndTime,
+        reason: reasonPermit.value,
+      ),
+    );
+
+    r.fold(
+      (l) {
+        isLoading(false);
+        final m = l.properties[0] as ApiException;
+        AppUtils.logApp('${m.message}');
+      },
+      (r) {
+        isLoading(false);
+        Get.back();
+        AppDialogImpl()
+            .showSuccessSnackBar(description: 'Success Create Permit Leave');
+      },
+    );
   }
 }

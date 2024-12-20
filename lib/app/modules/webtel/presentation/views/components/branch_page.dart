@@ -83,63 +83,66 @@ class BranchPage extends StatelessWidget {
       () => data.isNotEmpty
           ? SizedBox(
               height: Get.height,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const IntrinsicHeight(
-                  child: EPadding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: AppDivider(
-                      color: black,
+              child: RepaintBoundary(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const IntrinsicHeight(
+                    child: EPadding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: AppDivider(
+                        color: black,
+                      ),
                     ),
                   ),
-                ),
-                padding: REdgeInsets.only(top: 5, bottom: 150.h),
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final d = data[index];
+                  padding: REdgeInsets.only(top: 5, bottom: 150.h),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final d = data[index];
 
-                  return EPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ListTile(
-                      title: SearchHighlightText(
-                        d.fullName,
-                        softWrap: true,
-                        style: TS.labelLarge.copyWith(color: black),
-                        highlightStyle: TS.labelLarge.copyWith(color: red),
+                    return EPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ListTile(
+                        title: SearchHighlightText(
+                          d.fullName,
+                          softWrap: true,
+                          style: TS.labelLarge.copyWith(color: black),
+                          highlightStyle: TS.labelLarge.copyWith(color: red),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            d.workEmail != '' || d.workEmail.isNull
+                                ? SearchHighlightText(
+                                    d.workEmail,
+                                    softWrap: true,
+                                    style: TS.bodyMedium.copyWith(color: black),
+                                    highlightStyle:
+                                        TS.bodyMedium.copyWith(color: red),
+                                  )
+                                : Text(
+                                    "-",
+                                    softWrap: true,
+                                    style: TS.bodyMedium.copyWith(color: black),
+                                  ),
+                            10.verticalSpace,
+                            SearchHighlightText(
+                              d.departmentName,
+                              softWrap: true,
+                              style: TS.labelLarge.copyWith(color: black),
+                              highlightStyle:
+                                  TS.labelLarge.copyWith(color: red),
+                            ),
+                          ],
+                        ),
+                        trailing: SearchHighlightText(
+                          d.extentionNumber.toString(),
+                          softWrap: true,
+                          style: TS.titleMedium.copyWith(color: black),
+                          highlightStyle: TS.titleMedium.copyWith(color: red),
+                        ),
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          d.workEmail != '' || d.workEmail.isNull
-                              ? SearchHighlightText(
-                                  d.workEmail,
-                                  softWrap: true,
-                                  style: TS.bodyMedium.copyWith(color: black),
-                                  highlightStyle:
-                                      TS.bodyMedium.copyWith(color: red),
-                                )
-                              : Text(
-                                  "-",
-                                  softWrap: true,
-                                  style: TS.bodyMedium.copyWith(color: black),
-                                ),
-                          10.verticalSpace,
-                          SearchHighlightText(
-                            d.departmentName,
-                            softWrap: true,
-                            style: TS.labelLarge.copyWith(color: black),
-                            highlightStyle: TS.labelLarge.copyWith(color: red),
-                          ),
-                        ],
-                      ),
-                      trailing: SearchHighlightText(
-                        d.extentionNumber.toString(),
-                        softWrap: true,
-                        style: TS.titleMedium.copyWith(color: black),
-                        highlightStyle: TS.titleMedium.copyWith(color: red),
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             )
           : SizedBox(

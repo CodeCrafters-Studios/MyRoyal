@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/attendance/views/components/attendance_card.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_late_check_in_view.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_permit_request_view.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/dashboard_controller.dart';
@@ -23,18 +20,13 @@ class DashboardView extends GetView<DashboardController> {
       showBackground: false,
       title: 'Dashboard',
       child: SingleChildScrollView(
-        child: EPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: Obx(
-            () => Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const AppbarSpacer(),
-                controller.isLoading.value
-                    ? _buildLoadingUI()
-                    : _buildLoadedUI(),
-              ],
-            ),
+        child: Obx(
+          () => Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const AppbarSpacer(),
+              controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
+            ],
           ),
         ),
       ),
@@ -48,44 +40,32 @@ class DashboardView extends GetView<DashboardController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: ShimmerText(width: 150.w),
-          ),
-          20.verticalSpace,
-          Align(
-            alignment: Alignment.topLeft,
-            child: ShimmerText(width: 180.w),
-          ),
-          20.verticalSpace,
-          _buildAttendanceGrid(),
+          _buildDashboardCard(),
           25.verticalSpace,
-          PieChart(
-            chartRadius: 150.r,
-            centerWidget: Text(
-              controller.remainingLeave.toString(),
-              style: TS.headlineLarge,
-            ),
-            legendOptions: LegendOptions(
-              legendTextStyle: TS.bodyLarge,
-              legendPosition: LegendPosition.bottom,
-              showLegendsInRow: true,
-            ),
-            dataMap: const {"balance": 0.0, "used": 0.0},
-            chartType: ChartType.ring,
-            baseChartColor: black.withOpacity(0.15),
-            colorList: controller.colorList,
-            chartValuesOptions: ChartValuesOptions(
-              showChartValuesInPercentage: false,
-              decimalPlaces: 0,
-              showChartValuesOutside: true,
-              showChartValueBackground: false,
-              chartValueStyle: TS.titleMedium.copyWith(color: black),
-            ),
-            totalValue: controller.remainingLeave.value.toDouble(),
-          ),
-          // 25.verticalSpace,
-          // _buildTaskComplianceRatio(),
+          // PieChart(
+          //   chartRadius: 150.r,
+          //   centerWidget: Text(
+          //     controller.remainingLeave.toString(),
+          //     style: TS.headlineLarge,
+          //   ),
+          //   legendOptions: LegendOptions(
+          //     legendTextStyle: TS.bodyLarge,
+          //     legendPosition: LegendPosition.bottom,
+          //     showLegendsInRow: true,
+          //   ),
+          //   dataMap: const {"balance": 0.0, "used": 0.0},
+          //   chartType: ChartType.ring,
+          //   baseChartColor: black.withOpacity(0.15),
+          //   colorList: controller.colorList,
+          //   chartValuesOptions: ChartValuesOptions(
+          //     showChartValuesInPercentage: false,
+          //     decimalPlaces: 0,
+          //     showChartValuesOutside: true,
+          //     showChartValueBackground: false,
+          //     chartValueStyle: TS.titleMedium.copyWith(color: black),
+          //   ),
+          //   totalValue: controller.remainingLeave.value.toDouble(),
+          // ),
         ],
       ),
     );
@@ -98,8 +78,6 @@ class DashboardView extends GetView<DashboardController> {
         _buildDashboardSection(),
         controller.hasTeams.value ? 20.verticalSpace : emptyBox,
         // controller.hasTeams.value ? _buildMyTeamsSection() : emptyBox,
-        // 20.verticalSpace,
-        // _buildTaskComplianceRatio(),
       ],
     );
   }
@@ -108,144 +86,115 @@ class DashboardView extends GetView<DashboardController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Leaves Summary', style: TS.titleMedium),
-        25.verticalSpace,
-        _buildAttendanceGrid(),
-        25.verticalSpace,
-        Obx(
-          () => PieChart(
-            chartRadius: 150.r,
-            centerWidget: Text(
-              controller.dashboardData().data!.leaveBalance!.used.toString(),
-              style: TS.headlineLarge,
-            ),
-            legendOptions: LegendOptions(
-              legendTextStyle: TS.bodyLarge,
-              legendPosition: LegendPosition.bottom,
-              showLegendsInRow: true,
-            ),
-            dataMap: controller.dashboardData().data!.leaveBalance != null
-                ? {
-                    "balance": controller
-                        .dashboardData()
-                        .data!
-                        .leaveBalance!
-                        .balance!
-                        .toDouble(),
-                    "used": controller
-                        .dashboardData()
-                        .data!
-                        .leaveBalance!
-                        .used!
-                        .toDouble(),
-                  }
-                : {"balance": 8.0, "used": 0.0},
-            chartType: ChartType.ring,
-            baseChartColor: black.withOpacity(0.15),
-            colorList: controller.colorList,
-            chartValuesOptions: ChartValuesOptions(
-              showChartValuesInPercentage: false,
-              decimalPlaces: 0,
-              showChartValuesOutside: true,
-              showChartValueBackground: false,
-              chartValueStyle: TS.titleMedium.copyWith(color: black),
-            ),
-            totalValue: controller
-                    .dashboardData()
-                    .data!
-                    .leaveBalance!
-                    .balance!
-                    .toDouble() +
-                controller.dashboardData().data!.leaveBalance!.used!.toDouble(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAttendanceGrid() {
-    final leaveSummaryData = controller.dashboardData().data!.leaveSummary!;
-
-    return GridView.count(
-      padding: EdgeInsets.zero,
-      childAspectRatio: 1.2,
-      mainAxisSpacing: 15,
-      crossAxisSpacing: 15,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      shrinkWrap: true,
-      children: [
-        AttendanceCard(
-          backgroundColor: Colors.orange,
-          title: leaveSummaryData.specialLeaves!.toString(),
-          subTitle: 'Special Leaves',
-        ),
-        AttendanceCard(
-          backgroundColor: secondary70,
-          title: leaveSummaryData.absent!.toString(),
-          subTitle: 'Absents',
-        ),
-        AttendanceCard(
-          backgroundColor: red,
-          title: leaveSummaryData.late!.toString(),
-          subTitle: 'Late in',
-        ),
-        // const AttendanceCard(
-        //   backgroundColor: Colors.orange,
-        //   title: '08',
-        //   subTitle: 'Leaves',
+        _buildDashboardCard(),
+        10.verticalSpace,
+        // EPadding(
+        //   padding: const EdgeInsets.only(left: 14),
+        //   child: Text('Leaves Summary', style: TS.titleMedium),
+        // ),
+        // 25.verticalSpace,
+        // Obx(
+        //   () => PieChart(
+        //     chartRadius: 150.r,
+        //     centerWidget: Text(
+        //       controller.dashboardData().data!.leaveBalance!.used.toString(),
+        //       style: TS.headlineLarge,
+        //     ),
+        //     legendOptions: LegendOptions(
+        //       legendTextStyle: TS.bodyLarge,
+        //       legendPosition: LegendPosition.bottom,
+        //       showLegendsInRow: true,
+        //     ),
+        //     dataMap: controller.dashboardData().data!.leaveBalance != null
+        //         ? {
+        //             "balance": controller
+        //                 .dashboardData()
+        //                 .data!
+        //                 .leaveBalance!
+        //                 .balance!
+        //                 .toDouble(),
+        //             "used": controller
+        //                 .dashboardData()
+        //                 .data!
+        //                 .leaveBalance!
+        //                 .used!
+        //                 .toDouble(),
+        //           }
+        //         : {"balance": 8.0, "used": 0.0},
+        //     chartType: ChartType.ring,
+        //     baseChartColor: black.withOpacity(0.15),
+        //     colorList: controller.colorList,
+        //     chartValuesOptions: ChartValuesOptions(
+        //       showChartValuesInPercentage: false,
+        //       decimalPlaces: 0,
+        //       showChartValuesOutside: true,
+        //       showChartValueBackground: false,
+        //       chartValueStyle: TS.titleMedium.copyWith(color: black),
+        //     ),
+        //     totalValue: controller
+        //             .dashboardData()
+        //             .data!
+        //             .leaveBalance!
+        //             .balance!
+        //             .toDouble() +
+        //         controller.dashboardData().data!.leaveBalance!.used!.toDouble(),
+        //   ),
         // ),
       ],
     );
   }
 
-  // Widget _buildTaskComplianceRatio() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text('Task Compliance Ratio', style: TS.titleMedium),
-  //       // 20.verticalSpace,
-  //       // Align(
-  //       //   alignment: Alignment.center,
-  //       //   child: _buildContainer(
-  //       //     'Immediate Action\nRequired Task',
-  //       //     '20',
-  //       //     175,
-  //       //     114,
-  //       //   ),
-  //       // ),
-  //       5.verticalSpace,
-  //       Column(
-  //         children: [
-  //           SizedBox(
-  //             height: 200.r,
-  //             child: CustomizePieChart(
-  //               sections: controller.showingSectionsData(),
-  //             ),
-  //           ),
-  //           15.verticalSpace,
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.center,
-  //             children: [
-  //               const Indicator(
-  //                 color: Colors.blue,
-  //                 text: 'Task 1',
-  //                 isSquare: true,
-  //               ),
-  //               12.horizontalSpace,
-  //               const Indicator(
-  //                 color: Colors.green,
-  //                 text: 'Task 2',
-  //                 isSquare: true,
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _buildDashboardCard() {
+    final leaveSummaryData = controller.dashboardData().data!.leaveSummary!;
+    final permitData = controller.dashboardData().data!.permit!;
 
+    return Column(
+      children: [
+        DashboardCard(
+          title: 'Special Leave\nRequests',
+          value: leaveSummaryData.specialLeaves.toString(),
+          totalValue: '',
+          progressLinearValue: 0,
+          textColor: secondary,
+          progressLinearColor: secondary,
+          valueColor: secondary,
+          backgroundImage: 'assets/images/img_bg_special_leave.png',
+          iconAsset: 'assets/icons/ic_special_leaves.svg',
+          isLateCard: true,
+        ),
+        5.verticalSpace,
+        DashboardCard(
+          title: 'Permit\nRequest',
+          value: permitData.count.toString(),
+          totalValue: '',
+          progressLinearValue: 0,
+          textColor: primary20,
+          progressLinearColor: primary20,
+          valueColor: primary20,
+          backgroundImage: 'assets/images/img_bg_request_leave.png',
+          iconAsset: 'assets/icons/ic_request_leave.svg',
+          isLateCard: true,
+          onTap: () => Get.to(() => DetailPermitRequestView()),
+        ),
+        5.verticalSpace,
+        DashboardCard(
+          title: 'Late\nCheck-In',
+          value: leaveSummaryData.late.toString(),
+          totalValue: '',
+          progressLinearValue: 0,
+          textColor: errorColor,
+          progressLinearColor: errorColor,
+          valueColor: errorColor,
+          backgroundImage: 'assets/images/img_late_check_in.png',
+          iconAsset: 'assets/icons/ic_late_check_in.svg',
+          isLateCard: true,
+          onTap: () => Get.to(() => DetailLateCheckInView()),
+        ),
+      ],
+    );
+  }
+
+  // -- My Teams Section
   // Widget _buildMyTeamsSection() {
   //   return Column(
   //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +222,6 @@ class DashboardView extends GetView<DashboardController> {
   //     ],
   //   );
   // }
-
   // Widget _buildContainer(
   //     String title, String value, double width, double height) {
   //   return Container(
@@ -304,7 +252,6 @@ class DashboardView extends GetView<DashboardController> {
   //     ),
   //   );
   // }
-
   // Widget _buildGenderRatio() {
   //   return Column(
   //     children: [

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_approval_request_view.dart';
-
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/apply_leave_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/views/permit_view.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../controllers/leave_summary_controller.dart';
 
@@ -25,14 +23,114 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Leave Summary',
-      child: LeaveSummaryViewImpl(controller: controller),
+      title: 'Leaves',
+      child: Obx(
+        () => controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
+      ),
+    );
+  }
+
+  Widget _buildLoadedUI() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          AppbarSpacer(),
+          DashboardCard(
+            title: 'Leave\nRequests',
+            value: controller
+                .leaveModelRes()
+                .data!
+                .yearlyLeaveCount!
+                .used
+                .toString(),
+            totalValue: controller
+                .leaveModelRes()
+                .data!
+                .yearlyLeaveCount!
+                .max
+                .toString(),
+            progressLinearValue: controller
+                    .leaveModelRes()
+                    .data!
+                    .yearlyLeaveCount!
+                    .used!
+                    .toDouble() /
+                12,
+            textColor: secondary,
+            progressLinearColor: secondary,
+            valueColor: secondary,
+            backgroundImage: 'assets/images/img_bg_special_leave.png',
+            iconAsset: 'assets/icons/ic_special_leaves.svg',
+            isLateCard: false,
+            onTap: () => Get.toNamed(Routes.LEAVES),
+          ),
+          5.verticalSpace,
+          DashboardCard(
+            title: 'Permit\nRequest',
+            value: controller.permitData.length.toString(),
+            totalValue: '12',
+            progressLinearValue: 12 / 12,
+            textColor: primary20,
+            progressLinearColor: primary20,
+            valueColor: primary20,
+            backgroundImage: 'assets/images/img_bg_request_leave.png',
+            iconAsset: 'assets/icons/ic_request_leave.svg',
+            isLateCard: true,
+            onTap: () => Get.to(
+              () => PermitView(),
+            ),
+          ),
+          20.verticalSpace,
+          LeavesViewImpl(controller: controller),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingUI() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            AppbarSpacer(),
+            DashboardCard(
+              title: 'Leave\nRequests',
+              value: '',
+              totalValue: '',
+              progressLinearValue: 0,
+              textColor: secondary,
+              progressLinearColor: secondary,
+              valueColor: secondary,
+              backgroundImage: 'assets/images/img_bg_special_leave.png',
+              iconAsset: 'assets/icons/ic_special_leaves.svg',
+              isLateCard: false,
+            ),
+            5.verticalSpace,
+            DashboardCard(
+              title: 'Permit\nRequest',
+              value: '0',
+              totalValue: '0',
+              progressLinearValue: 0,
+              textColor: primary20,
+              progressLinearColor: primary20,
+              valueColor: primary20,
+              backgroundImage: 'assets/images/img_bg_request_leave.png',
+              iconAsset: 'assets/icons/ic_request_leave.svg',
+              isLateCard: true,
+            ),
+            // 20.verticalSpace,
+            // LeavesViewImpl(controller: controller),
+          ],
+        ),
+      ),
     );
   }
 }
 
-class LeaveSummaryViewImpl extends StatelessWidget {
-  const LeaveSummaryViewImpl({
+class LeavesViewImpl extends StatelessWidget {
+  const LeavesViewImpl({
     super.key,
     required this.controller,
   });
@@ -41,147 +139,37 @@ class LeaveSummaryViewImpl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      child: Column(
+    return _buildLeaveRequestSection(context);
+  }
+
+  Widget _buildLeaveRequestSection(BuildContext context) {
+    return emptyBox;
+    // Obx(
+    //   () => Column(
+    //     mainAxisSize: MainAxisSize.min,
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     children: [
+    //       // _buildSearch(),
+    //       // 20.verticalSpace,
+    //       // _buildAllLeaveRequestView(),
+    //       // 20.verticalSpace,
+    //       // controller.userData.value.position != 'Staff'
+    //       //     ? _buildLeaveRequestTabViews()
+    //       //     : emptyBox
+    //     ],
+    //   ),
+    // );
+  }
+
+  Widget _buildLeaveRequestTabViews() {
+    return SizedBox(
+      width: Get.width,
+      height: Get.height,
+      child: TabBarView(
+        controller: controller.tabLeaveController,
         children: [
-          const AppbarSpacer(),
-          _buildLeaveRequestSection(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLeaveRemainings() {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Obx(
-        () => controller.isLoading.value
-            ? ShimmerText(width: Get.width)
-            : _buildTypeRow(
-                "Year Leave Used",
-                controller
-                        .leaveModelRes()
-                        .data!
-                        .yearlyLeaveCount!
-                        .used!
-                        .toDouble() /
-                    10,
-                "${controller.leaveModelRes().data!.yearlyLeaveCount!.used!}/${controller.leaveModelRes().data!.yearlyLeaveCount!.max!}",
-              ),
-      ),
-    );
-  }
-
-  Widget _buildTypeRow(String type, double value, String ratio) {
-    return Row(
-      children: [
-        Text(type, style: TS.bodyMedium),
-        10.horizontalSpace,
-        Expanded(
-          child: LinearProgressIndicator(
-            color: primary,
-            backgroundColor: greyHint,
-            value: value,
-          ),
-        ),
-        10.horizontalSpace,
-        Text(ratio, style: TS.bodyMedium),
-      ],
-    );
-  }
-
-  Widget _buildLeaveRequestSection() {
-    return Obx(
-      () => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildLeaveRequestHeader(),
-          25.verticalSpace,
-          _buildLeaveRemainings(),
-          25.verticalSpace,
-          _buildSearch(),
-          20.verticalSpace,
-          _buildAllLeaveRequestView(),
-          20.verticalSpace,
-          controller.userData.value.position != 'Staff'
-              ? _buildLeaveRequestTabViews()
-              : emptyBox
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearch() {
-    return Obx(
-      () => EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: InputPrimary(
-          controller: controller.search,
-          label: '',
-          hint: 'Search',
-          onChanged: controller.onChanged,
-          color: white,
-          outlineColor: primary,
-          prefixIcon: _buildPrefixIcon(),
-          suffixIcon: _buildSuffixIcon(),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLeaveRequestHeader() {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Leave Request', style: TS.titleMedium),
-          Obx(
-            () => ButtonPrimary(
-              enable: controller
-                      .leaveModelRes()
-                      .data!
-                      .yearlyLeaveCount!
-                      .remaining! >
-                  0,
-              borderRadius: Corners.xxl,
-              margin: REdgeInsets.only(top: 5),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              color: controller
-                          .leaveModelRes()
-                          .data!
-                          .yearlyLeaveCount!
-                          .remaining ==
-                      0
-                  ? grey
-                  : urgentColor,
-              borderSide: BorderSide(
-                  color: controller
-                              .leaveModelRes()
-                              .data!
-                              .yearlyLeaveCount!
-                              .remaining ==
-                          0
-                      ? grey
-                      : urgentColor),
-              onPressed: () =>
-                  Get.to(() => ApplyLeaveView(controller: controller)),
-              child: Row(
-                children: [
-                  Icon(Icons.add, size: 18.dm, color: white),
-                  5.horizontalSpace,
-                  Text(
-                    'Create New',
-                    style: TS.bodySmall.copyWith(
-                      color: white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          AllLeaveRequestView(controller: controller),
+          AllApprovalRequestView(controller: controller),
         ],
       ),
     );
@@ -198,7 +186,7 @@ class LeaveSummaryViewImpl extends StatelessWidget {
                 color: white,
               ),
               child: TabBar(
-                controller: controller.tabController,
+                controller: controller.tabLeaveController,
                 indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(Corners.xxl),
                   color: primary,
@@ -215,40 +203,5 @@ class LeaveSummaryViewImpl extends StatelessWidget {
             ),
           )
         : AllLeaveRequestView(controller: controller);
-  }
-
-  Widget _buildLeaveRequestTabViews() {
-    return SizedBox(
-      width: Get.width,
-      height: Get.height,
-      child: TabBarView(
-        controller: controller.tabController,
-        children: [
-          AllLeaveRequestView(controller: controller),
-          AllApprovalRequestView(controller: controller),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPrefixIcon() {
-    return EPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: SvgPicture.asset(
-        'assets/icons/ic_search.svg',
-        width: 20.w,
-        height: 20.w,
-      ),
-    );
-  }
-
-  Widget? _buildSuffixIcon() {
-    final valueListener = controller.valueListener.value;
-    return valueListener.isNotEmpty
-        ? IconButton(
-            onPressed: controller.clear,
-            icon: const Icon(Icons.clear),
-          )
-        : null;
   }
 }

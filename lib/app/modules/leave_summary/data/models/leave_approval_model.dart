@@ -9,6 +9,7 @@ class LeaveApprovalModel extends LeaveApprovalEntity {
     required super.level,
     required super.status,
     required super.periode,
+    required super.listPeriode,
   });
 
   factory LeaveApprovalModel.fromJson(Map<String, dynamic> json) =>
@@ -19,6 +20,9 @@ class LeaveApprovalModel extends LeaveApprovalEntity {
         level: json["level"],
         status: json["status"],
         periode: Periode.fromJson(json["periode"]),
+        listPeriode: List<String>.from(
+          json["list_periode"].map((x) => x),
+        ),
       );
 
   Map<String, dynamic> toJson() => {
@@ -28,5 +32,6 @@ class LeaveApprovalModel extends LeaveApprovalEntity {
         "level": level,
         "status": status,
         "periode": periode.toJson(),
+        "list_periode": List<dynamic>.from(listPeriode.map((x) => x)),
       };
 }

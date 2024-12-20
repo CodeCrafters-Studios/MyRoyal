@@ -210,8 +210,8 @@ class LoginController extends GetxController {
       /* -- DEVELOPMENT -- */
       ParamsLogin(
         grantType: 'password',
-        clientId: '9d257196-4a49-413a-9b3d-1ab5f14c8b64',
-        clientSecret: 'cUL9sZA4Oz6Ufvv1myO0c0brsoFs3nzSNGpJSVgE',
+        clientId: '9db4796e-8a82-4fb7-936c-cc72f92ac425',
+        clientSecret: 'FsZipQkzcKQlHDOq0CP96QPn6x3sRp1M3eYcjO25',
         username: username(),
         password: password(),
         scope: '*',

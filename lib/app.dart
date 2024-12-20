@@ -1,4 +1,4 @@
-import 'package:alice/alice.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -120,8 +120,10 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      navigatorKey: Get.find<Alice>().getNavigatorKey(),
-      navigatorObservers: [GetObserver()],
+      navigatorObservers: [
+        GetObserver(),
+        DioRequestInspector.navigatorObserver,
+      ],
       title: appTitle,
       theme: appTheme(context),
       debugShowCheckedModeBanner: false,
@@ -133,9 +135,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
             Visibility(
               visible: widget.config != const EnvironmentConfig.production(),
               child: OverlayLogButton(
-                onTap: () {
-                  Get.find<Alice>().showInspector();
-                },
+                onTap: () => Get.find<DioRequestInspector>().goToInspector(),
               ),
             ),
           ],

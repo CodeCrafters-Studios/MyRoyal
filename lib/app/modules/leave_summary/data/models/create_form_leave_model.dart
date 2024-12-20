@@ -1,10 +1,10 @@
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 
-class CreateFormModel extends CreateFormLeaveEntity {
-  const CreateFormModel({required super.id, required super.codeNo});
+class CreateFormLeaveModel extends CreateFormLeaveEntity {
+  const CreateFormLeaveModel({required super.id, required super.codeNo});
 
-  factory CreateFormModel.fromJson(Map<String, dynamic> json) =>
-      CreateFormModel(
+  factory CreateFormLeaveModel.fromJson(Map<String, dynamic> json) =>
+      CreateFormLeaveModel(
         id: json["id"],
         codeNo: json["code_no"],
       );

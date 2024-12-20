@@ -1,7 +1,7 @@
-import 'package:alice/alice.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +59,12 @@ Future<void> setupAndRunApp(
     ignoreSsl: true,
   );
 
-  runApp(appWidget);
+  runApp(
+    DioRequestInspectorMain(
+      inspector: DioRequestInspector(isDebugMode: true),
+      child: appWidget,
+    ),
+  );
 }
 
 Future<void> remoteMessageHandler(RemoteMessage message) async {
@@ -83,15 +88,18 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final packageInfo = await PackageInfo.fromPlatform();
   final auth = LocalAuthentication();
   final dio = Dio();
-  final alice = Alice(showNotification: false);
+  final inspector = DioRequestInspector(
+    isDebugMode: true,
+    duration: Duration(milliseconds: 500),
+  );
   final internetConnectionChecker = InternetConnectionChecker();
   final appDialogImpl = AppDialogImpl();
   final Connectivity connectivity = Connectivity();
   final firebaseRemoteConfig = MellotippetFirebaseRemoteConfig();
 
   Get
-    ..put(alice)
     ..put(dio)
+    ..put(inspector)
     ..put(AppStorage(box: box))
     ..put(
       DeviceInfo(
@@ -110,8 +118,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
     ..put(AppEncryptImpl())
     ..put(
       HttpService(
-        alice: alice,
         dio: Get.find(),
+        inspector: Get.find(),
         appStorage: Get.find(),
         networkInfo: Get.find<NetworkInfoImpl>(),
         appEncrypt: Get.find<AppEncryptImpl>(),

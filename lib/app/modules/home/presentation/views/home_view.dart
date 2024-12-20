@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_slide.dart';
@@ -61,17 +62,24 @@ class HomeView extends GetView<HomeController> {
 
   Widget _buildNotifications() {
     return Obx(
-      () => Badge(
-        label: Text(controller.filterNewNotif.length.toString()),
-        child: InkWellTap(
-          onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
-          child: Icon(
-            Icons.notifications_rounded,
-            color: white,
-            size: 32.dm,
-          ),
-        ),
-      ),
+      () => controller.filterNewNotif.isNotEmpty
+          ? Badge(
+              smallSize: 12,
+              child: InkWellTap(
+                onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
+                child: SvgPicture.asset(
+                  height: 30.h,
+                  'assets/icons/ic_notifications.svg',
+                ),
+              ),
+            )
+          : InkWellTap(
+              onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
+              child: SvgPicture.asset(
+                height: 30.h,
+                'assets/icons/ic_notifications.svg',
+              ),
+            ),
     );
   }
 

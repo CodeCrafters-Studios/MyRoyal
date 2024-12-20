@@ -91,7 +91,7 @@ class HeaderDocumentView extends StatelessWidget {
                                             child: ButtonPrimary(
                                               onPressed: () => Get.back(),
                                               text: 'Cancel',
-                                              color: redPrimary,
+                                              color: red,
                                               fullWidth: true,
                                             ),
                                           ),

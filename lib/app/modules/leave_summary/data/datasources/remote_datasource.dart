@@ -1,10 +1,13 @@
 import 'package:iroyal/app/modules/leave_summary/data/models/cancel_form_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_approval_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/subtitute_employee_model.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
@@ -21,6 +24,10 @@ abstract class LeaveRemoteDataSources {
     Map<String, dynamic> cancelFormLeaveParams,
   );
   Future<List<LeaveApprovalModel>> getLeaveApproval();
+  Future<CreateFormPermitEntity> createFormPermit(
+    Map<String, dynamic> createFormPermitParams,
+  );
+  Future<PermitModel> getPermit();
 }
 
 class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
@@ -90,7 +97,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
       if (r['code'] != 200) {
         throw ApiException(r['message']);
       }
-      final response = CreateFormModel.fromJson(r["data"]);
+      final response = CreateFormLeaveModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');
@@ -143,6 +150,59 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
       final List<LeaveApprovalModel> response = (r['data'] as List)
           .map((x) => LeaveApprovalModel.fromJson(x))
           .toList();
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<CreateFormPermitEntity> createFormPermit(
+      Map<String, dynamic> createFormPermitParams) async {
+    try {
+      AppUtils.logApp('PARAMS ::: $createFormPermitParams');
+      final r = await httpService.request(
+        withToken: true,
+        enpoint: 'attendance/submissionPermit',
+        params: createFormPermitParams,
+        showPopUp: true,
+      );
+      if (r['code'] != 200) {
+        throw ApiException(r['message']);
+      }
+      final response = CreateFormPermitModel.fromJson(r["data"]);
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<PermitModel> getPermit() async {
+    try {
+      final r = await httpService.request(
+        withToken: true,
+        enpoint: 'dashboard/getData',
+        method: Method.GET,
+        params: {"type": "permitRequest"},
+        showPopUp: true,
+      );
+      if (r['code'] != 200) {
+        throw ApiException(r['message']);
+      }
+      final response = PermitModel.fromJson(r);
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');

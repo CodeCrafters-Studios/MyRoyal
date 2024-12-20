@@ -28,7 +28,6 @@ class ApprovalView extends StatelessWidget {
     return PageBase(
       showBackground: false,
       title: 'Approval',
-      textStyle: TS.titleMedium,
       child: SingleChildScrollView(
         physics: const NeverScrollableScrollPhysics(),
         child: Column(
@@ -101,12 +100,14 @@ class ApprovalView extends StatelessWidget {
   }
 
   Widget _buildDocumentList() {
-    return Obx(() => RefreshIndicator(
-          backgroundColor: white,
-          color: primary,
-          onRefresh: controller.onRefresh,
-          child: SizedBox(
-            height: Get.height,
+    return Obx(
+      () => RefreshIndicator(
+        backgroundColor: white,
+        color: primary,
+        onRefresh: controller.onRefresh,
+        child: SizedBox(
+          height: Get.height,
+          child: RepaintBoundary(
             child: ListView.separated(
               separatorBuilder: (_, __) => 15.verticalSpace,
               padding: REdgeInsets.fromLTRB(16, 10, 16, 180),
@@ -120,7 +121,9 @@ class ApprovalView extends StatelessWidget {
               },
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildDocumentCard(dynamic doc) {

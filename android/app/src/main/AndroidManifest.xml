@@ -45,7 +45,6 @@ package="com.iroyal">
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
             android:screenOrientation="locked"
-            android:showWhenLocked="true"
             android:turnScreenOn="true"
             tools:ignore="LockedOrientationActivity">
             <!-- Specifies an Android theme to apply to this Activity as soon as
