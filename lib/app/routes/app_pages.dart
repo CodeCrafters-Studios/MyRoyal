@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/leaves_request_view.dart';
+
+import '../modules/approval/presentation/bindings/approval_binding.dart';
+import '../modules/approval/presentation/views/approval_view.dart';
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
@@ -22,6 +24,7 @@ import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/leave_summary/presentation/bindings/leave_summary_binding.dart';
 import '../modules/leave_summary/presentation/views/leave_summary_view.dart';
+import '../modules/leave_summary/presentation/views/leaves_request_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
@@ -190,6 +193,11 @@ class AppPages {
       name: _Paths.LEAVES,
       page: () => const LeavesRequestView(),
       binding: LeaveSummaryBinding(),
+    ),
+    GetPage(
+      name: _Paths.APPROVAL,
+      page: () => const ApprovalView(),
+      binding: ApprovalBinding(),
     ),
   ];
 }

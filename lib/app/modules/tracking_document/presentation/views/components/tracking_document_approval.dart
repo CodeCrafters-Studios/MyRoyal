@@ -18,8 +18,8 @@ import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ApprovalView extends StatelessWidget {
-  const ApprovalView({super.key, required this.controller});
+class TrackingDocumentApprovalView extends StatelessWidget {
+  const TrackingDocumentApprovalView({super.key, required this.controller});
 
   final TrackingDocumentController controller;
 

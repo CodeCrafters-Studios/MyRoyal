@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_approval_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/permit_view.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
@@ -161,19 +160,19 @@ class LeavesViewImpl extends StatelessWidget {
     // );
   }
 
-  Widget _buildLeaveRequestTabViews() {
-    return SizedBox(
-      width: Get.width,
-      height: Get.height,
-      child: TabBarView(
-        controller: controller.tabLeaveController,
-        children: [
-          AllLeaveRequestView(controller: controller),
-          AllApprovalRequestView(controller: controller),
-        ],
-      ),
-    );
-  }
+  // Widget _buildLeaveRequestTabViews() {
+  //   return SizedBox(
+  //     width: Get.width,
+  //     height: Get.height,
+  //     child: TabBarView(
+  //       controller: controller.tabLeaveController,
+  //       children: [
+  //         AllLeaveRequestView(controller: controller),
+  //         AllApprovalRequestView(controller: controller),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildAllLeaveRequestView() {
     return controller.userData.value.position != 'Staff'

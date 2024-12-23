@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
 
-class LeaveApprovalEntity extends Equatable {
-  const LeaveApprovalEntity({
+class ApprovalEntity extends Equatable {
+  const ApprovalEntity({
     required this.fullName,
     required this.codeNo,
     required this.reason,

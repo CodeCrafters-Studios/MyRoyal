@@ -1,0 +1,140 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/approval/domain/entities/approval_entity.dart';
+import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+
+class ApprovalController extends GetxController {
+  ApprovalController({
+    required this.getLeaveApprovalUsecase,
+    required this.cancelFormLeaveUsecase,
+  });
+
+  final GetLeaveApprovalUsecase getLeaveApprovalUsecase;
+  final CancelFormLeaveUsecase cancelFormLeaveUsecase;
+
+  TextEditingController search = TextEditingController();
+
+  RxBool isLoading = false.obs;
+
+  RxString valueListener = ''.obs;
+  RxString reasonText = ''.obs;
+
+  RxList<ApprovalEntity> listLeaveApprovalRes = <ApprovalEntity>[].obs;
+  RxList<ApprovalEntity> filterApprovalLeaveData = <ApprovalEntity>[].obs;
+
+  Rx<CancelFormLeaveEntity> cancelFormRes =
+      const CancelFormLeaveEntity(id: 0, codeNo: '').obs;
+
+  @override
+  void onInit() {
+    _getLeaveApprovalSummary();
+    super.onInit();
+  }
+
+  Future<void> onRefresh() async {
+    filterApprovalLeaveData.value = [];
+    listLeaveApprovalRes.value = [];
+    _getLeaveApprovalSummary();
+  }
+
+  Future<void> _getLeaveApprovalSummary() async {
+    isLoading.value = true;
+
+    final r = await getLeaveApprovalUsecase();
+
+    r.fold((l) {
+      isLoading.value = false;
+      AppUtils.logApp(l.toString());
+    }, (r) {
+      listLeaveApprovalRes.value = r;
+      filterApprovalLeaveData.value = listLeaveApprovalRes;
+      isLoading.value = false;
+    });
+  }
+
+  void onChanged(String value) {
+    valueListener.value = value;
+    _filterApprovalLeaveData(
+        value, listLeaveApprovalRes, filterApprovalLeaveData);
+  }
+
+  void clear() {
+    search.clear();
+    valueListener.value = '';
+    filterApprovalLeaveData.value = listLeaveApprovalRes;
+  }
+
+  void _filterApprovalLeaveData(String value, RxList<ApprovalEntity> data,
+      RxList<ApprovalEntity> filterApprovalLeaveData) {
+    if (value.isEmpty) {
+      filterApprovalLeaveData.value = data;
+      AppUtils.logApp('${filterApprovalLeaveData.length}');
+    } else {
+      filterApprovalLeaveData.value = data
+          .where((e) =>
+              e.fullName.toLowerCase().contains(value.toLowerCase()) ||
+              e.codeNo.toLowerCase().contains(value.toLowerCase()) ||
+              e.periode.start
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.periode.end
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              e.status.toString().toLowerCase().contains(value.toLowerCase()))
+          .toList();
+      AppUtils.logApp('${filterApprovalLeaveData.length}');
+    }
+  }
+
+  Future<void> actionFormLeave(
+    String codeNo,
+    String type,
+    int level,
+    String reasonRejected,
+  ) async {
+    isLoading.value = true;
+
+    final r = await cancelFormLeaveUsecase(
+      CancelFormLeaveParamsEntity(
+        type: type,
+        level: level,
+        codeNo: codeNo,
+        feedback: reasonRejected,
+      ),
+    );
+
+    r.fold(
+      (l) {
+        isLoading(false);
+        reasonText.value = '';
+        final m = l.properties[0] as ApiException;
+        AppDialogImpl().showErrorDialog(description: m.message);
+      },
+      (r) {
+        isLoading(false);
+        reasonText.value = '';
+        _getLeaveApprovalSummary();
+        cancelFormRes.value = r;
+        AppDialogImpl().showCustomInfoDialog(
+          title: type == 'approved'
+              ? 'Your Approval has been updated!'
+              : 'Request Successfully rejected!',
+          textButton: 'Done',
+          imagePath: type == 'approved'
+              ? 'assets/json/lottie_success_approve.json'
+              : 'assets/json/lottie_success_reject.json',
+          height: 200.h,
+        );
+      },
+    );
+  }
+}

@@ -31,6 +31,7 @@ abstract class Routes {
   static const EDIT_PROFILE = _Paths.EDIT_PROFILE;
   static const ONBOARDING = _Paths.ONBOARDING;
   static const LEAVES = _Paths.LEAVES;
+  static const APPROVAL = _Paths.APPROVAL;
 }
 
 abstract class _Paths {
@@ -61,4 +62,5 @@ abstract class _Paths {
   static const EDIT_PROFILE = '/edit-profile';
   static const ONBOARDING = '/onboarding';
   static const LEAVES = '/leaves';
+  static const APPROVAL = '/approval';
 }

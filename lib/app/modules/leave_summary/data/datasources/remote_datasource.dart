@@ -1,7 +1,6 @@
 import 'package:iroyal/app/modules/leave_summary/data/models/cancel_form_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/leave_approval_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/subtitute_employee_model.dart';
@@ -23,7 +22,6 @@ abstract class LeaveRemoteDataSources {
   Future<CancelFormLeaveEntity> cancelFormLeave(
     Map<String, dynamic> cancelFormLeaveParams,
   );
-  Future<List<LeaveApprovalModel>> getLeaveApproval();
   Future<CreateFormPermitEntity> createFormPermit(
     Map<String, dynamic> createFormPermitParams,
   );
@@ -123,33 +121,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         throw ApiException(r['message']);
       }
       final response = CancelFormLeaveModel.fromJson(r["data"]);
-      return response;
-    } on ServerFailure {
-      throw ApiException('Server error occurred');
-    } on ApiException catch (e) {
-      AppUtils.logApp('CATCH ERR ::: ${e.message}');
-      throw ApiException(e.message ?? 'An error occurred');
-    } catch (e, stackTrace) {
-      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<List<LeaveApprovalModel>> getLeaveApproval() async {
-    try {
-      final r = await httpService.request(
-        withToken: true,
-        enpoint: 'attendance/getDataLeaveApproval',
-        method: Method.GET,
-        showPopUp: true,
-      );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
-      final List<LeaveApprovalModel> response = (r['data'] as List)
-          .map((x) => LeaveApprovalModel.fromJson(x))
-          .toList();
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');

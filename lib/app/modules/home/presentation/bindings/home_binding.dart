@@ -13,7 +13,6 @@ import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_reposit
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
@@ -215,9 +214,6 @@ class HomeBinding extends Bindings {
       ..lazyPut<CancelFormLeaveUsecase>(
         () => CancelFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
       )
-      ..lazyPut<GetLeaveApprovalUsecase>(
-        () => GetLeaveApprovalUsecase(Get.find<LeaveRepositoryImpl>()),
-      )
       ..lazyPut<CreateFormPermitUsecase>(
         () => CreateFormPermitUsecase(Get.find<LeaveRepositoryImpl>()),
       )
@@ -231,7 +227,6 @@ class HomeBinding extends Bindings {
           getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
           createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
           cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
-          getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
           getCacheUser: Get.find<GetCacheUser>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
         ),

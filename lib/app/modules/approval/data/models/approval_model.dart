@@ -1,8 +1,8 @@
 import 'package:iroyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/leave_approval_entity.dart';
+import 'package:iroyal/app/modules/approval/domain/entities/approval_entity.dart';
 
-class LeaveApprovalModel extends LeaveApprovalEntity {
-  const LeaveApprovalModel({
+class ApprovalModel extends ApprovalEntity {
+  const ApprovalModel({
     required super.fullName,
     required super.codeNo,
     required super.reason,
@@ -12,8 +12,7 @@ class LeaveApprovalModel extends LeaveApprovalEntity {
     required super.listPeriode,
   });
 
-  factory LeaveApprovalModel.fromJson(Map<String, dynamic> json) =>
-      LeaveApprovalModel(
+  factory ApprovalModel.fromJson(Map<String, dynamic> json) => ApprovalModel(
         fullName: json["full_name"],
         codeNo: json["code_no"],
         reason: json["reason"],

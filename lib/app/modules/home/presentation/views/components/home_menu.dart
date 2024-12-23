@@ -46,6 +46,9 @@ class HomeMenu extends StatelessWidget {
           case 'Leaves':
             Get.toNamed(Routes.LEAVE_SUMMARY);
             break;
+          case 'Approval':
+            Get.toNamed(Routes.APPROVAL);
+            break;
           default:
             Get.to(() => const ComingSoonScreen());
             break;
