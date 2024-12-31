@@ -10,8 +10,8 @@ class EnvironmentConfig {
 
   const EnvironmentConfig.staging()
       : environment = EnvironmentType.staging,
-        androidBaseUrl = 'https://apiems.royalcorp.co.id/api/v1/',
-        iosBaseUrl = 'https://apiems.royalcorp.co.id/api/v1/';
+        androidBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/',
+        iosBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/';
 
   const EnvironmentConfig.production()
       : environment = EnvironmentType.production,

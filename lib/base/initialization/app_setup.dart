@@ -60,10 +60,12 @@ Future<void> setupAndRunApp(
   );
 
   runApp(
-    DioRequestInspectorMain(
-      inspector: DioRequestInspector(isDebugMode: true),
-      child: appWidget,
-    ),
+    environment == EnvironmentConfig.production()
+        ? appWidget
+        : DioRequestInspectorMain(
+            inspector: DioRequestInspector(isDebugMode: true),
+            child: appWidget,
+          ),
   );
 }
 
