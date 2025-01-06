@@ -46,6 +46,7 @@ class CreateLeaveRequestView extends StatelessWidget {
                   value?.isEmpty ?? false ? 'Cannot be empty' : null,
             ),
             const Spacer(),
+            20.verticalSpace,
             _buildApplyButton(),
             const Spacer(),
           ],

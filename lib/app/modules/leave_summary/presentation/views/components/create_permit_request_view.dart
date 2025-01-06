@@ -48,10 +48,9 @@ class CreatePermitRequestView extends StatelessWidget {
               validation: (value) =>
                   value?.isEmpty ?? false ? 'Cannot be empty' : null,
             ),
-            const Spacer(),
+            const Spacer(flex: 2),
             _buildApplyButton(),
-            const Spacer(),
-            const Spacer(),
+            const Spacer(flex: 3),
           ],
         ),
       ),
@@ -270,6 +269,8 @@ class CreatePermitRequestView extends StatelessWidget {
                 (DateTime? selected) {
                   if (selected != null) {
                     controller.selectedStartDatePermit.value = selected;
+                    controller.selectedEndDatePermit.value = DateTime(0);
+                    controller.selectedEndTimePermitFormatted.value = '';
                     AppUtils.logApp(
                       '${controller.selectedStartDatePermit.value}',
                     );
@@ -301,9 +302,15 @@ class CreatePermitRequestView extends StatelessWidget {
               controller.selectedEndDatePermit.value == DateTime(0),
               () => showDatePicker(
                 context: context,
-                initialDate: DateTime.now(),
+                initialDate:
+                    controller.selectedStartDatePermit.value == DateTime(0)
+                        ? DateTime.now()
+                        : controller.selectedStartDatePermit.value,
                 currentDate: DateTime.now(),
-                firstDate: DateTime.now(),
+                firstDate:
+                    controller.selectedStartDatePermit.value == DateTime(0)
+                        ? DateTime.now()
+                        : controller.selectedStartDatePermit.value,
                 lastDate: DateTime(DateTime.now().year + 50),
                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                 builder: (context, child) {

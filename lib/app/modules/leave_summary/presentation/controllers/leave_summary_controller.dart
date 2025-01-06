@@ -311,6 +311,7 @@ class LeaveSummaryController extends GetxController {
       selectedSubtituteEmployee.value = '';
       selectedSubtituteEmployeeId.value = 0;
       reason.value = '';
+      _getLeaveSummary();
       Get.back();
       AppDialogImpl()
           .showSuccessSnackBar(description: 'Success Create Form Leave');
@@ -444,10 +445,26 @@ class LeaveSummaryController extends GetxController {
       },
       (r) {
         isLoading(false);
-        Get.back();
+        clearPermitRequest();
+        _getPermitSummary();
         AppDialogImpl()
             .showSuccessSnackBar(description: 'Success Create Permit Leave');
       },
     );
+  }
+
+  void clearPermitRequest() {
+    selectedPermitType.value = '';
+    selectedPermitTypeCode.value = '';
+    selectedStartTimePermitFormatted.value = '';
+    selectedEndTimePermitFormatted.value = '';
+    reasonPermit.value = '';
+    multiDatePickerValueleaveRequestWithDefaultValue.clear();
+    selectedStartDatePermit.value = DateTime(0);
+    selectedEndDatePermit.value = DateTime(0);
+    selectedStartTime.value = TimeOfDay(hour: 0, minute: 0);
+    selectedEndTime.value = TimeOfDay(hour: 0, minute: 0);
+
+    Get.back();
   }
 }
