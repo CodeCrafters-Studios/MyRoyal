@@ -7,6 +7,7 @@ import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_p
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -161,6 +162,8 @@ class DashboardView extends GetView<DashboardController> {
           backgroundImage: 'assets/images/img_bg_special_leave.png',
           iconAsset: 'assets/icons/ic_special_leaves.svg',
           isLateCard: true,
+          // onTap: () => Get.to(() => DetailSpecialLeaveView()),
+          onTap: () => Get.to(() => ComingSoonScreen()),
         ),
         5.verticalSpace,
         DashboardCard(

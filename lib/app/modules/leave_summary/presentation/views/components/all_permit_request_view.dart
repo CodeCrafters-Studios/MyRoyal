@@ -64,7 +64,7 @@ class AllPermitRequestView extends StatelessWidget {
                                     onRefresh: controller.onRefresh,
                                     child: ListView.builder(
                                       padding: EdgeInsets.only(
-                                        top: 5.h,
+                                        top: 65.h,
                                         bottom: 200.h,
                                       ),
                                       shrinkWrap: true,

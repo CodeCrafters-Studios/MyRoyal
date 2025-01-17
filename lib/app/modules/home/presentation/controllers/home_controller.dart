@@ -128,10 +128,16 @@ class HomeController extends GetxController {
     checkVersion();
   }
 
-  void checkVersion() {
+  void checkVersion() async {
     // Get the current app version
     final appVersion =
         _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+
+    final info = await deviceInfo.info();
+    AppUtils.logApp('Device ${info.device}');
+    AppUtils.logApp('Model ${info.model}');
+    AppUtils.logApp('Id ${info.id}');
+    AppUtils.logApp('Brand ${info.brand}');
 
     // Get the required min version from Firebase Remote Config
     final requiredMinVersion = _getExtendedVersionNumber(

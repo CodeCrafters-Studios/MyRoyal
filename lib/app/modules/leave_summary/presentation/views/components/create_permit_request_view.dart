@@ -65,12 +65,10 @@ class CreatePermitRequestView extends StatelessWidget {
           Expanded(
             child: _buildButton(
               'Time Start',
-              controller.selectedStartTime.value ==
-                      TimeOfDay(hour: 0, minute: 0)
+              controller.selectedStartTimePermitFormatted.value.isEmpty
                   ? 'Select time'
                   : controller.selectedStartTimePermitFormatted.value,
-              controller.selectedStartTime.value ==
-                  TimeOfDay(hour: 0, minute: 0),
+              controller.selectedStartTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
                     context: context,
@@ -102,10 +100,10 @@ class CreatePermitRequestView extends StatelessWidget {
           Expanded(
             child: _buildButton(
               'Time End',
-              controller.selectedEndTime.value == TimeOfDay(hour: 0, minute: 0)
+              controller.selectedEndTimePermitFormatted.value.isEmpty
                   ? 'Select time'
                   : controller.selectedEndTimePermitFormatted.value,
-              controller.selectedEndTime.value == TimeOfDay(hour: 0, minute: 0),
+              controller.selectedEndTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
                     context: context,
@@ -270,7 +268,6 @@ class CreatePermitRequestView extends StatelessWidget {
                   if (selected != null) {
                     controller.selectedStartDatePermit.value = selected;
                     controller.selectedEndDatePermit.value = DateTime(0);
-                    controller.selectedEndTimePermitFormatted.value = '';
                     AppUtils.logApp(
                       '${controller.selectedStartDatePermit.value}',
                     );
