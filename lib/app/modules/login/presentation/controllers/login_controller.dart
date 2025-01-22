@@ -101,10 +101,14 @@ class LoginController extends GetxController {
     }
   }
 
-  void checkVersion() {
+  void checkVersion() async {
     // Get the current app version
     final appVersion =
         _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+
+    // Get Device Id
+    final info = await deviceInfo.info();
+    await appStorage.write('device-id', info.id);
 
     // Get the required min version from Firebase Remote Config
     final requiredMinVersion = _getExtendedVersionNumber(
@@ -184,6 +188,7 @@ class LoginController extends GetxController {
   Future<void> getParams() async {
     AppUtils.logApp(username());
     AppUtils.logApp(password());
+
     if (!isValidForm()) {
       unawaited(appDialog.showErrorSnackBar(
           description: 'Please input Username and Password'));
@@ -191,6 +196,7 @@ class LoginController extends GetxController {
       return;
     }
     final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
+    final deviceId = await appStorage.read('device-id');
     AppUtils.logApp('$cacheFcmToken');
 
     isLoading(true);
@@ -210,12 +216,13 @@ class LoginController extends GetxController {
       /* -- DEVELOPMENT -- */
       ParamsLogin(
         grantType: 'password',
-        clientId: '9db4796e-8a82-4fb7-936c-cc72f92ac425',
-        clientSecret: 'FsZipQkzcKQlHDOq0CP96QPn6x3sRp1M3eYcjO25',
+        clientId: '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
+        clientSecret: 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
         username: username(),
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
+        deviceId: deviceId.toString(),
       ),
     );
     r.fold((l) {
@@ -233,6 +240,7 @@ class LoginController extends GetxController {
         password: r.password,
         scope: r.scope,
         fcmToken: r.fcmToken,
+        deviceId: r.deviceId,
       ));
       login();
     });

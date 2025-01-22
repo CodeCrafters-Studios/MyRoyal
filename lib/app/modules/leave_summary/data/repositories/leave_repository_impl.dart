@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
@@ -48,10 +48,10 @@ class LeaveRepositoryImpl implements LeaveRepository {
   }
 
   @override
-  Future<Either<Failure, CancelFormLeaveEntity>> cancelFormLeave(
-      Map<String, dynamic> cancelFormLeaveParams) async {
+  Future<Either<Failure, ActionFormLeaveEntity>> actionFormLeave(
+      Map<String, dynamic> actionFormLeaveParams) async {
     try {
-      final r = await remoteData.cancelFormLeave(cancelFormLeaveParams);
+      final r = await remoteData.actionFormLeave(actionFormLeaveParams);
       return Right(r);
     } catch (e) {
       return Left(ServerFailure(properties: [e]));

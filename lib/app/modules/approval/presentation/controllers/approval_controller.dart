@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/approval/domain/entities/approval_entity.dart';
 import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_usecase.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_params_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
@@ -13,11 +13,11 @@ import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 class ApprovalController extends GetxController {
   ApprovalController({
     required this.getLeaveApprovalUsecase,
-    required this.cancelFormLeaveUsecase,
+    required this.actionFormLeaveUsecase,
   });
 
   final GetLeaveApprovalUsecase getLeaveApprovalUsecase;
-  final CancelFormLeaveUsecase cancelFormLeaveUsecase;
+  final ActionFormLeaveUsecase actionFormLeaveUsecase;
 
   TextEditingController search = TextEditingController();
 
@@ -29,8 +29,8 @@ class ApprovalController extends GetxController {
   RxList<ApprovalEntity> listLeaveApprovalRes = <ApprovalEntity>[].obs;
   RxList<ApprovalEntity> filterApprovalLeaveData = <ApprovalEntity>[].obs;
 
-  Rx<CancelFormLeaveEntity> cancelFormRes =
-      const CancelFormLeaveEntity(id: 0, codeNo: '').obs;
+  Rx<ActionFormLeaveEntity> actionFormRes =
+      const ActionFormLeaveEntity(id: 0, codeNo: '').obs;
 
   @override
   void onInit() {
@@ -95,20 +95,17 @@ class ApprovalController extends GetxController {
     }
   }
 
-  Future<void> actionFormLeave(
-    String codeNo,
-    String type,
-    int level,
-    String reasonRejected,
-  ) async {
+  Future<void> actionFormLeave(String codeNo, String type, int level,
+      String reasonRejected, String typeSubmission) async {
     isLoading.value = true;
 
-    final r = await cancelFormLeaveUsecase(
-      CancelFormLeaveParamsEntity(
+    final r = await actionFormLeaveUsecase(
+      ActionFormLeaveParamsEntity(
         type: type,
         level: level,
         codeNo: codeNo,
         feedback: reasonRejected,
+        typeSubmission: typeSubmission,
       ),
     );
 
@@ -123,7 +120,7 @@ class ApprovalController extends GetxController {
         isLoading(false);
         reasonText.value = '';
         _getLeaveApprovalSummary();
-        cancelFormRes.value = r;
+        actionFormRes.value = r;
         AppDialogImpl().showCustomInfoDialog(
           title: type == 'approved'
               ? 'Your Approval has been updated!'

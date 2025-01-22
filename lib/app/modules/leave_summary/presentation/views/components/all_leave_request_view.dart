@@ -449,8 +449,9 @@ class AllLeaveRequestView extends StatelessWidget {
                                                                                 onPressedYes: () {
                                                                                   Get.back();
                                                                                   Get.back();
-                                                                                  controller.cancelFormLeave(
+                                                                                  controller.cancelForm(
                                                                                     r.codeNo,
+                                                                                    'leave',
                                                                                   );
                                                                                 },
                                                                               ),

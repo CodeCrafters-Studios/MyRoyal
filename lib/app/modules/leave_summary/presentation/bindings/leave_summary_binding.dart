@@ -3,7 +3,7 @@ import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.d
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
@@ -40,8 +40,8 @@ class LeaveSummaryBinding extends Bindings {
       ..lazyPut<CreateFormLeaveUsecase>(
         () => CreateFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
       )
-      ..lazyPut<CancelFormLeaveUsecase>(
-        () => CancelFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
+      ..lazyPut<ActionFormLeaveUsecase>(
+        () => ActionFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
       )
       ..lazyPut<CreateFormPermitUsecase>(
         () => CreateFormPermitUsecase(Get.find<LeaveRepositoryImpl>()),
@@ -55,7 +55,7 @@ class LeaveSummaryBinding extends Bindings {
           getPermitUsecase: Get.find<GetPermitUsecase>(),
           getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
           createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
-          cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
+          actionFormLeaveUsecase: Get.find<ActionFormLeaveUsecase>(),
           getCacheUser: Get.find<GetCacheUser>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
         ),

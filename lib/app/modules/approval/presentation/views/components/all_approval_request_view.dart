@@ -93,6 +93,7 @@ class AllApprovalRequestView extends StatelessWidget {
                                           : green,
                                   onTap: () {
                                     showModalBottomSheet(
+                                      isDismissible: false,
                                       backgroundColor: bgColorDropDown,
                                       context: context,
                                       builder: (context) {
@@ -431,6 +432,7 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                       'approved',
                                                                       r.level,
                                                                       '',
+                                                                      'leave',
                                                                     );
                                                                   },
                                                                 ),
@@ -546,6 +548,7 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                                             'rejected',
                                                                                             r.level,
                                                                                             controller.reasonText.value,
+                                                                                            'leave',
                                                                                           );
                                                                                         },
                                                                                         text: 'Submit',

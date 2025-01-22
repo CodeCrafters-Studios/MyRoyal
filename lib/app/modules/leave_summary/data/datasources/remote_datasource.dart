@@ -1,10 +1,10 @@
-import 'package:iroyal/app/modules/leave_summary/data/models/cancel_form_leave_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/subtitute_employee_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
@@ -19,8 +19,8 @@ abstract class LeaveRemoteDataSources {
   Future<CreateFormLeaveEntity> createFormLeave(
     Map<String, dynamic> createFormLeaveParams,
   );
-  Future<CancelFormLeaveEntity> cancelFormLeave(
-    Map<String, dynamic> cancelFormLeaveParams,
+  Future<ActionFormLeaveEntity> actionFormLeave(
+    Map<String, dynamic> actionFormLeaveParams,
   );
   Future<CreateFormPermitEntity> createFormPermit(
     Map<String, dynamic> createFormPermitParams,
@@ -109,18 +109,18 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
   }
 
   @override
-  Future<CancelFormLeaveEntity> cancelFormLeave(
-      Map<String, dynamic> cancelFormLeaveParams) async {
+  Future<ActionFormLeaveEntity> actionFormLeave(
+      Map<String, dynamic> actionFormLeaveParams) async {
     try {
       final r = await httpService.request(
         withToken: true,
         enpoint: 'attendance/approval',
-        params: cancelFormLeaveParams,
+        params: actionFormLeaveParams,
       );
       if (r['code'] != 200) {
         throw ApiException(r['message']);
       }
-      final response = CancelFormLeaveModel.fromJson(r["data"]);
+      final response = ActionFormLeaveModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class CancelFormLeaveEntity extends Equatable {
-  const CancelFormLeaveEntity({
+class ActionFormLeaveEntity extends Equatable {
+  const ActionFormLeaveEntity({
     required this.id,
     required this.codeNo,
   });

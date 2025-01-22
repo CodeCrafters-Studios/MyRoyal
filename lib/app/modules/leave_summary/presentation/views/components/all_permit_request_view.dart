@@ -8,6 +8,8 @@ import 'package:iroyal/app/modules/leave_summary/presentation/views/components/n
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/textfield/input_primary.dart';
@@ -81,24 +83,20 @@ class AllPermitRequestView extends StatelessWidget {
                                               : r.periodDate.length == 1
                                                   ? r.periodDate[0]
                                                   : '${r.periodDate[0]} - ${r.periodDate[1]}',
-                                          status: '',
-                                          // r.status,
-                                          iconStatus:
-                                              'assets/icons/ic_pending_summary.svg',
-                                          // r.status == 'pending'
-                                          //     ? 'assets/icons/ic_pending_summary.svg'
-                                          //     : r.status == 'cancel' ||
-                                          //             r.status == 'rejected'
-                                          //         ? 'assets/icons/ic_rejected_summar.svg'
-                                          //         : 'assets/icons/ic_approved_summary.svg',
+                                          status: r.status,
+                                          iconStatus: r.status == 'pending'
+                                              ? 'assets/icons/ic_pending_summary.svg'
+                                              : r.status == 'cancel' ||
+                                                      r.status == 'rejected'
+                                                  ? 'assets/icons/ic_rejected_summar.svg'
+                                                  : 'assets/icons/ic_approved_summary.svg',
                                           description: r.reason,
-                                          statusColor: Colors.orangeAccent,
-                                          // r.status == 'pending'
-                                          //     ? Colors.orangeAccent
-                                          //     : r.status == 'cancel' ||
-                                          //             r.status == 'rejected'
-                                          //         ? Colors.red
-                                          //         : green,
+                                          statusColor: r.status == 'pending'
+                                              ? Colors.orangeAccent
+                                              : r.status == 'cancel' ||
+                                                      r.status == 'rejected'
+                                                  ? Colors.red
+                                                  : green,
                                           onTap: () {
                                             showModalBottomSheet(
                                               context: context,
@@ -218,54 +216,54 @@ class AllPermitRequestView extends StatelessWidget {
                                                                   ],
                                                                 ),
                                                               ),
-                                                              // EPadding(
-                                                              //   padding:
-                                                              //       EdgeInsets
-                                                              //           .only(
-                                                              //     right: 14,
-                                                              //   ),
-                                                              //   child: Row(
-                                                              //     children: [
-                                                              //       Column(
-                                                              //         crossAxisAlignment:
-                                                              //             CrossAxisAlignment
-                                                              //                 .end,
-                                                              //         children: [
-                                                              //           Text(
-                                                              //             'Status',
-                                                              //             style:
-                                                              //                 TS.titleSmall,
-                                                              //           ),
-                                                              //           Text(
-                                                              //             r.status
-                                                              //                 .capitalizeFirst
-                                                              //                 .toString(),
-                                                              //             style: TS
-                                                              //                 .bodyMedium
-                                                              //                 .copyWith(
-                                                              //               fontWeight:
-                                                              //                   FontWeight.w300,
-                                                              //             ),
-                                                              //           ),
-                                                              //         ],
-                                                              //       ),
-                                                              //       5.horizontalSpace,
-                                                              //       SvgPicture
-                                                              //           .asset(
-                                                              //         height:
-                                                              //             35.h,
-                                                              //         width:
-                                                              //             35.h,
-                                                              //         r.status == 'cancel' ||
-                                                              //                 r.status == 'rejected'
-                                                              //             ? 'assets/icons/ic_status_canceled.svg'
-                                                              //             : r.status == 'approved'
-                                                              //                 ? 'assets/icons/ic_approved_detail_summary.svg'
-                                                              //                 : 'assets/icons/ic_date_status.svg',
-                                                              //       ),
-                                                              //     ],
-                                                              //   ),
-                                                              // ),
+                                                              EPadding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .only(
+                                                                  right: 14,
+                                                                ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      children: [
+                                                                        Text(
+                                                                          'Status',
+                                                                          style:
+                                                                              TS.titleSmall,
+                                                                        ),
+                                                                        Text(
+                                                                          r.status
+                                                                              .capitalizeFirst
+                                                                              .toString(),
+                                                                          style: TS
+                                                                              .bodyMedium
+                                                                              .copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.w300,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    5.horizontalSpace,
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                      height:
+                                                                          35.h,
+                                                                      width:
+                                                                          35.h,
+                                                                      r.status == 'cancel' ||
+                                                                              r.status == 'rejected'
+                                                                          ? 'assets/icons/ic_status_canceled.svg'
+                                                                          : r.status == 'approved'
+                                                                              ? 'assets/icons/ic_approved_detail_summary.svg'
+                                                                              : 'assets/icons/ic_date_status.svg',
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
@@ -354,145 +352,146 @@ class AllPermitRequestView extends StatelessWidget {
                                                           ),
                                                         ),
                                                         const Spacer(),
-                                                        // Obx(
-                                                        //   () => controller
-                                                        //           .isLoading
-                                                        //           .value
-                                                        //       ? Shimmer
-                                                        //           .fromColors(
-                                                        //           baseColor:
-                                                        //               Colors
-                                                        //                   .grey,
-                                                        //           highlightColor:
-                                                        //               Colors
-                                                        //                   .grey
-                                                        //                   .shade400,
-                                                        //           child: Row(
-                                                        //             children: [
-                                                        //               Expanded(
-                                                        //                 child:
-                                                        //                     ButtonPrimary(
-                                                        //                   fullWidth:
-                                                        //                       true,
-                                                        //                   margin:
-                                                        //                       REdgeInsets.fromLTRB(
-                                                        //                     14,
-                                                        //                     0,
-                                                        //                     14,
-                                                        //                     20,
-                                                        //                   ),
-                                                        //                   text:
-                                                        //                       '',
-                                                        //                   textColor:
-                                                        //                       primary,
-                                                        //                   onPressed:
-                                                        //                       null,
-                                                        //                   color:
-                                                        //                       Colors.grey,
-                                                        //                 ),
-                                                        //               ),
-                                                        //               Expanded(
-                                                        //                 child:
-                                                        //                     ButtonPrimary(
-                                                        //                   fullWidth:
-                                                        //                       true,
-                                                        //                   margin:
-                                                        //                       REdgeInsets.fromLTRB(
-                                                        //                     14,
-                                                        //                     0,
-                                                        //                     14,
-                                                        //                     20,
-                                                        //                   ),
-                                                        //                   text:
-                                                        //                       '',
-                                                        //                   textColor:
-                                                        //                       white,
-                                                        //                   onPressed:
-                                                        //                       null,
-                                                        //                   color:
-                                                        //                       Colors.grey,
-                                                        //                 ),
-                                                        //               ),
-                                                        //             ],
-                                                        //           ),
-                                                        //         )
-                                                        //       : r.canCancel
-                                                        //           ? Row(
-                                                        //               children: [
-                                                        //                   Expanded(
-                                                        //                     child:
-                                                        //                         ButtonPrimary(
-                                                        //                       fullWidth: true,
-                                                        //                       margin: REdgeInsets.fromLTRB(
-                                                        //                         14,
-                                                        //                         0,
-                                                        //                         14,
-                                                        //                         20,
-                                                        //                       ),
-                                                        //                       text: 'Close',
-                                                        //                       textColor: white,
-                                                        //                       onPressed: Get.back,
-                                                        //                       color: primary,
-                                                        //                       borderSide: const BorderSide(
-                                                        //                         color: primary,
-                                                        //                       ),
-                                                        //                     ),
-                                                        //                   ),
-                                                        //                   Expanded(
-                                                        //                     child:
-                                                        //                         ButtonPrimary(
-                                                        //                       fullWidth: true,
-                                                        //                       margin: REdgeInsets.fromLTRB(
-                                                        //                         14,
-                                                        //                         0,
-                                                        //                         14,
-                                                        //                         20,
-                                                        //                       ),
-                                                        //                       text: 'Cancel',
-                                                        //                       textColor: white,
-                                                        //                       onPressed: () => AppDialogImpl().showChoiceDialog(
-                                                        //                         description: 'Are you sure want to cancel this form?',
-                                                        //                         onPressedNo: Get.back,
-                                                        //                         onPressedYes: () {
-                                                        //                           Get.back();
-                                                        //                           Get.back();
-                                                        //                           controller.cancelFormLeave(
-                                                        //                             r.codeNo,
-                                                        //                           );
-                                                        //                         },
-                                                        //                       ),
-                                                        //                       color: secondary,
-                                                        //                       borderSide: const BorderSide(
-                                                        //                         color: secondary,
-                                                        //                       ),
-                                                        //                     ),
-                                                        //                   ),
-                                                        //                 ])
-                                                        //           : ButtonPrimary(
-                                                        //               fullWidth:
-                                                        //                   true,
-                                                        //               margin: REdgeInsets
-                                                        //                   .fromLTRB(
-                                                        //                 14,
-                                                        //                 0,
-                                                        //                 14,
-                                                        //                 20,
-                                                        //               ),
-                                                        //               text:
-                                                        //                   'Close',
-                                                        //               textColor:
-                                                        //                   white,
-                                                        //               onPressed:
-                                                        //                   Get.back,
-                                                        //               color:
-                                                        //                   primary,
-                                                        //               borderSide:
-                                                        //                   const BorderSide(
-                                                        //                 color:
-                                                        //                     primary,
-                                                        //               ),
-                                                        //             ),
-                                                        // ),
+                                                        Obx(
+                                                          () => controller
+                                                                  .isLoading
+                                                                  .value
+                                                              ? Shimmer
+                                                                  .fromColors(
+                                                                  baseColor:
+                                                                      Colors
+                                                                          .grey,
+                                                                  highlightColor:
+                                                                      Colors
+                                                                          .grey
+                                                                          .shade400,
+                                                                  child: Row(
+                                                                    children: [
+                                                                      Expanded(
+                                                                        child:
+                                                                            ButtonPrimary(
+                                                                          fullWidth:
+                                                                              true,
+                                                                          margin:
+                                                                              REdgeInsets.fromLTRB(
+                                                                            14,
+                                                                            0,
+                                                                            14,
+                                                                            20,
+                                                                          ),
+                                                                          text:
+                                                                              '',
+                                                                          textColor:
+                                                                              primary,
+                                                                          onPressed:
+                                                                              null,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                      ),
+                                                                      Expanded(
+                                                                        child:
+                                                                            ButtonPrimary(
+                                                                          fullWidth:
+                                                                              true,
+                                                                          margin:
+                                                                              REdgeInsets.fromLTRB(
+                                                                            14,
+                                                                            0,
+                                                                            14,
+                                                                            20,
+                                                                          ),
+                                                                          text:
+                                                                              '',
+                                                                          textColor:
+                                                                              white,
+                                                                          onPressed:
+                                                                              null,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                )
+                                                              : r.canCancel
+                                                                  ? Row(
+                                                                      children: [
+                                                                          Expanded(
+                                                                            child:
+                                                                                ButtonPrimary(
+                                                                              fullWidth: true,
+                                                                              margin: REdgeInsets.fromLTRB(
+                                                                                14,
+                                                                                0,
+                                                                                14,
+                                                                                20,
+                                                                              ),
+                                                                              text: 'Close',
+                                                                              textColor: white,
+                                                                              onPressed: Get.back,
+                                                                              color: primary,
+                                                                              borderSide: const BorderSide(
+                                                                                color: primary,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child:
+                                                                                ButtonPrimary(
+                                                                              fullWidth: true,
+                                                                              margin: REdgeInsets.fromLTRB(
+                                                                                14,
+                                                                                0,
+                                                                                14,
+                                                                                20,
+                                                                              ),
+                                                                              text: 'Cancel',
+                                                                              textColor: white,
+                                                                              onPressed: () => AppDialogImpl().showChoiceDialog(
+                                                                                description: 'Are you sure want to cancel this form?',
+                                                                                onPressedNo: Get.back,
+                                                                                onPressedYes: () {
+                                                                                  Get.back();
+                                                                                  Get.back();
+                                                                                  controller.cancelForm(
+                                                                                    r.codeNo,
+                                                                                    'permit',
+                                                                                  );
+                                                                                },
+                                                                              ),
+                                                                              color: secondary,
+                                                                              borderSide: const BorderSide(
+                                                                                color: secondary,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ])
+                                                                  : ButtonPrimary(
+                                                                      fullWidth:
+                                                                          true,
+                                                                      margin: REdgeInsets
+                                                                          .fromLTRB(
+                                                                        14,
+                                                                        0,
+                                                                        14,
+                                                                        20,
+                                                                      ),
+                                                                      text:
+                                                                          'Close',
+                                                                      textColor:
+                                                                          white,
+                                                                      onPressed:
+                                                                          Get.back,
+                                                                      color:
+                                                                          primary,
+                                                                      borderSide:
+                                                                          const BorderSide(
+                                                                        color:
+                                                                            primary,
+                                                                      ),
+                                                                    ),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),

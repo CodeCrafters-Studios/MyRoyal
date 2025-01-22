@@ -9,6 +9,7 @@ class CacheUserLogin extends Equatable {
     required this.password,
     required this.scope,
     required this.fcmToken,
+    required this.deviceId,
   });
 
   final String grantType;
@@ -18,6 +19,7 @@ class CacheUserLogin extends Equatable {
   final String password;
   final String scope;
   final String fcmToken;
+  final String deviceId;
 
   @override
   List<Object?> get props => [
@@ -28,5 +30,6 @@ class CacheUserLogin extends Equatable {
         password,
         scope,
         fcmToken,
+        deviceId,
       ];
 }

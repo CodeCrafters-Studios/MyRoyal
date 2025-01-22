@@ -47,6 +47,7 @@ class LoginRepositoryImpl implements LoginRepository {
     required String password,
     required String scope,
     required String fcmToken,
+    required String deviceId,
   }) async {
     try {
       final r = await localData.getLoginParams(
@@ -57,6 +58,7 @@ class LoginRepositoryImpl implements LoginRepository {
         password: password,
         scope: scope,
         fcmToken: fcmToken,
+        deviceId: deviceId,
       );
       return Right(r);
     } on LocalDataException {
@@ -80,6 +82,7 @@ class LoginRepositoryImpl implements LoginRepository {
           password: loginParams['password'],
           scope: loginParams['scope'],
           fcmToken: loginParams['fcm_token'],
+          deviceId: loginParams['device_id'],
         ),
       );
       await localData.saveLoginToken(

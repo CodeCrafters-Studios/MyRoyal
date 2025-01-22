@@ -9,6 +9,7 @@ class CacheUserLoginModel extends CacheUserLogin {
     required super.password,
     required super.scope,
     required super.fcmToken,
+    required super.deviceId,
   });
 
   factory CacheUserLoginModel.fromJson(Map<String, dynamic> json) =>
@@ -20,6 +21,7 @@ class CacheUserLoginModel extends CacheUserLogin {
         password: json['password'],
         scope: json['scope'],
         fcmToken: json['fcm_token'],
+        deviceId: json['device_id'],
       );
 
   Map<String, dynamic> toJson() {
@@ -31,6 +33,7 @@ class CacheUserLoginModel extends CacheUserLogin {
       'password': password,
       'scope': scope,
       'fcm_token': fcmToken,
+      'device_id': deviceId,
     };
   }
 }

@@ -4,7 +4,7 @@ import 'package:iroyal/app/modules/approval/data/repositories/approval_repositor
 import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 
 import '../controllers/approval_controller.dart';
 
@@ -34,14 +34,14 @@ class ApprovalBinding extends Bindings {
           Get.find<ApprovalRepositoryImpl>(),
         ),
       )
-      ..lazyPut<CancelFormLeaveUsecase>(
-        () => CancelFormLeaveUsecase(
+      ..lazyPut<ActionFormLeaveUsecase>(
+        () => ActionFormLeaveUsecase(
           Get.find<LeaveRepositoryImpl>(),
         ),
       )
       ..lazyPut<ApprovalController>(
         () => ApprovalController(
-          cancelFormLeaveUsecase: Get.find(),
+          actionFormLeaveUsecase: Get.find(),
           getLeaveApprovalUsecase: Get.find(),
         ),
       );

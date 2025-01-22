@@ -9,6 +9,7 @@ import 'package:dio/io.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' as getx;
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_config.dart';
@@ -284,7 +285,7 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  static void catchError(String message, {bool showPopUp = true}) {
+  void catchError(String message, {bool showPopUp = true}) {
     if (showPopUp) {
       if (message.isNotEmpty) {
         AppDialogImpl().showErrorDialog(
@@ -295,6 +296,15 @@ class HttpService extends getx.GetxService {
         AppDialogImpl().showErrorDialog(
           title: 'System is Under Maintenance',
           description: message,
+        );
+      } else if (message == "Unauthorized") {
+        AppDialogImpl().showErrorDialog(
+          title: message,
+          onPress: () async {
+            await appStorage.delete(CACHE_ACCESS_TOKEN);
+            await appStorage.delete(CACHE_REFRESH_TOKEN);
+            Get.offAllNamed(Routes.LOGIN);
+          },
         );
       } else {
         AppDialogImpl().showErrorDialog(title: 'Failed', description: message);

@@ -11,6 +11,8 @@ class PermitDataModel extends PermitDataEntity {
     required super.code,
     required super.codeNo,
     required super.codeDefine,
+    required super.canCancel,
+    required super.status,
   });
 
   factory PermitDataModel.fromJson(Map<String, dynamic> json) =>
@@ -23,6 +25,8 @@ class PermitDataModel extends PermitDataEntity {
         code: json["code"],
         codeNo: json["code_no"],
         codeDefine: json["code_define"],
+        canCancel: json["can_cancel"],
+        status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,5 +38,7 @@ class PermitDataModel extends PermitDataEntity {
         "code": code,
         "code_no": codeNo,
         "code_define": codeDefine,
+        "can_cancel": canCancel,
+        "status": status,
       };
 }

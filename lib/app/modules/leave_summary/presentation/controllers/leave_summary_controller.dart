@@ -8,14 +8,14 @@ import 'package:iroyal/app/modules/leave_summary/data/models/leave_data_model.da
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_data_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_params_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_type_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
@@ -34,7 +34,7 @@ class LeaveSummaryController extends GetxController {
     required this.getPermitUsecase,
     required this.getSubtituteEmployeeUsecase,
     required this.createFormLeaveUsecase,
-    required this.cancelFormLeaveUsecase,
+    required this.actionFormLeaveUsecase,
     required this.getCacheUser,
     required this.createFormPermitUsecase,
   });
@@ -97,8 +97,8 @@ class LeaveSummaryController extends GetxController {
   ).obs;
   Rx<CreateFormLeaveEntity> createFormRes =
       const CreateFormLeaveEntity(id: 0, codeNo: '').obs;
-  Rx<CancelFormLeaveEntity> cancelFormRes =
-      const CancelFormLeaveEntity(id: 0, codeNo: '').obs;
+  Rx<ActionFormLeaveEntity> actionFormRes =
+      const ActionFormLeaveEntity(id: 0, codeNo: '').obs;
   final Rx<UserDataModel> userData = UserDataModel.empty().obs;
 
   RxList<DataLeaveModel> leaveData = <DataLeaveModel>[].obs;
@@ -140,7 +140,7 @@ class LeaveSummaryController extends GetxController {
   final GetPermitUsecase getPermitUsecase;
   final GetSubtituteEmployeeUsecase getSubtituteEmployeeUsecase;
   final CreateFormLeaveUsecase createFormLeaveUsecase;
-  final CancelFormLeaveUsecase cancelFormLeaveUsecase;
+  final ActionFormLeaveUsecase actionFormLeaveUsecase;
   final GetCacheUser getCacheUser;
   final CreateFormPermitUsecase createFormPermitUsecase;
 
@@ -319,15 +319,16 @@ class LeaveSummaryController extends GetxController {
     });
   }
 
-  Future<void> cancelFormLeave(String codeNo) async {
+  Future<void> cancelForm(String codeNo, String typeSubmission) async {
     isLoading.value = true;
 
-    final r = await cancelFormLeaveUsecase(
-      CancelFormLeaveParamsEntity(
+    final r = await actionFormLeaveUsecase(
+      ActionFormLeaveParamsEntity(
         type: 'canceled',
         level: 0,
         codeNo: codeNo,
         feedback: '',
+        typeSubmission: typeSubmission,
       ),
     );
 
@@ -339,8 +340,8 @@ class LeaveSummaryController extends GetxController {
     }, (r) {
       Get.back();
       isLoading(false);
-      _getLeaveSummary();
-      cancelFormRes.value = r;
+      typeSubmission == 'leave' ? _getLeaveSummary() : _getPermitSummary();
+      actionFormRes.value = r;
       AppDialogImpl().showSuccessSnackBar(description: 'Form Leave Canceled');
     });
   }
