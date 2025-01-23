@@ -10,6 +10,8 @@ import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
 import '../modules/change_pin/bindings/change_pin_binding.dart';
 import '../modules/change_pin/views/change_pin_view.dart';
+import '../modules/check_password/presentation/bindings/check_password_binding.dart';
+import '../modules/check_password/presentation/views/check_password_view.dart';
 import '../modules/dashboard/presentation/bindings/dashboard_binding.dart';
 import '../modules/dashboard/presentation/views/dashboard_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
@@ -198,6 +200,11 @@ class AppPages {
       name: _Paths.APPROVAL,
       page: () => const ApprovalView(),
       binding: ApprovalBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECK_PASSWORD,
+      page: () => const CheckPasswordView(),
+      binding: CheckPasswordBinding(),
     ),
   ];
 }

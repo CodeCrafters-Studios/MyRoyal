@@ -27,8 +27,7 @@ class HomeMenu extends StatelessWidget {
             // Get.toNamed(Routes.TASKS);
             break;
           case 'Payroll':
-            Get.toNamed(Routes.PAYROLL);
-            // Get.toNamed(Routes.PIN);
+            Get.toNamed(Routes.CHECK_PASSWORD);
             break;
           case 'Visit':
             Get.to(() => const ComingSoonScreen());

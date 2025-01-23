@@ -90,8 +90,6 @@ class PayrollController extends GetxController {
     response.fold(
       (l) {
         isLoading.value = false;
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;
@@ -110,8 +108,6 @@ class PayrollController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;

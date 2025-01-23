@@ -3,14 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/config/app_config.dart';
 
 class AppbarSpacer extends StatelessWidget {
-  const AppbarSpacer({super.key});
+  const AppbarSpacer({
+    super.key,
+    this.height,
+  });
+
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: AppConfig.iAppBarHeight +
-          MediaQuery.of(context).viewPadding.top +
-          8.h,
+      height: height ??
+          AppConfig.iAppBarHeight +
+              MediaQuery.of(context).viewPadding.top +
+              8.h,
     );
   }
 }

@@ -31,6 +31,7 @@ class ButtonPrimary extends StatelessWidget {
     this.isOutline = false,
     this.outlineColor,
     this.textStyle,
+    this.width = 100,
   });
 
   ///receive a ValueNotifier to indicate a loading widget
@@ -85,11 +86,13 @@ class ButtonPrimary extends StatelessWidget {
   final double borderRadius;
   final bool isOutline;
   final Color? outlineColor;
+  final double width;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 100),
-      width: fullWidth ? double.infinity : null,
+      width: fullWidth ? double.infinity : width,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.all(Radius.circular(borderRadius)),

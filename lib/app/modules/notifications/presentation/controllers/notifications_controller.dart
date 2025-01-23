@@ -12,6 +12,8 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsController extends GetxController {
   NotificationsController(
@@ -88,12 +90,15 @@ class NotificationsController extends GetxController {
         notificationsDataList.addAll(notificationsData()
             .data
             .data
-            .map((e) => NotificationDataListEntities(
+            .map(
+              (e) => NotificationDataListEntities(
                 id: e.id,
                 createdAt: e.createdAt,
                 body: e.body,
                 title: e.title,
-                isRead: e.isRead))
+                isRead: e.isRead,
+              ),
+            )
             .toList());
 
         totalPages.value = notificationsData().data.totalPage;
@@ -165,42 +170,45 @@ class NotificationsController extends GetxController {
       (l) {
         AppUtils.logApp('Error');
       },
-      (r) {
+      (r) async {
         isLoading.value = false;
         AppUtils.logApp('Success');
-        _getNotifications();
+
         tapNotificationData.value = r;
-        switch (tapNotificationData.value.data.route) {
-          case 'My Teams':
-            Get.toNamed(Routes.MY_TEAMS);
-            break;
-          case 'Webtel':
-            Get.offAndToNamed(Routes.WEBTEL);
-            break;
-          case 'Tracking Documents':
-            Get.offAndToNamed(Routes.TRACKING_DOCUMENT);
-            break;
-          case 'Leave Summary':
-            Get.offAndToNamed(Routes.LEAVE_SUMMARY);
-            break;
-          case 'Tasks':
-            Get.offAndToNamed(Routes.TASKS);
-            break;
-          case 'Payroll':
-            Get.offAndToNamed(Routes.PIN);
-            break;
-          case 'Dashboard':
-            Get.offAndToNamed(Routes.DASHBOARD);
-            break;
-          case 'Visit':
-            Get.offAndToNamed(Routes.VISIT);
-            break;
-          case 'Bottom Navbar':
-            Get.offAllNamed(Routes.BOTTOMNAVBAR);
-            break;
-          default:
-            null;
-            break;
+        final route = tapNotificationData.value.data.route;
+        final uri = Uri.parse(route);
+
+        if (route.toString().contains('https://')) {
+          if (!await launchUrl(uri)) {
+            throw Exception('Could not launch $uri');
+          }
+        } else {
+          switch (route) {
+            case 'My Teams':
+              Get.toNamed(Routes.MY_TEAMS);
+              break;
+            case 'Webtel':
+              Get.toNamed(Routes.WEBTEL);
+              break;
+            case 'Tracking Documents':
+              Get.toNamed(Routes.TRACKING_DOCUMENT);
+              break;
+            case 'Tasks':
+              Get.toNamed(Routes.TASKS);
+              break;
+            case 'Payroll':
+              Get.toNamed(Routes.PIN);
+              break;
+            case 'Dashboard':
+              Get.toNamed(Routes.DASHBOARD);
+              break;
+            case 'Visit':
+              Get.toNamed(Routes.VISIT);
+              break;
+            default:
+              Get.to(() => const ComingSoonScreen());
+              break;
+          }
         }
       },
     );
