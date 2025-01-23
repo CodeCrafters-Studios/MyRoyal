@@ -114,10 +114,12 @@ class AllLeaveRequestView extends StatelessWidget {
                                                           BorderRadius.only(
                                                         topLeft:
                                                             Radius.circular(
-                                                                25.r),
+                                                          25.r,
+                                                        ),
                                                         topRight:
                                                             Radius.circular(
-                                                                25.r),
+                                                          25.r,
+                                                        ),
                                                       ),
                                                       color: bgColorDropDown,
                                                     ),

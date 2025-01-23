@@ -85,7 +85,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
   Future<CreateFormLeaveEntity> createFormLeave(
       Map<String, dynamic> createFormLeaveParams) async {
     try {
-      AppUtils.logApp('PARAMS ::: $createFormLeaveParams');
       final r = await httpService.request(
         withToken: true,
         enpoint: 'attendance/submission',
@@ -137,7 +136,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
   Future<CreateFormPermitEntity> createFormPermit(
       Map<String, dynamic> createFormPermitParams) async {
     try {
-      AppUtils.logApp('PARAMS ::: $createFormPermitParams');
       final r = await httpService.request(
         withToken: true,
         enpoint: 'attendance/submissionPermit',

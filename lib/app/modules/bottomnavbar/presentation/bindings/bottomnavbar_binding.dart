@@ -32,6 +32,12 @@ import 'package:iroyal/app/modules/notifications/data/repositories/notifications
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:iroyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
+import 'package:iroyal/app/modules/payroll/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/payroll/data/repositories/payroll_period_repository_impl.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
+import 'package:iroyal/app/modules/payroll/presentation/controllers/payroll_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
@@ -319,6 +325,42 @@ class BottomnavbarBinding extends Bindings {
           actionFormLeaveUsecase: Get.find<ActionFormLeaveUsecase>(),
           getCacheUser: Get.find<GetCacheUser>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
+        ),
+      )
+
+      // Payroll
+      ..lazyPut<PayrollRemoteDataSourcesImpl>(
+        () => PayrollRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<PayrollPeriodRepositoryImpl>(
+        () => PayrollPeriodRepositoryImpl(
+          remoteData: Get.find<PayrollRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut<GetPayrollPeriodeUsecase>(
+        () => GetPayrollPeriodeUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollDownloadUrlUsecase>(
+        () => PayrollDownloadUrlUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollDataOverviewUsecase>(
+        () => PayrollDataOverviewUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollController>(
+        () => PayrollController(
+          payrollDataOverviewUsecase: Get.find<PayrollDataOverviewUsecase>(),
+          payrollDownloadUrlUsecase: Get.find<PayrollDownloadUrlUsecase>(),
+          getPayrollPeriodeUsecase: Get.find<GetPayrollPeriodeUsecase>(),
+          downloadFile: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       );
   }

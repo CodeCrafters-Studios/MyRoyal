@@ -33,8 +33,8 @@ import '../modules/notifications/presentation/bindings/notifications_binding.dar
 import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
-import '../modules/payroll/bindings/payroll_binding.dart';
-import '../modules/payroll/views/payroll_view.dart';
+import '../modules/payroll/presentation/bindings/payroll_binding.dart';
+import '../modules/payroll/presentation/views/payroll_view.dart';
 import '../modules/pin/bindings/pin_binding.dart';
 import '../modules/pin/views/pin_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';

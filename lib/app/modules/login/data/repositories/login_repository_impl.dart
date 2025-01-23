@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_remote.data.dart';
+import 'package:iroyal/app/modules/login/data/datasources/login_remote_data.dart';
 import 'package:iroyal/app/modules/login/data/models/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/domain/entities/login_params.dart';

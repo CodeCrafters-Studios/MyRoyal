@@ -9,7 +9,9 @@ import 'package:iroyal/app/modules/notifications/domain/entities/tap_notificatio
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class NotificationsController extends GetxController {
   NotificationsController(
@@ -77,6 +79,8 @@ class NotificationsController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
+        final m = l.properties[0] as ApiException;
+        AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;
