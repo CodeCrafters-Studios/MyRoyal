@@ -31,6 +31,7 @@ class PayrollController extends GetxController {
   RxString payrollPeriod = ''.obs;
 
   RxBool isLoading = false.obs;
+  RxBool isObsecureText = true.obs;
 
   Rx<PayrollPeriodModel> payrollPeriodRes =
       PayrollPeriodModel(code: 0, message: '', data: []).obs;
@@ -130,5 +131,9 @@ class PayrollController extends GetxController {
         );
       },
     );
+  }
+
+  void toggleShow() {
+    isObsecureText.value = !isObsecureText.value;
   }
 }

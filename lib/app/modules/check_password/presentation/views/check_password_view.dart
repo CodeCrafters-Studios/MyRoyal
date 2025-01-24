@@ -25,7 +25,7 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             InputPassword(
-              hint: 'Password',
+              hint: 'Enter your password AD',
               onChanged: (value) => controller.setLoginValue(value),
               validation: (value) {
                 if (value == null || value.isEmpty) {
@@ -45,7 +45,7 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
             ),
             16.verticalSpace,
             TextButton(
-              onPressed: null,
+              onPressed: () => controller.gotoForgotPassword(),
               child: Text(
                 'Forgot Password?',
                 style: TS.bodySmall
@@ -55,8 +55,9 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
             16.verticalSpace,
             Obx(
               () => ButtonPrimary(
+                fullWidth: true,
+                margin: REdgeInsets.symmetric(horizontal: 100),
                 enable: controller.isValidForm.value,
-                width: 100,
                 isLoading: controller.isLoading.value,
                 onPressed: () => controller.checkPassword(),
                 text: 'Submit',

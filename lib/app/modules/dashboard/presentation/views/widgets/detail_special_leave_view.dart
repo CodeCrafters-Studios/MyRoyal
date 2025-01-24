@@ -18,7 +18,7 @@ class DetailSpecialLeaveView extends GetView<DashboardController> {
       showBackground: false,
       title: 'Special Leave Requests',
       child: Obx(
-        () => controller.detailLateData().data.isEmpty
+        () => controller.detailSpeacialLeaveRequestData().data.isEmpty
             ? SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -37,14 +37,21 @@ class DetailSpecialLeaveView extends GetView<DashboardController> {
                           child: ListView.separated(
                             padding: EdgeInsets.zero,
                             separatorBuilder: (_, __) => 18.verticalSpace,
-                            itemCount: 5,
-                            itemBuilder: (_, __) {
+                            itemCount: controller
+                                .detailSpeacialLeaveRequestData()
+                                .data
+                                .length,
+                            itemBuilder: (context, index) {
+                              final r = controller
+                                  .detailSpeacialLeaveRequestData()
+                                  .data[index];
                               return CustomDetailCard(
-                                borderSideColor: errorColor,
-                                time: '08:15',
-                                dateStart: '08 November 2024',
+                                borderSideColor: secondary,
+                                time: r.reason,
+                                dateStart: r.periodDate.first,
                                 dateEnd: '',
                                 typeRequest: 'Late',
+                                isSpecialLeave: true,
                               );
                             },
                           ),

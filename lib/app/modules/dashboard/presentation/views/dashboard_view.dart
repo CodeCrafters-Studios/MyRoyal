@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_late_check_in_view.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_permit_request_view.dart';
+import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_special_leave_view.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -162,8 +163,8 @@ class DashboardView extends GetView<DashboardController> {
           backgroundImage: 'assets/images/img_bg_special_leave.png',
           iconAsset: 'assets/icons/ic_special_leaves.svg',
           isLateCard: true,
-          // onTap: () => Get.to(() => DetailSpecialLeaveView()),
-          onTap: () => Get.to(() => ComingSoonScreen()),
+          onTap: () => Get.to(() => DetailSpecialLeaveView()),
+          // onTap: () => Get.to(() => ComingSoonScreen()),
         ),
         5.verticalSpace,
         DashboardCard(

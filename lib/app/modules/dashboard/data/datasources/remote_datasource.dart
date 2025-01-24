@@ -51,7 +51,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         enpoint: 'dashboard/getData',
         method: Method.GET,
         showPopUp: true,
-        // params: {"type": "specialLeavesRequest"},
+        params: {"type": "specialLeave"},
       );
       if (r['code'] != 200) {
         throw ApiException(r['message']);

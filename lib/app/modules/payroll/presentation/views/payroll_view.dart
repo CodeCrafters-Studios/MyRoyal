@@ -97,66 +97,96 @@ class PayrollView extends GetView<PayrollController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'The current net salary period',
-              style: TS.bodyMedium.copyWith(
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                isDense: true,
-                padding: EdgeInsets.zero,
-                dropdownColor: white,
-                items: controller.payrollPeriodListRes
-                    .map<DropdownMenuItem<String>>(
-                  (PayrollPeriodData value) {
-                    return DropdownMenuItem<String>(
-                      value: value.datePayroll,
-                      child: Text(
-                        value.datePayroll,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'The current net salary period',
+                      style: TS.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isDense: true,
+                        padding: EdgeInsets.zero,
+                        dropdownColor: white,
+                        items: controller.payrollPeriodListRes
+                            .map<DropdownMenuItem<String>>(
+                          (PayrollPeriodData value) {
+                            return DropdownMenuItem<String>(
+                              value: value.datePayroll,
+                              child: Text(
+                                value.datePayroll,
+                                style: TS.bodyMedium.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          },
+                        ).toList(),
+                        value: controller.payrollPeriod.value.isEmpty
+                            ? (controller.payrollPeriodRes().data.isNotEmpty
+                                ? controller
+                                    .payrollPeriodRes()
+                                    .data
+                                    .first
+                                    .datePayroll
+                                : '')
+                            : controller.payrollPeriod.value,
                         style: TS.bodyMedium.copyWith(
-                          fontWeight: FontWeight.w600,
+                          color: black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        onChanged: (newValue) {
+                          int oldIndex =
+                              controller.payrollPeriodListRes.indexWhere(
+                            (element) =>
+                                element.datePayroll ==
+                                controller.payrollPeriod.value,
+                          );
+                          int newIndex =
+                              controller.payrollPeriodListRes.indexWhere(
+                            (element) => element.datePayroll == newValue,
+                          );
+
+                          controller.payrollPeriod.value = newValue.toString();
+
+                          final selectedPayrollPeriod =
+                              controller.payrollPeriodListRes.firstWhere(
+                            (element) =>
+                                element.datePayroll ==
+                                controller.payrollPeriod.value,
+                          );
+
+                          if (oldIndex != newIndex) {
+                            controller
+                                .downloadSlipUrl(selectedPayrollPeriod.id);
+                            controller
+                                .payrollDataOverview(selectedPayrollPeriod.id);
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
                         ),
                       ),
-                    );
-                  },
-                ).toList(),
-                value: controller.payrollPeriod.value.isEmpty
-                    ? (controller.payrollPeriodRes().data.isNotEmpty
-                        ? controller.payrollPeriodRes().data.first.datePayroll
-                        : '')
-                    : controller.payrollPeriod.value,
-                style: TS.bodyMedium.copyWith(
-                  color: black,
-                  fontWeight: FontWeight.w300,
+                    ),
+                  ],
                 ),
-                onChanged: (newValue) {
-                  int oldIndex = controller.payrollPeriodListRes.indexWhere(
-                    (element) =>
-                        element.datePayroll == controller.payrollPeriod.value,
-                  );
-                  int newIndex = controller.payrollPeriodListRes.indexWhere(
-                    (element) => element.datePayroll == newValue,
-                  );
-
-                  controller.payrollPeriod.value = newValue.toString();
-
-                  final selectedPayrollPeriod =
-                      controller.payrollPeriodListRes.firstWhere(
-                    (element) =>
-                        element.datePayroll == controller.payrollPeriod.value,
-                  );
-
-                  if (oldIndex != newIndex) {
-                    controller.downloadSlipUrl(selectedPayrollPeriod.id);
-                    controller.payrollDataOverview(selectedPayrollPeriod.id);
-                  }
-                },
-                icon: const Icon(
-                  Icons.arrow_drop_down,
+                IconButton(
+                  onPressed: () => controller.toggleShow(),
+                  icon: Icon(
+                    controller.isObsecureText.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    size: 30,
+                    color: disabledColor,
+                  ),
                 ),
-              ),
+              ],
             ),
             20.verticalSpace,
             Center(
@@ -165,9 +195,10 @@ class PayrollView extends GetView<PayrollController> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text:
-                          'Rp. ${controller.payrollDataOverviewRes().data.gajiPokok}',
-                      style: TS.headlineMedium,
+                      text: controller.isObsecureText.value
+                          ? 'Rp. ************'
+                          : 'Rp. ${controller.payrollDataOverviewRes().data.gajiPokok}',
+                      style: TS.titleLarge,
                     ),
                     TextSpan(
                       text: '/Month',
@@ -216,16 +247,19 @@ class PayrollView extends GetView<PayrollController> {
                   20.verticalSpace,
                   RowDetailsEarningAndDeductions(
                     title: 'Income Before Tax',
-                    value: controller
-                        .payrollDataOverviewRes()
-                        .data
-                        .pendapatanSebelumPajak,
+                    value: controller.isObsecureText.value
+                        ? '*************'
+                        : controller
+                            .payrollDataOverviewRes()
+                            .data
+                            .pendapatanSebelumPajak,
                   ),
                   RowDetailsEarningAndDeductions(
                     title:
                         'Tax Deduction (${controller.payrollDataOverviewRes().data.persentasePotonganPajak}%)',
-                    value:
-                        '- ${controller.payrollDataOverviewRes().data.potonganPajak}',
+                    value: controller.isObsecureText.value
+                        ? '*************'
+                        : '- ${controller.payrollDataOverviewRes().data.potonganPajak}',
                     valueStyle: TS.bodyMedium.copyWith(
                       color: red,
                     ),
@@ -233,15 +267,18 @@ class PayrollView extends GetView<PayrollController> {
                   ),
                   RowDetailsEarningAndDeductions(
                     title: 'Income After Tax',
-                    value: controller
-                        .payrollDataOverviewRes()
-                        .data
-                        .pendapatanSesudahPajak,
+                    value: controller.isObsecureText.value
+                        ? '*************'
+                        : controller
+                            .payrollDataOverviewRes()
+                            .data
+                            .pendapatanSesudahPajak,
                   ),
                   RowDetailsEarningAndDeductions(
                     title: 'Total Deductions',
-                    value:
-                        '- ${controller.payrollDataOverviewRes().data.totalPotongan}',
+                    value: controller.isObsecureText.value
+                        ? '*************'
+                        : '- ${controller.payrollDataOverviewRes().data.totalPotongan}',
                     valueStyle: TS.bodyMedium.copyWith(
                       color: red,
                     ),
@@ -249,7 +286,9 @@ class PayrollView extends GetView<PayrollController> {
                   ),
                   RowDetailsEarningAndDeductions(
                     title: 'Rounding',
-                    value: controller.payrollDataOverviewRes().data.pembulatan,
+                    value: controller.isObsecureText.value
+                        ? '*************'
+                        : controller.payrollDataOverviewRes().data.pembulatan,
                     valueStyle: TS.bodyMedium.copyWith(
                       color: controller
                               .payrollDataOverviewRes()
@@ -265,7 +304,9 @@ class PayrollView extends GetView<PayrollController> {
                   RowDetailsEarningAndDeductions(
                     title: 'Net Salary',
                     titleStyle: TS.titleSmall,
-                    value: controller.payrollDataOverviewRes().data.gajiBersih,
+                    value: controller.isObsecureText.value
+                        ? '************'
+                        : controller.payrollDataOverviewRes().data.gajiBersih,
                     valueStyle: TS.titleSmall,
                     withBackground: true,
                   ),

@@ -11,10 +11,12 @@ class CustomDetailCard extends StatelessWidget {
     required this.dateStart,
     required this.dateEnd,
     required this.typeRequest,
+    this.isSpecialLeave = false,
   });
 
   final Color borderSideColor;
   final String time, dateStart, dateEnd, typeRequest;
+  final bool isSpecialLeave;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class CustomDetailCard extends StatelessWidget {
           children: [
             10.horizontalSpace,
             Text(
-              '$time WIB',
+              isSpecialLeave ? time : '$time WIB',
               style: TS.titleSmall.copyWith(fontWeight: FontWeight.w500),
             ),
             10.horizontalSpace,

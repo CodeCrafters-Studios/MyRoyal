@@ -4,6 +4,7 @@ import 'package:iroyal/app/modules/dashboard/data/repositories/dashboard_reposit
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
@@ -191,12 +192,16 @@ class HomeBinding extends Bindings {
           () => GetDetailLateUsecase(Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<GetDetailPermitRequestUsecase>(() =>
           GetDetailPermitRequestUsecase(Get.find<DashboardRepositoryImpl>()))
+      ..lazyPut<GetDetailSpecialLeaveRequestUsecase>(() =>
+          GetDetailSpecialLeaveRequestUsecase(
+              Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
           getUser: Get.find(),
           getDashboard: Get.find(),
           getDetailLateUsecase: Get.find(),
           getDetailPermitRequestUsecase: Get.find(),
+          getDetailSpecialLeaveRequestUsecase: Get.find(),
         ),
       )
 

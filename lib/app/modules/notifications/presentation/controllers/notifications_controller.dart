@@ -173,7 +173,9 @@ class NotificationsController extends GetxController {
       (r) async {
         isLoading.value = false;
         AppUtils.logApp('Success');
-
+        notificationsDataList.clear();
+        notificationsDataList.value = [];
+        _getNotifications();
         tapNotificationData.value = r;
         final route = tapNotificationData.value.data.route;
         final uri = Uri.parse(route);
