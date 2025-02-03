@@ -22,7 +22,6 @@ import 'package:iroyal/base/utils/biometrics.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
-// ignore: unused_import
 import 'package:iroyal/base/utils/location/app_location.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
@@ -55,15 +54,19 @@ Future<void> setupAndRunApp(
   FirebaseMessaging.onBackgroundMessage(remoteMessageHandler);
 
   await FlutterDownloader.initialize(
-    debug: environment == const EnvironmentConfig.production() ? false : true,
+    debug: environment.environment == EnvironmentType.production ? false : true,
     ignoreSsl: true,
   );
 
+  AppUtils.logApp('RUNNING ENV ${environment.environment}');
+
   runApp(
-    DioRequestInspectorMain(
-      inspector: DioRequestInspector(isDebugMode: true),
-      child: appWidget,
-    ),
+    environment.environment == EnvironmentType.production
+        ? appWidget
+        : DioRequestInspectorMain(
+            inspector: DioRequestInspector(isDebugMode: true),
+            child: appWidget,
+          ),
   );
 }
 

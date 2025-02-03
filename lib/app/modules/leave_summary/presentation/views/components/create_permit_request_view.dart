@@ -48,10 +48,9 @@ class CreatePermitRequestView extends StatelessWidget {
               validation: (value) =>
                   value?.isEmpty ?? false ? 'Cannot be empty' : null,
             ),
-            const Spacer(),
+            const Spacer(flex: 2),
             _buildApplyButton(),
-            const Spacer(),
-            const Spacer(),
+            const Spacer(flex: 3),
           ],
         ),
       ),
@@ -66,14 +65,35 @@ class CreatePermitRequestView extends StatelessWidget {
           Expanded(
             child: _buildButton(
               'Time Start',
-              controller.selectedStartTime.value ==
-                      TimeOfDay(hour: 0, minute: 0)
+              controller.selectedStartTimePermitFormatted.value.isEmpty
                   ? 'Select time'
                   : controller.selectedStartTimePermitFormatted.value,
-              controller.selectedStartTime.value ==
-                  TimeOfDay(hour: 0, minute: 0),
+              controller.selectedStartTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          timePickerTheme: TimePickerThemeData(
+                            backgroundColor: white,
+                            dayPeriodTextColor: black,
+                            dayPeriodColor: primary.withOpacity(0.1),
+                            dayPeriodShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          datePickerTheme: DatePickerThemeData(
+                            dividerColor: Colors.transparent,
+                          ),
+                          colorScheme: ColorScheme.light(primary: primary),
+                          textButtonTheme: TextButtonThemeData(
+                            style:
+                                TextButton.styleFrom(foregroundColor: primary),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     context: context,
                     initialTime: TimeOfDay.now(),
                     initialEntryMode: TimePickerEntryMode.dial);
@@ -103,12 +123,35 @@ class CreatePermitRequestView extends StatelessWidget {
           Expanded(
             child: _buildButton(
               'Time End',
-              controller.selectedEndTime.value == TimeOfDay(hour: 0, minute: 0)
+              controller.selectedEndTimePermitFormatted.value.isEmpty
                   ? 'Select time'
                   : controller.selectedEndTimePermitFormatted.value,
-              controller.selectedEndTime.value == TimeOfDay(hour: 0, minute: 0),
+              controller.selectedEndTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          timePickerTheme: TimePickerThemeData(
+                            backgroundColor: white,
+                            dayPeriodTextColor: black,
+                            dayPeriodColor: primary.withOpacity(0.1),
+                            dayPeriodShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          datePickerTheme: DatePickerThemeData(
+                            dividerColor: Colors.transparent,
+                          ),
+                          colorScheme: ColorScheme.light(primary: primary),
+                          textButtonTheme: TextButtonThemeData(
+                            style:
+                                TextButton.styleFrom(foregroundColor: primary),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     context: context,
                     initialTime: TimeOfDay.now(),
                     initialEntryMode: TimePickerEntryMode.dial);
@@ -270,6 +313,7 @@ class CreatePermitRequestView extends StatelessWidget {
                 (DateTime? selected) {
                   if (selected != null) {
                     controller.selectedStartDatePermit.value = selected;
+                    controller.selectedEndDatePermit.value = DateTime(0);
                     AppUtils.logApp(
                       '${controller.selectedStartDatePermit.value}',
                     );
@@ -301,9 +345,15 @@ class CreatePermitRequestView extends StatelessWidget {
               controller.selectedEndDatePermit.value == DateTime(0),
               () => showDatePicker(
                 context: context,
-                initialDate: DateTime.now(),
+                initialDate:
+                    controller.selectedStartDatePermit.value == DateTime(0)
+                        ? DateTime.now()
+                        : controller.selectedStartDatePermit.value,
                 currentDate: DateTime.now(),
-                firstDate: DateTime.now(),
+                firstDate:
+                    controller.selectedStartDatePermit.value == DateTime(0)
+                        ? DateTime.now()
+                        : controller.selectedStartDatePermit.value,
                 lastDate: DateTime(DateTime.now().year + 50),
                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                 builder: (context, child) {

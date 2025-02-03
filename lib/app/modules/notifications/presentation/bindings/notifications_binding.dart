@@ -6,6 +6,7 @@ import 'package:iroyal/app/modules/dashboard/data/repositories/dashboard_reposit
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
@@ -17,10 +18,9 @@ import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/cancel_form_leave_usecase.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/create_form_permit_usecase.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_approval_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
@@ -33,6 +33,12 @@ import 'package:iroyal/app/modules/notifications/data/datasources/remote_data.da
 import 'package:iroyal/app/modules/notifications/data/repositories/notifications_repository_impl.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
+import 'package:iroyal/app/modules/payroll/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/payroll/data/repositories/payroll_period_repository_impl.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
+import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
+import 'package:iroyal/app/modules/payroll/presentation/controllers/payroll_controller.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
@@ -276,12 +282,16 @@ class NotificationsBinding extends Bindings {
           () => GetDetailLateUsecase(Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<GetDetailPermitRequestUsecase>(() =>
           GetDetailPermitRequestUsecase(Get.find<DashboardRepositoryImpl>()))
+      ..lazyPut<GetDetailSpecialLeaveRequestUsecase>(() =>
+          GetDetailSpecialLeaveRequestUsecase(
+              Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
           getUser: Get.find(),
           getDashboard: Get.find(),
           getDetailLateUsecase: Get.find(),
           getDetailPermitRequestUsecase: Get.find(),
+          getDetailSpecialLeaveRequestUsecase: Get.find(),
         ),
       )
 
@@ -302,11 +312,8 @@ class NotificationsBinding extends Bindings {
       ..lazyPut<CreateFormLeaveUsecase>(
         () => CreateFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
       )
-      ..lazyPut<CancelFormLeaveUsecase>(
-        () => CancelFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
-      )
-      ..lazyPut<GetLeaveApprovalUsecase>(
-        () => GetLeaveApprovalUsecase(Get.find<LeaveRepositoryImpl>()),
+      ..lazyPut<ActionFormLeaveUsecase>(
+        () => ActionFormLeaveUsecase(Get.find<LeaveRepositoryImpl>()),
       )
       ..lazyPut<CreateFormPermitUsecase>(
         () => CreateFormPermitUsecase(Get.find<LeaveRepositoryImpl>()),
@@ -320,10 +327,45 @@ class NotificationsBinding extends Bindings {
           getPermitUsecase: Get.find<GetPermitUsecase>(),
           getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
           createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
-          cancelFormLeaveUsecase: Get.find<CancelFormLeaveUsecase>(),
-          getLeaveApprovalUsecase: Get.find<GetLeaveApprovalUsecase>(),
+          actionFormLeaveUsecase: Get.find<ActionFormLeaveUsecase>(),
           getCacheUser: Get.find<GetCacheUser>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
+        ),
+      )
+
+      // Payroll
+      ..lazyPut<PayrollRemoteDataSourcesImpl>(
+        () => PayrollRemoteDataSourcesImpl(
+          httpService: Get.find(),
+        ),
+      )
+      ..lazyPut<PayrollPeriodRepositoryImpl>(
+        () => PayrollPeriodRepositoryImpl(
+          remoteData: Get.find<PayrollRemoteDataSourcesImpl>(),
+        ),
+      )
+      ..lazyPut<GetPayrollPeriodeUsecase>(
+        () => GetPayrollPeriodeUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollDownloadUrlUsecase>(
+        () => PayrollDownloadUrlUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollDataOverviewUsecase>(
+        () => PayrollDataOverviewUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<PayrollController>(
+        () => PayrollController(
+          payrollDataOverviewUsecase: Get.find<PayrollDataOverviewUsecase>(),
+          payrollDownloadUrlUsecase: Get.find<PayrollDownloadUrlUsecase>(),
+          getPayrollPeriodeUsecase: Get.find<GetPayrollPeriodeUsecase>(),
+          downloadFile: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       );
   }

@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -29,7 +30,7 @@ Future<void> onForegroundMessage(
   final notification = message.notification;
   final data = message.data;
 
-  AppUtils.logApp('$data');
+  AppUtils.logApp('FCM DATA :::: $data');
 
   if (notification != null) {
     final androidNotification = notification.android;
@@ -62,34 +63,45 @@ Future<void> onForegroundMessage(
 void onDidReceiveBackgroundNotificationResponse(
     NotificationResponse notificationResponse) async {
   if (notificationResponse.payload != null) {
-    AppUtils.logApp('ROUTESS4 :::::::::');
-    AppUtils.logApp("ON DID RECEIVE :::: ${notificationResponse.payload}");
-    switch (notificationResponse.payload) {
-      case 'My Teams':
-        Get.toNamed(Routes.MY_TEAMS);
-        break;
-      case 'Webtel':
-        Get.toNamed(Routes.WEBTEL);
-        break;
-      case 'Tracking Documents':
-        Get.toNamed(Routes.TRACKING_DOCUMENT);
-        break;
-      case 'Tasks':
-        Get.toNamed(Routes.TASKS);
-        break;
-      case 'Payroll':
-        Get.toNamed(Routes.PIN);
-        break;
-      case 'Dashboard':
-        Get.toNamed(Routes.DASHBOARD);
-        break;
-      case 'Visit':
-        Get.toNamed(Routes.VISIT);
-        break;
-      default:
-        Get.to(() => const ComingSoonScreen());
-        break;
+    final route = notificationResponse.payload;
+
+    if (route.toString().contains('https://')) {
+      final uri = Uri.parse(route!);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        AppUtils.logApp('Could not launch $route');
+      }
+    } else {
+      switch (notificationResponse.payload) {
+        case 'My Teams':
+          Get.toNamed(Routes.MY_TEAMS);
+          break;
+        case 'Webtel':
+          Get.toNamed(Routes.WEBTEL);
+          break;
+        case 'Tracking Documents':
+          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          break;
+        case 'Tasks':
+          Get.toNamed(Routes.TASKS);
+          break;
+        case 'Payroll':
+          Get.toNamed(Routes.PIN);
+          break;
+        case 'Dashboard':
+          Get.toNamed(Routes.DASHBOARD);
+          break;
+        case 'Visit':
+          Get.toNamed(Routes.VISIT);
+          break;
+        default:
+          Get.to(() => const ComingSoonScreen());
+          break;
+      }
     }
+  } else {
+    AppUtils.logApp('ROUTE IS EMPTY');
   }
 }
 
@@ -142,31 +154,40 @@ void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse) async {
   if (notificationResponse.payload != null &&
       notificationResponse.payload != '') {
-    switch (notificationResponse.payload) {
-      case 'My Teams':
-        Get.toNamed(Routes.MY_TEAMS);
-        break;
-      case 'Webtel':
-        Get.toNamed(Routes.WEBTEL);
-        break;
-      case 'Tracking Documents':
-        Get.toNamed(Routes.TRACKING_DOCUMENT);
-        break;
-      case 'Tasks':
-        Get.toNamed(Routes.TASKS);
-        break;
-      case 'Payroll':
-        Get.toNamed(Routes.PIN);
-        break;
-      case 'Dashboard':
-        Get.toNamed(Routes.DASHBOARD);
-        break;
-      case 'Visit':
-        Get.toNamed(Routes.VISIT);
-        break;
-      default:
-        Get.to(() => const ComingSoonScreen());
-        break;
+    final route = notificationResponse.payload;
+    final uri = Uri.parse(route!);
+
+    if (route.toString().contains('https://')) {
+      if (!await launchUrl(uri)) {
+        throw Exception('Could not launch $uri');
+      }
+    } else {
+      switch (notificationResponse.payload) {
+        case 'My Teams':
+          Get.toNamed(Routes.MY_TEAMS);
+          break;
+        case 'Webtel':
+          Get.toNamed(Routes.WEBTEL);
+          break;
+        case 'Tracking Documents':
+          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          break;
+        case 'Tasks':
+          Get.toNamed(Routes.TASKS);
+          break;
+        case 'Payroll':
+          Get.toNamed(Routes.PIN);
+          break;
+        case 'Dashboard':
+          Get.toNamed(Routes.DASHBOARD);
+          break;
+        case 'Visit':
+          Get.toNamed(Routes.VISIT);
+          break;
+        default:
+          Get.to(() => const ComingSoonScreen());
+          break;
+      }
     }
   } else {
     AppUtils.logApp('ROUTE IS EMPTY');

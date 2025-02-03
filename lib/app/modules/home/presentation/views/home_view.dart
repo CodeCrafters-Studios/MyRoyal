@@ -68,7 +68,7 @@ class HomeView extends GetView<HomeController> {
               child: InkWellTap(
                 onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
                 child: SvgPicture.asset(
-                  height: 30.h,
+                  height: 27.h,
                   'assets/icons/ic_notifications.svg',
                 ),
               ),
@@ -76,7 +76,7 @@ class HomeView extends GetView<HomeController> {
           : InkWellTap(
               onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
               child: SvgPicture.asset(
-                height: 30.h,
+                height: 27.h,
                 'assets/icons/ic_notifications.svg',
               ),
             ),

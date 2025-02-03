@@ -20,20 +20,7 @@ class PermitView extends GetView<LeaveSummaryController> {
         leadingWidth: 45,
         iconTheme: IconThemeData(color: white, size: 18.w),
         leading: InkWell(
-          onTap: () {
-            controller.selectedPermitType.value = '';
-            controller.selectedPermitTypeCode.value = '';
-            controller.selectedStartTimePermitFormatted.value = '';
-            controller.selectedEndTimePermitFormatted.value = '';
-            controller.reasonPermit.value = '';
-            controller.multiDatePickerValueleaveRequestWithDefaultValue.clear();
-            controller.selectedStartDatePermit.value = DateTime(0);
-            controller.selectedEndDatePermit.value = DateTime(0);
-            controller.selectedStartTime.value = TimeOfDay(hour: 0, minute: 0);
-            controller.selectedEndTime.value = TimeOfDay(hour: 0, minute: 0);
-
-            Get.back();
-          },
+          onTap: () => controller.clearPermitRequest(),
           child: Icon(Icons.arrow_back_ios_new),
         ),
         centerTitle: false,

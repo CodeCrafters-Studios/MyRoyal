@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tracking_document/presentation/views/components/approval_view.dart';
 import 'package:iroyal/app/modules/tracking_document/presentation/views/components/history_view.dart';
+import 'package:iroyal/app/modules/tracking_document/presentation/views/components/tracking_document_approval.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
@@ -40,7 +40,8 @@ class TrackingDocumentImplView extends StatelessWidget {
               title: 'Approval',
               itemCount: controller.trackingDocOnProgressData().data.length,
               color: white.withOpacity(0.8),
-              onTap: () => Get.to(() => ApprovalView(controller: controller)),
+              onTap: () => Get.to(
+                  () => TrackingDocumentApprovalView(controller: controller)),
             ),
             15.verticalSpace,
             _buildCardHistory(

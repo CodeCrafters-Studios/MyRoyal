@@ -2,7 +2,7 @@
 
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_remote.data.dart';
+import 'package:iroyal/app/modules/login/data/datasources/login_remote_data.dart';
 import 'package:iroyal/app/modules/login/data/repositories/login_repository_impl.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/auth_biometrics_login.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/get_cache_user_login.dart';

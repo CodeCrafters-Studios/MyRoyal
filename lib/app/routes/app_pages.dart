@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/leaves_request_view.dart';
+
+import '../modules/approval/presentation/bindings/approval_binding.dart';
+import '../modules/approval/presentation/views/approval_view.dart';
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
@@ -8,6 +10,8 @@ import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
 import '../modules/change_pin/bindings/change_pin_binding.dart';
 import '../modules/change_pin/views/change_pin_view.dart';
+import '../modules/check_password/presentation/bindings/check_password_binding.dart';
+import '../modules/check_password/presentation/views/check_password_view.dart';
 import '../modules/dashboard/presentation/bindings/dashboard_binding.dart';
 import '../modules/dashboard/presentation/views/dashboard_view.dart';
 import '../modules/detail_tasks/bindings/detail_tasks_binding.dart';
@@ -22,6 +26,7 @@ import '../modules/home/presentation/bindings/home_binding.dart';
 import '../modules/home/presentation/views/home_view.dart';
 import '../modules/leave_summary/presentation/bindings/leave_summary_binding.dart';
 import '../modules/leave_summary/presentation/views/leave_summary_view.dart';
+import '../modules/leave_summary/presentation/views/leaves_request_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
@@ -30,8 +35,8 @@ import '../modules/notifications/presentation/bindings/notifications_binding.dar
 import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
-import '../modules/payroll/bindings/payroll_binding.dart';
-import '../modules/payroll/views/payroll_view.dart';
+import '../modules/payroll/presentation/bindings/payroll_binding.dart';
+import '../modules/payroll/presentation/views/payroll_view.dart';
 import '../modules/pin/bindings/pin_binding.dart';
 import '../modules/pin/views/pin_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
@@ -190,6 +195,16 @@ class AppPages {
       name: _Paths.LEAVES,
       page: () => const LeavesRequestView(),
       binding: LeaveSummaryBinding(),
+    ),
+    GetPage(
+      name: _Paths.APPROVAL,
+      page: () => const ApprovalView(),
+      binding: ApprovalBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHECK_PASSWORD,
+      page: () => const CheckPasswordView(),
+      binding: CheckPasswordBinding(),
     ),
   ];
 }

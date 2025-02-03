@@ -42,37 +42,34 @@ class HomeController extends GetxController {
     const Menu(
       code: 'ic_dashboard',
       name: 'Dashboard',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_task',
       name: 'Tasks',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_payroll',
       name: 'Payroll',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_visit',
       name: 'Visit',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_webtel',
       name: 'Webtel',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_tracking_documents',
       name: 'Tracking Documents',
-      isVisible: true,
     ),
     const Menu(
       code: 'ic_leaves',
       name: 'Leaves',
-      isVisible: true,
+    ),
+    const Menu(
+      code: 'ic_approval',
+      name: 'Approval',
     ),
     // const Menu(
     //   code: 'ic_teams',
@@ -100,7 +97,6 @@ class HomeController extends GetxController {
 
   Rx<User> userData =
       User(code: 0, message: '', data: UserDataModel.empty()).obs;
-
   Rx<NotificationEntities> notificationsData = const NotificationEntities(
           code: 0,
           message: '',
@@ -131,7 +127,7 @@ class HomeController extends GetxController {
     checkVersion();
   }
 
-  void checkVersion() {
+  void checkVersion() async {
     // Get the current app version
     final appVersion =
         _getExtendedVersionNumber(deviceInfo.packageInfo.version);
@@ -217,27 +213,24 @@ class HomeController extends GetxController {
     //     mainMenu.refresh();
     //   },
     // );
-    mainMenu(generateMenu(getAllMenu));
+    mainMenu(generateHomeMenu(getAllMenu));
     //     mainMenu.refresh();
   }
 
-  List<HomeMenu> generateMenu(List<Menu> getAllMenu) {
+  List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {
     final homeMenu = <HomeMenu>[];
 
-    getAllMenu.where((menu) => menu.isVisible).forEach((menu) {
-      if (menu.code == 'ic_teams') {
-        if (isVisible.value == true) {
-          AppUtils.logApp('ISVISIBLE MENU :::::$menu');
-          homeMenu.add(HomeMenu(menu: menu));
-        }
-      } else {
-        AppUtils.logApp('ISVISIBLE MENU :::::$menu');
-        homeMenu.add(HomeMenu(menu: menu));
-      }
-    });
-    AppUtils.logApp('ISVISIBLE :::::${isVisible.value}');
-    AppUtils.logApp(
-        'MENU VISIBLE :::::${getAllMenu.where((menu) => menu.isVisible)}');
+    final mappedMenus = getAllMenu.map((menu) {
+      return HomeMenu(menu: menu);
+    }).toList();
+
+    if (userData().data.position == 'Staff') {
+      homeMenu.addAll(mappedMenus);
+      homeMenu.removeWhere((x) => x.menu.name == 'Approval');
+    } else {
+      homeMenu.addAll(mappedMenus);
+    }
+
     return homeMenu;
   }
 

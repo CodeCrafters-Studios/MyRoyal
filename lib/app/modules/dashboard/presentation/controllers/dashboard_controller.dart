@@ -4,6 +4,7 @@ import 'package:iroyal/app/modules/dashboard/data/models/dashboard_data_model.da
 import 'package:iroyal/app/modules/dashboard/data/models/dashboard_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/detail_late_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/detail_permit_request_model.dart';
+import 'package:iroyal/app/modules/dashboard/data/models/detail_special_leave_request_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/leave_balance_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/leave_summary_model.dart';
 import 'package:iroyal/app/modules/dashboard/data/models/permit_model.dart';
@@ -11,6 +12,7 @@ import 'package:iroyal/app/modules/dashboard/data/models/ptk_model.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
+import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -21,6 +23,7 @@ class DashboardController extends GetxController {
     required this.getDashboard,
     required this.getDetailLateUsecase,
     required this.getDetailPermitRequestUsecase,
+    required this.getDetailSpecialLeaveRequestUsecase,
   });
   final dataMap = <String, double>{};
 
@@ -55,6 +58,12 @@ class DashboardController extends GetxController {
     message: '',
     data: [],
   ).obs;
+  final Rx<DetailSpecialLeaveRequestModel> detailSpeacialLeaveRequestData =
+      DetailSpecialLeaveRequestModel(
+    code: 0,
+    message: '',
+    data: [],
+  ).obs;
 
   // final Rx<MyTeams> myTeamsData = const MyTeams(
   //   hasChildren: false,
@@ -67,6 +76,7 @@ class DashboardController extends GetxController {
   final GetDashboardUsecase getDashboard;
   final GetDetailLateUsecase getDetailLateUsecase;
   final GetDetailPermitRequestUsecase getDetailPermitRequestUsecase;
+  final GetDetailSpecialLeaveRequestUsecase getDetailSpecialLeaveRequestUsecase;
 
   RxBool isLoading = false.obs;
   RxBool hasTeams = false.obs;
@@ -84,6 +94,7 @@ class DashboardController extends GetxController {
     _getDashboard();
     _getDetailPermitRequest();
     _getDetailLate();
+    _getDetailSpecialLeaves();
     super.onInit();
   }
 
@@ -150,6 +161,19 @@ class DashboardController extends GetxController {
     }, (r) {
       isLoading.value = false;
       detailPermitRequestData.value = r;
+    });
+  }
+
+  Future<void> _getDetailSpecialLeaves() async {
+    isLoading.value = true;
+
+    final result = await getDetailSpecialLeaveRequestUsecase();
+
+    result.fold((l) {
+      isLoading.value = false;
+    }, (r) {
+      isLoading.value = false;
+      detailSpeacialLeaveRequestData.value = r;
     });
   }
 

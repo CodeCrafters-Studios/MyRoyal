@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
+import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/base/design/styles.dart';
 
 class HomeSlide extends StatelessWidget {
@@ -11,43 +12,50 @@ class HomeSlide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CarouselSlider(
-            items: controller.homeSLider
-                .map(
-                  (e) => Padding(
-                    padding: REdgeInsets.symmetric(horizontal: 6),
-                    child: ClipRRect(
-                      borderRadius: Corners.medBorder,
-                      child: Image.asset(
-                        e.link,
-                        // imageUrl:
-                        //     AppConfig.environment.baseUrl + e.image,
-                        // imageUrl:
-                        //     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                        width: Get.width * .9,
-                        height: 132.h,
-                        fit: BoxFit.cover,
-                      ),
+    return Obx(
+      () => SliverToBoxAdapter(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            controller.isLoading.value
+                ? ShimmerText(
+                    width: Get.width * .9,
+                    height: 132.h,
+                  )
+                : CarouselSlider(
+                    items: controller.homeSLider
+                        .map(
+                          (e) => Padding(
+                            padding: REdgeInsets.symmetric(horizontal: 6),
+                            child: ClipRRect(
+                              borderRadius: Corners.medBorder,
+                              child: Image.asset(
+                                e.link,
+                                // imageUrl:
+                                //     AppConfig.environment.baseUrl + e.image,
+                                // imageUrl:
+                                //     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                                width: Get.width * .9,
+                                height: 132.h,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      viewportFraction: 0.9,
+                      height: 132.h,
+                      // onPageChanged: (index, reason) =>
+                      //     controller.indexSlider(index),
                     ),
                   ),
-                )
-                .toList(),
-            options: CarouselOptions(
-              autoPlay: true,
-              viewportFraction: 0.9,
-              height: 132.h,
-              // onPageChanged: (index, reason) =>
-              //     controller.indexSlider(index),
+            Container(
+              height: 100.h,
             ),
-          ),
-          Container(
-            height: 100.h,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

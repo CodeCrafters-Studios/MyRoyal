@@ -19,6 +19,7 @@ class GetLoginParams implements UseCase<LoginParams, ParamsLogin> {
       password: params.password,
       scope: params.scope,
       fcmToken: params.fcmToken,
+      deviceId: params.deviceId,
     );
   }
 }
@@ -32,6 +33,7 @@ class ParamsLogin extends Equatable {
     required this.password,
     required this.scope,
     required this.fcmToken,
+    required this.deviceId,
   });
 
   final String grantType;
@@ -41,6 +43,7 @@ class ParamsLogin extends Equatable {
   final String password;
   final String scope;
   final String fcmToken;
+  final String deviceId;
 
   @override
   List<Object?> get props => [
@@ -51,5 +54,6 @@ class ParamsLogin extends Equatable {
         password,
         scope,
         fcmToken,
+        deviceId,
       ];
 }

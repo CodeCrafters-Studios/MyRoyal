@@ -13,6 +13,7 @@ abstract class LoginRepository {
     required String password,
     required String scope,
     required String fcmToken,
+    required String deviceId,
   });
   Future<Either<Failure, LoginResponse>> loginApp(
     Map<String, dynamic> loginParams,

@@ -6,6 +6,7 @@ import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_te
 
 import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
 import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
+import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
@@ -39,7 +40,10 @@ class NotificationsViewImpl extends StatelessWidget {
                 ? const NoNotificationsView()
                 : Column(
                     children: [
-                      const AppbarSpacer(),
+                      AppbarSpacer(
+                        height: AppConfig.iAppBarHeight +
+                            MediaQuery.of(context).viewPadding.top,
+                      ),
                       Expanded(
                         child: _buildNotificationsList(),
                       ),

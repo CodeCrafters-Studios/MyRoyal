@@ -85,6 +85,7 @@ class ButtonPrimary extends StatelessWidget {
   final double borderRadius;
   final bool isOutline;
   final Color? outlineColor;
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_approval_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/permit_view.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
@@ -31,58 +30,60 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
   }
 
   Widget _buildLoadedUI() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          AppbarSpacer(),
-          DashboardCard(
-            title: 'Leave\nRequests',
-            value: controller
-                .leaveModelRes()
-                .data!
-                .yearlyLeaveCount!
-                .used
-                .toString(),
-            totalValue: controller
-                .leaveModelRes()
-                .data!
-                .yearlyLeaveCount!
-                .max
-                .toString(),
-            progressLinearValue: controller
-                    .leaveModelRes()
-                    .data!
-                    .yearlyLeaveCount!
-                    .used!
-                    .toDouble() /
-                12,
-            textColor: secondary,
-            progressLinearColor: secondary,
-            valueColor: secondary,
-            backgroundImage: 'assets/images/img_bg_special_leave.png',
-            iconAsset: 'assets/icons/ic_special_leaves.svg',
-            isLateCard: false,
-            onTap: () => Get.toNamed(Routes.LEAVES),
-          ),
-          5.verticalSpace,
-          DashboardCard(
-            title: 'Permit\nRequest',
-            value: controller.permitData.length.toString(),
-            totalValue: '12',
-            progressLinearValue: 12 / 12,
-            textColor: primary20,
-            progressLinearColor: primary20,
-            valueColor: primary20,
-            backgroundImage: 'assets/images/img_bg_request_leave.png',
-            iconAsset: 'assets/icons/ic_request_leave.svg',
-            isLateCard: true,
-            onTap: () => Get.to(
-              () => PermitView(),
+    return Obx(
+      () => SingleChildScrollView(
+        child: Column(
+          children: [
+            AppbarSpacer(),
+            DashboardCard(
+              title: 'Leave\nRequests',
+              value: controller
+                  .leaveModelRes()
+                  .data!
+                  .yearlyLeaveCount!
+                  .used
+                  .toString(),
+              totalValue: controller
+                  .leaveModelRes()
+                  .data!
+                  .yearlyLeaveCount!
+                  .max
+                  .toString(),
+              progressLinearValue: controller
+                      .leaveModelRes()
+                      .data!
+                      .yearlyLeaveCount!
+                      .used!
+                      .toDouble() /
+                  12,
+              textColor: secondary,
+              progressLinearColor: secondary,
+              valueColor: secondary,
+              backgroundImage: 'assets/images/img_bg_special_leave.png',
+              iconAsset: 'assets/icons/ic_special_leaves.svg',
+              isLateCard: false,
+              onTap: () => Get.toNamed(Routes.LEAVES),
             ),
-          ),
-          20.verticalSpace,
-          LeavesViewImpl(controller: controller),
-        ],
+            5.verticalSpace,
+            DashboardCard(
+              title: 'Permit\nRequest',
+              value: controller.permitData.length.toString(),
+              totalValue: '12',
+              progressLinearValue: 12 / 12,
+              textColor: primary20,
+              progressLinearColor: primary20,
+              valueColor: primary20,
+              backgroundImage: 'assets/images/img_bg_request_leave.png',
+              iconAsset: 'assets/icons/ic_request_leave.svg',
+              isLateCard: true,
+              onTap: () => Get.to(
+                () => PermitView(),
+              ),
+            ),
+            20.verticalSpace,
+            LeavesViewImpl(controller: controller),
+          ],
+        ),
       ),
     );
   }
@@ -161,19 +162,19 @@ class LeavesViewImpl extends StatelessWidget {
     // );
   }
 
-  Widget _buildLeaveRequestTabViews() {
-    return SizedBox(
-      width: Get.width,
-      height: Get.height,
-      child: TabBarView(
-        controller: controller.tabLeaveController,
-        children: [
-          AllLeaveRequestView(controller: controller),
-          AllApprovalRequestView(controller: controller),
-        ],
-      ),
-    );
-  }
+  // Widget _buildLeaveRequestTabViews() {
+  //   return SizedBox(
+  //     width: Get.width,
+  //     height: Get.height,
+  //     child: TabBarView(
+  //       controller: controller.tabLeaveController,
+  //       children: [
+  //         AllLeaveRequestView(controller: controller),
+  //         AllApprovalRequestView(controller: controller),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildAllLeaveRequestView() {
     return controller.userData.value.position != 'Staff'

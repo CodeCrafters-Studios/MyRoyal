@@ -26,6 +26,7 @@ abstract class LoginLocalDataSource {
     required String password,
     required String scope,
     required String fcmToken,
+    required String deviceId,
   });
   Future<bool> authBiometrics();
   Future<void> saveLoginToken(String token);
@@ -91,6 +92,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     required String password,
     required String scope,
     required String fcmToken,
+    required String deviceId,
   }) async {
     if (username.isEmpty || password.isEmpty) {
       throw LocalDataException('Username or Password cannot be empty');
@@ -109,6 +111,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
           password,
           scope,
           fcmToken,
+          deviceId,
         );
       } else {
         throw LocalDataException('Permission Denied');
@@ -117,15 +120,8 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
       throw LocalDataException('Permission Denied');
     } else if (permissionStatus == LocationPermission.always ||
         permissionStatus == LocationPermission.whileInUse) {
-      return loginParam(
-        grantType,
-        clientId,
-        clientSecret,
-        username,
-        password,
-        scope,
-        fcmToken,
-      );
+      return loginParam(grantType, clientId, clientSecret, username, password,
+          scope, fcmToken, deviceId);
     } else {
       throw LocalDataException('Permission Denied');
     }
@@ -160,6 +156,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
     final String password,
     final String scope,
     final String fcmToken,
+    final String deviceId,
   ) async {
     // final info = await deviceInfo.info();
     // final position = await appLocation.position;
@@ -173,6 +170,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
       password: password,
       scope: scope,
       fcmToken: fcmToken,
+      deviceId: deviceId,
     );
   }
 

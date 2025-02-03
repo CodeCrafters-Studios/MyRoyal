@@ -10,6 +10,8 @@ class PermitDataEntity extends Equatable {
   final String code;
   final String codeNo;
   final String codeDefine;
+  final bool canCancel;
+  final String status;
 
   const PermitDataEntity({
     required this.id,
@@ -20,6 +22,8 @@ class PermitDataEntity extends Equatable {
     required this.code,
     required this.codeNo,
     required this.codeDefine,
+    required this.canCancel,
+    required this.status,
   });
 
   @override
@@ -32,5 +36,7 @@ class PermitDataEntity extends Equatable {
         code,
         codeNo,
         codeDefine,
+        canCancel,
+        status,
       ];
 }

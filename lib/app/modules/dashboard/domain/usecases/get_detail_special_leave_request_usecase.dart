@@ -10,6 +10,6 @@ class GetDetailSpecialLeaveRequestUsecase implements UseCaseNoParams {
 
   @override
   Future<Either<Failure, dynamic>> call() {
-    return repository.getDetailLateUseCase();
+    return repository.getDetailSpecialLeaveRequestUseCase();
   }
 }

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_remote.data.dart';
+import 'package:iroyal/app/modules/login/data/datasources/login_remote_data.dart';
 import 'package:iroyal/app/modules/login/data/models/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
 import 'package:iroyal/app/modules/login/domain/entities/login_params.dart';
@@ -47,6 +47,7 @@ class LoginRepositoryImpl implements LoginRepository {
     required String password,
     required String scope,
     required String fcmToken,
+    required String deviceId,
   }) async {
     try {
       final r = await localData.getLoginParams(
@@ -57,6 +58,7 @@ class LoginRepositoryImpl implements LoginRepository {
         password: password,
         scope: scope,
         fcmToken: fcmToken,
+        deviceId: deviceId,
       );
       return Right(r);
     } on LocalDataException {
@@ -80,6 +82,7 @@ class LoginRepositoryImpl implements LoginRepository {
           password: loginParams['password'],
           scope: loginParams['scope'],
           fcmToken: loginParams['fcm_token'],
+          deviceId: loginParams['device_id'],
         ),
       );
       await localData.saveLoginToken(

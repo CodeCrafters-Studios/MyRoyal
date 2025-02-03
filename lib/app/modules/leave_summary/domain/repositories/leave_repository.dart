@@ -1,8 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/leave_approval_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/cancel_form_leave_entity.dart';
+import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
@@ -14,10 +13,9 @@ abstract class LeaveRepository {
   Future<Either<Failure, CreateFormLeaveEntity>> createFormLeave(
     Map<String, dynamic> createFormLeaveParams,
   );
-  Future<Either<Failure, CancelFormLeaveEntity>> cancelFormLeave(
-    Map<String, dynamic> cancelFormLeaveParams,
+  Future<Either<Failure, ActionFormLeaveEntity>> actionFormLeave(
+    Map<String, dynamic> actionFormLeaveParams,
   );
-  Future<Either<Failure, List<LeaveApprovalModel>>> getLeaveApproval();
   Future<Either<Failure, CreateFormPermitEntity>> createFormPermit(
     Map<String, dynamic> createFormPermitParams,
   );
