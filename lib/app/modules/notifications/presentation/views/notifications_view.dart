@@ -94,10 +94,18 @@ class NotificationsViewImpl extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           final notification = controller.notificationsDataList[index];
+          final scheduledDate = notification.createdAt
+                  .isBefore(DateTime.now().subtract(Duration(days: 1)))
+              ? (notification.createdAt
+                      .isBefore(DateTime.now().subtract(Duration(days: 2)))
+                  ? DateFormat('dd MMM yyyy').format(notification.createdAt)
+                  : 'yesterday')
+              : DateFormat('hh:mm a').format(notification.createdAt);
+
           return NotificationsCard(
             title: notification.title,
             description: notification.body,
-            date: DateFormat('hh:mm a').format(notification.createdAt),
+            date: scheduledDate,
             isRead: notification.isRead,
             onTap: () => controller.onTapNotification(notification.id),
           );

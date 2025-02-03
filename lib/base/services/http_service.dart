@@ -288,24 +288,22 @@ class HttpService extends getx.GetxService {
   void catchError(String message, {bool showPopUp = true}) {
     if (showPopUp) {
       if (message.isNotEmpty) {
-        AppDialogImpl().showErrorDialog(
-          title: 'Error System',
-          description: message,
-        );
-      } else if (message == "Error System") {
-        AppDialogImpl().showErrorDialog(
-          title: 'System is Under Maintenance',
-          description: message,
-        );
-      } else if (message == "Unauthorized") {
-        AppDialogImpl().showErrorDialog(
-          title: message,
-          onPress: () async {
-            await appStorage.delete(CACHE_ACCESS_TOKEN);
-            await appStorage.delete(CACHE_REFRESH_TOKEN);
-            Get.offAllNamed(Routes.LOGIN);
-          },
-        );
+        if (message == "Unauthenticated.") {
+          AppDialogImpl().showErrorDialog(
+            title: message,
+            description: 'You need to login again, sorry for the inconvenience',
+            onPress: () async {
+              await appStorage.delete(CACHE_ACCESS_TOKEN);
+              await appStorage.delete(CACHE_REFRESH_TOKEN);
+              Get.offAllNamed(Routes.LOGIN);
+            },
+          );
+        } else {
+          AppDialogImpl().showErrorDialog(
+            title: 'System is Under Maintenance',
+            description: message,
+          );
+        }
       } else {
         AppDialogImpl().showErrorDialog(title: 'Failed', description: message);
       }
