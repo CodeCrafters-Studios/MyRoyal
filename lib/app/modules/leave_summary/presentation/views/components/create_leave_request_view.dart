@@ -32,6 +32,7 @@ class CreateLeaveRequestView extends StatelessWidget {
             _buildLabel('Reason'),
             5.verticalSpace,
             InputPrimary(
+              controller: controller.reasonText,
               maxLength: 1000,
               maxLines: 5,
               color: white,

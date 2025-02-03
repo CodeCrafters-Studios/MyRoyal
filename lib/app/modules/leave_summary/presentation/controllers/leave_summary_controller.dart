@@ -42,6 +42,7 @@ class LeaveSummaryController extends GetxController {
   late final TabController tabLeaveController;
   late final TabController tabPermitController;
   TextEditingController search = TextEditingController();
+  TextEditingController reasonText = TextEditingController();
 
   final config = CalendarDatePicker2Config(
     firstDate: DateTime.now().add(const Duration(days: 3)),
@@ -156,10 +157,10 @@ class LeaveSummaryController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void dispose() {
+    super.dispose();
     tabLeaveController.dispose();
     tabPermitController.dispose();
-    super.onClose();
   }
 
   Future<void> onRefresh() async {
