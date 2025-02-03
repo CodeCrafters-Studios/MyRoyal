@@ -202,28 +202,28 @@ class LoginController extends GetxController {
     isLoading(true);
     final r = await getLoginParams(
       /* -- PRODUCTION -- */
-
-      // ParamsLogin(
-      //   grantType: 'password',
-      //   clientId: '9d6240c2-9c30-4b5e-97d2-c0a57a461190 ',
-      //   clientSecret: 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W',
-      //   username: username(),
-      //   password: password(),
-      //   scope: '*',
-      //   fcmToken: cacheFcmToken.toString(),
-      // ),
-
-      /* -- DEVELOPMENT -- */
       ParamsLogin(
         grantType: 'password',
-        clientId: '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
-        clientSecret: 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
+        clientId: '9d6240c2-9c30-4b5e-97d2-c0a57a461190',
+        clientSecret: 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W',
         username: username(),
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
         deviceId: deviceId.toString(),
       ),
+
+      /* -- DEVELOPMENT -- */
+      // ParamsLogin(
+      //   grantType: 'password',
+      //   clientId: '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
+      //   clientSecret: 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
+      //   username: username(),
+      //   password: password(),
+      //   scope: '*',
+      //   fcmToken: cacheFcmToken.toString(),
+      //   deviceId: deviceId.toString(),
+      // ),
     );
     r.fold((l) {
       isLoading(false);
