@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
 import 'package:iroyal/app/modules/notifications/data/models/tap_notification_data_model.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
-import 'package:iroyal/app/modules/notifications/domain/entities/notification_dummy.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/tap_notification_entities.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
@@ -12,15 +11,11 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsController extends GetxController {
   NotificationsController(
       {required this.getNotifications, required this.tapNotification});
-
-  var filterNewNotif = <NotificationsDummy>[].obs;
-  var notifDummy = <NotificationsDummy>[].obs;
 
   RxBool isLoading = false.obs;
   RxBool isLoadMore = false.obs;
@@ -40,8 +35,10 @@ class NotificationsController extends GetxController {
 
   final Rx<TapNotificationEntities> tapNotificationData =
       const TapNotificationEntities(
-              0, '', TapNotificationDataModel(0, '', 'route'))
-          .obs;
+    0,
+    '',
+    TapNotificationDataModel(0, '', 'route'),
+  ).obs;
 
   final GetNotifications getNotifications;
   final TapNotification tapNotification;
@@ -53,12 +50,15 @@ class NotificationsController extends GetxController {
     notificationsDataList.value = notificationsData()
         .data
         .data
-        .map((e) => NotificationDataListEntities(
+        .map(
+          (e) => NotificationDataListEntities(
             id: e.id,
             createdAt: e.createdAt,
             body: e.body,
             title: e.title,
-            isRead: e.isRead))
+            isRead: e.isRead,
+          ),
+        )
         .toList();
     scrollController.addListener(_scrollListener);
 
@@ -175,10 +175,22 @@ class NotificationsController extends GetxController {
         AppUtils.logApp('Success');
         notificationsDataList.clear();
         notificationsDataList.value = [];
-        _getNotifications();
-        tapNotificationData.value = r;
+        notificationsData.value = const NotificationEntities(
+          code: 0,
+          message: '',
+          data: NotificationDataModel(
+            currentPage: 0,
+            data: [],
+            totalPage: 0,
+          ),
+        );
         final route = tapNotificationData.value.data.route;
         final uri = Uri.parse(route);
+
+        if (route.isNotEmpty) {
+          _getNotifications();
+          tapNotificationData.value = r;
+        }
 
         if (route.toString().contains('https://')) {
           if (!await launchUrl(uri)) {
@@ -208,7 +220,7 @@ class NotificationsController extends GetxController {
               Get.toNamed(Routes.VISIT);
               break;
             default:
-              Get.to(() => const ComingSoonScreen());
+              null;
               break;
           }
         }
