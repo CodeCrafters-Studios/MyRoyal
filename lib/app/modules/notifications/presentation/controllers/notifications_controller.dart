@@ -37,7 +37,7 @@ class NotificationsController extends GetxController {
       const TapNotificationEntities(
     0,
     '',
-    TapNotificationDataModel(0, '', 'route'),
+    TapNotificationDataModel(0, '', ''),
   ).obs;
 
   final GetNotifications getNotifications;
@@ -162,8 +162,6 @@ class NotificationsController extends GetxController {
   }
 
   void onTapNotification(int notificationId) async {
-    isLoading.value = true;
-
     final result = await tapNotification(notificationId);
 
     result.fold(
@@ -171,57 +169,61 @@ class NotificationsController extends GetxController {
         AppUtils.logApp('Error');
       },
       (r) async {
-        isLoading.value = false;
         AppUtils.logApp('Success');
-        notificationsDataList.clear();
-        notificationsDataList.value = [];
-        notificationsData.value = const NotificationEntities(
-          code: 0,
-          message: '',
-          data: NotificationDataModel(
-            currentPage: 0,
-            data: [],
-            totalPage: 0,
-          ),
-        );
+        tapNotificationData.value = r;
+
         final route = tapNotificationData.value.data.route;
         final uri = Uri.parse(route);
 
-        if (route.isNotEmpty) {
-          _getNotifications();
-          tapNotificationData.value = r;
-        }
+        AppUtils.logApp('ROUTE ${tapNotificationData.value.data.route}');
 
-        if (route.toString().contains('https://')) {
-          if (!await launchUrl(uri)) {
-            throw Exception('Could not launch $uri');
-          }
-        } else {
-          switch (route) {
-            case 'My Teams':
-              Get.toNamed(Routes.MY_TEAMS);
-              break;
-            case 'Webtel':
-              Get.toNamed(Routes.WEBTEL);
-              break;
-            case 'Tracking Documents':
-              Get.toNamed(Routes.TRACKING_DOCUMENT);
-              break;
-            case 'Tasks':
-              Get.toNamed(Routes.TASKS);
-              break;
-            case 'Payroll':
-              Get.toNamed(Routes.PIN);
-              break;
-            case 'Dashboard':
-              Get.toNamed(Routes.DASHBOARD);
-              break;
-            case 'Visit':
-              Get.toNamed(Routes.VISIT);
-              break;
-            default:
-              null;
-              break;
+        if (route.isNotEmpty || route != '') {
+          AppUtils.logApp('HERE');
+
+          notificationsDataList.clear();
+          notificationsDataList.value = [];
+          notificationsData.value = const NotificationEntities(
+            code: 0,
+            message: '',
+            data: NotificationDataModel(
+              currentPage: 0,
+              data: [],
+              totalPage: 0,
+            ),
+          );
+          _getNotifications();
+
+          if (route.toString().contains('https://')) {
+            if (!await launchUrl(uri)) {
+              throw Exception('Could not launch $uri');
+            }
+          } else {
+            switch (route) {
+              case 'My Teams':
+                Get.toNamed(Routes.MY_TEAMS);
+                break;
+              case 'Webtel':
+                Get.toNamed(Routes.WEBTEL);
+                break;
+              case 'Tracking Documents':
+                Get.toNamed(Routes.TRACKING_DOCUMENT);
+                break;
+              case 'Tasks':
+                Get.toNamed(Routes.TASKS);
+                break;
+              case 'Payroll':
+                Get.toNamed(Routes.PIN);
+                break;
+              case 'Dashboard':
+                Get.toNamed(Routes.DASHBOARD);
+                break;
+              case 'Visit':
+                Get.toNamed(Routes.VISIT);
+                break;
+              default:
+                null;
+                break;
+            }
           }
         }
       },

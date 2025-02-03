@@ -71,6 +71,29 @@ class CreatePermitRequestView extends StatelessWidget {
               controller.selectedStartTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          timePickerTheme: TimePickerThemeData(
+                            backgroundColor: white,
+                            dayPeriodTextColor: black,
+                            dayPeriodColor: primary.withOpacity(0.1),
+                            dayPeriodShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          datePickerTheme: DatePickerThemeData(
+                            dividerColor: Colors.transparent,
+                          ),
+                          colorScheme: ColorScheme.light(primary: primary),
+                          textButtonTheme: TextButtonThemeData(
+                            style:
+                                TextButton.styleFrom(foregroundColor: primary),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     context: context,
                     initialTime: TimeOfDay.now(),
                     initialEntryMode: TimePickerEntryMode.dial);
@@ -106,6 +129,29 @@ class CreatePermitRequestView extends StatelessWidget {
               controller.selectedEndTimePermitFormatted.value.isEmpty,
               () async {
                 final TimeOfDay? time = await showTimePicker(
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          timePickerTheme: TimePickerThemeData(
+                            backgroundColor: white,
+                            dayPeriodTextColor: black,
+                            dayPeriodColor: primary.withOpacity(0.1),
+                            dayPeriodShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          datePickerTheme: DatePickerThemeData(
+                            dividerColor: Colors.transparent,
+                          ),
+                          colorScheme: ColorScheme.light(primary: primary),
+                          textButtonTheme: TextButtonThemeData(
+                            style:
+                                TextButton.styleFrom(foregroundColor: primary),
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
                     context: context,
                     initialTime: TimeOfDay.now(),
                     initialEntryMode: TimePickerEntryMode.dial);

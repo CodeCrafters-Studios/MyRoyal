@@ -508,7 +508,7 @@ class AllPermitRequestView extends StatelessWidget {
                             : const Center(
                                 child: NoResultFoundWidget(),
                               ),
-                controller.leaveData.isEmpty ? emptyBox : _buildSearch(),
+                controller.permitData.isEmpty ? emptyBox : _buildSearch(),
               ],
             ),
     );
