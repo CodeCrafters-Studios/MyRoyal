@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/create_leave_request_view.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/views/components/no_leaves_available.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -96,7 +97,14 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
                 controller: controller.tabLeaveController,
                 children: [
                   AllLeaveRequestView(controller: controller),
-                  CreateLeaveRequestView(controller: controller),
+                  controller
+                              .leaveModelRes()
+                              .data!
+                              .yearlyLeaveCount!
+                              .remaining ==
+                          0
+                      ? NoLeavesAvailable()
+                      : CreateLeaveRequestView(controller: controller),
                 ],
               ),
             ),

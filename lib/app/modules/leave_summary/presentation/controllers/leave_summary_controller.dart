@@ -151,7 +151,7 @@ class LeaveSummaryController extends GetxController {
     tabPermitController = TabController(length: 2, vsync: TicckerProvider());
     await _getCacheUser();
     _getLeaveSummary();
-    _getPermitSummary();
+    // _getPermitSummary();
     _getSubtituteEmployees();
     super.onInit();
   }
@@ -312,6 +312,7 @@ class LeaveSummaryController extends GetxController {
       selectedSubtituteEmployee.value = '';
       selectedSubtituteEmployeeId.value = 0;
       reason.value = '';
+      reasonText.text = '';
       _getLeaveSummary();
       Get.back();
       AppDialogImpl()

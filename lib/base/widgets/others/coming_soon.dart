@@ -13,6 +13,7 @@ class ComingSoonScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      showBackground: false,
       showIconBack: enableBackImpl ?? true,
       title: 'Coming Soon',
       child: Column(
