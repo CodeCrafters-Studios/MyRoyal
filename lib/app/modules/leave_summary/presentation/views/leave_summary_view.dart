@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
+import 'package:iroyal/app/modules/leave_summary/presentation/views/permit_view.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
@@ -76,10 +76,9 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
               backgroundImage: 'assets/images/img_bg_request_leave.png',
               iconAsset: 'assets/icons/ic_request_leave.svg',
               isLateCard: true,
-              onTap: () => Get.to(() => const ComingSoonScreen()),
-              // Get.to(
-              //   () => PermitView(),
-              // ),
+              onTap: () => Get.to(
+                () => PermitView(),
+              ),
             ),
             20.verticalSpace,
             LeavesViewImpl(controller: controller),

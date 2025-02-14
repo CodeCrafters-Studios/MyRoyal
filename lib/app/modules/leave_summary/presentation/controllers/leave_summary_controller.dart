@@ -42,7 +42,8 @@ class LeaveSummaryController extends GetxController {
   late final TabController tabLeaveController;
   late final TabController tabPermitController;
   TextEditingController search = TextEditingController();
-  TextEditingController reasonText = TextEditingController();
+  TextEditingController reasonLeaveText = TextEditingController();
+  TextEditingController reasonPermitText = TextEditingController();
 
   final config = CalendarDatePicker2Config(
     firstDate: DateTime.now().add(const Duration(days: 3)),
@@ -151,7 +152,7 @@ class LeaveSummaryController extends GetxController {
     tabPermitController = TabController(length: 2, vsync: TicckerProvider());
     await _getCacheUser();
     _getLeaveSummary();
-    // _getPermitSummary();
+    _getPermitSummary();
     _getSubtituteEmployees();
     super.onInit();
   }
@@ -312,7 +313,7 @@ class LeaveSummaryController extends GetxController {
       selectedSubtituteEmployee.value = '';
       selectedSubtituteEmployeeId.value = 0;
       reason.value = '';
-      reasonText.text = '';
+      reasonLeaveText.text = '';
       _getLeaveSummary();
       Get.back();
       AppDialogImpl()
@@ -467,6 +468,7 @@ class LeaveSummaryController extends GetxController {
     selectedEndDatePermit.value = DateTime(0);
     selectedStartTime.value = TimeOfDay(hour: 0, minute: 0);
     selectedEndTime.value = TimeOfDay(hour: 0, minute: 0);
+    reasonPermitText.text = '';
 
     Get.back();
   }

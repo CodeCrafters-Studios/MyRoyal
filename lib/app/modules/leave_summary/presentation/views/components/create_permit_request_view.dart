@@ -35,6 +35,7 @@ class CreatePermitRequestView extends StatelessWidget {
             _buildLabel('Reason'),
             5.verticalSpace,
             InputPrimary(
+              controller: controller.reasonPermitText,
               maxLength: 1000,
               maxLines: 5,
               color: white,
@@ -51,6 +52,7 @@ class CreatePermitRequestView extends StatelessWidget {
             const Spacer(flex: 2),
             _buildApplyButton(),
             const Spacer(flex: 3),
+            20.verticalSpace,
           ],
         ),
       ),

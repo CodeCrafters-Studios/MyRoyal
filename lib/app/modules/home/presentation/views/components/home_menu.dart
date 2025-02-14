@@ -20,16 +20,14 @@ class HomeMenu extends StatelessWidget {
       onTap: () {
         switch (menu.name) {
           case 'Dashboard':
-            Get.to(() => const ComingSoonScreen());
-            // Get.toNamed(Routes.DASHBOARD);
+            Get.toNamed(Routes.DASHBOARD);
             break;
           case 'Tasks':
             Get.to(() => const ComingSoonScreen());
             // Get.toNamed(Routes.TASKS);
             break;
           case 'Payroll':
-            Get.to(() => const ComingSoonScreen());
-            // Get.toNamed(Routes.CHECK_PASSWORD);
+            Get.toNamed(Routes.CHECK_PASSWORD);
             break;
           case 'Visit':
             Get.to(() => const ComingSoonScreen());
