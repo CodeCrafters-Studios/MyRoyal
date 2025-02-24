@@ -16,7 +16,7 @@ class HelpAndSupportController extends GetxController {
     PopularQuestions(
       title: 'Is it possible to access two accounts on different devices?',
       description:
-          'Yes, it is possible to access two accounts on different devices. Each account can be logged in separately on its respective device without any issues.',
+          'No, to ensure security and user privacy, we enforce a One Device, One Account system.',
     ),
     PopularQuestions(
       title: 'Can I change my password?',

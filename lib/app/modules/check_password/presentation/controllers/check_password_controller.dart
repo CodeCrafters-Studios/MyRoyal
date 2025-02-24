@@ -70,10 +70,11 @@ class CheckPasswordController extends GetxController {
   }
 
   void gotoForgotPassword() {
-    appDialog.showInfoDialog(
+    appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description:
-          'Please contact the IT Department\nfor further assistance.\n\nCall 0811-2465-515 or 0811-2000-5071',
+      description: 'Please contact the IT Department\nfor further assistance.',
+      phoneNumber: '0811-2465-515',
+      phoneNumber2: '0811-2000-5071',
       textButton: 'Continue',
     );
   }

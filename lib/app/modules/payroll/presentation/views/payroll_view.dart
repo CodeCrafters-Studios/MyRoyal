@@ -77,7 +77,7 @@ class PayrollView extends GetView<PayrollController> {
                 .copyWith(fontWeight: FontWeight.w400, color: black),
           ),
           TextSpan(
-            text: '\nTGL_LAHIR-NIK KARYAWAN',
+            text: '\nddmmyyyy-nik karyawan',
             style: TS.bodyMedium
                 .copyWith(fontWeight: FontWeight.w600, color: black),
           ),

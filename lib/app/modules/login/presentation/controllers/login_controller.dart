@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:android_id/android_id.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/login/data/models/login_params.dart';
@@ -106,9 +108,14 @@ class LoginController extends GetxController {
     final appVersion =
         _getExtendedVersionNumber(deviceInfo.packageInfo.version);
 
-    // Get Device Id
+    // Get Device Id iOS
     final info = await deviceInfo.info();
-    await appStorage.write('device-id', info.id);
+
+    // Get Android Id
+    final String? androidId = await AndroidId().getId();
+
+    final deviceId = Platform.isAndroid ? androidId.toString() : info.id;
+    await appStorage.write('device-id', deviceId);
 
     // Get the required min version from Firebase Remote Config
     final requiredMinVersion = _getExtendedVersionNumber(
@@ -129,6 +136,8 @@ class LoginController extends GetxController {
     if (appVersion < requiredMinVersion) {
       _showUpdateVersionDialog(forceUpdateVersion);
     } else if (appVersion < recommendedMinVersion) {
+      _showUpdateVersionDialog(forceUpdateVersion);
+    } else if (forceUpdateVersion) {
       _showUpdateVersionDialog(forceUpdateVersion);
     } else {
       emptyBox;
@@ -371,20 +380,22 @@ class LoginController extends GetxController {
 
   // Navigation
   void gotoForgotPassword() {
-    appDialog.showInfoDialog(
+    appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description:
-          'Please contact the IT Department\nfor further assistance.\n\nCall 0811-2465-515 or 0811-2000-5071',
+      description: 'Please contact the IT Department\nfor further assistance.',
+      phoneNumber: '0811-2465-515',
+      phoneNumber2: '0811-2000-5071',
       textButton: 'Continue',
     );
   }
 
   // Dont have an Account
   void dontHaveAnAccount() {
-    appDialog.showInfoDialog(
+    appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description:
-          'Please contact the IT Department\nfor further assistance.\n\nCall 021-2345-6789',
+      description: 'Please contact the IT Department\nfor further assistance.',
+      phoneNumber: '0811-2465-515',
+      phoneNumber2: '0811-2000-5071',
       textButton: 'Continue',
     );
   }

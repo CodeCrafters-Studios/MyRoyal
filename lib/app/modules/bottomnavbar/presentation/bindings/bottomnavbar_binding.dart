@@ -80,6 +80,7 @@ class BottomnavbarBinding extends Bindings {
           appDialog: Get.find<AppDialogImpl>(),
           deviceInfo: Get.find<DeviceInfo>(),
           firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
+          appStorage: Get.find(),
         ),
       )
       ..lazyPut<HomeLocalDataSourceImpl>(

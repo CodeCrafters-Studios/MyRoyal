@@ -29,6 +29,7 @@ class DeviceInfo extends GetxService {
         appVersion: packageInfo.version,
         buildNumber: packageInfo.buildNumber,
         os: 'Android',
+        display: dInfo.data['display'],
       );
     } else {
       final dInfo = await deviceInfoPlugin.iosInfo;
@@ -45,6 +46,7 @@ class DeviceInfo extends GetxService {
         appVersion: packageInfo.version,
         buildNumber: packageInfo.buildNumber,
         os: 'iOS',
+        display: dInfo.data['display'],
       );
     }
   }
@@ -63,6 +65,8 @@ class DeviceInfoModel {
   String appVersion;
   String buildNumber;
   String os;
+  String display;
+
   DeviceInfoModel({
     required this.board,
     required this.brand,
@@ -76,5 +80,24 @@ class DeviceInfoModel {
     required this.appVersion,
     required this.buildNumber,
     required this.os,
+    required this.display,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'board': board,
+      'brand': brand,
+      'device': device,
+      'hardware': hardware,
+      'host': host,
+      'id': id,
+      'manufacturer': manufacturer,
+      'model': model,
+      'osVersion': osVersion,
+      'appVersion': appVersion,
+      'buildNumber': buildNumber,
+      'os': os,
+      'display': display,
+    };
+  }
 }

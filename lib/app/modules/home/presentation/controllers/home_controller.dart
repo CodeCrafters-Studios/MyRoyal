@@ -14,6 +14,7 @@ import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
@@ -23,6 +24,7 @@ class HomeController extends GetxController {
     required this.deviceInfo,
     required this.firebaseRemoteConfig,
     required this.appDialog,
+    required this.appStorage,
   });
 
   String userState = '';
@@ -108,6 +110,7 @@ class HomeController extends GetxController {
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
+  final AppStorage appStorage;
 
   @override
   void onInit() {
@@ -125,6 +128,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
+    _showEventDialog();
   }
 
   void checkVersion() async {
@@ -221,7 +225,7 @@ class HomeController extends GetxController {
     final homeMenu = <HomeMenu>[];
 
     final mappedMenus = getAllMenu.map((menu) {
-      return HomeMenu(menu: menu);
+      return HomeMenu(menu: menu, appStorage: appStorage);
     }).toList();
 
     if (userData().data.position == 'Staff') {
@@ -280,5 +284,10 @@ class HomeController extends GetxController {
         getNewNotifications.where((notif) => notif.isRead == false).toList());
 
     return filterNewNotif;
+  }
+
+  void _showEventDialog() {
+    appDialog.showEventDialog(
+        imagePath: 'assets/images/img_banner_ramadhan_kareem.png');
   }
 }

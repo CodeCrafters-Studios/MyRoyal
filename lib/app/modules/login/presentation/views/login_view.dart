@@ -49,7 +49,7 @@ class LoginView extends GetView<LoginController> {
                       hint: 'Username',
                       onChanged: (value) => controller.setLoginValue(
                         FormLoginValue.username,
-                        value,
+                        value.toLowerCase(),
                       ),
                       validation: (value) =>
                           value?.isEmpty ?? false ? 'Cannot be empty' : null,
