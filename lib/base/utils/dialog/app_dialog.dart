@@ -8,6 +8,7 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary_outlined.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -861,28 +862,31 @@ class AppDialogImpl implements AppDialog {
       Function()? onPress}) async {
     await Get.dialog(
       Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: REdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                imagePath.toString(),
-                height: 500.h,
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath.toString(),
+              height: 500.h,
+              width: width,
+            ),
+            15.verticalSpace,
+            InkWellTap(
+              radius: Corners.xxl,
+              color: Colors.transparent,
+              onTap: () => Get.back(),
+              child: Image.asset(
+                'assets/images/img_icon_close_banner.png',
+                height: 48.h,
                 width: width,
               ),
-              15.verticalSpace,
-              InkWell(
-                onTap: () => Get.back(),
-                child: Image.asset(
-                  'assets/images/img_icon_close_banner.png',
-                  height: 48.h,
-                  width: width,
-                ),
-              )
-            ],
-          )),
+            )
+          ],
+        ),
+      ),
       barrierDismissible: false,
     );
   }

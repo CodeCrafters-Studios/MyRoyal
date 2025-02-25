@@ -11,14 +11,6 @@ class CreateFormLeaveParamsEntity extends Equatable {
   final List<String> dateLeave;
   final String reason;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'substitute_id': substituteId,
-      'date_leave': dateLeave,
-      'reason': reason,
-    };
-  }
-
   @override
   List<Object?> get props => [substituteId, dateLeave, reason];
 }

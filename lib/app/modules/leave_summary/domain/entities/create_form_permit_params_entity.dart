@@ -12,17 +12,6 @@ class CreateFormPermitParamsEntity extends Equatable {
 
   final String typeCode, startDate, endDate, startTime, endTime, reason;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'type': typeCode,
-      'startdate': startDate,
-      'enddate': endDate,
-      'starttime': startTime,
-      'endtime': endTime,
-      'reason': reason,
-    };
-  }
-
   @override
   List<Object?> get props => [
         typeCode,

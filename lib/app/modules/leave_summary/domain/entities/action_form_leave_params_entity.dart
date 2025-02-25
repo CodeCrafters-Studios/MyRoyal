@@ -15,16 +15,6 @@ class ActionFormLeaveParamsEntity extends Equatable {
     required this.typeSubmission,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'type': type,
-      'level': level,
-      'code_no': codeNo,
-      'feedback': feedback,
-      'type_submission': typeSubmission,
-    };
-  }
-
   @override
   List<Object?> get props => [
         type,

@@ -85,15 +85,31 @@ class HomeController extends GetxController {
     // ),
   ];
 
-  List<HomeSlider> homeSLider = <HomeSlider>[
+  List<HomeSlider> homeSlider = <HomeSlider>[
     const HomeSlider(
-      link: 'assets/images/img_banner1.jpeg',
+      title: 'IT Governance (Tata Kelola Teknologi Informasi)',
+      subtitle:
+          "IT Governance (Tata Kelola Teknologi Informasi) adalah proses yang mengatur penggunaan teknologi informasi (TI) di dalam suatu organisasi atau perusahaan. IT Governance bertujuan untuk memastikan bahwa TI digunakan secara efektif, efisien, dan aman, serta sesuai dengan tujuan bisnis perusahaan.",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/qXKdfeGxJx1mCo4J-image-2024-12-11-211422472.png',
+      url:
+          'https://wiki.royalcorp.co.id/shelves/it-governance-tata-kelola-teknologi-informasi',
     ),
     const HomeSlider(
-      link: 'assets/images/img_banner2.jpeg',
+      title: 'HRMS',
+      subtitle:
+          "a comprehensive guide for hrms project writen by HRMS Member and Developer",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/pNVIzyfjBXOStUgw-ras-logo.png',
+      url: 'https://wiki.royalcorp.co.id/shelves/hrms',
     ),
     const HomeSlider(
-      link: 'assets/images/img_banner3.jpeg',
+      title: 'IT Infrastructure & Support',
+      subtitle:
+          "Comprehensive knowledge sharing on IT Infrastructure & Support.",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/6nnfCLWOnOSFNETe-infra-support.jpeg',
+      url: 'https://wiki.royalcorp.co.id/shelves/it-infrastructure-support',
     ),
   ];
 
@@ -119,7 +135,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    _initial();
+    await _getUserData();
+    _getAllMenu();
+    await _getNotifications();
+    _filterNewNotifications(notificationsData().data.data);
+    checkVersion();
   }
 
   void _initial() async {
@@ -288,6 +308,15 @@ class HomeController extends GetxController {
 
   void _showEventDialog() {
     appDialog.showEventDialog(
-        imagePath: 'assets/images/img_banner_ramadhan_kareem.png');
+      imagePath: 'assets/images/img_banner_ramadhan_kareem.png',
+    );
+  }
+
+  Future<void> launchArticle(String url) async {
+    if (!await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

@@ -1,14 +1,14 @@
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
 
-class CreateFormParamsModel extends CreateFormLeaveParamsEntity {
-  const CreateFormParamsModel({
+class CreateFormLeaveParamsModel extends CreateFormLeaveParamsEntity {
+  const CreateFormLeaveParamsModel({
     required super.substituteId,
     required super.dateLeave,
     required super.reason,
   });
 
-  factory CreateFormParamsModel.fromJson(Map<String, dynamic> json) =>
-      CreateFormParamsModel(
+  factory CreateFormLeaveParamsModel.fromJson(Map<String, dynamic> json) =>
+      CreateFormLeaveParamsModel(
         substituteId: json["substitute_id"],
         dateLeave: List<String>.from(json["date_leave"].map((x) => x)),
         reason: json["reason"],

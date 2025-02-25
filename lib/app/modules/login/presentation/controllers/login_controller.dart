@@ -11,6 +11,7 @@ import 'package:iroyal/app/modules/login/domain/usecases/get_login_param.dart';
 import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
@@ -34,6 +35,7 @@ class LoginController extends GetxController {
     required this.authBiometrics,
     required this.deviceInfo,
     required this.firebaseRemoteConfig,
+    required this.envConfig,
   });
 
   final FocusNode focusNodeUsername = FocusNode();
@@ -68,6 +70,7 @@ class LoginController extends GetxController {
   final AuthBiometrics authBiometrics;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
+  final EnvironmentConfig envConfig;
 
   @override
   void onInit() async {
@@ -210,29 +213,20 @@ class LoginController extends GetxController {
 
     isLoading(true);
     final r = await getLoginParams(
-      /* -- PRODUCTION -- */
       ParamsLogin(
         grantType: 'password',
-        clientId: '9d6240c2-9c30-4b5e-97d2-c0a57a461190',
-        clientSecret: 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W',
+        clientId: envConfig == EnvironmentConfig.production()
+            ? '9d6240c2-9c30-4b5e-97d2-c0a57a461190'
+            : '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
+        clientSecret: envConfig == EnvironmentConfig.production()
+            ? 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W'
+            : 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
         username: username(),
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
         deviceId: deviceId.toString(),
       ),
-
-      /* -- DEVELOPMENT -- */
-      // ParamsLogin(
-      //   grantType: 'password',
-      //   clientId: '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
-      //   clientSecret: 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
-      //   username: username(),
-      //   password: password(),
-      //   scope: '*',
-      //   fcmToken: cacheFcmToken.toString(),
-      //   deviceId: deviceId.toString(),
-      // ),
     );
     r.fold((l) {
       isLoading(false);
