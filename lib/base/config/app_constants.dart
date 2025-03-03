@@ -29,3 +29,6 @@ const CACHE_FAVORITES = 'cache-favorites';
 const CACHE_ONBOARDING_STEP = 'cache-onboarding-step';
 const CACHE_LANGUAGE = 'cache-language';
 const CACHE_USER = 'cache-user';
+const String tokenID = 'MdNnMxPdVmCvMdC7B05IWAOSKpY6CpSs';
+const String tokenSecret = 'UvFv9ywAfH5yJ4hyF1l6q45A8ARehZxq';
+const String baseUrlRoyalWiki = 'https://wiki.royalcorp.co.id/';

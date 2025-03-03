@@ -11,7 +11,8 @@ import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.dart';
+import 'package:iroyal/app/modules/home/data/repositories/home_repository_impl.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
@@ -81,6 +82,7 @@ class BottomnavbarBinding extends Bindings {
           deviceInfo: Get.find<DeviceInfo>(),
           firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
           appStorage: Get.find(),
+          getArticles: Get.find<GetArticlesUsecase>(),
         ),
       )
       ..lazyPut<HomeLocalDataSourceImpl>(
@@ -106,6 +108,11 @@ class BottomnavbarBinding extends Bindings {
       )
       ..lazyPut(
         () => GetCacheUser(
+          Get.find<HomeRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetArticlesUsecase(
           Get.find<HomeRepositoryImpl>(),
         ),
       )

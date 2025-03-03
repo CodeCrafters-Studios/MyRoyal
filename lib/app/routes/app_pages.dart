@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/approval/presentation/bindings/approval_binding.dart';
 import '../modules/approval/presentation/views/approval_view.dart';
+import '../modules/articles/presentation/bindings/articles_binding.dart';
+import '../modules/articles/presentation/views/articles_view.dart';
 import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
@@ -205,6 +207,11 @@ class AppPages {
       name: _Paths.CHECK_PASSWORD,
       page: () => const CheckPasswordView(),
       binding: CheckPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.ARTICLES,
+      page: () => const ArticlesView(),
+      binding: ArticlesBinding(),
     ),
   ];
 }

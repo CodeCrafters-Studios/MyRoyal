@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/domain/entities/articles_entites.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
 import 'package:iroyal/app/modules/notifications/data/models/notification_data_list_model.dart';
@@ -25,6 +27,7 @@ class HomeController extends GetxController {
     required this.firebaseRemoteConfig,
     required this.appDialog,
     required this.appStorage,
+    required this.getArticles,
   });
 
   String userState = '';
@@ -87,6 +90,7 @@ class HomeController extends GetxController {
 
   List<HomeSlider> homeSlider = <HomeSlider>[
     const HomeSlider(
+      id: '8',
       title: 'IT Governance (Tata Kelola Teknologi Informasi)',
       subtitle:
           "IT Governance (Tata Kelola Teknologi Informasi) adalah proses yang mengatur penggunaan teknologi informasi (TI) di dalam suatu organisasi atau perusahaan. IT Governance bertujuan untuk memastikan bahwa TI digunakan secara efektif, efisien, dan aman, serta sesuai dengan tujuan bisnis perusahaan.",
@@ -96,6 +100,7 @@ class HomeController extends GetxController {
           'https://wiki.royalcorp.co.id/shelves/it-governance-tata-kelola-teknologi-informasi',
     ),
     const HomeSlider(
+      id: '7',
       title: 'HRMS',
       subtitle:
           "a comprehensive guide for hrms project writen by HRMS Member and Developer",
@@ -104,6 +109,7 @@ class HomeController extends GetxController {
       url: 'https://wiki.royalcorp.co.id/shelves/hrms',
     ),
     const HomeSlider(
+      id: '2',
       title: 'IT Infrastructure & Support',
       subtitle:
           "Comprehensive knowledge sharing on IT Infrastructure & Support.",
@@ -120,9 +126,11 @@ class HomeController extends GetxController {
           message: '',
           data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
       .obs;
+  Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
 
   final GetUser getUser;
   final GetNotifications getNotifications;
+  final GetArticlesUsecase getArticles;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
@@ -149,6 +157,7 @@ class HomeController extends GetxController {
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
     _showEventDialog();
+    // _getArticles();
   }
 
   void checkVersion() async {
@@ -312,11 +321,19 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> launchArticle(String url) async {
-    if (!await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // Future<void> _getArticles() async {
+  //   isLoading.value = true;
+
+  //   final result = await getArticles();
+
+  //   result.fold(
+  //     (l) {
+  //       isLoading.value = false;
+  //     },
+  //     (r) {
+  //       isLoading.value = false;
+  //       articlesData.value = r;
+  //     },
+  //   );
+  // }
 }

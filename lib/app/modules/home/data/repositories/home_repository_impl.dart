@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
+import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/repositories/home_repository.dart';
@@ -31,6 +32,16 @@ class HomeRepositoryImpl implements HomeRepository {
       return Right(r);
     } on CacheException {
       return const Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, ArticlesModel>> getArticles() async {
+    try {
+      final r = await remoteData.getArticles();
+      return Right(r);
+    } on ApiException {
+      return const Left(ServerFailure());
     }
   }
 }

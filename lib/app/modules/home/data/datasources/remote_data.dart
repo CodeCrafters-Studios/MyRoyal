@@ -1,3 +1,4 @@
+import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
@@ -6,6 +7,7 @@ import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class HomeRemoteDataSource {
   Future<UserModel> getUser();
+  Future<ArticlesModel> getArticles();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -33,6 +35,21 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     } catch (e, stackTrace) {
       AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
       rethrow;
+    }
+  }
+
+  @override
+  Future<ArticlesModel> getArticles() async {
+    try {
+      final r = await httpService.customRequest(
+        withToken: true,
+        enpoint: 'api/shelves',
+        method: Method.GET,
+      );
+      final articlesResponse = ArticlesModel.fromJson(r);
+      return articlesResponse;
+    } catch (e) {
+      throw ApiException('$e');
     }
   }
 }

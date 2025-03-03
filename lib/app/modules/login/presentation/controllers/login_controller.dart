@@ -140,8 +140,6 @@ class LoginController extends GetxController {
       _showUpdateVersionDialog(forceUpdateVersion);
     } else if (appVersion < recommendedMinVersion) {
       _showUpdateVersionDialog(forceUpdateVersion);
-    } else if (forceUpdateVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion);
     } else {
       emptyBox;
     }
@@ -215,10 +213,10 @@ class LoginController extends GetxController {
     final r = await getLoginParams(
       ParamsLogin(
         grantType: 'password',
-        clientId: envConfig == EnvironmentConfig.production()
+        clientId: envConfig.environment == EnvironmentType.production
             ? '9d6240c2-9c30-4b5e-97d2-c0a57a461190'
             : '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
-        clientSecret: envConfig == EnvironmentConfig.production()
+        clientSecret: envConfig.environment == EnvironmentType.production
             ? 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W'
             : 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
         username: username(),

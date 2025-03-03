@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/repositories/user_repository_impl.dart';
+import 'package:iroyal/app/modules/home/data/repositories/home_repository_impl.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
