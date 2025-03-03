@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,7 +8,9 @@ import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/buttons/button_primary_outlined.dart';
+import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 abstract class AppDialog {
   Future<bool> showPermissionDialog({
@@ -82,6 +85,28 @@ abstract class AppDialog {
   });
 
   Future<void> showCustomInfoDialog({
+    String? imagePath,
+    String? title,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    Function()? onPress,
+  });
+
+  Future<void> showForgotPasswordDialog({
+    String? imagePath,
+    String? title,
+    String? phoneNumber,
+    String? phoneNumber2,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    Function()? onPress,
+  });
+
+  Future<void> showEventDialog({
     String? imagePath,
     String? title,
     String? description,
@@ -260,10 +285,10 @@ class AppDialogImpl implements AppDialog {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset(
-                imagePath ?? 'assets/icons/ic_error.png',
-                height: 50.w,
-                width: 50.w,
+              Lottie.asset(
+                imagePath ?? 'assets/json/lottie_error_dialog.json',
+                height: 85.w,
+                width: 85.w,
               ),
               10.verticalSpace,
               Text(
@@ -707,6 +732,159 @@ class AppDialogImpl implements AppDialog {
               16.verticalSpace,
             ],
           ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showForgotPasswordDialog({
+    String? imagePath,
+    String? title,
+    String? phoneNumber,
+    String? phoneNumber2,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    Function()? onPress,
+  }) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 40),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(
+            Insets.med,
+            Insets.xl,
+            Insets.med,
+            Insets.xs,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (imagePath != null)
+                SvgPicture.asset(
+                  imagePath,
+                  height: height ?? 40.w,
+                  width: width ?? 40.w,
+                ),
+              description == null ? 28.verticalSpace : 5.verticalSpace,
+              Text(
+                title ?? 'Information',
+                style: TS.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              12.verticalSpace,
+              if (description != null)
+                Text.rich(
+                  TextSpan(
+                    text: description,
+                    style: TS.bodyMedium,
+                    children: [
+                      TextSpan(
+                          text: '\n\nCall',
+                          style: TS.bodyMedium.copyWith(color: primary),
+                          children: [
+                            TextSpan(
+                              text: ' $phoneNumber',
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  String url = "https://wa.me/628112465515";
+                                  if (await canLaunchUrl(Uri.parse(url))) {
+                                    await launchUrl(Uri.parse(url),
+                                        mode: LaunchMode.externalApplication);
+                                  } else {
+                                    throw 'Could not launch $url';
+                                  }
+                                },
+                              style: TS.bodyMedium.copyWith(color: Colors.blue),
+                              children: [
+                                TextSpan(
+                                    text: ' or ',
+                                    style:
+                                        TS.bodyMedium.copyWith(color: primary),
+                                    children: [
+                                      TextSpan(
+                                        text: '$phoneNumber2',
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            String url =
+                                                "https://wa.me/6281120005071";
+                                            if (await canLaunchUrl(
+                                                Uri.parse(url))) {
+                                              await launchUrl(Uri.parse(url),
+                                                  mode: LaunchMode
+                                                      .externalApplication);
+                                            } else {
+                                              throw 'Could not launch $url';
+                                            }
+                                          },
+                                        style: TS.bodyMedium
+                                            .copyWith(color: Colors.blue),
+                                      ),
+                                    ]),
+                              ],
+                            )
+                          ]),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              28.verticalSpace,
+              ButtonPrimary(
+                onPressed: onPress ?? Get.back,
+                text: textButton ?? 'Okay',
+                fullWidth: true,
+              ),
+              16.verticalSpace,
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showEventDialog(
+      {String? imagePath,
+      String? title,
+      String? description,
+      String? textButton,
+      double? height,
+      double? width,
+      Function()? onPress}) async {
+    await Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath.toString(),
+              height: 500.h,
+              width: width,
+            ),
+            15.verticalSpace,
+            InkWellTap(
+              radius: Corners.xxl,
+              color: Colors.transparent,
+              onTap: () => Get.back(),
+              child: Image.asset(
+                'assets/images/img_icon_close_banner.png',
+                height: 48.h,
+                width: width,
+              ),
+            )
+          ],
         ),
       ),
       barrierDismissible: false,

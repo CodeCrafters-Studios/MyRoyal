@@ -2,9 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/articles/presentation/views/components/articles_card.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/padding.dart';
 
 class HomeSlide extends StatelessWidget {
   const HomeSlide({super.key, required this.controller});
@@ -14,49 +17,73 @@ class HomeSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => SliverToBoxAdapter(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            controller.isLoading.value
-                ? ShimmerText(
-                    width: Get.width * .9,
-                    height: 132.h,
-                  )
-                : CarouselSlider(
-                    items: controller.homeSLider
-                        .map(
-                          (e) => Padding(
-                            padding: REdgeInsets.symmetric(horizontal: 6),
-                            child: ClipRRect(
-                              borderRadius: Corners.medBorder,
-                              child: Image.asset(
-                                e.link,
-                                // imageUrl:
-                                //     AppConfig.environment.baseUrl + e.image,
-                                // imageUrl:
-                                //     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                                width: Get.width * .9,
-                                height: 132.h,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      viewportFraction: 0.9,
-                      height: 132.h,
-                      // onPageChanged: (index, reason) =>
-                      //     controller.indexSlider(index),
-                    ),
-                  ),
-            Container(
-              height: 100.h,
+          child: controller.isLoading.value
+              ? _loadingArticles()
+              : _buildArticles()),
+    );
+  }
+
+  Widget _loadingArticles() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: EPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: ShimmerText(
+              width: 150.w,
             ),
-          ],
+          ),
         ),
-      ),
+        ShimmerText(
+          width: Get.width * .9,
+          height: 132.h,
+        ),
+        Container(
+          height: 100.h,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildArticles() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        EPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 21),
+          child: Text(
+            'Royal Wiki',
+            style: TS.titleMedium,
+            textAlign: TextAlign.start,
+          ),
+        ),
+        10.verticalSpace,
+        CarouselSlider(
+          items: controller.homeSlider
+              .map(
+                (e) => ArticlesCard(
+                  title: e.title,
+                  subtitle: e.subtitle,
+                  imgUrl: e.imgUrl,
+                  onTap: () => Get.toNamed(Routes.ARTICLES, arguments: e),
+                ),
+              )
+              .toList(),
+          options: CarouselOptions(
+            autoPlay: true,
+            viewportFraction: 0.9,
+            height: 132.h,
+            // onPageChanged: (index, reason) =>
+            //     controller.indexSlider(index),
+          ),
+        ),
+        Container(
+          height: 100.h,
+        ),
+      ],
     );
   }
 }

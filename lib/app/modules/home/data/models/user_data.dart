@@ -15,6 +15,7 @@ class UserDataModel extends UserData {
     required super.absentEndDay,
     required super.absentStartTime,
     required super.absentEndTime,
+    required super.canAccessLeave,
   });
 
   factory UserDataModel.empty() => const UserDataModel(
@@ -31,6 +32,7 @@ class UserDataModel extends UserData {
         absentEndDay: '',
         absentStartTime: '',
         absentEndTime: '',
+        canAccessLeave: false,
       );
 
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
@@ -47,6 +49,7 @@ class UserDataModel extends UserData {
         absentEndDay: json["absent_end_day"] ?? '',
         absentStartTime: json["absent_start_time"] ?? '',
         absentEndTime: json["absent_end_time"] ?? '',
+        canAccessLeave: json["can_submission_leave"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -63,5 +66,6 @@ class UserDataModel extends UserData {
         "absentEndDay": absentEndDay,
         "absentStartTime": absentStartTime,
         "absentEndTime": absentEndTime,
+        "can_submission_leave": canAccessLeave,
       };
 }

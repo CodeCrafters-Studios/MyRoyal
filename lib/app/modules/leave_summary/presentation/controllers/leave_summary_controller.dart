@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_params_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_params_model.dart';
+import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_params_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/data_leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_data_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_data_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_params_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_type_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
@@ -42,7 +42,8 @@ class LeaveSummaryController extends GetxController {
   late final TabController tabLeaveController;
   late final TabController tabPermitController;
   TextEditingController search = TextEditingController();
-  TextEditingController reasonText = TextEditingController();
+  TextEditingController reasonLeaveText = TextEditingController();
+  TextEditingController reasonPermitText = TextEditingController();
 
   final config = CalendarDatePicker2Config(
     firstDate: DateTime.now().add(const Duration(days: 3)),
@@ -294,7 +295,7 @@ class LeaveSummaryController extends GetxController {
     isLoading.value = true;
 
     final r = await createFormLeaveUsecase(
-      CreateFormLeaveParamsEntity(
+      CreateFormLeaveParamsModel(
         dateLeave: formattedDates,
         reason: reason.value,
         substituteId: selectedSubtituteEmployeeId.value,
@@ -312,6 +313,7 @@ class LeaveSummaryController extends GetxController {
       selectedSubtituteEmployee.value = '';
       selectedSubtituteEmployeeId.value = 0;
       reason.value = '';
+      reasonLeaveText.text = '';
       _getLeaveSummary();
       Get.back();
       AppDialogImpl()
@@ -324,7 +326,7 @@ class LeaveSummaryController extends GetxController {
     isLoading.value = true;
 
     final r = await actionFormLeaveUsecase(
-      ActionFormLeaveParamsEntity(
+      ActionFormLeaveParamsModel(
         type: 'canceled',
         level: 0,
         codeNo: codeNo,
@@ -429,7 +431,7 @@ class LeaveSummaryController extends GetxController {
     isLoading.value = true;
 
     final r = await createFormPermitUsecase(
-      CreateFormPermitParamsEntity(
+      CreateFormPermitParamsModel(
         typeCode: selectedPermitTypeCode.value,
         startDate: formattedStartDate,
         endDate: formattedEndDate,
@@ -466,6 +468,7 @@ class LeaveSummaryController extends GetxController {
     selectedEndDatePermit.value = DateTime(0);
     selectedStartTime.value = TimeOfDay(hour: 0, minute: 0);
     selectedEndTime.value = TimeOfDay(hour: 0, minute: 0);
+    reasonPermitText.text = '';
 
     Get.back();
   }

@@ -52,6 +52,7 @@ class LoginBinding extends Bindings {
           authBiometrics: Get.find<AuthBiometricsImpl>(),
           deviceInfo: Get.find<DeviceInfo>(),
           firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
+          envConfig: Get.find(),
         ),
       );
   }

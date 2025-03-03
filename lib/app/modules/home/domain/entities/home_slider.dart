@@ -1,7 +1,11 @@
 class HomeSlider {
   const HomeSlider({
-    required this.link,
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.imgUrl,
+    required this.url,
   });
 
-  final String link;
+  final String id, title, subtitle, imgUrl, url;
 }

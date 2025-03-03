@@ -104,6 +104,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final firebaseRemoteConfig = MellotippetFirebaseRemoteConfig();
 
   Get
+    ..put(AppConfig.environment)
     ..put(dio)
     ..put(inspector)
     ..put(AppStorage(box: box))

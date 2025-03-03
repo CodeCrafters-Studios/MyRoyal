@@ -33,6 +33,7 @@ abstract class Routes {
   static const LEAVES = _Paths.LEAVES;
   static const APPROVAL = _Paths.APPROVAL;
   static const CHECK_PASSWORD = _Paths.CHECK_PASSWORD;
+  static const ARTICLES = _Paths.ARTICLES;
 }
 
 abstract class _Paths {
@@ -65,4 +66,5 @@ abstract class _Paths {
   static const LEAVES = '/leaves';
   static const APPROVAL = '/approval';
   static const CHECK_PASSWORD = '/check-password';
+  static const ARTICLES = '/articles';
 }

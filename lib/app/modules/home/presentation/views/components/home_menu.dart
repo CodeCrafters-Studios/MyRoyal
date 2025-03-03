@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
@@ -11,13 +18,24 @@ class HomeMenu extends StatelessWidget {
   const HomeMenu({
     super.key,
     required this.menu,
+    required this.appStorage,
   });
+
   final Menu menu;
+  final AppStorage appStorage;
 
   @override
   Widget build(BuildContext context) {
     return InkWellTap(
-      onTap: () {
+      onTap: () async {
+        final jsonString = await appStorage.read(CACHE_USER);
+        if (jsonString == null) {
+          throw CacheException('Data Not Found');
+        }
+
+        final cacheUserData = UserDataModel.fromJson(jsonDecode(jsonString));
+        final canAccessLeave = cacheUserData.canAccessLeave;
+
         switch (menu.name) {
           case 'Dashboard':
             Get.toNamed(Routes.DASHBOARD);
@@ -43,7 +61,16 @@ class HomeMenu extends StatelessWidget {
             Get.toNamed(Routes.MY_TEAMS);
             break;
           case 'Leaves':
-            Get.toNamed(Routes.LEAVE_SUMMARY);
+            if (canAccessLeave) {
+              Get.toNamed(Routes.LEAVE_SUMMARY);
+            } else {
+              AppDialogImpl().showErrorDialog(
+                title: 'Perhatian',
+                description:
+                    'Shift kerja belum terdaftar, harap hubungi bagian personalia.',
+                textButton: 'Close',
+              );
+            }
             break;
           case 'Approval':
             Get.toNamed(Routes.APPROVAL);
@@ -60,9 +87,7 @@ class HomeMenu extends StatelessWidget {
             height: 54.h,
             padding: REdgeInsets.all(4),
             child: Center(
-              child: Image.asset(
-                'assets/icons/${menu.code}.png',
-              ),
+              child: Image.asset('assets/icons/${menu.code}.png'),
             ),
           ),
           Text(

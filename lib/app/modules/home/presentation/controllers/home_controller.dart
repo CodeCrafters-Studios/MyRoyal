@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/domain/entities/articles_entites.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
 import 'package:iroyal/app/modules/notifications/data/models/notification_data_list_model.dart';
@@ -14,6 +16,7 @@ import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
+import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
@@ -23,6 +26,8 @@ class HomeController extends GetxController {
     required this.deviceInfo,
     required this.firebaseRemoteConfig,
     required this.appDialog,
+    required this.appStorage,
+    required this.getArticles,
   });
 
   String userState = '';
@@ -83,15 +88,34 @@ class HomeController extends GetxController {
     // ),
   ];
 
-  List<HomeSlider> homeSLider = <HomeSlider>[
+  List<HomeSlider> homeSlider = <HomeSlider>[
     const HomeSlider(
-      link: 'assets/images/img_banner1.jpeg',
+      id: '8',
+      title: 'IT Governance (Tata Kelola Teknologi Informasi)',
+      subtitle:
+          "IT Governance (Tata Kelola Teknologi Informasi) adalah proses yang mengatur penggunaan teknologi informasi (TI) di dalam suatu organisasi atau perusahaan. IT Governance bertujuan untuk memastikan bahwa TI digunakan secara efektif, efisien, dan aman, serta sesuai dengan tujuan bisnis perusahaan.",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/qXKdfeGxJx1mCo4J-image-2024-12-11-211422472.png',
+      url:
+          'https://wiki.royalcorp.co.id/shelves/it-governance-tata-kelola-teknologi-informasi',
     ),
     const HomeSlider(
-      link: 'assets/images/img_banner2.jpeg',
+      id: '7',
+      title: 'HRMS',
+      subtitle:
+          "a comprehensive guide for hrms project writen by HRMS Member and Developer",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/pNVIzyfjBXOStUgw-ras-logo.png',
+      url: 'https://wiki.royalcorp.co.id/shelves/hrms',
     ),
     const HomeSlider(
-      link: 'assets/images/img_banner3.jpeg',
+      id: '2',
+      title: 'IT Infrastructure & Support',
+      subtitle:
+          "Comprehensive knowledge sharing on IT Infrastructure & Support.",
+      imgUrl:
+          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/6nnfCLWOnOSFNETe-infra-support.jpeg',
+      url: 'https://wiki.royalcorp.co.id/shelves/it-infrastructure-support',
     ),
   ];
 
@@ -102,12 +126,15 @@ class HomeController extends GetxController {
           message: '',
           data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
       .obs;
+  Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
 
   final GetUser getUser;
   final GetNotifications getNotifications;
+  final GetArticlesUsecase getArticles;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
+  final AppStorage appStorage;
 
   @override
   void onInit() {
@@ -116,7 +143,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    _initial();
+    await _getUserData();
+    _getAllMenu();
+    await _getNotifications();
+    _filterNewNotifications(notificationsData().data.data);
+    checkVersion();
   }
 
   void _initial() async {
@@ -125,6 +156,8 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
+    _showEventDialog();
+    // _getArticles();
   }
 
   void checkVersion() async {
@@ -221,7 +254,7 @@ class HomeController extends GetxController {
     final homeMenu = <HomeMenu>[];
 
     final mappedMenus = getAllMenu.map((menu) {
-      return HomeMenu(menu: menu);
+      return HomeMenu(menu: menu, appStorage: appStorage);
     }).toList();
 
     if (userData().data.position == 'Staff') {
@@ -281,4 +314,26 @@ class HomeController extends GetxController {
 
     return filterNewNotif;
   }
+
+  void _showEventDialog() {
+    appDialog.showEventDialog(
+      imagePath: 'assets/images/img_banner_ramadhan_kareem.png',
+    );
+  }
+
+  // Future<void> _getArticles() async {
+  //   isLoading.value = true;
+
+  //   final result = await getArticles();
+
+  //   result.fold(
+  //     (l) {
+  //       isLoading.value = false;
+  //     },
+  //     (r) {
+  //       isLoading.value = false;
+  //       articlesData.value = r;
+  //     },
+  //   );
+  // }
 }

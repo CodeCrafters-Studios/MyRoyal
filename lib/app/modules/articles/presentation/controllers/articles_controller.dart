@@ -1,0 +1,109 @@
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entities.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entities.dart';
+import 'package:iroyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
+import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
+import 'package:iroyal/app/modules/articles/presentation/views/components/books_view.dart';
+import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
+
+class ArticlesController extends GetxController {
+  ArticlesController({
+    required this.getArticlesDetailUsecase,
+    required this.getBooksDetailUsecase,
+  });
+
+  late HomeSlider dataArticle;
+
+  RxBool isLoading = false.obs;
+
+  Rx<ArticlesDetailEntities> dataArticleDetail = ArticlesDetailEntities(
+    id: 0,
+    name: '',
+    slug: '',
+    description: '',
+    createdBy: EdBy(id: 0, name: '', slug: ''),
+    updatedBy: EdBy(id: 0, name: '', slug: ''),
+    createdAt: DateTime(0),
+    updatedAt: DateTime(0),
+    ownedBy: EdBy(id: 0, name: '', slug: ''),
+    descriptionHtml: '',
+    tags: [],
+    cover: Cover(
+      id: 0,
+      name: '',
+      url: '',
+      createdAt: DateTime(0),
+      updatedAt: DateTime(0),
+      createdBy: 0,
+      updatedBy: 0,
+      path: '',
+      type: '',
+      uploadedTo: 0,
+    ),
+    books: [],
+  ).obs;
+  Rx<BooksDetailEntities> dataBookDetail = BooksDetailEntities(
+    id: 0,
+    name: '',
+    slug: '',
+    description: '',
+    createdAt: DateTime(0),
+    updatedAt: DateTime(0),
+    descriptionHtml: '',
+    cover: CoverBooks(
+      id: 0,
+      name: '',
+      url: '',
+      createdAt: DateTime(0),
+      updatedAt: DateTime(0),
+      createdBy: 0,
+      updatedBy: 0,
+      path: '',
+      type: '',
+      uploadedTo: 0,
+    ),
+  ).obs;
+
+  final GetArticlesDetailUsecase getArticlesDetailUsecase;
+  final GetBooksDetailUsecase getBooksDetailUsecase;
+
+  @override
+  void onInit() {
+    dataArticle = Get.arguments;
+    _getDetailArticles();
+    super.onInit();
+  }
+
+  Future<void> _getDetailArticles() async {
+    isLoading.value = true;
+
+    final result = await getArticlesDetailUsecase(dataArticle.id);
+
+    result.fold((l) {
+      isLoading.value = false;
+    }, (r) {
+      isLoading.value = false;
+      dataArticleDetail.value = r;
+    });
+  }
+
+  Future<void> getDetailBooks(String id) async {
+    isLoading.value = true;
+
+    final result = await getBooksDetailUsecase(id);
+
+    result.fold((l) {
+      isLoading.value = false;
+      AppUtils.logApp('IMAGE URL ::: ERROR $l');
+    }, (r) {
+      isLoading.value = false;
+      dataBookDetail.value = r;
+      AppUtils.logApp('IMAGE URL ::: ${dataBookDetail.value.cover.url}');
+      Get.to(
+        () => BooksView(),
+        arguments: r,
+      );
+    });
+  }
+}
