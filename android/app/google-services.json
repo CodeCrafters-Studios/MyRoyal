@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "830784728566",
     "project_id": "iroyal-14dea",
-    "storage_bucket": "iroyal-14dea.appspot.com"
+    "storage_bucket": "iroyal-14dea.firebasestorage.app"
   },
   "client": [
     {
@@ -29,9 +29,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:830784728566:android:f578563b96f2ed0bbfebd7",
+        "mobilesdk_app_id": "1:830784728566:android:812318b4b1149778bfebd7",
         "android_client_info": {
-          "package_name": "com.example.iroyal.production"
+          "package_name": "com.iroyal"
         }
       },
       "oauth_client": [],
@@ -51,9 +51,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:830784728566:android:812318b4b1149778bfebd7",
+        "mobilesdk_app_id": "1:830784728566:android:fdffe2907a19af58bfebd7",
         "android_client_info": {
-          "package_name": "com.iroyal"
+          "package_name": "com.iroyal.dev"
         }
       },
       "oauth_client": [],

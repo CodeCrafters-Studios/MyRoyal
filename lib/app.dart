@@ -129,17 +129,23 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
       builder: (BuildContext context, Widget? child) {
-        return Stack(
-          children: [
-            child!,
-            Visibility(
-              visible: widget.config != const EnvironmentConfig.production(),
-              child: OverlayLogButton(
-                onTap: () => Get.find<DioRequestInspector>().goToInspector(),
-              ),
-            ),
-          ],
-        );
+        return widget.config != const EnvironmentConfig.production()
+            ? Banner(
+                message: 'DEV',
+                location: BannerLocation.topStart,
+                child: Stack(
+                  children: [
+                    child!,
+                    OverlayLogButton(
+                      onTap: () =>
+                          Get.find<DioRequestInspector>().goToInspector(),
+                    ),
+                  ],
+                ),
+              )
+            : Stack(
+                children: [child!],
+              );
       },
       getPages: AppPages.routes,
       initialBinding: InitialBinding(),

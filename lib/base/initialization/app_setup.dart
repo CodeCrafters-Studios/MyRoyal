@@ -79,6 +79,9 @@ Future<void> remoteMessageHandler(RemoteMessage message) async {
 /// such as Firebase or background handlers can be configured here.
 Future configureApp(EnvironmentConfig envConfig) async {
   await Firebase.initializeApp(
+    name: envConfig.environment == EnvironmentType.production
+        ? "MyRoyal"
+        : "MyRoyal-Dev",
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await MellotippetFirebaseRemoteConfig.initialize();

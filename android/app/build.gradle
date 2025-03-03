@@ -37,22 +37,18 @@ android {
      productFlavors {
         prod {
             dimension "flavor-dimension"
-            applicationId "com.iroyal"
-            resValue "string", "app_name", "I-Royal"
-         
+            resValue "string", "app_name", "MyRoyal"
+            applicationIdSuffix ""
+        }
+        staging {
+            dimension "flavor-dimension"
+            resValue "string", "app_name", "MyRoyal Staging"
+            applicationIdSuffix ".stag"
         }
         dev {
             dimension "flavor-dimension"
-            applicationId "com.iroyal"
-            resValue "string", "app_name", "I-Royal Dev"
-            
-        }
-
-        staging {
-            dimension "flavor-dimension"
-            applicationId "com.iroyal"
-            resValue "string", "app_name", "I-Royal Staging"
-           
+            resValue "string", "app_name", "MyRoyal Dev"
+            applicationIdSuffix ".dev"
         }
     }
 
