@@ -62,6 +62,7 @@ Future<void> onForegroundMessage(
 @pragma('vm:entry-point')
 void onDidReceiveBackgroundNotificationResponse(
     NotificationResponse notificationResponse) async {
+  log('Background Message received!');
   if (notificationResponse.payload != null) {
     final route = notificationResponse.payload;
 
@@ -114,7 +115,7 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
   final data = message.data;
 
-  log('Message opened from background. ::: $data');
+  log('On Background Message ::: $data');
 }
 
 /// Callback executed if the app has opened from a background state (and was
@@ -123,13 +124,49 @@ Future<void> onMessageOpenedFromBackground(
   BuildContext context,
   RemoteMessage message,
 ) async {
-  log('Message opened from background.');
+  final data = message.data;
 
-  // Navigate to the specified route
-  // Get.toNamed(Routes.WEBTEL);
-  // String route = message.data.type;
+  log('Message opened from background. ::: $data');
 
-  // Get.toNamed(route);
+  if (data.isNotEmpty) {
+    final route = data['route'];
+
+    if (route.toString().contains('https://')) {
+      final uri = Uri.parse(route!);
+      if (!await launchUrl(uri)) {
+        throw Exception('Could not launch $uri');
+      }
+    } else {
+      switch (route) {
+        case 'My Teams':
+          Get.toNamed(Routes.MY_TEAMS);
+          break;
+        case 'Webtel':
+          Get.toNamed(Routes.WEBTEL);
+          break;
+        case 'Tracking Documents':
+          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          break;
+        case 'Tasks':
+          Get.toNamed(Routes.TASKS);
+          break;
+        case 'Payroll':
+          Get.toNamed(Routes.PIN);
+          break;
+        case 'Dashboard':
+          Get.toNamed(Routes.DASHBOARD);
+          break;
+        case 'Visit':
+          Get.toNamed(Routes.VISIT);
+          break;
+        default:
+          Get.to(() => const ComingSoonScreen());
+          break;
+      }
+    }
+  } else {
+    AppUtils.logApp('ROUTE IS EMPTY');
+  }
 }
 
 /// If the application has been opened from a terminated state via a remote
