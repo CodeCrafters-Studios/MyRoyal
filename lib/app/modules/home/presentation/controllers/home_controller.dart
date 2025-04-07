@@ -156,7 +156,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
-    _showEventDialog();
+    // _showEventDialog();
     // _getArticles();
   }
 
@@ -315,17 +315,15 @@ class HomeController extends GetxController {
     return filterNewNotif;
   }
 
-  void _showEventDialog() {
-    appDialog.showEventDialog(
-      imagePath: 'assets/images/img_banner_ramadhan_kareem.png',
-    );
-  }
+  // void _showEventDialog() {
+  //   appDialog.showEventDialog(
+  //     imagePath: 'assets/json/lottie_ramadhan_kareem_event.json',
+  //   );
+  // }
 
   // Future<void> _getArticles() async {
   //   isLoading.value = true;
-
   //   final result = await getArticles();
-
   //   result.fold(
   //     (l) {
   //       isLoading.value = false;

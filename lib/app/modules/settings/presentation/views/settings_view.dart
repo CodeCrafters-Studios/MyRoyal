@@ -142,6 +142,9 @@ class SettingsViewImpl extends StatelessWidget {
           assetSvg: 'assets/icons/ic_log_out.svg',
           text: 'Logout',
           onTap: controller.iLogout,
+          withTrailing: true,
+          trailingIcon: false,
+          appVersion: controller.deviceInfo.packageInfo.version,
         ),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/biometrics.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 class SettingsController extends GetxController {
@@ -14,6 +15,7 @@ class SettingsController extends GetxController {
     required this.getUser,
     required this.appStorage,
     required this.authBiometrics,
+    required this.deviceInfo,
   });
 
   final GetUser getUser;
@@ -21,6 +23,7 @@ class SettingsController extends GetxController {
   final BiometricsApp biometricsApp;
   final AppStorage appStorage;
   final AuthBiometrics authBiometrics;
+  final DeviceInfo deviceInfo;
 
   RxBool isLoading = false.obs;
   RxBool switchbiometricsValue = false.obs;

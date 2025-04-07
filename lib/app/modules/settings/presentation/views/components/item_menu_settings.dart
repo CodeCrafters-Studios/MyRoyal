@@ -12,8 +12,10 @@ class ItemMenuSettings extends StatelessWidget {
     super.key,
     required this.assetSvg,
     required this.text,
+    this.appVersion = '',
     this.textStyle,
     this.withTrailing = false,
+    this.trailingIcon = true,
     this.icon,
     this.onTap,
     this.onTapIcon,
@@ -21,9 +23,11 @@ class ItemMenuSettings extends StatelessWidget {
   });
   final String assetSvg;
   final String text;
+  final String appVersion;
   final TextStyle? textStyle;
   final IconData? icon;
   final bool withTrailing;
+  final bool trailingIcon;
   final Function()? onTap;
   final Function()? onTapIcon;
   final bool withDivider;
@@ -44,13 +48,19 @@ class ItemMenuSettings extends StatelessWidget {
                   child: Text(text, style: textStyle ?? TS.labelLarge),
                 ),
                 withTrailing
-                    ? InkWell(
-                        onTap: onTapIcon,
-                        child: Icon(
-                          icon ?? Icons.arrow_forward_ios_rounded,
-                          color: primary,
-                        ),
-                      )
+                    ? trailingIcon
+                        ? InkWell(
+                            onTap: onTapIcon,
+                            child: Icon(
+                              icon ?? Icons.arrow_forward_ios_rounded,
+                              color: primary,
+                            ),
+                          )
+                        : Text(
+                            'Version $appVersion',
+                            style: TS.bodySmall
+                                .copyWith(fontWeight: FontWeight.w500),
+                          )
                     : emptyBox,
               ],
             ),

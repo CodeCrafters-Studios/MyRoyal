@@ -148,6 +148,7 @@ class BottomnavbarBinding extends Bindings {
           appStorage: Get.find(),
           biometricsApp: Get.find(),
           authBiometrics: Get.find<AuthBiometricsImpl>(),
+          deviceInfo: Get.find(),
         ),
       )
 
