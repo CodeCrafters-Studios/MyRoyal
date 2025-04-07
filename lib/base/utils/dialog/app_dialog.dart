@@ -868,7 +868,7 @@ class AppDialogImpl implements AppDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
+            Lottie.asset(
               imagePath.toString(),
               height: 500.h,
               width: width,
