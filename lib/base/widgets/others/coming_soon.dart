@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 
@@ -14,7 +15,9 @@ class ComingSoonScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      showIconBack: enableBackImpl ?? true,
+      showIconBack: false,
+      centeredTitle: true,
+      textStyle: TS.headlineSmall.copyWith(color: white),
       title: 'Coming Soon',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

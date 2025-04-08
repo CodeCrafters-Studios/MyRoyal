@@ -29,21 +29,8 @@ class HomeUserInfo extends GetView<HomeController> {
                     shadows: Shadows.small,
                     padding: REdgeInsets.all(8),
                     margin: REdgeInsets.all(16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        HomeUserCard(
-                          title: '',
-                          subtitle: '',
-                          isThridLine: true,
-                          thridLineTitle: '',
-                          isAvatarPicture: true,
-                          avatarPicture:
-                              controller.userData().data.profilePicture.isEmpty
-                                  ? ''
-                                  : controller.userData().data.profilePicture,
-                        ),
-                      ],
+                    child: SizedBox(
+                      height: 80.h,
                     ),
                   ),
                 )
@@ -73,7 +60,7 @@ class HomeUserInfo extends GetView<HomeController> {
                               ? '-'
                               : 'Join date: ${controller.userData().data.joinDate}',
                           isImageAvailable: controller.isImageAvailable.value,
-                          isAvatarPicture: true,
+                          withAvatar: true,
                           avatarPicture: controller
                                   .userData()
                                   .data

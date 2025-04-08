@@ -279,13 +279,10 @@ class HomeController extends GetxController {
         userState = 'getUserSuccess';
         isLoading.value = false;
         userData.value = r;
-        if (userData.value.data.profilePicture.isEmpty ||
-            userData.value.data.profilePicture == '') {
-          isImageAvailable.value = false;
-        } else {
-          isImageAvailable.value = true;
-        }
-        // isVisible.value = r.children;
+        userData.value.data.profilePicture.isNotEmpty ||
+                userData.value.data.profilePicture != ''
+            ? isImageAvailable.value = true
+            : isImageAvailable.value;
       },
     );
   }

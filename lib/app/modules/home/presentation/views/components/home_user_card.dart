@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class HomeUserCard extends StatelessWidget {
@@ -13,8 +14,8 @@ class HomeUserCard extends StatelessWidget {
     required this.subtitle,
     this.initial,
     required this.isThridLine,
-    required this.isAvatarPicture,
     this.isImageAvailable = false,
+    this.withAvatar = false,
     this.textColor,
     this.backgroundColor,
     this.borderSideColor,
@@ -31,8 +32,8 @@ class HomeUserCard extends StatelessWidget {
   final String? thridLineSubtitle;
   final String avatarPicture;
   final bool isThridLine;
-  final bool isAvatarPicture;
   final bool isImageAvailable;
+  final bool withAvatar;
   final Color? textColor;
   final Color? backgroundColor;
   final Color? borderSideColor;
@@ -41,29 +42,37 @@ class HomeUserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EPadding(
-      padding: EdgeInsets.fromLTRB(isAvatarPicture ? 5 : 12, 10, 0, 10),
+      padding: EdgeInsets.fromLTRB(isImageAvailable ? 5 : 12, 10, 0, 10),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          isAvatarPicture
+          withAvatar
               ? CircleAvatar(
-                  backgroundColor: isImageAvailable ? null : secondary,
-                  backgroundImage: isImageAvailable
-                      ? CachedNetworkImageProvider(
-                          avatarPicture.isNotEmpty
-                              ? avatarPicture
-                              : 'https://via.placeholder.com/150',
-                        )
-                      : null,
                   radius: 30,
+                  backgroundColor: isImageAvailable ? white : secondary,
                   child: isImageAvailable
-                      ? emptyBox
+                      ? ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: avatarPicture,
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                            errorWidget: (context, url, error) {
+                              AppUtils.logApp(error.toString());
+                              return Image.network(
+                                'https://avatar.iran.liara.run/public',
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        )
                       : Text(
                           initial ?? '',
                           style: TS.titleLarge,
-                        ))
+                        ),
+                )
               : emptyBox,
-          isAvatarPicture == true ? 12.horizontalSpace : emptyBox,
+          withAvatar ? 12.horizontalSpace : emptyBox,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

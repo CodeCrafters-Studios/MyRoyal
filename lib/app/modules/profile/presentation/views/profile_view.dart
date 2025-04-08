@@ -99,20 +99,29 @@ class ProfileViewImpl extends StatelessWidget {
     return ListTile(
       horizontalTitleGap: 5,
       leading: CircleAvatar(
-        backgroundColor: primary,
-        radius: 35,
-        backgroundImage:
+        radius: 30,
+        backgroundColor:
             controller.profileData().data.personal.profilePicture.isNotEmpty
-                ? CachedNetworkImageProvider(
-                    controller.profileData().data.personal.profilePicture,
-                  )
-                : null,
-        child: controller.profileData().data.personal.profilePicture.isEmpty
-            ? Text(
+                ? white
+                : secondary,
+        child: controller.profileData().data.personal.profilePicture.isNotEmpty
+            ? ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl:
+                      controller.profileData().data.personal.profilePicture,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) {
+                    return Image.network(
+                      'https://avatar.iran.liara.run/public',
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
+              )
+            : Text(
                 controller.userData().initialName,
                 style: TS.titleLarge,
-              )
-            : null,
+              ),
       ),
       title: Text(
         controller.profileData().data.personal.fullName.isNotEmpty
@@ -136,7 +145,7 @@ class ProfileViewImpl extends StatelessWidget {
           baseColor: Colors.grey.shade300,
           highlightColor: Colors.grey.shade100,
           child: const CircleAvatar(
-            radius: 35,
+            radius: 30,
           ),
         ),
         title: ShimmerText(width: 100.w),

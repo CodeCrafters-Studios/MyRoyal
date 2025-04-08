@@ -37,7 +37,6 @@ class HomeUserStatus extends GetView<HomeController> {
                               width: 155.w,
                               child: const HomeUserCard(
                                 shapeBorder: true,
-                                isAvatarPicture: false,
                                 title: '',
                                 subtitle: '',
                                 isThridLine: false,
@@ -52,7 +51,6 @@ class HomeUserStatus extends GetView<HomeController> {
                               width: 155.w,
                               child: const HomeUserCard(
                                 shapeBorder: true,
-                                isAvatarPicture: false,
                                 title: '',
                                 subtitle: '',
                                 isThridLine: false,
@@ -74,7 +72,6 @@ class HomeUserStatus extends GetView<HomeController> {
                             shadows: Shadows.universal,
                             child: HomeUserCard(
                               shapeBorder: true,
-                              isAvatarPicture: false,
                               title: "Last Check In",
                               subtitle: controller.userData.value.data
                                       .absentStartDay.isNotEmpty
@@ -100,7 +97,6 @@ class HomeUserStatus extends GetView<HomeController> {
                             outlineColor: black,
                             child: HomeUserCard(
                               shapeBorder: true,
-                              isAvatarPicture: false,
                               title: 'Last Check Out',
                               subtitle: controller.userData.value.data
                                       .absentEndDay.isNotEmpty
