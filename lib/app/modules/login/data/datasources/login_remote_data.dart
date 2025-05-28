@@ -17,7 +17,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
     try {
       final r = await httpService.request(
         params: loginParams,
-        enpoint: 'oauth/token',
+        endpoint: 'oauth/token',
       );
       if (r['code'] != 200) {
         throw ApiException(r['message']);

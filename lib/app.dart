@@ -11,7 +11,9 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/widgets/others/overlay_log_button.dart';
+import 'package:open_filex/open_filex.dart';
 
 class BaseApp extends StatelessWidget {
   const BaseApp({
@@ -68,17 +70,29 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         .listen((message) => onMessageOpenedFromBackground(context, message));
   }
 
+  Future<void> _openFile(String filePath) async {
+    final result = await OpenFilex.open(filePath);
+
+    if (result.type != ResultType.done) {
+      AppUtils.logApp("Failed to open file: ${result.message}");
+    }
+  }
+
   Future<void> _requestNotificationPermissions() async {
     // Initialize flutter_local_notifications
     const androidSettings =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const initializationSettings =
         InitializationSettings(android: androidSettings);
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) async {
+          (NotificationResponse notificationResponse) {
+        final payload = notificationResponse.payload;
+        if (payload != null && payload.isNotEmpty) {
+          _openFile(payload);
+        }
         onDidReceiveNotificationResponse(notificationResponse);
       },
       onDidReceiveBackgroundNotificationResponse:

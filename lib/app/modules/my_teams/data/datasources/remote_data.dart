@@ -16,7 +16,7 @@ class MyTeamsRemoteDataSourcesImpl extends MyTeamsRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: '/api/v1/employees/$id/children',
+        endpoint: '/api/v1/employees/$id/children',
         method: Method.GET,
       );
       final myTeamsResponse = MyTeamsModel.fromJson(r);

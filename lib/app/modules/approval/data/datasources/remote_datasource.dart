@@ -18,7 +18,7 @@ class ApprovalRemoteDataSourceImpl implements ApprovalRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/getDataLeaveApproval',
+        endpoint: 'attendance/getDataLeaveApproval',
         method: Method.GET,
         showPopUp: true,
       );

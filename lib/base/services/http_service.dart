@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart' as getx;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
@@ -18,12 +19,16 @@ import 'package:iroyal/base/data/app_encryption.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
+import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
@@ -151,7 +156,7 @@ class HttpService extends getx.GetxService {
 
   Future<dynamic> request({
     String url = '',
-    String enpoint = '',
+    String endpoint = '',
     Method method = Method.POST,
     Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
@@ -165,7 +170,7 @@ class HttpService extends getx.GetxService {
     }
 
     Response response;
-    final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + enpoint : url;
+    final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + endpoint : url;
 
     ///SET Default Headers
     if (headers == null) {
@@ -248,7 +253,7 @@ class HttpService extends getx.GetxService {
         return response.data;
       } else if (response.statusCode == 401) {
         catchError('Unauthorized', showPopUp: showPopUp);
-        Routes.LOGIN;
+        Get.offAllNamed(Routes.LOGIN);
       } else if (response.statusCode == 422) {
         catchError('Error System', showPopUp: showPopUp);
       } else if (response.statusCode == 500) {
@@ -287,7 +292,7 @@ class HttpService extends getx.GetxService {
 
   Future<dynamic> customRequest({
     String url = baseUrlRoyalWiki,
-    String enpoint = '',
+    String endpoint = '',
     Method method = Method.POST,
     Map<String, dynamic>? params,
     Map<String, dynamic>? headers,
@@ -301,7 +306,7 @@ class HttpService extends getx.GetxService {
     }
 
     Response response;
-    final newUrl = url + enpoint;
+    final newUrl = url + endpoint;
 
     ///SET Default Headers
     if (headers == null) {
@@ -419,7 +424,179 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  void catchError(String message, {bool showPopUp = true}) {
+  Future<bool> _requestStoragePermission() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.storage.status;
+      if (!status.isGranted) {
+        final result = await Permission.storage.request();
+        return result == PermissionStatus.granted;
+      }
+    }
+    return true;
+  }
+
+  Future<Directory?> _getDownloadDirectory() async {
+    if (Platform.isIOS) {
+      return await getDownloadsDirectory();
+    } else {
+      var directory = "/storage/emulated/0/Download/";
+
+      var dirDownloadExists = await Directory(directory).exists();
+      if (dirDownloadExists) {
+        directory = "/storage/emulated/0/Download/";
+      } else {
+        directory = "/storage/emulated/0/Downloads/";
+      }
+      return Directory(directory);
+    }
+  }
+
+  bool canCreateFile(String filePath) {
+    try {
+      final file = File(filePath);
+      final raf = file.openSync(mode: FileMode.writeOnlyAppend);
+      raf.closeSync();
+      file.deleteSync();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<String> _getUniqueFilePath(
+      String directoryPath, String fileName) async {
+    int counter = 1;
+    String baseName = path.basenameWithoutExtension(fileName);
+    String extension = path.extension(fileName);
+    String candidate = path.join(directoryPath, fileName);
+
+    while (!canCreateFile(candidate)) {
+      candidate = path.join(directoryPath, '$baseName($counter)$extension');
+      counter++;
+    }
+
+    return candidate;
+  }
+
+  Future<dynamic> downloadFilePost({
+    required String endpoint,
+    required String fileName,
+    Map<String, dynamic>? params,
+    Map<String, dynamic>? headers,
+    bool withToken = false,
+    Function(int received, int total)? onReceiveProgress,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      catchError('No Internet Connection!');
+      return;
+    }
+
+    final hasPermission = await _requestStoragePermission();
+    if (!hasPermission) {
+      catchError('Storage permission denied');
+      return;
+    }
+
+    final url = AppConfig.environment.baseUrl + endpoint;
+
+    // Set headers
+    final defaultHeader = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    if (withToken) {
+      final token = await appStorage.read(CACHE_ACCESS_TOKEN);
+      dio.options.headers = {
+        'Authorization': 'Bearer $token',
+        ...?headers,
+        ...defaultHeader,
+      };
+    } else {
+      dio.options.headers = {
+        ...?headers,
+        ...defaultHeader,
+      };
+    }
+
+    try {
+      final directory = await _getDownloadDirectory();
+      if (directory == null) {
+        catchError('Download directory not found');
+        return;
+      }
+
+      final uniqueFilePath = await _getUniqueFilePath(directory.path, fileName);
+
+      final response = await dio.post<List<int>>(
+        url,
+        data: params,
+        options: Options(
+          responseType: ResponseType.bytes,
+          followRedirects: false,
+          validateStatus: (status) => status != null && status < 500,
+        ),
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      if (response.statusCode == 200 &&
+          response.headers.map['content-type']?.first
+                  .contains('application/pdf') ==
+              true) {
+        try {
+          final file = File(uniqueFilePath);
+          await file.writeAsBytes(response.data!, flush: true);
+          AppUtils.logApp('File downloaded to: $uniqueFilePath');
+        } catch (e) {
+          AppUtils.logApp('Error saving file: $e');
+          catchError('Gagal menyimpan file: $e');
+        }
+      } else {
+        final responseString = utf8.decode(response.data!);
+        final decoded = jsonDecode(responseString);
+        final message = decoded['errors']['message'][0].toString();
+
+        AppUtils.logApp(
+            'Download failed. Server returned non-PDF response: $responseString');
+        catchError(
+          title: 'Gagal mengunduh slip',
+          message,
+        );
+      }
+
+      await showDownloadNotification(fileName, uniqueFilePath);
+    } on DioException catch (e) {
+      AppUtils.logApp('Download error: $e');
+    } catch (e) {
+      AppUtils.logApp('Unexpected error: $e');
+    }
+  }
+
+  Future<void> showDownloadNotification(
+      String fileName, String filePath) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'download_channel',
+      'File Downloads',
+      channelDescription: 'Notifies when a file is downloaded',
+      importance: Importance.high,
+      priority: Priority.high,
+      showWhen: true,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Download selesai',
+      '$fileName telah disimpan.',
+      platformChannelSpecifics,
+      payload: filePath,
+    );
+  }
+
+  void catchError(String message, {bool showPopUp = true, String? title}) {
     if (showPopUp) {
       if (message.isNotEmpty) {
         if (message == "Unauthenticated.") {
@@ -434,8 +611,9 @@ class HttpService extends getx.GetxService {
           );
         } else {
           AppDialogImpl().showErrorDialog(
-            title: 'System is Under Maintenance',
+            title: title ?? 'System is Under Maintenance',
             description: message,
+            textButton: 'Close',
           );
         }
       } else {

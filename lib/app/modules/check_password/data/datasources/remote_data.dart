@@ -19,7 +19,7 @@ class CheckPasswordRemoteDataSourceImpl
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'user/checkPassword',
+        endpoint: 'user/checkPassword',
         params: params,
         showPopUp: true,
       );

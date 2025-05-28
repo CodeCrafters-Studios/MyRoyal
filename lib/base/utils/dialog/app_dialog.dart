@@ -66,6 +66,7 @@ abstract class AppDialog {
     String? textButton,
     double? height,
     double? width,
+    bool? isLoading,
     Function()? onPress,
   });
 
@@ -393,6 +394,7 @@ class AppDialogImpl implements AppDialog {
     String? textButton,
     double? height,
     double? width,
+    bool? isLoading,
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -410,36 +412,39 @@ class AppDialogImpl implements AppDialog {
             borderRadius: Corners.smBorder,
             color: Colors.white,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (imagePath != null)
-                SvgPicture.asset(
-                  imagePath,
-                  height: height ?? 40.w,
-                  width: width ?? 40.w,
-                ),
-              description == null ? 28.verticalSpace : 5.verticalSpace,
-              Text(
-                title ?? 'Information',
-                style: TS.titleMedium,
-                textAlign: TextAlign.center,
-              ),
-              12.verticalSpace,
-              if (description != null)
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (imagePath != null)
+                  SvgPicture.asset(
+                    imagePath,
+                    height: height ?? 40.w,
+                    width: width ?? 40.w,
+                  ),
+                description == null ? 28.verticalSpace : 5.verticalSpace,
                 Text(
-                  description,
-                  style: TS.bodyMedium,
+                  title ?? 'Information',
+                  style: TS.titleMedium,
                   textAlign: TextAlign.center,
                 ),
-              28.verticalSpace,
-              ButtonPrimary(
-                onPressed: onPress ?? Get.back,
-                text: textButton ?? 'Okay',
-                fullWidth: true,
-              ),
-              16.verticalSpace,
-            ],
+                12.verticalSpace,
+                if (description != null)
+                  Text(
+                    description,
+                    style: TS.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                28.verticalSpace,
+                ButtonPrimary(
+                  onPressed: onPress ?? Get.back,
+                  text: textButton ?? 'Okay',
+                  fullWidth: true,
+                  isLoading: isLoading ?? false,
+                ),
+                16.verticalSpace,
+              ],
+            ),
           ),
         ),
       ),

@@ -136,7 +136,7 @@ Future<void> onMessageOpenedFromBackground(
       if (!await launchUrl(uri)) {
         throw Exception('Could not launch $uri');
       }
-    } else {
+    } else if (!route.toString().contains('/storage')) {
       switch (route) {
         case 'My Teams':
           Get.toNamed(Routes.MY_TEAMS);
@@ -194,11 +194,13 @@ void onDidReceiveNotificationResponse(
     final route = notificationResponse.payload;
     final uri = Uri.parse(route!);
 
+    AppUtils.logApp('HERE 2 $route');
+
     if (route.toString().contains('https://')) {
       if (!await launchUrl(uri)) {
         throw Exception('Could not launch $uri');
       }
-    } else {
+    } else if (!route.toString().contains('/storage')) {
       switch (notificationResponse.payload) {
         case 'My Teams':
           Get.toNamed(Routes.MY_TEAMS);

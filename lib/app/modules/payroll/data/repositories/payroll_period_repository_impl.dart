@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/payroll/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_period_model.dart';
 import 'package:iroyal/app/modules/payroll/domain/repositories/payroll_period_repository.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -22,11 +21,10 @@ class PayrollPeriodRepositoryImpl implements PayrollPeriodRepository {
   }
 
   @override
-  Future<Either<Failure, PayrollDownloadUrlModel>> payrollDownloadUrl(
-      params) async {
+  Future<Either<Failure, void>> payrollDownloadUrl(params) async {
     try {
-      final r = await remoteData.payrollDownloadUrl(params);
-      return Right(r);
+      await remoteData.payrollDownloadUrl(params);
+      return const Right(null);
     } on ApiException {
       return const Left(ServerFailure());
     }

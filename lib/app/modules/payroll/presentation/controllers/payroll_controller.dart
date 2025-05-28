@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_id_params_model.dart';
+import 'package:iroyal/app/modules/payroll/data/models/payroll_period_params_model.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_period_model.dart';
 import 'package:iroyal/app/modules/payroll/domain/entities/payroll_data_overview_entity.dart';
 import 'package:iroyal/app/modules/payroll/domain/entities/payroll_download_url_entity.dart';
@@ -29,6 +29,9 @@ class PayrollController extends GetxController {
   });
 
   RxString payrollPeriod = ''.obs;
+  RxString selectedFilename = ''.obs;
+
+  RxInt selectedIndex = 0.obs;
 
   RxBool isLoading = false.obs;
   RxBool isObsecureText = true.obs;
@@ -60,8 +63,7 @@ class PayrollController extends GetxController {
   void onInit() async {
     super.onInit();
     await _getPayrollPeriod();
-    payrollDataOverview(payrollPeriodRes.value.data[0].id);
-    downloadSlipUrl(payrollPeriodRes.value.data[0].id);
+    // payrollDataOverview(payrollPeriodRes.value.data[0].id);
   }
 
   Future<void> _getPayrollPeriod() async {
@@ -83,55 +85,82 @@ class PayrollController extends GetxController {
     );
   }
 
-  Future<void> payrollDataOverview(int payrollId) async {
-    final response = await payrollDataOverviewUsecase(
-      PayrollIdParamsModel(payrollId: payrollId),
-    );
-
-    response.fold(
-      (l) {
-        isLoading.value = false;
-      },
-      (r) {
-        isLoading.value = false;
-        payrollDataOverviewRes.value = r;
-      },
-    );
+  void selectedPeriod(int index, String value, String filename) {
+    selectedIndex.value = index;
+    payrollPeriod.value = value;
+    selectedFilename.value = filename;
   }
+  // Future<void> payrollDataOverview(int payrollId) async {
+  //   final response = await payrollDataOverviewUsecase(
+  //     PayrollIdParamsModel(payrollId: payrollId),
+  //   );
 
-  Future<void> downloadSlipUrl(int payrollId) async {
-    isLoading.value = true;
+  //   response.fold(
+  //     (l) {
+  //       isLoading.value = false;
+  //     },
+  //     (r) {
+  //       isLoading.value = false;
+  //       payrollDataOverviewRes.value = r;
+  //     },
+  //   );
+  // }
 
-    final result = await payrollDownloadUrlUsecase(
-      PayrollIdParamsModel(payrollId: payrollId),
-    );
+  void downloadSlipUrl(String payrollPeriod, String fileName) {
+    appDialog.showInfoDialog(
+      title: 'Disclaimer',
+      description: '''
+🔒 DISCLAIMER – KERAHASIAAN SLIP GAJI
 
-    result.fold(
-      (l) {
-        isLoading.value = false;
-      },
-      (r) {
-        isLoading.value = false;
-        payrollDownloadUrlRes.value = r;
-      },
-    );
-  }
+Slip gaji ini merupakan dokumen bersifat rahasia yang hanya diperuntukkan bagi karyawan yang bersangkutan dan tidak untuk disebarluaskan kepada pihak manapun di luar kepentingan pribadi dan internal perusahaan.
 
-  Future<void> downloadFiles(String url, String fileName) async {
-    final result = await downloadFile(
-      ParamsDownload(url: url, fileName: fileName),
-    );
+Dengan mengakses dan/atau mengunduh slip gaji ini, Anda menyatakan setuju untuk:
 
-    await result.fold(
-      (failure) =>
-          appDialog.showErrorSnackBar(description: 'Failed Download Document'),
-      (success) async {
-        await appDialog.showSuccessSnackBar(
-          description: 'Success Download Document',
+1. Menjaga kerahasiaan informasi yang tercantum di dalam slip gaji.
+2. Tidak menggandakan, membagikan, atau memperlihatkan isi slip gaji kepada pihak lain tanpa izin tertulis dari manajemen perusahaan.
+3. Bertanggung jawab penuh atas penyalahgunaan informasi apabila terjadi pelanggaran yang berasal dari pihak Anda.
+
+Setiap pelanggaran terhadap kebijakan kerahasiaan ini akan dikenakan sanksi sesuai ketentuan perusahaan dan/atau hukum yang berlaku.
+''',
+      textButton: 'Download',
+      isLoading: isLoading.value,
+      onPress: () async {
+        isLoading.value = true;
+        Get.back();
+
+        final result = await payrollDownloadUrlUsecase(
+          PayrollPeriodParamsModel(
+              payrollPeriod: payrollPeriod, filename: fileName),
+        );
+
+        result.fold(
+          (l) {
+            isLoading.value = false;
+          },
+          (r) {
+            isLoading.value = false;
+            // payrollDownloadUrlRes.value = r;
+          },
         );
       },
     );
   }
+
+  // Future<void> downloadFiles(String url, String fileName) async {
+  //   final result = await downloadFile(
+  //     ParamsDownload(url: url, fileName: fileName),
+  //   );
+
+  //   await result.fold(
+  //     (failure) =>
+  //         appDialog.showErrorSnackBar(description: 'Failed Download Document'),
+  //     (success) async {
+  //       await appDialog.showSuccessSnackBar(
+  //         description: 'Success Download Document',
+  //       );
+  //     },
+  //   );
+  // }
 
   void toggleShow() {
     isObsecureText.value = !isObsecureText.value;

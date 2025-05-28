@@ -24,7 +24,7 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'ptk/detail',
+        endpoint: 'ptk/detail',
         method: Method.GET,
         showPopUp: true,
         params: {'labor_id': params},
@@ -51,7 +51,7 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'ptk/approval',
+        endpoint: 'ptk/approval',
         method: Method.GET,
         showPopUp: true,
         params: params,

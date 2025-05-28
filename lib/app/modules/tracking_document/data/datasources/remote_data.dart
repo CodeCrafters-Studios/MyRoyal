@@ -23,7 +23,7 @@ class TrackingDocumentRemoteDataSourcesImpl
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'ptk/allPtkOnProgress',
+        endpoint: 'ptk/allPtkOnProgress',
         method: Method.GET,
         showPopUp: true,
       );
@@ -48,7 +48,7 @@ class TrackingDocumentRemoteDataSourcesImpl
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'ptk/allPtkComplete',
+        endpoint: 'ptk/allPtkComplete',
         method: Method.GET,
         showPopUp: true,
       );

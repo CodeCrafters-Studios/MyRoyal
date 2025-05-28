@@ -18,7 +18,7 @@ class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'oauth/profile',
+        endpoint: 'oauth/profile',
         method: Method.GET,
         showPopUp: true,
       );

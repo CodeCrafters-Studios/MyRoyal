@@ -18,7 +18,7 @@ class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'webtel/getAll',
+        endpoint: 'webtel/getAll',
         method: Method.GET,
       );
       if (r['code'] != 200) {

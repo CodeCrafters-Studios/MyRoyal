@@ -53,7 +53,7 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
         final r = await httpService.request(
           withToken: true,
           paramsImg: formData,
-          enpoint: 'oauth/updateProfile',
+          endpoint: 'oauth/updateProfile',
           showPopUp: true,
         );
         if (r['code'] != 200) {
@@ -79,7 +79,7 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
             "gender": editProfileParams.gender,
             "profile": editProfileParams.profilePicture,
           },
-          enpoint: 'oauth/updateProfile',
+          endpoint: 'oauth/updateProfile',
         );
         if (r['code'] != 200) {
           throw ApiException(r['message']);

@@ -1,5 +1,4 @@
 import 'package:iroyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
 import 'package:iroyal/app/modules/payroll/data/models/payroll_period_model.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
@@ -8,12 +7,9 @@ import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class PayrollRemoteDataSources {
   Future<PayrollPeriodModel> getPayrollPeriod();
-  Future<PayrollDownloadUrlModel> payrollDownloadUrl(
-    Map<String, dynamic> params,
-  );
+  Future<void> payrollDownloadUrl(Map<String, dynamic> params);
   Future<PayrollDataOverviewModel> payrollDataOverview(
-    Map<String, dynamic> params,
-  );
+      Map<String, dynamic> params);
 }
 
 class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
@@ -26,7 +22,7 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'payroll/getActivePayroll',
+        endpoint: 'payroll/getActivePayroll',
         method: Method.GET,
         showPopUp: true,
       );
@@ -48,21 +44,27 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
   }
 
   @override
-  Future<PayrollDownloadUrlModel> payrollDownloadUrl(
-      Map<String, dynamic> params) async {
+  Future<void> payrollDownloadUrl(Map<String, dynamic> params) async {
+    AppUtils.logApp('PARAMS $params');
     try {
-      final r = await httpService.request(
-        withToken: true,
-        enpoint: 'payroll/downloadSlip',
+      await httpService.downloadFilePost(
+        endpoint: 'payroll/downloadSlip',
+        fileName: '${params["filename"]}.pdf',
         params: params,
-        showPopUp: true,
+        withToken: true,
+        onReceiveProgress: (received, total) {
+          if (total <= 0) {
+            AppUtils.logApp('Download progress: unknown (received: $received)');
+          } else {
+            final progress = (received / total * 100).toStringAsFixed(0);
+            AppUtils.logApp('Download progress: $progress%');
+          }
+        },
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
 
-      final response = PayrollDownloadUrlModel.fromJson(r);
-      return response;
+      AppUtils.logApp('Download success');
+
+      // final response = PayrollDownloadUrlModel.fromJson(r);
     } on ServerFailure {
       throw ApiException('Server error occurred');
     } on ApiException catch (e) {
@@ -80,7 +82,7 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'payroll/viewPayroll',
+        endpoint: 'payroll/viewPayroll',
         params: params,
         showPopUp: true,
       );

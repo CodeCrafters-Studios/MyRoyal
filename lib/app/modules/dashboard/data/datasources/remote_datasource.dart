@@ -24,7 +24,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'dashboard/index',
+        endpoint: 'dashboard/index',
         method: Method.GET,
       );
       if (r['code'] != 200) {
@@ -48,7 +48,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'dashboard/getData',
+        endpoint: 'dashboard/getData',
         method: Method.GET,
         showPopUp: true,
         params: {"type": "specialLeave"},
@@ -74,7 +74,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'dashboard/getData',
+        endpoint: 'dashboard/getData',
         method: Method.GET,
         showPopUp: true,
         params: {"type": "lateAttendance"},
@@ -100,7 +100,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'dashboard/getData',
+        endpoint: 'dashboard/getData',
         method: Method.GET,
         showPopUp: true,
         params: {"type": "permitRequest"},

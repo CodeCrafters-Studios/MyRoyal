@@ -38,7 +38,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/getDataLeave',
+        endpoint: 'attendance/getDataLeave',
         method: Method.GET,
       );
       if (r['code'] != 200) {
@@ -62,7 +62,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/getDataForm',
+        endpoint: 'attendance/getDataForm',
         method: Method.GET,
       );
       if (r['code'] != 200) {
@@ -87,7 +87,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/submission',
+        endpoint: 'attendance/submission',
         params: createFormLeaveParams,
         showPopUp: true,
       );
@@ -113,7 +113,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/approval',
+        endpoint: 'attendance/approval',
         params: actionFormLeaveParams,
       );
       if (r['code'] != 200) {
@@ -138,7 +138,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'attendance/submissionPermit',
+        endpoint: 'attendance/submissionPermit',
         params: createFormPermitParams,
         showPopUp: true,
       );
@@ -163,7 +163,7 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'dashboard/getData',
+        endpoint: 'dashboard/getData',
         method: Method.GET,
         params: {"type": "permitRequest"},
         showPopUp: true,

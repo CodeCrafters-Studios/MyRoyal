@@ -19,7 +19,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'oauth/user',
+        endpoint: 'oauth/user',
         method: Method.GET,
       );
       if (r['code'] != 200) {
@@ -43,7 +43,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       final r = await httpService.customRequest(
         withToken: true,
-        enpoint: 'api/shelves',
+        endpoint: 'api/shelves',
         method: Method.GET,
       );
       final articlesResponse = ArticlesModel.fromJson(r);

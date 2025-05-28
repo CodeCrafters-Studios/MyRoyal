@@ -19,7 +19,7 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
     try {
       final r = await httpService.customRequest(
         withToken: true,
-        enpoint: 'api/shelves/$id',
+        endpoint: 'api/shelves/$id',
         method: Method.GET,
       );
       final articlesDetailResponse = ArticlesDetailModel.fromJson(r);
@@ -34,7 +34,7 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
     try {
       final r = await httpService.customRequest(
         withToken: true,
-        enpoint: 'api/books/$id',
+        endpoint: 'api/books/$id',
         method: Method.GET,
       );
       final booksDetailResponse = BooksDetailModel.fromJson(r);

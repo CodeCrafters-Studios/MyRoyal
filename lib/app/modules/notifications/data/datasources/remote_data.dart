@@ -20,7 +20,7 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'notification/notifyPagination',
+        endpoint: 'notification/notifyPagination',
         method: Method.GET,
         showPopUp: true,
         params: {'page': params},
@@ -46,7 +46,7 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
     try {
       final r = await httpService.request(
         withToken: true,
-        enpoint: 'notification/clickNotification',
+        endpoint: 'notification/clickNotification',
         showPopUp: true,
         params: {'notification_id': params},
       );
