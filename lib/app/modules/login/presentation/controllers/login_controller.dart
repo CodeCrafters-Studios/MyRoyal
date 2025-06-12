@@ -114,11 +114,30 @@ class LoginController extends GetxController {
     // Get Device Id iOS
     final info = await deviceInfo.info();
 
+    String deviceUser = '';
+    String deviceId = '';
+
     // Get Android Id
     final String? androidId = await AndroidId().getId();
 
-    final deviceId = Platform.isAndroid ? androidId.toString() : info.id;
+    if (Platform.isAndroid) {
+      deviceId = androidId.toString();
+      deviceUser = '${info.model}-${info.brand}-${info.osVersion}';
+    } else if (Platform.isIOS) {
+      deviceId = info.id;
+
+      deviceUser =
+          '${info.model}-${info.brand}-${info.hardware}-${info.osVersion}';
+    } else {
+      deviceUser = '';
+      deviceId = '';
+    }
+
     await appStorage.write('device-id', deviceId);
+    await appStorage.write('device-user', deviceUser);
+
+    AppUtils.logApp('DEVICE ID :::: $deviceId');
+    AppUtils.logApp('DEVICE USER :::: $deviceUser');
 
     // Get the required min version from Firebase Remote Config
     final requiredMinVersion = _getExtendedVersionNumber(
@@ -207,7 +226,11 @@ class LoginController extends GetxController {
     }
     final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
     final deviceId = await appStorage.read('device-id');
+    final deviceUser = await appStorage.read('device-user');
+    final deviceUserParams = '$deviceUser-${username()}';
+
     AppUtils.logApp('$cacheFcmToken');
+    AppUtils.logApp('DEVICE USER :::: $deviceUserParams');
 
     isLoading(true);
     final r = await getLoginParams(
@@ -223,7 +246,9 @@ class LoginController extends GetxController {
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
-        deviceId: deviceId.toString(),
+        deviceId: deviceId.toString().isEmpty || deviceId.toString() == ''
+            ? deviceUserParams
+            : deviceId.toString(),
       ),
     );
     r.fold((l) {

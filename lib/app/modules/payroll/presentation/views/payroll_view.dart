@@ -56,7 +56,7 @@ class PayrollView extends GetView<PayrollController> {
                                 ),
                                 trailing: index == 0
                                     ? Text(
-                                        'Ongoing',
+                                        'Latest',
                                         style: TS.bodyMini
                                             .copyWith(color: greyIcon),
                                       )

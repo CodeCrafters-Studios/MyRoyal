@@ -28,7 +28,6 @@ import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:permission_handler/permission_handler.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
@@ -255,7 +254,7 @@ class HttpService extends getx.GetxService {
         catchError('Unauthorized', showPopUp: showPopUp);
         Get.offAllNamed(Routes.LOGIN);
       } else if (response.statusCode == 422) {
-        catchError('Error System', showPopUp: showPopUp);
+        catchError(response.data, showPopUp: showPopUp);
       } else if (response.statusCode == 500) {
         catchError('Internal Server Error', showPopUp: showPopUp);
       } else {
@@ -424,16 +423,23 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  Future<bool> _requestStoragePermission() async {
-    if (Platform.isAndroid) {
-      final status = await Permission.storage.status;
-      if (!status.isGranted) {
-        final result = await Permission.storage.request();
-        return result == PermissionStatus.granted;
-      }
-    }
-    return true;
-  }
+  // Future<bool> _requestStoragePermission() async {
+  //   if (Platform.isAndroid) {
+  //     final androidInfo = await DeviceInfoPlugin().androidInfo;
+  //     final sdkInt = androidInfo.version.sdkInt;
+
+  //     if (sdkInt >= 33) {
+  //       final status = await Permission.photos.request();
+  //       return status.isGranted;
+  //     } else {
+  //       final status = await Permission.storage.request();
+  //       return status.isGranted;
+  //     }
+  //   } else {
+  //     final status = await Permission.storage.request();
+  //     return status.isGranted;
+  //   }
+  // }
 
   Future<Directory?> _getDownloadDirectory() async {
     if (Platform.isIOS) {
@@ -491,11 +497,11 @@ class HttpService extends getx.GetxService {
       return;
     }
 
-    final hasPermission = await _requestStoragePermission();
-    if (!hasPermission) {
-      catchError('Storage permission denied');
-      return;
-    }
+    // final hasPermission = await _requestStoragePermission();
+    // if (!hasPermission) {
+    //   catchError('Storage permission denied');
+    //   return;
+    // }
 
     final url = AppConfig.environment.baseUrl + endpoint;
 
@@ -559,7 +565,6 @@ class HttpService extends getx.GetxService {
         AppUtils.logApp(
             'Download failed. Server returned non-PDF response: $responseString');
         catchError(
-          title: 'Gagal mengunduh slip',
           message,
         );
       }
@@ -596,13 +601,12 @@ class HttpService extends getx.GetxService {
     );
   }
 
-  void catchError(String message, {bool showPopUp = true, String? title}) {
+  void catchError(String message, {bool showPopUp = true}) {
     if (showPopUp) {
       if (message.isNotEmpty) {
         if (message == "Unauthenticated.") {
           AppDialogImpl().showErrorDialog(
-            title: message,
-            description: 'You need to login again, sorry for the inconvenience',
+            description: message,
             onPress: () async {
               await appStorage.delete(CACHE_ACCESS_TOKEN);
               await appStorage.delete(CACHE_REFRESH_TOKEN);
@@ -611,7 +615,6 @@ class HttpService extends getx.GetxService {
           );
         } else {
           AppDialogImpl().showErrorDialog(
-            title: title ?? 'System is Under Maintenance',
             description: message,
             textButton: 'Close',
           );

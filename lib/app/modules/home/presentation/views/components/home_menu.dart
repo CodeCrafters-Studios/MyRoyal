@@ -40,10 +40,22 @@ class HomeMenu extends StatelessWidget {
           case 'Dashboard':
             Get.toNamed(Routes.DASHBOARD);
             break;
-          case 'Tasks':
-            Get.to(() => const ComingSoonScreen());
-            // Get.toNamed(Routes.TASKS);
+          case 'Leaves':
+            if (canAccessLeave) {
+              Get.toNamed(Routes.LEAVE_SUMMARY);
+            } else {
+              AppDialogImpl().showErrorDialog(
+                title: 'Perhatian',
+                description:
+                    'Shift kerja belum terdaftar, harap hubungi bagian personalia.',
+                textButton: 'Close',
+              );
+            }
             break;
+          // case 'Tasks':
+          //   Get.to(() => const ComingSoonScreen());
+          //   // Get.toNamed(Routes.TASKS);
+          //   break;
           case 'Payroll':
             Get.toNamed(Routes.CHECK_PASSWORD);
             break;
@@ -60,17 +72,50 @@ class HomeMenu extends StatelessWidget {
           case 'My Teams':
             Get.toNamed(Routes.MY_TEAMS);
             break;
-          case 'Leaves':
-            if (canAccessLeave) {
-              Get.toNamed(Routes.LEAVE_SUMMARY);
-            } else {
-              AppDialogImpl().showErrorDialog(
-                title: 'Perhatian',
-                description:
-                    'Shift kerja belum terdaftar, harap hubungi bagian personalia.',
-                textButton: 'Close',
-              );
-            }
+          case 'Online App':
+            AppDialogImpl().showLiquidGlassDialog(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: 54.h,
+                        padding: REdgeInsets.all(4),
+                        child: Center(
+                          child: Image.asset('assets/icons/ic_ras_app.png'),
+                        ),
+                      ),
+                      Text(
+                        menu.name,
+                        textAlign: TextAlign.center,
+                        style: TS.caption,
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 30),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: 54.h,
+                        padding: REdgeInsets.all(4),
+                        child: Center(
+                          child: Image.asset('assets/icons/ic_cam_app.png'),
+                        ),
+                      ),
+                      Text(
+                        menu.name,
+                        textAlign: TextAlign.center,
+                        style: TS.caption,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
             break;
           case 'Approval':
             Get.toNamed(Routes.APPROVAL);

@@ -49,8 +49,8 @@ class HomeController extends GetxController {
       name: 'Dashboard',
     ),
     const Menu(
-      code: 'ic_task',
-      name: 'Tasks',
+      code: 'ic_leaves',
+      name: 'Leaves',
     ),
     const Menu(
       code: 'ic_payroll',
@@ -68,14 +68,19 @@ class HomeController extends GetxController {
       code: 'ic_tracking_documents',
       name: 'Tracking Documents',
     ),
+
     const Menu(
-      code: 'ic_leaves',
-      name: 'Leaves',
+      code: 'ic_online_app',
+      name: 'Online App',
     ),
     const Menu(
       code: 'ic_approval',
       name: 'Approval',
     ),
+    // const Menu(
+    //   code: 'ic_task',
+    //   name: 'Tasks',
+    // ),
     // const Menu(
     //   code: 'ic_teams',
     //   name: 'My Teams',
@@ -156,7 +161,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
-    // _showEventDialog();
+    _showEventDialog();
     // _getArticles();
   }
 
@@ -312,11 +317,12 @@ class HomeController extends GetxController {
     return filterNewNotif;
   }
 
-  // void _showEventDialog() {
-  //   appDialog.showEventDialog(
-  //     imagePath: 'assets/json/lottie_ramadhan_kareem_event.json',
-  //   );
-  // }
+  void _showEventDialog() {
+    appDialog.showEventDialog(
+      isImg: true,
+      imagePath: 'assets/images/img_idul_adha.gif',
+    );
+  }
 
   // Future<void> _getArticles() async {
   //   isLoading.value = true;

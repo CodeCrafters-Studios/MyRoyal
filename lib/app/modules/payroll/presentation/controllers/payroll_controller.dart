@@ -121,6 +121,8 @@ Dengan mengakses dan/atau mengunduh slip gaji ini, Anda menyatakan setuju untuk:
 3. Bertanggung jawab penuh atas penyalahgunaan informasi apabila terjadi pelanggaran yang berasal dari pihak Anda.
 
 Setiap pelanggaran terhadap kebijakan kerahasiaan ini akan dikenakan sanksi sesuai ketentuan perusahaan dan/atau hukum yang berlaku.
+
+Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
 ''',
       textButton: 'Download',
       isLoading: isLoading.value,

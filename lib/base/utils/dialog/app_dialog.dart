@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -109,11 +111,13 @@ abstract class AppDialog {
 
   Future<void> showEventDialog({
     String? imagePath,
-    String? title,
-    String? description,
-    String? textButton,
-    double? height,
-    double? width,
+    bool? isImg,
+    Function()? onPress,
+  });
+
+  Future<void> showLiquidGlassDialog({
+    String? imagePath,
+    Widget? child,
     Function()? onPress,
   });
 }
@@ -857,14 +861,11 @@ class AppDialogImpl implements AppDialog {
   }
 
   @override
-  Future<void> showEventDialog(
-      {String? imagePath,
-      String? title,
-      String? description,
-      String? textButton,
-      double? height,
-      double? width,
-      Function()? onPress}) async {
+  Future<void> showEventDialog({
+    String? imagePath,
+    bool? isImg,
+    Function()? onPress,
+  }) async {
     await Get.dialog(
       Dialog(
         backgroundColor: Colors.transparent,
@@ -873,11 +874,12 @@ class AppDialogImpl implements AppDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              imagePath.toString(),
-              height: 500.h,
-              width: width,
-            ),
+            isImg == true
+                ? Image.asset(imagePath.toString())
+                : Lottie.asset(
+                    imagePath.toString(),
+                    height: 500.h,
+                  ),
             15.verticalSpace,
             InkWellTap(
               radius: Corners.xxl,
@@ -886,13 +888,42 @@ class AppDialogImpl implements AppDialog {
               child: Image.asset(
                 'assets/images/img_icon_close_banner.png',
                 height: 48.h,
-                width: width,
               ),
             )
           ],
         ),
       ),
       barrierDismissible: false,
+    );
+  }
+
+  @override
+  Future<void> showLiquidGlassDialog(
+      {String? imagePath, Widget? child, Function()? onPress}) async {
+    await Get.dialog(
+      barrierColor: Colors.white12.withOpacity(0.2),
+      BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: REdgeInsets.symmetric(horizontal: 10),
+          child: Container(
+            width: 100,
+            height: 225,
+            padding: EdgeInsets.fromLTRB(
+              Insets.med,
+              Insets.med,
+              Insets.med,
+              Insets.xs,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: Corners.smBorder,
+              color: Color(0xFFC0C0C0).withOpacity(0.25),
+            ),
+            child: child,
+          ),
+        ),
+      ),
     );
   }
 }

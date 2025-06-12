@@ -1,5 +1,5 @@
 name: iroyal
-version: 1.2.0+24
+version: 1.2.2+28
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -56,6 +56,7 @@ dependencies:
   shimmer: ^3.0.0
   tuple: ^2.0.2
   url_launcher: ^6.3.1
+  uuid: ^4.5.1
   webview_flutter: ^4.7.0
 
 dev_dependencies:

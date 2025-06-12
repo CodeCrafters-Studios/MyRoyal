@@ -106,6 +106,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
   Get
     ..put(AppConfig.environment)
     ..put(dio)
+    ..put(box)
     ..put(inspector)
     ..put(AppStorage(box: box))
     ..put(
