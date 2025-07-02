@@ -23,7 +23,7 @@ import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repositor
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
 import 'package:iroyal/app/modules/notifications/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/notifications/data/repositories/notifications_repository_impl.dart';
+import 'package:iroyal/app/modules/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:iroyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
@@ -51,8 +51,8 @@ import 'package:iroyal/base/utils/permission/app_permission.dart';
 class HomeBinding extends Bindings {
   @override
   void dependencies() {
-    // My Teams
     Get
+      // My Teams
       ..lazyPut<MyTeamsController>(
         () => MyTeamsController(
           getMyTeams: Get.find(),

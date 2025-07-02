@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/base/config/app_constants.dart';
@@ -120,6 +121,14 @@ abstract class AppDialog {
     Widget? child,
     Function()? onPress,
   });
+
+  Future<void> showLiquidGlassInfo({
+    String? imagePath,
+    String title,
+    Widget? child,
+  });
+
+  Future<void> showLoading({String title});
 }
 
 class AppDialogImpl implements AppDialog {
@@ -925,5 +934,101 @@ class AppDialogImpl implements AppDialog {
         ),
       ),
     );
+  }
+
+  @override
+  Future<void> showLiquidGlassInfo({
+    String? imagePath,
+    String? title,
+    Widget? child,
+  }) async {
+    await Get.dialog(
+      barrierColor: Colors.white12.withOpacity(0.2),
+      BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: REdgeInsets.symmetric(horizontal: 20),
+          child: Container(
+            height: 120,
+            width: 60,
+            padding: EdgeInsets.all(
+              Insets.med,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: Corners.smBorder,
+              color: Color(0xFFC0C0C0).withOpacity(0.25),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (imagePath != null)
+                  SvgPicture.asset(
+                    imagePath,
+                    height: 45.w,
+                    width: 45.w,
+                  ),
+                SizedBox(height: 5),
+                if (title != null)
+                  Text(
+                    title,
+                    style: TS.titleMedium,
+                    textAlign: TextAlign.center,
+                  )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> showLoading({String title = 'Please Wait'}) async {
+    await Get.dialog(
+      PopScope(
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(10),
+          elevation: 0,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                height: 55,
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SpinKitWave(
+                      color: primary,
+                      size: 20,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      title,
+                      style: TS.bodyMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void hideLoading() {
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
+    }
   }
 }

@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entities.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entity.dart';
 
-class BooksDetailModel extends BooksDetailEntities {
+class BooksDetailModel extends BooksDetailEntity {
   const BooksDetailModel({
     required super.id,
     required super.name,

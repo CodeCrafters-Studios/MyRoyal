@@ -6,7 +6,10 @@ import 'package:iroyal/base/widgets/padding.dart';
 class NoResultWidget extends StatelessWidget {
   const NoResultWidget({
     super.key,
+    this.description,
   });
+
+  final String? description;
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +17,19 @@ class NoResultWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 120.h,
-          width: 350.w,
+          height: 120,
+          width: 350,
           child: Image.asset('assets/images/img_no-result.gif'),
         ),
         EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(
             children: [
-              Text("Sorry! No Result Found :(",
-                  style: TS.bodyMini.copyWith(fontSize: 12)),
+              Text("Sorry! No Result Found :(", style: TS.titleSmall),
               8.verticalSpace,
               Text(
-                "We'are sorry what you were looking for.\nPlease try another keys.",
+                description ??
+                    "We'are sorry what you were looking for.\nPlease try another keys.",
                 style: TS.labelSmall,
                 maxLines: 2,
                 textAlign: TextAlign.center,

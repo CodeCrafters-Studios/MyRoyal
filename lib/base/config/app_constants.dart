@@ -32,3 +32,4 @@ const CACHE_USER = 'cache-user';
 const String tokenID = 'MdNnMxPdVmCvMdC7B05IWAOSKpY6CpSs';
 const String tokenSecret = 'UvFv9ywAfH5yJ4hyF1l6q45A8ARehZxq';
 const String baseUrlRoyalWiki = 'https://wiki.royalcorp.co.id/';
+const String USER_ID_JDE = 'user-id-jde';

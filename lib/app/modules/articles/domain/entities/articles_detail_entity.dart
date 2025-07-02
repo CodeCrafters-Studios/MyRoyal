@@ -1,4 +1,4 @@
-class ArticlesDetailEntities {
+class ArticlesDetailEntity {
   final int id;
   final String name;
   final String slug;
@@ -13,7 +13,7 @@ class ArticlesDetailEntities {
   final Cover cover;
   final List<Book> books;
 
-  ArticlesDetailEntities({
+  ArticlesDetailEntity({
     required this.id,
     required this.name,
     required this.slug,

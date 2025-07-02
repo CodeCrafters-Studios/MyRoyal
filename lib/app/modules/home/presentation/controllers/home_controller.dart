@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
+import 'package:iroyal/app/modules/home/data/models/user_jde_params_model.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_user_jde_usecase.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/articles_entites.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
@@ -11,12 +14,15 @@ import 'package:iroyal/app/modules/notifications/data/models/notification_data_l
 import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
 import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
@@ -28,6 +34,7 @@ class HomeController extends GetxController {
     required this.appDialog,
     required this.appStorage,
     required this.getArticles,
+    required this.getUserJde,
   });
 
   String userState = '';
@@ -132,10 +139,12 @@ class HomeController extends GetxController {
           data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
       .obs;
   Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
+  Rx<UserJdeModel> userJdeData = UserJdeModel.empty().obs;
 
   final GetUser getUser;
   final GetNotifications getNotifications;
   final GetArticlesUsecase getArticles;
+  final GetUserJdeUsecase getUserJde;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
@@ -161,7 +170,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
-    _showEventDialog();
+    // _showEventDialog();
     // _getArticles();
   }
 
@@ -292,6 +301,40 @@ class HomeController extends GetxController {
     );
   }
 
+  Future<void> getUserJDE(String company, String username) async {
+    appDialog.showLoading();
+
+    final result = await getUserJde.call(
+      UserJdeParamsModel(
+        username: username,
+        company: company,
+      ),
+    );
+    // userData.value.data.username
+
+    result.fold(
+      (l) {
+        AppDialogImpl().hideLoading();
+        Get.back();
+        AppUtils.logApp('ERROR R ${l.properties}');
+        final m = l.properties[0] as ApiException;
+        appDialog.showErrorDialog(description: m.message);
+      },
+      (r) async {
+        AppDialogImpl().hideLoading();
+        Get.back();
+        userJdeData.value = r;
+        await appStorage.write(
+            USER_ID_JDE, userJdeData.value.data.data.first.userid);
+        if (company == 'CAM') {
+          Get.toNamed(Routes.CAM_APP);
+        } else {
+          Get.to(ComingSoonScreen());
+        }
+      },
+    );
+  }
+
   Future<void> _getNotifications() async {
     isLoading.value = true;
 
@@ -317,12 +360,12 @@ class HomeController extends GetxController {
     return filterNewNotif;
   }
 
-  void _showEventDialog() {
-    appDialog.showEventDialog(
-      isImg: true,
-      imagePath: 'assets/images/img_idul_adha.gif',
-    );
-  }
+  // void _showEventDialog() {
+  //   appDialog.showEventDialog(
+  //     isImg: true,
+  //     imagePath: 'assets/images/img_idul_adha.gif',
+  //   );
+  // }
 
   // Future<void> _getArticles() async {
   //   isLoading.value = true;

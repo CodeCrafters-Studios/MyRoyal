@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entities.dart';
-import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entities.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entity.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entity.dart';
 import 'package:iroyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
 import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
 import 'package:iroyal/app/modules/articles/presentation/views/components/books_view.dart';
@@ -17,7 +17,7 @@ class ArticlesController extends GetxController {
 
   RxBool isLoading = false.obs;
 
-  Rx<ArticlesDetailEntities> dataArticleDetail = ArticlesDetailEntities(
+  Rx<ArticlesDetailEntity> dataArticleDetail = ArticlesDetailEntity(
     id: 0,
     name: '',
     slug: '',
@@ -43,7 +43,7 @@ class ArticlesController extends GetxController {
     ),
     books: [],
   ).obs;
-  Rx<BooksDetailEntities> dataBookDetail = BooksDetailEntities(
+  Rx<BooksDetailEntity> dataBookDetail = BooksDetailEntity(
     id: 0,
     name: '',
     slug: '',

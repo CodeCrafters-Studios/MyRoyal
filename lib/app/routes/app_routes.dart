@@ -34,6 +34,9 @@ abstract class Routes {
   static const APPROVAL = _Paths.APPROVAL;
   static const CHECK_PASSWORD = _Paths.CHECK_PASSWORD;
   static const ARTICLES = _Paths.ARTICLES;
+  static const CAM_APP = _Paths.CAM_APP;
+  static const CAM_APP_TRACE_SERIAL = _Paths.CAM_APP_TRACE_SERIAL;
+  static const CAM_APP_RESERVED_BY = _Paths.CAM_APP_RESERVED_BY;
 }
 
 abstract class _Paths {
@@ -67,4 +70,7 @@ abstract class _Paths {
   static const APPROVAL = '/approval';
   static const CHECK_PASSWORD = '/check-password';
   static const ARTICLES = '/articles';
+  static const CAM_APP = '/cam-app';
+  static const CAM_APP_TRACE_SERIAL = '/cam-app-trace-serial';
+  static const CAM_APP_RESERVED_BY = '/cam-app-reserved-by';
 }

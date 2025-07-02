@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entities.dart';
+import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entity.dart';
 
-class ArticlesDetailModel extends ArticlesDetailEntities {
+class ArticlesDetailModel extends ArticlesDetailEntity {
   ArticlesDetailModel({
     required super.id,
     required super.name,

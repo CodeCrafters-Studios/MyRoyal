@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
+import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -15,7 +16,7 @@ import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
 class HomeMenu extends StatelessWidget {
-  const HomeMenu({
+  HomeMenu({
     super.key,
     required this.menu,
     required this.appStorage,
@@ -23,6 +24,7 @@ class HomeMenu extends StatelessWidget {
 
   final Menu menu;
   final AppStorage appStorage;
+  final controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -78,40 +80,47 @@ class HomeMenu extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: 54.h,
-                        padding: REdgeInsets.all(4),
-                        child: Center(
-                          child: Image.asset('assets/icons/ic_ras_app.png'),
+                  GestureDetector(
+                    onTap: () => Get.to(ComingSoonScreen()),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 54.h,
+                          padding: REdgeInsets.all(4),
+                          child: Center(
+                            child: Image.asset('assets/icons/ic_ras_app.png'),
+                          ),
                         ),
-                      ),
-                      Text(
-                        menu.name,
-                        textAlign: TextAlign.center,
-                        style: TS.caption,
-                      ),
-                    ],
+                        Text(
+                          'RAS App',
+                          textAlign: TextAlign.center,
+                          style: TS.caption,
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(width: 30),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: 54.h,
-                        padding: REdgeInsets.all(4),
-                        child: Center(
-                          child: Image.asset('assets/icons/ic_cam_app.png'),
+                  GestureDetector(
+                    onTap: () =>
+                        controller.getUserJDE('CAM', cacheUserData.username),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 54.h,
+                          padding: REdgeInsets.all(4),
+                          child: Center(
+                            child: Image.asset('assets/icons/ic_cam_app.png'),
+                          ),
                         ),
-                      ),
-                      Text(
-                        menu.name,
-                        textAlign: TextAlign.center,
-                        style: TS.caption,
-                      ),
-                    ],
+                        Text(
+                          'CAM App',
+                          textAlign: TextAlign.center,
+                          style: TS.caption,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

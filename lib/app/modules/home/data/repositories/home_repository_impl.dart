@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
@@ -40,8 +41,18 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final r = await remoteData.getArticles();
       return Right(r);
-    } on ApiException {
-      return const Left(ServerFailure());
+    } catch (e) {
+      return Left(ServerFailure(properties: [e]));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserJdeModel>> getUserJDE(params) async {
+    try {
+      final r = await remoteData.getUserJde(params);
+      return Right(r);
+    } catch (e) {
+      return Left(ServerFailure(properties: [e]));
     }
   }
 }

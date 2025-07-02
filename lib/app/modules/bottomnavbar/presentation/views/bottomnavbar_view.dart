@@ -53,9 +53,7 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
           children: const [
             HomeView(),
             // AttendanceView(),
-            ComingSoonScreen(
-              enableBackImpl: false,
-            ),
+            ComingSoonScreen(),
             SettingsView(),
           ],
         ),

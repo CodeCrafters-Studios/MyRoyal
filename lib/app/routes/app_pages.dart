@@ -8,6 +8,12 @@ import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
+import '../modules/cam_app/presentation/bindings/cam_app_binding.dart';
+import '../modules/cam_app/presentation/views/cam_app_view.dart';
+import '../modules/cam_app_reserved_by/presentation/bindings/cam_app_reserved_by_binding.dart';
+import '../modules/cam_app_reserved_by/presentation/views/cam_app_reserved_by_view.dart';
+import '../modules/cam_app_trace_serial/presentation/bindings/cam_app_trace_serial_binding.dart';
+import '../modules/cam_app_trace_serial/presentation/views/cam_app_trace_serial_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
 import '../modules/change_pin/bindings/change_pin_binding.dart';
@@ -212,6 +218,21 @@ class AppPages {
       name: _Paths.ARTICLES,
       page: () => const ArticlesView(),
       binding: ArticlesBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAM_APP,
+      page: () => const CamAppView(),
+      binding: CamAppBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAM_APP_TRACE_SERIAL,
+      page: () => const CamAppTraceSerialView(),
+      binding: CamAppTraceSerialBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAM_APP_RESERVED_BY,
+      page: () => const CamAppReservedByView(),
+      binding: CamAppReservedByBinding(),
     ),
   ];
 }

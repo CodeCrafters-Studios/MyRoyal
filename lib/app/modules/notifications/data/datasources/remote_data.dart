@@ -6,7 +6,7 @@ import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class NotificationsDataSources {
-  Future<NotificatiosnModel> getNotifications(params);
+  Future<NotificationModel> getNotifications(params);
   Future<TapNotificationModel> tapNotification(params);
 }
 
@@ -16,7 +16,7 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
   final HttpService httpService;
 
   @override
-  Future<NotificatiosnModel> getNotifications(params) async {
+  Future<NotificationModel> getNotifications(params) async {
     try {
       final r = await httpService.request(
         withToken: true,
@@ -28,7 +28,7 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
       if (r['code'] != 200) {
         throw ApiException(r['message']);
       }
-      final response = NotificatiosnModel.fromJson(r);
+      final response = NotificationModel.fromJson(r);
       return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class BooksDetailEntities extends Equatable {
+class BooksDetailEntity extends Equatable {
   final int id;
   final String name;
   final String slug;
@@ -10,7 +10,7 @@ class BooksDetailEntities extends Equatable {
   final String descriptionHtml;
   final CoverBooks cover;
 
-  const BooksDetailEntities({
+  const BooksDetailEntity({
     required this.id,
     required this.name,
     required this.slug,

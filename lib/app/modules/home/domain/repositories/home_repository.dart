@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/user.dart';
@@ -8,4 +9,5 @@ abstract class HomeRepository {
   Future<Either<Failure, User>> getUser();
   Future<Either<Failure, UserDataModel>> getCacheUser();
   Future<Either<Failure, ArticlesModel>> getArticles();
+  Future<Either<Failure, UserJdeModel>> getUserJDE(params);
 }

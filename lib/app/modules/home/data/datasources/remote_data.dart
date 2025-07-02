@@ -1,3 +1,4 @@
+import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -8,6 +9,7 @@ import 'package:iroyal/base/utils/app_utils.dart';
 abstract class HomeRemoteDataSource {
   Future<UserModel> getUser();
   Future<ArticlesModel> getArticles();
+  Future<UserJdeModel> getUserJde(params);
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -50,6 +52,30 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       return articlesResponse;
     } catch (e) {
       throw ApiException('$e');
+    }
+  }
+
+  @override
+  Future<UserJdeModel> getUserJde(params) async {
+    try {
+      final r = await httpService.request(
+        withToken: true,
+        endpoint: 'trackproduct/getUserJde',
+        params: params,
+      );
+      if (r['code'] != 200) {
+        throw ApiException(r['message']);
+      }
+      final response = UserJdeModel.fromJson(r);
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      rethrow;
     }
   }
 }
