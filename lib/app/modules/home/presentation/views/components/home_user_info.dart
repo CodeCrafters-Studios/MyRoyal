@@ -6,7 +6,7 @@ import 'package:iroyal/app/modules/home/presentation/views/components/home_user_
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 

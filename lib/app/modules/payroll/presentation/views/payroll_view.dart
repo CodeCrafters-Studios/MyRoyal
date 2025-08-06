@@ -78,7 +78,7 @@ class PayrollView extends GetView<PayrollController> {
                       ? controller.payrollPeriodListRes[0].filename
                       : controller.selectedFilename.value,
                 ),
-                text: 'Download',
+                text: 'Continue',
               ),
               // controller.isLoading.value
               //     ? _buildLoadingSalaryCard()

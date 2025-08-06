@@ -5,7 +5,7 @@ import 'package:iroyal/app/modules/home/presentation/controllers/home_controller
 import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 

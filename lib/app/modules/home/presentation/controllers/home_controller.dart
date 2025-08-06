@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_jde_params_model.dart';
@@ -16,13 +19,13 @@ import 'package:iroyal/app/modules/notifications/domain/entities/notification_en
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
+import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
@@ -63,10 +66,10 @@ class HomeController extends GetxController {
       code: 'ic_payroll',
       name: 'Payroll',
     ),
-    const Menu(
-      code: 'ic_visit',
-      name: 'Visit',
-    ),
+    // const Menu(
+    //   code: 'ic_visit',
+    //   name: 'Visit',
+    // ),
     const Menu(
       code: 'ic_webtel',
       name: 'Webtel',
@@ -170,7 +173,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
-    // _showEventDialog();
+    _showEventDialog();
     // _getArticles();
   }
 
@@ -187,8 +190,12 @@ class HomeController extends GetxController {
     final recommendedMinVersion = _getExtendedVersionNumber(
         firebaseRemoteConfig.getRecommendedMinimumVersion());
 
+    // Get new update popup
+    final newUpdate = await appStorage.read('new-update');
+
     final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
+    AppUtils.logApp('APP NEW UPDATE :::: $newUpdate');
     AppUtils.logApp('APP VERSION :::: $appVersion');
     AppUtils.logApp('APP VERSION REQUIRED :::: $requiredMinVersion');
     AppUtils.logApp('APP VERSION RECOMMENDED :::: $recommendedMinVersion');
@@ -202,7 +209,11 @@ class HomeController extends GetxController {
       _showUpdateVersionDialog(forceUpdateVersion,
           firebaseRemoteConfig.getRecommendedMinimumVersion());
     } else {
-      emptyBox;
+      if (newUpdate == 'true') {
+        _showWhatsNewDialog();
+      } else {
+        emptyBox;
+      }
     }
   }
 
@@ -219,22 +230,22 @@ class HomeController extends GetxController {
   void _showUpdateVersionDialog(
       bool isForceUpdateVersion, String recommendedMinVersion) {
     appDialog.showAppVersionInfoDialog(
-        isForceUpdateVersion: isForceUpdateVersion,
-        title: 'New version available',
-        description:
-            'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
-        onPressLater: Get.back,
-        onPressUpdate: () async {
-          Get.back();
-          String url =
-              "https://play.google.com/store/apps/details?id=com.iroyal";
-          if (await canLaunchUrl(Uri.parse(url))) {
-            await launchUrl(Uri.parse(url),
-                mode: LaunchMode.externalApplication);
-          } else {
-            throw 'Could not launch $url';
-          }
-        });
+      isForceUpdateVersion: isForceUpdateVersion,
+      title: 'New version available',
+      description:
+          'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
+      onPressLater: Get.back,
+      onPressUpdate: () async {
+        await appStorage.write('new-update', 'true');
+        Get.back();
+        String url = "https://play.google.com/store/apps/details?id=com.iroyal";
+        if (await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        } else {
+          throw 'Could not launch $url';
+        }
+      },
+    );
   }
 
   Future<void> _getAllMenu() async {
@@ -310,7 +321,6 @@ class HomeController extends GetxController {
         company: company,
       ),
     );
-    // userData.value.data.username
 
     result.fold(
       (l) {
@@ -329,7 +339,7 @@ class HomeController extends GetxController {
         if (company == 'CAM') {
           Get.toNamed(Routes.CAM_APP);
         } else {
-          Get.to(ComingSoonScreen());
+          Get.toNamed(Routes.RAS_APP);
         }
       },
     );
@@ -360,12 +370,101 @@ class HomeController extends GetxController {
     return filterNewNotif;
   }
 
-  // void _showEventDialog() {
-  //   appDialog.showEventDialog(
-  //     isImg: true,
-  //     imagePath: 'assets/images/img_idul_adha.gif',
-  //   );
-  // }
+  void _showEventDialog() {
+    appDialog.showEventDialog(
+      isImg: true,
+      imagePath: 'assets/images/img_banner_1.png',
+    );
+  }
+
+  void _showWhatsNewDialog() {
+    appDialog.showWhatsNewDialog(
+        title: "✨ What's new? 🎉",
+        description: 'MyRoyal ${deviceInfo.packageInfo.version}',
+        children: [
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Add new feature MyAssets (Settings -> Personal Information -> My Assets)',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 8),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Add new feature Aplikasi Online for RAS Company',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Show event banner independence day of indonesia',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Fixing bugs and handle error user JDE not found',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Improvement performence low end device',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
+        ],
+        onPress: () async {
+          await appStorage.write(
+            'new-update',
+            'false',
+          );
+          Get.back();
+        });
+  }
 
   // Future<void> _getArticles() async {
   //   isLoading.value = true;

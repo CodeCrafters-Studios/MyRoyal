@@ -5,7 +5,7 @@ import 'package:iroyal/app/modules/home/presentation/controllers/home_controller
 import 'package:iroyal/app/modules/home/presentation/views/components/loading_main_menu.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class HomeUserMenu extends GetView<HomeController> {

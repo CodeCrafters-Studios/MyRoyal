@@ -49,7 +49,7 @@ class LeaveSummaryController extends GetxController {
     firstDate: DateTime.now().add(const Duration(days: 3)),
     dayModeScrollDirection: Axis.horizontal,
     calendarType: CalendarDatePicker2Type.multi,
-    selectedDayHighlightColor: Colors.indigo,
+    selectedDayHighlightColor: primary,
     dayTextStyle: TS.bodySmall,
     monthTextStyle: TS.bodySmall,
     yearTextStyle: TS.bodySmall,

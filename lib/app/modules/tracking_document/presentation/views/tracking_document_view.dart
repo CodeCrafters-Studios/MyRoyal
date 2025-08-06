@@ -6,7 +6,7 @@ import 'package:iroyal/app/modules/tracking_document/presentation/views/componen
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';

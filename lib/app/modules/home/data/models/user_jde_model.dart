@@ -14,7 +14,7 @@ class UserJdeModel extends UserJdeEntity {
         code: 0,
         message: '',
         data: Data(
-          status: false,
+          status: '',
           username: '',
           data: [],
         ),

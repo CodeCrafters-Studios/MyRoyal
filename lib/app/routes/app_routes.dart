@@ -37,6 +37,12 @@ abstract class Routes {
   static const CAM_APP = _Paths.CAM_APP;
   static const CAM_APP_TRACE_SERIAL = _Paths.CAM_APP_TRACE_SERIAL;
   static const CAM_APP_RESERVED_BY = _Paths.CAM_APP_RESERVED_BY;
+  static const CAM_APP_RELEASE_ORDER = _Paths.CAM_APP_RELEASE_ORDER;
+  static const MY_ASSETS = _Paths.MY_ASSETS;
+  static const RAS_APP = _Paths.RAS_APP;
+  static const RAS_APP_RELEASE_ORDER = _Paths.RAS_APP_RELEASE_ORDER;
+  static const RAS_APP_RESERVED_BY = _Paths.RAS_APP_RESERVED_BY;
+  static const RAS_APP_TRACE_SERIAL = _Paths.RAS_APP_TRACE_SERIAL;
 }
 
 abstract class _Paths {
@@ -73,4 +79,10 @@ abstract class _Paths {
   static const CAM_APP = '/cam-app';
   static const CAM_APP_TRACE_SERIAL = '/cam-app-trace-serial';
   static const CAM_APP_RESERVED_BY = '/cam-app-reserved-by';
+  static const CAM_APP_RELEASE_ORDER = '/cam-app-release-order';
+  static const MY_ASSETS = '/my-assets';
+  static const RAS_APP = '/ras-app';
+  static const RAS_APP_RELEASE_ORDER = '/ras-app-release-order';
+  static const RAS_APP_RESERVED_BY = '/ras-app-reserved-by';
+  static const RAS_APP_TRACE_SERIAL = '/ras-app-trace-serial';
 }

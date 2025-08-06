@@ -55,13 +55,13 @@ class CheckPasswordController extends GetxController {
         isLoading.value = false;
       },
       (r) {
-        isLoading.value = false;
         checkPasswordRes.value = r;
         if (checkPasswordRes.value.data == true) {
           appDialog.showSuccessSnackBar(
             description: 'Password is correct',
           );
           Future.delayed(Duration(seconds: 1), () {
+            isLoading.value = false;
             Get.offNamed(Routes.PAYROLL);
           });
         }

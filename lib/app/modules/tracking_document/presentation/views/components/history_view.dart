@@ -9,7 +9,7 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/others/no_result_widget.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -216,14 +216,20 @@ class HistoryView extends StatelessWidget {
   }
 
   Widget _buildLastApprovalInfo(dynamic doc) {
-    return Column(
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last Approval By:', style: TS.bodySmall.copyWith(color: black)),
-        SearchHighlightText(
-          doc.lastApprovalBy,
-          style: TS.bodySmall.copyWith(color: black),
-          highlightStyle: TS.labelLarge.copyWith(color: red),
+        Text('Last Approval By: ', style: TS.bodySmall.copyWith(color: black)),
+        Flexible(
+          fit: FlexFit.loose,
+          child: SearchHighlightText(
+            doc.lastApprovalBy,
+            style: TS.bodySmall,
+            highlightStyle: TS.labelLarge,
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
         ),
       ],
     );

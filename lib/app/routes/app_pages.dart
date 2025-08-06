@@ -1,4 +1,20 @@
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/bindings/cam_app_binding.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/views/cam_app_view.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/presentation/bindings/cam_app_release_order_binding.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/presentation/views/cam_app_release_order_view.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/presentation/bindings/cam_app_reserved_by_binding.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/presentation/views/cam_app_reserved_by_view.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/presentation/bindings/cam_app_trace_serial_binding.dart';
+import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/presentation/views/cam_app_trace_serial_view.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app/bindings/ras_app_binding.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app/views/ras_app_view.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_release_order/bindings/ras_app_release_order_binding.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_release_order/views/ras_app_release_order_view.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_reserved_by/bindings/ras_app_reserved_by_binding.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_reserved_by/views/ras_app_reserved_by_view.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_trace_serial/bindings/ras_app_trace_serial_binding.dart';
+import 'package:iroyal/app/modules/online_app/ras/ras_app_trace_serial/views/ras_app_trace_serial_view.dart';
 
 import '../modules/approval/presentation/bindings/approval_binding.dart';
 import '../modules/approval/presentation/views/approval_view.dart';
@@ -8,12 +24,6 @@ import '../modules/attendance/bindings/attendance_binding.dart';
 import '../modules/attendance/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
-import '../modules/cam_app/presentation/bindings/cam_app_binding.dart';
-import '../modules/cam_app/presentation/views/cam_app_view.dart';
-import '../modules/cam_app_reserved_by/presentation/bindings/cam_app_reserved_by_binding.dart';
-import '../modules/cam_app_reserved_by/presentation/views/cam_app_reserved_by_view.dart';
-import '../modules/cam_app_trace_serial/presentation/bindings/cam_app_trace_serial_binding.dart';
-import '../modules/cam_app_trace_serial/presentation/views/cam_app_trace_serial_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
 import '../modules/change_password/views/change_password_view.dart';
 import '../modules/change_pin/bindings/change_pin_binding.dart';
@@ -37,6 +47,8 @@ import '../modules/leave_summary/presentation/views/leave_summary_view.dart';
 import '../modules/leave_summary/presentation/views/leaves_request_view.dart';
 import '../modules/login/presentation/bindings/login_binding.dart';
 import '../modules/login/presentation/views/login_view.dart';
+import '../modules/my_assets/bindings/my_assets_binding.dart';
+import '../modules/my_assets/views/my_assets_view.dart';
 import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
 import '../modules/notifications/presentation/bindings/notifications_binding.dart';
@@ -49,6 +61,7 @@ import '../modules/pin/bindings/pin_binding.dart';
 import '../modules/pin/views/pin_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
+
 import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -233,6 +246,36 @@ class AppPages {
       name: _Paths.CAM_APP_RESERVED_BY,
       page: () => const CamAppReservedByView(),
       binding: CamAppReservedByBinding(),
+    ),
+    GetPage(
+      name: _Paths.CAM_APP_RELEASE_ORDER,
+      page: () => const CamAppReleaseOrderView(),
+      binding: CamAppReleaseOrderBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_ASSETS,
+      page: () => const MyAssetsView(),
+      binding: MyAssetsBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAS_APP,
+      page: () => const RasAppView(),
+      binding: RasAppBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAS_APP_RELEASE_ORDER,
+      page: () => const RasAppReleaseOrderView(),
+      binding: RasAppReleaseOrderBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAS_APP_RESERVED_BY,
+      page: () => const RasAppReservedByView(),
+      binding: RasAppReservedByBinding(),
+    ),
+    GetPage(
+      name: _Paths.RAS_APP_TRACE_SERIAL,
+      page: () => const RasAppTraceSerialView(),
+      binding: RasAppTraceSerialBinding(),
     ),
   ];
 }

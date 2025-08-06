@@ -7,7 +7,7 @@ import 'package:iroyal/app/modules/tracking_document/presentation/views/componen
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:iroyal/base/widgets/padding.dart';
@@ -209,10 +209,15 @@ class TrackingDocumentApprovalView extends StatelessWidget {
       children: [
         Text('Last Approval By:', style: TS.bodySmall.copyWith(color: black)),
         5.horizontalSpace,
-        SearchHighlightText(
-          doc.lastApprovalBy,
-          style: TS.bodySmall.copyWith(color: black),
-          highlightStyle: TS.labelLarge.copyWith(color: red),
+        Flexible(
+          fit: FlexFit.loose,
+          child: SearchHighlightText(
+            doc.lastApprovalBy,
+            style: TS.bodySmall.copyWith(color: black),
+            highlightStyle: TS.labelLarge.copyWith(color: red),
+            softWrap: false,
+            overflow: TextOverflow.fade,
+          ),
         ),
       ],
     );

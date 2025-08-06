@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/app/modules/pin/controllers/pin_controller.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
 class PinKeyboard extends StatelessWidget {

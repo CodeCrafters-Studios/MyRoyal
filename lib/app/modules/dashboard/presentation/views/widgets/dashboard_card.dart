@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class DashboardCard extends StatelessWidget {

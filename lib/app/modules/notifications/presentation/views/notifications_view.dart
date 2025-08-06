@@ -7,6 +7,7 @@ import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_te
 import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
 import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
 import 'package:iroyal/base/config/app_config.dart';
+import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
@@ -82,34 +83,40 @@ class NotificationsViewImpl extends StatelessWidget {
   }
 
   Widget _buildNotificationsList() {
-    return RepaintBoundary(
-      child: ListView.builder(
-        controller: controller.scrollController,
-        padding: REdgeInsets.only(bottom: 100),
-        itemCount: controller.notificationsDataList.length +
-            (controller.isLoadMore.value ? 1 : 0),
-        itemBuilder: (_, index) {
-          if (controller.isLoadMore.value &&
-              index == controller.notificationsDataList.length) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          final notification = controller.notificationsDataList[index];
-          final scheduledDate = notification.createdAt
-                  .isBefore(DateTime.now().subtract(Duration(days: 1)))
-              ? (notification.createdAt
-                      .isBefore(DateTime.now().subtract(Duration(days: 2)))
-                  ? DateFormat('dd MMM yyyy').format(notification.createdAt)
-                  : 'yesterday')
-              : DateFormat('hh:mm a').format(notification.createdAt);
+    return RefreshIndicator(
+      backgroundColor: white,
+      color: primary,
+      onRefresh: controller.onRefresh,
+      child: RepaintBoundary(
+        child: ListView.builder(
+          controller: controller.scrollController,
+          padding: REdgeInsets.only(bottom: 100),
+          itemCount: controller.notificationsDataList.length +
+              (controller.isLoadMore.value ? 1 : 0),
+          itemBuilder: (_, index) {
+            if (controller.isLoadMore.value &&
+                index == controller.notificationsDataList.length) {
+              return const Center(
+                  child: CircularProgressIndicator(color: primary));
+            }
+            final notification = controller.notificationsDataList[index];
+            final scheduledDate = notification.createdAt
+                    .isBefore(DateTime.now().subtract(Duration(days: 1)))
+                ? (notification.createdAt
+                        .isBefore(DateTime.now().subtract(Duration(days: 2)))
+                    ? DateFormat('dd MMM yyyy').format(notification.createdAt)
+                    : 'yesterday')
+                : DateFormat('hh:mm a').format(notification.createdAt);
 
-          return NotificationsCard(
-            title: notification.title,
-            description: notification.body,
-            date: scheduledDate,
-            isRead: notification.isRead,
-            onTap: () => controller.onTapNotification(notification.id),
-          );
-        },
+            return NotificationsCard(
+              title: notification.title,
+              description: notification.body,
+              date: scheduledDate,
+              isRead: notification.isRead,
+              onTap: () => controller.onTapNotification(notification.id),
+            );
+          },
+        ),
       ),
     );
   }

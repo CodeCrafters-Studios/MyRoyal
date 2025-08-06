@@ -125,7 +125,16 @@ abstract class AppDialog {
   Future<void> showLiquidGlassInfo({
     String? imagePath,
     String title,
-    Widget? child,
+  });
+
+  Future<void> showWhatsNewDialog({
+    String? title,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    List<Widget>? children,
+    Function()? onPress,
   });
 
   Future<void> showLoading({String title});
@@ -461,7 +470,6 @@ class AppDialogImpl implements AppDialog {
           ),
         ),
       ),
-      barrierDismissible: false,
     );
   }
 
@@ -940,7 +948,6 @@ class AppDialogImpl implements AppDialog {
   Future<void> showLiquidGlassInfo({
     String? imagePath,
     String? title,
-    Widget? child,
   }) async {
     await Get.dialog(
       barrierColor: Colors.white12.withOpacity(0.2),
@@ -1030,5 +1037,65 @@ class AppDialogImpl implements AppDialog {
     if (Get.isDialogOpen ?? false) {
       Get.back();
     }
+  }
+
+  @override
+  Future<void> showWhatsNewDialog({
+    String? title,
+    String? description,
+    String? textButton,
+    double? height,
+    double? width,
+    List<Widget>? children,
+    Function()? onPress,
+  }) async {
+    await Get.dialog(
+      barrierColor: Colors.transparent,
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: REdgeInsets.symmetric(horizontal: 10),
+        child: Container(
+          padding: EdgeInsets.all(
+            Insets.xl,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: Corners.smBorder,
+            color: Colors.white,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    title ?? 'Information',
+                    style: TS.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    description ?? '',
+                    style: TS.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: children ?? [],
+              ),
+              SizedBox(height: 20),
+              ButtonPrimary(
+                onPressed: onPress ?? Get.back,
+                text: textButton ?? 'Lanjutkan',
+                fullWidth: true,
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
   }
 }

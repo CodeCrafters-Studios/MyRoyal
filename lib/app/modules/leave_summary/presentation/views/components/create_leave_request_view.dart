@@ -138,7 +138,6 @@ class CreateLeaveRequestView extends StatelessWidget {
                   controller.multiDatePickerValueleaveRequestWithDefaultValue,
                 ),
           () => showModalBottomSheet(
-                isDismissible: false,
                 isScrollControlled: true,
                 context: context,
                 builder: (_) {
@@ -216,7 +215,9 @@ class CreateLeaveRequestView extends StatelessWidget {
               width: 80.w,
               height: 5.h,
               decoration: BoxDecoration(
-                  color: grey, borderRadius: BorderRadius.circular(40.r)),
+                color: grey,
+                borderRadius: BorderRadius.circular(40.r),
+              ),
             ),
           ),
           20.verticalSpace,

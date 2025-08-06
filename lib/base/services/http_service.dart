@@ -607,6 +607,7 @@ class HttpService extends getx.GetxService {
         if (message == "Unauthenticated.") {
           AppDialogImpl().showErrorDialog(
             description: message,
+            textButton: 'Back to Login',
             onPress: () async {
               await appStorage.delete(CACHE_ACCESS_TOKEN);
               await appStorage.delete(CACHE_REFRESH_TOKEN);

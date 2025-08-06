@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
@@ -61,10 +62,10 @@ class HomeMenu extends StatelessWidget {
           case 'Payroll':
             Get.toNamed(Routes.CHECK_PASSWORD);
             break;
-          case 'Visit':
-            Get.to(() => const ComingSoonScreen());
-            // Get.toNamed(Routes.VISIT);
-            break;
+          // case 'Visit':
+          //   Get.to(() => const ComingSoonScreen());
+          //   // Get.toNamed(Routes.VISIT);
+          //   break;
           case 'Webtel':
             Get.toNamed(Routes.WEBTEL);
             break;
@@ -81,7 +82,7 @@ class HomeMenu extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
-                    onTap: () => Get.to(ComingSoonScreen()),
+                    onTap: () => controller.getUserJDE('RAS', 'angga.nur'),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -102,8 +103,7 @@ class HomeMenu extends StatelessWidget {
                   ),
                   SizedBox(width: 30),
                   GestureDetector(
-                    onTap: () =>
-                        controller.getUserJDE('CAM', cacheUserData.username),
+                    onTap: () => controller.getUserJDE('CAM', 'angga.nur'),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -141,7 +141,7 @@ class HomeMenu extends StatelessWidget {
             height: 54.h,
             padding: REdgeInsets.all(4),
             child: Center(
-              child: Image.asset('assets/icons/${menu.code}.png'),
+              child: SvgPicture.asset('assets/icons/${menu.code}.svg'),
             ),
           ),
           Text(

@@ -11,7 +11,7 @@ class UserJdeEntity {
 }
 
 class Data {
-  final bool status;
+  final String status;
   final String username;
   final List<Datum> data;
 

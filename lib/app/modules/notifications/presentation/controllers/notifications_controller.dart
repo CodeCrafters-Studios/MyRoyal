@@ -73,6 +73,25 @@ class NotificationsController extends GetxController {
     super.onClose();
   }
 
+  Future<void> onRefresh() async {
+    notificationsDataList.clear();
+    await _getNotifications();
+    notificationsDataList.value = notificationsData()
+        .data
+        .data
+        .map(
+          (e) => NotificationDataListEntities(
+            id: e.id,
+            createdAt: e.createdAt,
+            body: e.body,
+            title: e.title,
+            isRead: e.isRead,
+          ),
+        )
+        .toList();
+    isLoading.value = false;
+  }
+
   Future<void> _getNotifications() async {
     isLoading.value = true;
 

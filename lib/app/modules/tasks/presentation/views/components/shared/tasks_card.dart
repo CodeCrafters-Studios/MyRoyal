@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/linear_progress.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card_app.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class TaskCard extends StatelessWidget {
