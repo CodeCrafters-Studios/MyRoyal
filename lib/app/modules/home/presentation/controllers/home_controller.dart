@@ -373,7 +373,7 @@ class HomeController extends GetxController {
   void _showEventDialog() {
     appDialog.showEventDialog(
       isImg: true,
-      imagePath: 'assets/images/img_banner_1.png',
+      imagePath: 'assets/images/img_banner_new.jpg',
     );
   }
 
