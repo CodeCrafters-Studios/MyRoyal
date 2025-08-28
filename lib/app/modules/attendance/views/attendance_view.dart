@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -80,7 +79,10 @@ class AttendanceView extends GetView<AttendanceController> {
     return Column(
       children: [
         _buildBackgroundImage(controller),
-        _buildGoogleMapsLocation(controller),
+        if (!controller.isCheckIn.value)
+          _buildGoogleMapsLocation(controller)
+        else
+          _buildPhotoPreview(controller),
         10.verticalSpace,
         _buildTimeDisplay(controller),
         _buildTimesInfo(controller),
@@ -91,47 +93,63 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildGoogleMapsLocation(AttendanceController controller) {
-    return Obx(() {
-      // Wait until currentPosition is not null
-      if (controller.currentPosition.value == null) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      return controller.isCheckIn.value
-          ? emptyBox
-          : SizedBox(
-              height: 300.h,
-              width: Get.width,
-              child: GoogleMap(
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-                initialCameraPosition: CameraPosition(
-                  target: controller.currentPosition.value!,
-                  zoom: 18,
-                ),
-                onMapCreated: controller.onMapCreated,
-                circles: {
-                  Circle(
-                    strokeWidth: 1,
-                    fillColor: green.withOpacity(0.3),
-                    radius: 18.r,
-                    visible: true,
-                    strokeColor: green,
-                    circleId: const CircleId('royal'),
-                    center: const LatLng(-6.8617228, 107.5010659),
-                  )
-                },
-                markers: {
-                  const Marker(
-                    markerId: MarkerId('royal'),
-                    position: LatLng(-6.8617228, 107.5010659),
-                  ),
-                  // Add more markers here
-                },
+    return SizedBox(
+      height: 300.h,
+      width: Get.width,
+      child: Obx(() {
+        // Show loading indicator until currentPosition is available
+        if (controller.currentPosition.value == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return GoogleMap(
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          initialCameraPosition: CameraPosition(
+            target: controller.currentPosition.value!,
+            zoom: 17,
+          ),
+          onMapCreated: controller.onMapCreated,
+          circles: {
+            Circle(
+              circleId: const CircleId('office_radius'),
+              center: controller.officeLocation,
+              radius: controller.officeRadius,
+              strokeColor: Colors.green,
+              strokeWidth: 2,
+              fillColor: Colors.green.withOpacity(0.2),
+            ),
+          },
+          markers: {
+            Marker(
+              markerId: const MarkerId('office_marker'),
+              position: controller.officeLocation,
+            ),
+            Marker(
+              markerId: const MarkerId('user_marker'),
+              position: controller.currentPosition.value!,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
+            ),
+          },
+        );
+      }),
+    );
+  }
 
-                // ToDo: Add polygon
-              ),
-            );
-    });
+  Widget _buildPhotoPreview(AttendanceController controller) {
+    return SizedBox(
+      height: 300.h,
+      width: Get.width,
+      child: Obx(() {
+        if (controller.takenPhoto.value == null) {
+          return const Center(child: Text('No Photo Taken'));
+        }
+        return Image.file(
+          controller.takenPhoto.value!,
+          fit: BoxFit.cover,
+        );
+      }),
+    );
   }
 
   Widget _buildBackgroundImage(AttendanceController controller) {
@@ -247,29 +265,40 @@ class AttendanceView extends GetView<AttendanceController> {
     } else {
       return Column(
         children: [
-          CircleAvatar(
-            backgroundColor: primary30.withOpacity(0.2),
-            radius: 80.r,
-            child: InkWellTap(
-              radius: 72.r,
-              color: primary.withOpacity(0.3),
-              onTap: controller.checkIn,
-              child: CircleAvatar(
-                backgroundColor: primary,
-                radius: 72.r,
-                child: Text(
-                  'Check in',
-                  style: TS.bodyLarge.copyWith(color: white),
+          Obx(() => CircleAvatar(
+                backgroundColor: primary30.withOpacity(0.2),
+                radius: 80.r,
+                child: InkWellTap(
+                  radius: 72.r,
+                  color: controller.isLocationValid.value
+                      ? primary.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.3),
+                  onTap: controller.isLocationValid.value
+                      ? controller.checkIn
+                      : null,
+                  child: CircleAvatar(
+                    backgroundColor: controller.isLocationValid.value
+                        ? primary
+                        : Colors.grey,
+                    radius: 72.r,
+                    child: Text(
+                      'Check in',
+                      style: TS.bodyLarge.copyWith(color: white),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
+              )),
           10.verticalSpace,
-          Text(
-            "Check in and get started on your successful day.",
-            style: TS.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
+          Obx(() => Text(
+                controller.isLocationValid.value
+                    ? "Check in and get started on your successful day."
+                    : "Anda berada di luar radius kantor.",
+                style: TS.bodyMedium.copyWith(
+                    color: controller.isLocationValid.value
+                        ? Colors.black
+                        : Colors.red),
+                textAlign: TextAlign.center,
+              )),
         ],
       );
     }

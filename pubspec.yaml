@@ -1,5 +1,5 @@
 name: iroyal
-version: 1.4.0+33
+version: 1.4.1+35
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -10,6 +10,7 @@ dependencies:
   another_stepper: ^1.2.2
   cached_network_image: ^3.3.1
   calendar_date_picker2: ^1.1.7
+  camera: ^0.10.5+9
   carousel_slider: ^5.0.0
   collection: ^1.18.0
   connectivity_plus: ^6.1.0

@@ -419,7 +419,7 @@ class HomeController extends GetxController {
               Flexible(
                 fit: FlexFit.loose,
                 child: Text(
-                  'Show event banner independence day of indonesia',
+                  'Show event banner Independence Day of Indonesia',
                   style: TS.bodyMedium,
                   textAlign: TextAlign.start,
                 ),

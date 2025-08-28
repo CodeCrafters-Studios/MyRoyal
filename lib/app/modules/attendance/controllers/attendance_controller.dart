@@ -1,80 +1,153 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/attendance/views/components/selfie_camera_view.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AttendanceController extends GetxController {
   final currentTime = DateTime.now().obs;
   final checkInTime = DateTime.now().obs;
   final checkOutTime = DateTime.now().obs;
   final breakTime = DateTime.now().obs;
-  late GoogleMapController mapController;
-  final Completer<GoogleMapController> controller = Completer();
+  final Completer<GoogleMapController> mapCompleter = Completer();
   final currentPosition = Rxn<LatLng>();
   final locationError = RxnString();
+  final officeLocation = const LatLng(-6.8617228, 107.5010659);
+  final officeRadius = 10.0;
 
   RxBool isCheckIn = false.obs;
   RxBool isCheckOut = false.obs;
   RxBool isBreakTime = false.obs;
+  RxBool isLocationValid = false.obs;
+  RxBool isFacingCamera = false.obs;
+  final cameras = RxList<CameraDescription>();
+  final cameraController = Rxn<CameraController>();
+  final takenPhoto = Rxn<File>();
+  final buttonEnabled = false.obs;
 
   RxString totalHours = ''.obs;
   RxString countTimes = '--:--:--'.obs;
 
   late Timer _timer;
-
   Timer? countingTimer;
   Duration myDuration = const Duration();
+
+  Position? _previousPosition;
+  final isGpsSpoofing = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     _startTimer();
-    _getCurrentLocation();
+    _checkPermissions();
   }
 
   @override
   void onClose() {
     super.onClose();
     _timer.cancel();
+    cameraController.value?.dispose();
   }
 
-  Future<void> _getCurrentLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        forceAndroidLocationManager: true,
-        timeLimit: const Duration(seconds: 15),
-      );
-      currentPosition.value = LatLng(position.latitude, position.longitude);
-    } catch (e) {
-      // Handle any other errors.
-      locationError.value = "Failed to get location: ${e.toString()}";
+  Future<void> _checkPermissions() async {
+    var cameraStatus = await Permission.camera.request();
+
+    if (cameraStatus.isGranted) {
+      _initCamera();
+      _startLocationStream();
+    } else {
+      Get.snackbar('Permission Denied',
+          'Please grant camera permissions to use this feature.');
     }
   }
 
+  Future<void> _initCamera() async {
+    try {
+      cameras.value = await availableCameras();
+      final frontCamera = cameras.firstWhere(
+          (camera) => camera.lensDirection == CameraLensDirection.front);
+      cameraController.value = CameraController(
+          frontCamera, ResolutionPreset.high,
+          enableAudio: false);
+      await cameraController.value!.initialize();
+      isFacingCamera.value = true;
+    } catch (e) {
+      AppUtils.logApp('Error initializing camera: $e');
+    }
+  }
+
+  void _startLocationStream() {
+    Geolocator.getPositionStream(
+            locationSettings:
+                const LocationSettings(accuracy: LocationAccuracy.best))
+        .listen((Position position) {
+      _handleLocationUpdate(position);
+    });
+  }
+
+  void _handleLocationUpdate(Position newPosition) {
+    if (_previousPosition != null) {
+      final distance = Geolocator.distanceBetween(
+        _previousPosition!.latitude,
+        _previousPosition!.longitude,
+        newPosition.latitude,
+        newPosition.longitude,
+      );
+      final timeDifference = newPosition.timestamp
+          .difference(_previousPosition!.timestamp)
+          .inSeconds;
+
+      if (timeDifference > 0 && distance / timeDifference > 100) {
+        isGpsSpoofing.value = true;
+        buttonEnabled.value = false;
+        Get.snackbar('Location Tampering Detected!',
+            'Your attendance cannot be recorded due to suspicious location changes.');
+        return;
+      }
+    }
+
+    _previousPosition = newPosition;
+    currentPosition.value = LatLng(newPosition.latitude, newPosition.longitude);
+
+    double distance = Geolocator.distanceBetween(
+      currentPosition.value!.latitude,
+      currentPosition.value!.longitude,
+      officeLocation.latitude,
+      officeLocation.longitude,
+    );
+    isLocationValid.value = distance <= officeRadius;
+
+    buttonEnabled.value =
+        isLocationValid.value && isFacingCamera.value && !isGpsSpoofing.value;
+  }
+
   void onMapCreated(GoogleMapController controller) {
-    if (!this.controller.isCompleted) {
-      mapController = controller;
-      this.controller.complete(controller);
+    if (!mapCompleter.isCompleted) {
+      mapCompleter.complete(controller);
     }
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(
-      const Duration(seconds: 1),
-      (timer) {
-        currentTime.value = DateTime.now();
-      },
-    );
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      currentTime.value = DateTime.now();
+    });
   }
 
-  void checkIn() {
-    isCheckIn.value = true;
-    checkInTime.value = DateTime.now();
+  Future<void> checkIn() async {
+    if (!isLocationValid.value) {
+      Get.snackbar(
+          'Gagal Check In', 'Anda harus berada di dalam radius kantor.');
+      return;
+    }
+
+    await Get.to(() => SelfieCameraView());
   }
 
   void checkOut() {

@@ -12,7 +12,6 @@ import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/image.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import '../controllers/home_controller.dart';
 
@@ -65,7 +64,7 @@ class HomeView extends GetView<HomeController> {
       () => controller.filterNewNotif.isNotEmpty
           ? Badge(
               smallSize: 12,
-              child: InkWellTap(
+              child: GestureDetector(
                 onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
                 child: SvgPicture.asset(
                   height: 27.h,
@@ -73,7 +72,7 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
             )
-          : InkWellTap(
+          : GestureDetector(
               onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
               child: SvgPicture.asset(
                 height: 27.h,

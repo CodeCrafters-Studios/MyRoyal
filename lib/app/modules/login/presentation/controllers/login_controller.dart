@@ -107,15 +107,15 @@ class LoginController extends GetxController {
   }
 
   void checkVersion() async {
+    String deviceUser = '';
+    String deviceId = '';
+
     // Get the current app version
     final appVersion =
         _getExtendedVersionNumber(deviceInfo.packageInfo.version);
 
     // Get Device Id iOS
     final info = await deviceInfo.info();
-
-    String deviceUser = '';
-    String deviceId = '';
 
     // Get Android Id
     final String? androidId = await AndroidId().getId();
@@ -125,12 +125,8 @@ class LoginController extends GetxController {
       deviceUser = '${info.model}-${info.brand}-${info.osVersion}';
     } else if (Platform.isIOS) {
       deviceId = info.id;
-
       deviceUser =
           '${info.model}-${info.brand}-${info.hardware}-${info.osVersion}';
-    } else {
-      deviceUser = '';
-      deviceId = '';
     }
 
     await appStorage.write('device-id', deviceId);

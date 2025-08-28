@@ -5,7 +5,6 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
 class ItemMenuSettings extends StatelessWidget {
   const ItemMenuSettings({
@@ -36,7 +35,7 @@ class ItemMenuSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        InkWellTap(
+        GestureDetector(
           onTap: onTap,
           child: Padding(
             padding: REdgeInsets.symmetric(vertical: 12),

@@ -6,7 +6,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/card/card_app.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
 
 class CustomButtomBar extends StatelessWidget {
   const CustomButtomBar({
@@ -48,7 +47,7 @@ class IconTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWellTap(
+    return GestureDetector(
       onTap: onTap,
       child: AnimatedOpacity(
         duration: const Duration(milliseconds: 300),
