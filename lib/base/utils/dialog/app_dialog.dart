@@ -622,82 +622,85 @@ class AppDialogImpl implements AppDialog {
     Function()? onPressUpdate,
   }) async {
     await Get.dialog(
-      Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: REdgeInsets.symmetric(horizontal: 40),
-        child: Container(
-          padding: EdgeInsets.fromLTRB(
-            Insets.med,
-            Insets.xl,
-            Insets.med,
-            Insets.xs,
-          ),
-          decoration: BoxDecoration(
-            borderRadius: Corners.smBorder,
-            color: Colors.white,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title ?? 'Information',
-                style: TS.titleMedium,
-              ),
-              15.verticalSpace,
-              Text(
-                description,
-                style: TS.bodyMedium,
-              ),
-              28.verticalSpace,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  isForceUpdateVersion
-                      ? emptyBox
-                      : TextButton(
-                          onPressed: onPressLater,
-                          child: Text(
-                            'Later',
-                            style: TS.titleSmall.copyWith(color: red),
+      PopScope(
+        canPop: false,
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: REdgeInsets.symmetric(horizontal: 40),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(
+              Insets.med,
+              Insets.xl,
+              Insets.med,
+              Insets.xs,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: Corners.smBorder,
+              color: Colors.white,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title ?? 'Information',
+                  style: TS.titleMedium,
+                ),
+                15.verticalSpace,
+                Text(
+                  description,
+                  style: TS.bodyMedium,
+                ),
+                28.verticalSpace,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    isForceUpdateVersion
+                        ? emptyBox
+                        : TextButton(
+                            onPressed: onPressLater,
+                            child: Text(
+                              'Later',
+                              style: TS.titleSmall.copyWith(color: red),
+                            ),
                           ),
+                    15.horizontalSpace,
+                    InkWell(
+                      onTap: onPressUpdate,
+                      child: Container(
+                        padding: REdgeInsets.fromLTRB(12, 8, 12, 8),
+                        decoration: BoxDecoration(
+                            color: primary,
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: Text(
+                          'Update',
+                          style: TS.titleSmall.copyWith(color: white),
                         ),
-                  15.horizontalSpace,
-                  InkWell(
-                    onTap: onPressUpdate,
-                    child: Container(
-                      padding: REdgeInsets.fromLTRB(12, 8, 12, 8),
-                      decoration: BoxDecoration(
-                          color: primary,
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: Text(
-                        'Update',
-                        style: TS.titleSmall.copyWith(color: white),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              5.verticalSpace,
-              const Divider(color: grey),
-              5.verticalSpace,
-              Row(
-                children: [
-                  Image.asset(
-                    height: 30.w,
-                    'assets/images/img_googleplay.png',
-                  ),
-                  10.horizontalSpace,
-                  Text(
-                    'Google Play',
-                    style: TS.titleMedium.copyWith(
-                      fontWeight: FontWeight.w400,
+                  ],
+                ),
+                5.verticalSpace,
+                const Divider(color: grey),
+                5.verticalSpace,
+                Row(
+                  children: [
+                    Image.asset(
+                      height: 30.w,
+                      'assets/images/img_googleplay.png',
                     ),
-                  )
-                ],
-              ),
-              16.verticalSpace,
-            ],
+                    10.horizontalSpace,
+                    Text(
+                      'Google Play',
+                      style: TS.titleMedium.copyWith(
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                ),
+                16.verticalSpace,
+              ],
+            ),
           ),
         ),
       ),
@@ -995,6 +998,7 @@ class AppDialogImpl implements AppDialog {
   Future<void> showLoading({String title = 'Please Wait'}) async {
     await Get.dialog(
       PopScope(
+        canPop: false,
         child: Dialog(
           backgroundColor: Colors.transparent,
           insetPadding: EdgeInsets.all(10),

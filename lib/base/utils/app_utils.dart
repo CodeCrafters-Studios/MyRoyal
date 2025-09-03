@@ -7,7 +7,6 @@ import 'dart:developer' as d;
 import 'package:dog/dog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_jailbreak_detection/flutter_jailbreak_detection.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AppUtils {
@@ -24,13 +23,13 @@ class AppUtils {
     return 'v${packageInfo.version}';
   }
 
-  static Future<bool> checkIsJailBroken() async {
-    if (kReleaseMode) {
-      final b = await FlutterJailbreakDetection.jailbroken;
-      return b;
-    }
-    return false;
-  }
+  // static Future<bool> checkIsJailBroken() async {
+  //   if (kReleaseMode) {
+  //     final b = await FlutterJailbreakDetection.jailbroken;
+  //     return b;
+  //   }
+  //   return false;
+  // }
 
   // static bool checkTokenValidity(String token) {
   //   try {

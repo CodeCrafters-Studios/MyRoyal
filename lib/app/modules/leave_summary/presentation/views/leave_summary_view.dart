@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/views/components/all_leave_request_view.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/views/permit_view.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -176,33 +173,33 @@ class LeavesViewImpl extends StatelessWidget {
   //   );
   // }
 
-  Widget _buildAllLeaveRequestView() {
-    return controller.userData.value.position != 'Staff'
-        ? EPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: grey),
-                borderRadius: BorderRadius.circular(Corners.xxl),
-                color: white,
-              ),
-              child: TabBar(
-                controller: controller.tabLeaveController,
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Corners.xxl),
-                  color: primary,
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelStyle: TS.bodyMedium.copyWith(color: white),
-                unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-                unselectedLabelColor: primary,
-                tabs: const [
-                  Tab(text: 'All'),
-                  Tab(text: 'Need Approval'),
-                ],
-              ),
-            ),
-          )
-        : AllLeaveRequestView(controller: controller);
-  }
+  // Widget _buildAllLeaveRequestView() {
+  //   return controller.userData.value.position != 'Staff'
+  //       ? EPadding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 20),
+  //           child: Container(
+  //             decoration: BoxDecoration(
+  //               border: Border.all(color: grey),
+  //               borderRadius: BorderRadius.circular(Corners.xxl),
+  //               color: white,
+  //             ),
+  //             child: TabBar(
+  //               controller: controller.tabLeaveController,
+  //               indicator: BoxDecoration(
+  //                 borderRadius: BorderRadius.circular(Corners.xxl),
+  //                 color: primary,
+  //               ),
+  //               indicatorSize: TabBarIndicatorSize.tab,
+  //               labelStyle: TS.bodyMedium.copyWith(color: white),
+  //               unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
+  //               unselectedLabelColor: primary,
+  //               tabs: const [
+  //                 Tab(text: 'All'),
+  //                 Tab(text: 'Need Approval'),
+  //               ],
+  //             ),
+  //           ),
+  //         )
+  //       : AllLeaveRequestView(controller: controller);
+  // }
 }

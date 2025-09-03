@@ -61,9 +61,6 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
           }
         },
       );
-
-      AppUtils.logApp('Download success');
-
       // final response = PayrollDownloadUrlModel.fromJson(r);
     } on ServerFailure {
       throw ApiException('Server error occurred');
@@ -71,7 +68,7 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
       AppUtils.logApp('CATCH ERR ::: ${e.message}');
       throw ApiException(e.message ?? 'An error occurred');
     } catch (e, stackTrace) {
-      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      AppUtils.logApp('Error: $e\n$stackTrace');
       rethrow;
     }
   }

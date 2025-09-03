@@ -534,46 +534,59 @@ class HttpService extends getx.GetxService {
 
       final uniqueFilePath = await _getUniqueFilePath(directory.path, fileName);
 
-      final response = await dio.post<List<int>>(
+      final response = await dio.post<dynamic>(
         url,
         data: params,
         options: Options(
           responseType: ResponseType.bytes,
           followRedirects: false,
-          validateStatus: (status) => status != null && status < 500,
+          validateStatus: (status) => status != null,
         ),
         onReceiveProgress: onReceiveProgress,
       );
 
-      if (response.statusCode == 200 &&
-          response.headers.map['content-type']?.first
-                  .contains('application/pdf') ==
-              true) {
-        try {
-          final file = File(uniqueFilePath);
-          await file.writeAsBytes(response.data!, flush: true);
-          AppUtils.logApp('File downloaded to: $uniqueFilePath');
-        } catch (e) {
-          AppUtils.logApp('Error saving file: $e');
-          catchError('Gagal menyimpan file: $e');
+      if (response.statusCode == 200) {
+        final contentType = response.headers.value('content-type');
+        if (contentType != null && contentType.contains('application/pdf')) {
+          try {
+            final file = File(uniqueFilePath);
+            if (response.data is List<int>) {
+              await file.writeAsBytes(response.data as List<int>, flush: true);
+              AppUtils.logApp('File downloaded to: $uniqueFilePath');
+              await showDownloadNotification(fileName, uniqueFilePath);
+              return;
+            } else {
+              throw ApiException('Invalid file format received from server.');
+            }
+          } catch (e) {
+            AppUtils.logApp('Error saving file: $e');
+            throw ApiException('Gagal menyimpan file: $e');
+          }
         }
       } else {
-        final responseString = utf8.decode(response.data!);
+        final responseString = utf8.decode(response.data as List<int>);
         final decoded = jsonDecode(responseString);
-        final message = decoded['errors']['message'][0].toString();
-
-        AppUtils.logApp(
-            'Download failed. Server returned non-PDF response: $responseString');
-        catchError(
-          message,
-        );
+        final message = decoded['message'] ?? 'Unknown server message.';
+        throw ApiException(message);
       }
-
-      await showDownloadNotification(fileName, uniqueFilePath);
     } on DioException catch (e) {
-      AppUtils.logApp('Download error: $e');
+      AppUtils.logApp('Download DioException: $e');
+
+      if (e.response?.data != null) {
+        final String responseString =
+            utf8.decode(e.response!.data as List<int>);
+        final Map<String, dynamic> decoded = jsonDecode(responseString);
+        final String message =
+            decoded['message'] ?? 'Unknown error from server.';
+        throw ApiException(message);
+      }
+      throw ApiException(e.message ?? 'Unknown download error.');
+    } on ApiException catch (e) {
+      AppUtils.logApp('API Exception: ${e.message}');
+      catchError(e.message!);
     } catch (e) {
       AppUtils.logApp('Unexpected error: $e');
+      catchError('Terjadi kesalahan tak terduga: $e');
     }
   }
 
@@ -624,7 +637,6 @@ class HttpService extends getx.GetxService {
         AppDialogImpl().showErrorDialog(title: 'Failed', description: message);
       }
     }
-    throw ApiException(message);
   }
 
   static String errorLogin =

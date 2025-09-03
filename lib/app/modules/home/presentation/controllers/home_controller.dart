@@ -173,7 +173,7 @@ class HomeController extends GetxController {
     await _getNotifications();
     _filterNewNotifications(notificationsData().data.data);
     checkVersion();
-    _showEventDialog();
+    // _showEventDialog();
     // _getArticles();
   }
 
@@ -370,33 +370,18 @@ class HomeController extends GetxController {
     return filterNewNotif;
   }
 
-  void _showEventDialog() {
-    appDialog.showEventDialog(
-      isImg: true,
-      imagePath: 'assets/images/img_banner_new.jpg',
-    );
-  }
+  // void _showEventDialog() {
+  //   appDialog.showEventDialog(
+  //     isImg: true,
+  //     imagePath: 'assets/images/img_banner_new.jpg',
+  //   );
+  // }
 
   void _showWhatsNewDialog() {
     appDialog.showWhatsNewDialog(
         title: "✨ What's new? 🎉",
         description: 'MyRoyal ${deviceInfo.packageInfo.version}',
         children: [
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Add new feature MyAssets (Settings -> Personal Information -> My Assets)',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 8),
           Row(
             children: [
               SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
@@ -404,37 +389,7 @@ class HomeController extends GetxController {
               Flexible(
                 fit: FlexFit.loose,
                 child: Text(
-                  'Add new feature Aplikasi Online for RAS Company',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Show event banner Independence Day of Indonesia',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Fixing bugs and handle error user JDE not found',
+                  'Remove event banner Independence Day of Indonesia',
                   style: TS.bodyMedium,
                   textAlign: TextAlign.start,
                 ),

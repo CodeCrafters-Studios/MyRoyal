@@ -14,7 +14,7 @@ ThemeData appTheme(BuildContext context) {
     scaffoldBackgroundColor: bgColor,
     textTheme: context.textTheme.apply(bodyColor: appTextColor),
     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: primaryColor),
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: white,
       titleTextStyle: TS.titleLarge.copyWith(color: black),
       contentTextStyle: TS.bodySmall.copyWith(color: black),

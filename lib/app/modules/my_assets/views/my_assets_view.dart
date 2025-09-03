@@ -2,7 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:iroyal/app/modules/my_assets/views/components/my_assets_card.dart';
 import 'package:iroyal/base/design/colors.dart';
@@ -203,11 +203,12 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                 ),
                                 10.verticalSpace,
                                 DottedBorder(
-                                  borderType: BorderType.RRect,
-                                  color: grey,
-                                  dashPattern: [6, 6, 6, 6],
-                                  strokeWidth: 2,
-                                  radius: Radius.circular(8),
+                                  options: RectDottedBorderOptions(
+                                    color: grey,
+                                    dashPattern: [6, 6, 6, 6],
+                                    strokeWidth: 2,
+                                    borderPadding: EdgeInsets.all(8),
+                                  ),
                                   child: ClipRRect(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8)),
@@ -293,9 +294,10 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                               .toIso8601String()
                                               .replaceAll('.', ':');
                                           final result =
-                                              await ImageGallerySaver.saveImage(
-                                                  controller.signature!,
-                                                  name: 'signature_$time');
+                                              await ImageGallerySaverPlus
+                                                  .saveImage(
+                                                      controller.signature!,
+                                                      name: 'signature_$time');
                                           AppUtils.logApp(result.toString());
                                           if (result['isSuccess']) {
                                             AppDialogImpl().showSuccessSnackBar(
@@ -489,11 +491,12 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                     10.verticalSpace,
                                     controller.selectedImage.value == null
                                         ? DottedBorder(
-                                            borderType: BorderType.RRect,
-                                            color: grey,
-                                            dashPattern: [6, 6, 6, 6],
-                                            strokeWidth: 2,
-                                            radius: Radius.circular(8),
+                                            options: RectDottedBorderOptions(
+                                              color: grey,
+                                              dashPattern: [6, 6, 6, 6],
+                                              strokeWidth: 2,
+                                              borderPadding: EdgeInsets.all(8),
+                                            ),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(8)),
@@ -512,18 +515,19 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                                           .pickImage(ImageSource
                                                               .gallery),
                                                       child: DottedBorder(
-                                                        borderType:
-                                                            BorderType.RRect,
-                                                        color: grey,
-                                                        dashPattern: [
-                                                          6,
-                                                          6,
-                                                          6,
-                                                          6
-                                                        ],
-                                                        strokeWidth: 2,
-                                                        radius:
-                                                            Radius.circular(28),
+                                                        options:
+                                                            RectDottedBorderOptions(
+                                                          color: grey,
+                                                          dashPattern: [
+                                                            6,
+                                                            6,
+                                                            6,
+                                                            6
+                                                          ],
+                                                          strokeWidth: 2,
+                                                          borderPadding:
+                                                              EdgeInsets.all(8),
+                                                        ),
                                                         child: Container(
                                                           padding:
                                                               EdgeInsets.all(
@@ -550,11 +554,12 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                             ),
                                           )
                                         : DottedBorder(
-                                            borderType: BorderType.RRect,
-                                            color: grey,
-                                            dashPattern: [6, 6, 6, 6],
-                                            strokeWidth: 2,
-                                            radius: Radius.circular(8),
+                                            options: RectDottedBorderOptions(
+                                              color: grey,
+                                              dashPattern: [6, 6, 6, 6],
+                                              strokeWidth: 2,
+                                              borderPadding: EdgeInsets.all(8),
+                                            ),
                                             child: ClipRRect(
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(8)),

@@ -50,7 +50,9 @@ class CamAppReleaseOrderView extends GetView<CamAppReleaseOrderController> {
                       color: white,
                       outlineColor: grey,
                       suffixIcon: IconButton(
-                        onPressed: controller.getReleaseOrder,
+                        onPressed: controller.textEditingController.text.isEmpty
+                            ? null
+                            : controller.getReleaseOrder,
                         icon: const Icon(Icons.search),
                       ),
                     ),

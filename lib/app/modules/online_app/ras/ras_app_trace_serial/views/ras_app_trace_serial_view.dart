@@ -73,7 +73,10 @@ class RasAppTraceSerialView extends GetView<RasAppTraceSerialController> {
                               color: white,
                               outlineColor: grey,
                               suffixIcon: IconButton(
-                                onPressed: controller.getTraceSerial,
+                                onPressed: controller
+                                        .textEditingController.text.isEmpty
+                                    ? null
+                                    : controller.getTraceSerial,
                                 icon: const Icon(Icons.search),
                               ),
                             ),

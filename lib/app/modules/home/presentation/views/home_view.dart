@@ -19,43 +19,46 @@ class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: white,
-      appBar: AppBar(
-        centerTitle: false,
-        scrolledUnderElevation: 0.0,
-        backgroundColor: primary,
-        automaticallyImplyLeading: false,
-        toolbarHeight: 70.h,
-        title: _buildTitle(),
-        actions: [
-          _buildNotifications(),
-          15.horizontalSpace,
-          _buildLogo(),
-        ],
-      ),
-      body: Stack(children: [
-        Image.asset(
-          'assets/images/img_bg_page.png',
-          fit: BoxFit.cover,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: white,
+        appBar: AppBar(
+          centerTitle: false,
+          scrolledUnderElevation: 0.0,
+          backgroundColor: primary,
+          automaticallyImplyLeading: false,
+          toolbarHeight: 70.h,
+          title: _buildTitle(),
+          actions: [
+            _buildNotifications(),
+            15.horizontalSpace,
+            _buildLogo(),
+          ],
         ),
-        RefreshIndicator(
-          backgroundColor: white,
-          color: primary,
-          onRefresh: controller.onRefresh,
-          child: CustomScrollView(
-            scrollDirection: Axis.vertical,
-            slivers: [
-              const HomeUserInfo(),
-              const HomeUserStatus(),
-              const HomeUserMenu(),
-              HomeSlide(
-                controller: controller,
-              ),
-            ],
+        body: Stack(children: [
+          Image.asset(
+            'assets/images/img_bg_page.png',
+            fit: BoxFit.cover,
           ),
-        ),
-      ]),
+          RefreshIndicator(
+            backgroundColor: white,
+            color: primary,
+            onRefresh: controller.onRefresh,
+            child: CustomScrollView(
+              scrollDirection: Axis.vertical,
+              slivers: [
+                const HomeUserInfo(),
+                const HomeUserStatus(),
+                const HomeUserMenu(),
+                HomeSlide(
+                  controller: controller,
+                ),
+              ],
+            ),
+          ),
+        ]),
+      ),
     );
   }
 

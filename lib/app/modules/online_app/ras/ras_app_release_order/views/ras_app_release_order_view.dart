@@ -50,7 +50,9 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                       color: white,
                       outlineColor: grey,
                       suffixIcon: IconButton(
-                        onPressed: controller.getReleaseOrder,
+                        onPressed: controller.textEditingController.text.isEmpty
+                            ? null
+                            : controller.getReleaseOrder,
                         icon: const Icon(Icons.search),
                       ),
                     ),
@@ -150,11 +152,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                     const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
-                                                          item.nomorOrder
-                                                                  .isEmpty
-                                                              ? ': -'
-                                                              : ': ${item.nomorOrder}',
-                                                          style: TS.bodyMedium),
+                                                        item.nomorOrder.isEmpty
+                                                            ? ': -'
+                                                            : ': ${item.nomorOrder}',
+                                                        style: TS.bodyMedium,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -168,10 +170,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                     const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
-                                                          item.tipeOrder.isEmpty
-                                                              ? ': -'
-                                                              : ': ${item.tipeOrder}',
-                                                          style: TS.bodyMedium),
+                                                        item.tipeOrder.isEmpty
+                                                            ? ': -'
+                                                            : ': ${item.tipeOrder}',
+                                                        style: TS.bodyMedium,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -252,11 +255,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                     const SizedBox(width: 10),
                                                     Expanded(
                                                       child: Text(
-                                                          item.userRelease
-                                                                  .isEmpty
-                                                              ? ': -'
-                                                              : ': ${item.userRelease}',
-                                                          style: TS.bodyMedium),
+                                                        item.userRelease.isEmpty
+                                                            ? ': -'
+                                                            : ': ${item.userRelease}',
+                                                        style: TS.bodyMedium,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
@@ -336,10 +339,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
-                                                        item.nomorOrder.isEmpty
-                                                            ? ': -'
-                                                            : ': ${item.nomorOrder}',
-                                                        style: TS.bodyMedium),
+                                                      item.nomorOrder.isEmpty
+                                                          ? ': -'
+                                                          : ': ${item.nomorOrder}',
+                                                      style: TS.bodyMedium,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -353,10 +357,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
-                                                        item.tipeOrder.isEmpty
-                                                            ? ': -'
-                                                            : ': ${item.tipeOrder}',
-                                                        style: TS.bodyMedium),
+                                                      item.tipeOrder.isEmpty
+                                                          ? ': -'
+                                                          : ': ${item.tipeOrder}',
+                                                      style: TS.bodyMedium,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -370,10 +375,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
-                                                        item.kodeHold.isEmpty
-                                                            ? ': -'
-                                                            : ': ${item.kodeHold}',
-                                                        style: TS.bodyMedium),
+                                                      item.kodeHold.isEmpty
+                                                          ? ': -'
+                                                          : ': ${item.kodeHold}',
+                                                      style: TS.bodyMedium,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -387,10 +393,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
-                                                        item.nomorRma.isEmpty
-                                                            ? ': -'
-                                                            : ': ${item.nomorRma}',
-                                                        style: TS.bodyMedium),
+                                                      item.nomorRma.isEmpty
+                                                          ? ': -'
+                                                          : ': ${item.nomorRma}',
+                                                      style: TS.bodyMedium,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -437,10 +444,11 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                                                   const SizedBox(width: 10),
                                                   Expanded(
                                                     child: Text(
-                                                        item.userRelease.isEmpty
-                                                            ? ': -'
-                                                            : ': ${item.userRelease}',
-                                                        style: TS.bodyMedium),
+                                                      item.userRelease.isEmpty
+                                                          ? ': -'
+                                                          : ': ${item.userRelease}',
+                                                      style: TS.bodyMedium,
+                                                    ),
                                                   ),
                                                 ],
                                               ),

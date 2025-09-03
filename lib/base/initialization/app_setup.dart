@@ -64,7 +64,7 @@ Future<void> setupAndRunApp(
     environment.environment == EnvironmentType.production
         ? appWidget
         : DioRequestInspectorMain(
-            inspector: DioRequestInspector(isDebugMode: true),
+            inspector: DioRequestInspector(isInspectorEnabled: true),
             child: appWidget,
           ),
   );
@@ -94,11 +94,8 @@ Future configureApp(EnvironmentConfig envConfig) async {
   final packageInfo = await PackageInfo.fromPlatform();
   final auth = LocalAuthentication();
   final dio = Dio();
-  final inspector = DioRequestInspector(
-    isDebugMode: true,
-    duration: Duration(milliseconds: 500),
-  );
-  final internetConnectionChecker = InternetConnectionChecker();
+  final inspector = DioRequestInspector(isInspectorEnabled: true);
+  final internetConnectionChecker = InternetConnectionChecker.createInstance();
   final appDialogImpl = AppDialogImpl();
   final Connectivity connectivity = Connectivity();
   final firebaseRemoteConfig = MellotippetFirebaseRemoteConfig();
