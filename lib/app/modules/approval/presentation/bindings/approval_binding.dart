@@ -5,6 +5,7 @@ import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_u
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/approval_controller.dart';
 
@@ -41,9 +42,9 @@ class ApprovalBinding extends Bindings {
       )
       ..lazyPut<ApprovalController>(
         () => ApprovalController(
-          actionFormLeaveUsecase: Get.find(),
-          getLeaveApprovalUsecase: Get.find(),
-        ),
+            actionFormLeaveUsecase: Get.find(),
+            getLeaveApprovalUsecase: Get.find(),
+            appDialog: Get.find<AppDialogImpl>()),
       );
   }
 }

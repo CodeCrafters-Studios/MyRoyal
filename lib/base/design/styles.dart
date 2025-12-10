@@ -162,6 +162,11 @@ class TS {
         letterSpacing: .25,
         fontWeight: FontWeight.w500,
       );
+  static TextStyle get bodyMediumBold => ts.copyWith(
+        fontSize: 14.sp,
+        letterSpacing: .25,
+        fontWeight: FontWeight.bold,
+      );
   static TextStyle get bodySmall => ts.copyWith(
         fontSize: 12.sp,
         letterSpacing: .1,

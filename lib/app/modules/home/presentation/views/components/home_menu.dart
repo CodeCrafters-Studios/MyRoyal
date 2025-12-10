@@ -1,22 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/others/coming_soon.dart';
 
-class HomeMenu extends StatelessWidget {
+class HomeMenu extends GetView<HomeController> {
   HomeMenu({
     super.key,
     required this.menu,
@@ -25,26 +20,17 @@ class HomeMenu extends StatelessWidget {
 
   final Menu menu;
   final AppStorage appStorage;
-  final controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
     return InkWellTap(
       onTap: () async {
-        final jsonString = await appStorage.read(CACHE_USER);
-        if (jsonString == null) {
-          throw CacheException('Data Not Found');
-        }
-
-        final cacheUserData = UserDataModel.fromJson(jsonDecode(jsonString));
-        final canAccessLeave = cacheUserData.canAccessLeave;
-
         switch (menu.name) {
           case 'Dashboard':
             Get.toNamed(Routes.DASHBOARD);
             break;
           case 'Leaves':
-            if (canAccessLeave) {
+            if (controller.userData.value.data.canAccessLeave) {
               Get.toNamed(Routes.LEAVE_SUMMARY);
             } else {
               AppDialogImpl().showErrorDialog(
@@ -82,7 +68,8 @@ class HomeMenu extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   GestureDetector(
-                    onTap: () => controller.getUserJDE('RAS', 'angga.nur'),
+                    onTap: () => controller.getUserJDE(
+                        'RAS', controller.userData.value.data.username),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -103,7 +90,8 @@ class HomeMenu extends StatelessWidget {
                   ),
                   SizedBox(width: 30),
                   GestureDetector(
-                    onTap: () => controller.getUserJDE('CAM', 'angga.nur'),
+                    onTap: () => controller.getUserJDE(
+                        'CAM', controller.userData.value.data.username),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

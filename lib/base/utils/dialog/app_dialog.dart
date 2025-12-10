@@ -1054,7 +1054,6 @@ class AppDialogImpl implements AppDialog {
     Function()? onPress,
   }) async {
     await Get.dialog(
-      barrierColor: Colors.transparent,
       Dialog(
         backgroundColor: Colors.transparent,
         insetPadding: REdgeInsets.symmetric(horizontal: 10),

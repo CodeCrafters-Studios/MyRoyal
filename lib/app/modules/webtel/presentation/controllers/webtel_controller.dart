@@ -6,9 +6,10 @@ import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
 import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class WebtelController extends GetxController {
-  WebtelController({required this.getWebtel});
+  WebtelController({required this.getWebtel, required this.appDialog});
 
   TextEditingController searchR = TextEditingController();
   TextEditingController searchB = TextEditingController();
@@ -17,6 +18,7 @@ class WebtelController extends GetxController {
   TextEditingController searchBC = TextEditingController();
 
   final GetWebtel getWebtel;
+  final AppDialog appDialog;
 
   String webtelState = '';
 
@@ -95,7 +97,9 @@ class WebtelController extends GetxController {
     final r = await getWebtel();
     isLoading(false);
     r.fold(
-      (l) => AppUtils.logApp(l.toString()),
+      (l) {
+        AppUtils.logApp(l.toString());
+      },
       (r) {
         webtelState = 'getPromSuccess';
         webtelData(r);

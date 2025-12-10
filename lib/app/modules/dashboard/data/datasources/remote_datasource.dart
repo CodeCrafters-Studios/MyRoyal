@@ -26,10 +26,19 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         withToken: true,
         endpoint: 'dashboard/index',
         method: Method.GET,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = DashboardModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -53,9 +62,17 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         showPopUp: true,
         params: {"type": "specialLeave"},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = DetailSpecialLeaveRequestModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -79,9 +96,17 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         showPopUp: true,
         params: {"type": "lateAttendance"},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = DetailLateModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -105,9 +130,17 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         showPopUp: true,
         params: {"type": "permitRequest"},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = DetailPermitRequestModel.fromJson(r);
       return response;
     } on ServerFailure {

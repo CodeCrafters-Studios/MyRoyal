@@ -40,10 +40,8 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/getDataLeave',
         method: Method.GET,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = LeaveModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -64,10 +62,9 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/getDataForm',
         method: Method.GET,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
+
       final response = SubtituteEmployeeModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
@@ -91,9 +88,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         params: createFormLeaveParams,
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = CreateFormLeaveModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
@@ -115,10 +109,8 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/approval',
         params: actionFormLeaveParams,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = ActionFormLeaveModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
@@ -142,9 +134,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         params: createFormPermitParams,
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = CreateFormPermitModel.fromJson(r["data"]);
       return response;
     } on ServerFailure {
@@ -168,9 +157,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         params: {"type": "permitRequest"},
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = PermitModel.fromJson(r);
       return response;
     } on ServerFailure {

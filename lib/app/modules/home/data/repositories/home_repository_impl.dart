@@ -29,7 +29,7 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, UserDataModel>> getCacheUser() async {
     try {
-      final r = await localData.getCacheUserLogin();
+      final r = await localData.getCacheUser();
       return Right(r);
     } on CacheException {
       return const Left(CacheFailure());

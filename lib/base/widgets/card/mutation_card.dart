@@ -96,7 +96,8 @@ class MutationCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'IN $transaction',
-                    style: TS.titleSmall.copyWith(color: colorTextTransaction),
+                    style:
+                        TS.bodyMediumBold.copyWith(color: colorTextTransaction),
                     maxLines: 2,
                     overflow: TextOverflow.visible,
                   ),
@@ -196,7 +197,7 @@ class MutationCard extends StatelessWidget {
             ),
             title: Text(
               ': $serial',
-              style: TS.titleSmall.copyWith(color: primary),
+              style: TS.bodyMediumBold.copyWith(color: primary),
               maxLines: 2,
               overflow: TextOverflow.visible,
             ),

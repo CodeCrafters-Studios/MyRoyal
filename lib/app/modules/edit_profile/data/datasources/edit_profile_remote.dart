@@ -7,9 +7,7 @@ import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 
 abstract class EditProfileRemoteDataSource {
-  Future<bool> editProfile(
-    EmployeeParamsModel editProfileParams,
-  );
+  Future<bool> editProfile(EmployeeParamsModel editProfileParams);
 }
 
 class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
@@ -56,10 +54,16 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
           endpoint: 'oauth/updateProfile',
           showPopUp: true,
         );
-        if (r['code'] != 200) {
-          throw ApiException(r['message']);
+        if (r == null) {
+          throw ApiException('No response from server');
         }
-        AppUtils.logApp("RESPONSE: ${r['data']}");
+
+        final code = r['code'];
+        final message = r['message'] ?? 'Unknown error occurred';
+
+        if (code != 200) {
+          throw ApiException(message);
+        }
 
         return true;
       } else {
@@ -80,11 +84,18 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
             "profile": editProfileParams.profilePicture,
           },
           endpoint: 'oauth/updateProfile',
+          showPopUp: true,
         );
-        if (r['code'] != 200) {
-          throw ApiException(r['message']);
+        if (r == null) {
+          throw ApiException('No response from server');
         }
-        AppUtils.logApp("RESPONSE: ${r['data']}");
+
+        final code = r['code'];
+        final message = r['message'] ?? 'Unknown error occurred';
+
+        if (code != 200) {
+          throw ApiException(message);
+        }
 
         return true;
       }

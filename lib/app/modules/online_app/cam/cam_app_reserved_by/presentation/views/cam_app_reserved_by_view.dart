@@ -20,7 +20,7 @@ class CamAppReservedByView extends GetView<CamAppReservedByController> {
       appBar: AppBar(
         centerTitle: true,
         scrolledUnderElevation: 0.0,
-        backgroundColor: primary,
+        backgroundColor: secondary,
         iconTheme: IconThemeData(color: white),
         toolbarHeight: 70.h,
         title: Text(

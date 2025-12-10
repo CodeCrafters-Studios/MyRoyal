@@ -48,9 +48,9 @@ class ProfileController extends GetxController {
   final Rx<UserDataModel> userData = UserDataModel.empty().obs;
 
   @override
-  void onInit() async {
+  void onInit() {
     tabController = TabController(length: 3, vsync: TicckerProvider());
-    await _getCacheUser();
+    _getCacheUser();
     _getProfileData();
     super.onInit();
   }
@@ -70,13 +70,10 @@ class ProfileController extends GetxController {
   }
 
   Future<void> _getCacheUser() async {
-    isLoading.value = true;
     final r = await getCacheUser();
     r.fold((l) {
       isLoading.value = false;
-      AppUtils.logApp(l.toString());
     }, (r) {
-      isLoading.value = false;
       AppUtils.logApp('RESPONSE CACHE USER :::: $r');
       userData.value = r;
       id.value = r.employeeId;

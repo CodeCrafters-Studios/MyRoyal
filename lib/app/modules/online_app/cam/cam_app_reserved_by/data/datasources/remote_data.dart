@@ -24,10 +24,6 @@ class ReservedByRemoteDatasoureceImpl implements ReservedByRemoteDatasource {
         showPopUp: true,
         params: params,
       );
-
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = ReservedByModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -50,10 +46,6 @@ class ReservedByRemoteDatasoureceImpl implements ReservedByRemoteDatasource {
         showPopUp: true,
         params: params,
       );
-
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = UpdateReservedByModel.fromJson(r);
       return response;
     } on ServerFailure {

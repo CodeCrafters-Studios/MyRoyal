@@ -22,9 +22,6 @@ class TraceSerialDataSourcesImpl implements TraceSerialDataSources {
         showPopUp: true,
         params: params,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = TraceSerialModel.fromJson(r);
       return response;
     } on ServerFailure {

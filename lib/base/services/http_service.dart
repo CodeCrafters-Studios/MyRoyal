@@ -165,21 +165,21 @@ class HttpService extends getx.GetxService {
   }) async {
     if (!await networkInfo.isConnected) {
       catchError('No Internet Connection!', showPopUp: showPopUp);
-      return;
+      return {'code': 0, 'message': 'No Internet Connection!'};
     }
 
     Response response;
     final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + endpoint : url;
 
-    ///SET Default Headers
+    // --- Set Headers ---
     if (headers == null) {
       final defaultHeader = {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
       };
       dio.options.headers = defaultHeader;
+
       if (withToken) {
-        ///SET headers with TOKEN from CACHE [Authorization : bearer]
         final token = await appStorage.read(CACHE_ACCESS_TOKEN);
         dio.options.headers = {
           'Authorization': 'Bearer $token',
@@ -190,6 +190,7 @@ class HttpService extends getx.GetxService {
       dio.options.headers = headers;
     }
 
+    // --- Allow bad certificates (DEV) ---
     final isTest = Platform.environment.containsKey('FLUTTER_TEST');
     if (!isTest) {
       dio.httpClientAdapter = IOHttpClientAdapter(
@@ -200,41 +201,21 @@ class HttpService extends getx.GetxService {
           return client;
         },
       );
-      try {
-        AppUtils.logApp(
-          '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}',
-        );
-        AppUtils.logApp(
-          newUrl,
-        );
-      } catch (e) {
-        AppUtils.logApp('ERROR ENCODE $e');
-      }
     }
 
-    // --- Encrypt Params ---
-
-    // final encryptedParams =
-    //     params != null ? appEncrypt.encryptParams(params) : null;
-
-    // initInterceptors();
+    // --- Log request ---
     try {
-      // var expToken = await appStorage.read(CACHE_EXPIRES_TOKEN);
-      // final expiresIn = DateTime.parse(expToken ?? '');
-      // final now = DateTime.now();
-      // AppTokenImpl appTokenImpl = AppTokenImpl(
-      //   appStorage: appStorage,
-      //   http: this,
-      // );
-      // if (expToken != null && now.compareTo(expiresIn) > 0) {
-      //   return appTokenImpl.getToken();
-      // }
+      AppUtils.logApp(
+          '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}');
+      AppUtils.logApp(newUrl);
+    } catch (e) {
+      AppUtils.logApp('ERROR ENCODE $e');
+    }
 
+    try {
+      // --- Perform HTTP Request ---
       if (method == Method.POST) {
-        response = await dio.post(
-          newUrl,
-          data: paramsImg ?? params,
-        );
+        response = await dio.post(newUrl, data: paramsImg ?? params);
       } else if (method == Method.DELETE) {
         response = await dio.delete(newUrl);
       } else if (method == Method.PATCH) {
@@ -242,50 +223,48 @@ class HttpService extends getx.GetxService {
       } else if (method == Method.PUT) {
         response = await dio.put(newUrl, data: params);
       } else {
-        response = await dio.get(
-          newUrl,
-          queryParameters: params,
-        );
+        response = await dio.get(newUrl, queryParameters: params);
       }
 
-      if (response.statusCode == 200) {
+      final code = response.statusCode ?? 0;
+      final message = _extractServerMessage(response.data);
+
+      if (code == 200) {
         return response.data;
-      } else if (response.statusCode == 401) {
-        catchError('Unauthorized', showPopUp: showPopUp);
-        Get.offAllNamed(Routes.LOGIN);
-      } else if (response.statusCode == 422) {
-        catchError(response.data, showPopUp: showPopUp);
-      } else if (response.statusCode == 500) {
-        catchError('Internal Server Error', showPopUp: showPopUp);
-      } else {
-        catchError("Something went wrong", showPopUp: showPopUp);
       }
+
+      // --- Handle Error Codes ---
+      catchError(message, showPopUp: showPopUp);
+
+      if (code == 401) {
+        Get.offAllNamed(Routes.LOGIN);
+      }
+
+      return {'code': code, 'message': message};
     } on SocketException catch (e) {
       AppUtils.logApp(e.toString());
       catchError('No Internet Connection', showPopUp: showPopUp);
+      return {'code': 0, 'message': 'No Internet Connection'};
     } on FormatException catch (e) {
       AppUtils.logApp(e.toString());
       catchError('Bad response format', showPopUp: showPopUp);
+      return {'code': 0, 'message': 'Bad response format'};
     } on DioException catch (e) {
+      final code = e.response?.statusCode ?? 0;
+      final message = _extractServerMessage(e.response?.data);
+
       AppUtils.logApp('Dio exc $e ${e.message}');
-      if (e.type == DioExceptionType.unknown) {
-        catchError(errorSystem, showPopUp: showPopUp);
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        catchError('Request timeout', showPopUp: showPopUp);
-      } else if (e.error is SocketException) {
-        catchError(e.error.toString(), showPopUp: showPopUp);
-      } else if (e.response?.statusCode == 400) {
-        AppUtils.logApp('LOGIN ERROR HERE');
-        catchError(errorLogin, showPopUp: showPopUp);
-      } else {
-        AppUtils.logApp('ANY ERROR HERE');
-        catchError(errorSystem, showPopUp: showPopUp);
+      catchError(message, showPopUp: showPopUp);
+
+      if (code == 401) {
+        Get.offAllNamed(Routes.LOGIN);
       }
-    } catch (e) {
-      AppUtils.logApp('unknown exc $e');
-      catchError(errorSystem, showPopUp: showPopUp);
+
+      return {'code': code, 'message': message};
+    } catch (e, s) {
+      AppUtils.logApp('Unknown exc $e\n$s');
+      catchError(e.toString(), showPopUp: showPopUp);
+      return {'code': 0, 'message': e.toString()};
     }
   }
 
@@ -637,6 +616,17 @@ class HttpService extends getx.GetxService {
         AppDialogImpl().showErrorDialog(title: 'Failed', description: message);
       }
     }
+  }
+
+  String _extractServerMessage(dynamic data) {
+    if (data == null) return 'Unknown error';
+    if (data is String) return data;
+    if (data is Map<String, dynamic>) {
+      if (data['message'] != null) return data['message'].toString();
+      if (data['error'] != null) return data['error'].toString();
+      if (data['msg'] != null) return data['msg'].toString();
+    }
+    return 'Unknown error';
   }
 
   static String errorLogin =

@@ -20,10 +20,19 @@ class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
         withToken: true,
         endpoint: 'webtel/getAll',
         method: Method.GET,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = WebtelModel.fromJson(r);
       return response;
     } on ServerFailure {

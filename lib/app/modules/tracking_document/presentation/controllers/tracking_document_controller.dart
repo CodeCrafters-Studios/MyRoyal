@@ -7,15 +7,18 @@ import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_do
 import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_history.dart';
 import 'package:iroyal/app/modules/tracking_document/domain/usecase/get_tracking_document_on_progress.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class TrackingDocumentController extends GetxController {
   TrackingDocumentController({
     required this.getTrackingDocumentOnProgress,
     required this.getTrackingDocumentHistory,
+    required this.appDialog,
   });
 
   final GetTrackingDocumentOnProgress getTrackingDocumentOnProgress;
   final GetTrackingDocumentHistory getTrackingDocumentHistory;
+  final AppDialog appDialog;
 
   TextEditingController searchDocOnProgress = TextEditingController();
   TextEditingController searchDocHistory = TextEditingController();

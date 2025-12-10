@@ -6,11 +6,13 @@ import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_use
 import 'package:iroyal/app/modules/articles/presentation/views/components/books_view.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class ArticlesController extends GetxController {
   ArticlesController({
     required this.getArticlesDetailUsecase,
     required this.getBooksDetailUsecase,
+    required this.appDialog,
   });
 
   late HomeSlider dataArticle;
@@ -67,6 +69,7 @@ class ArticlesController extends GetxController {
 
   final GetArticlesDetailUsecase getArticlesDetailUsecase;
   final GetBooksDetailUsecase getBooksDetailUsecase;
+  final AppDialog appDialog;
 
   @override
   void onInit() {
@@ -95,7 +98,6 @@ class ArticlesController extends GetxController {
 
     result.fold((l) {
       isLoading.value = false;
-      AppUtils.logApp('IMAGE URL ::: ERROR $l');
     }, (r) {
       isLoading.value = false;
       dataBookDetail.value = r;

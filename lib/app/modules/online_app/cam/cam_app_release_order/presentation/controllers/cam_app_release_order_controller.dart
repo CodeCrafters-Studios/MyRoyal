@@ -27,6 +27,7 @@ class CamAppReleaseOrderController extends GetxController {
   final TextEditingController textEditingController = TextEditingController();
 
   RxBool isLoading = false.obs;
+  RxString serial = ''.obs;
 
   // @override
   // void onInit() {
@@ -45,9 +46,6 @@ class CamAppReleaseOrderController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
-
-        // final m = l.properties[0] as ApiException;
-        // AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) async {
         isLoading.value = false;

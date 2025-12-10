@@ -24,13 +24,6 @@
       "args": ["--flavor", "dev", "--debug"]
     },
     {
-      "name": "STAGING",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main_staging.dart",
-      "args": ["--flavor", "staging", "--debug"]
-    },
-    {
       "name": "PRODUCTION IOS",
       "type": "dart",
       "request": "launch",
@@ -44,12 +37,5 @@
       "program": "lib/main_dev.dart",
       "args": ["--target", "lib/main_dev.dart"]
     },
-    {
-      "name": "STAGING IOS",
-      "type": "dart",
-      "request": "launch",
-      "program": "lib/main_staging.dart",
-      "args": ["--target", "lib/main_staging.dart"]
-    }
   ]
 }

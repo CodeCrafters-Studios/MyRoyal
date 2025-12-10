@@ -8,9 +8,7 @@ import 'package:iroyal/app/modules/notifications/domain/entities/tap_notificatio
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsController extends GetxController {
@@ -100,8 +98,6 @@ class NotificationsController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
-        final m = l.properties[0] as ApiException;
-        AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;
@@ -181,14 +177,17 @@ class NotificationsController extends GetxController {
   }
 
   void onTapNotification(int notificationId) async {
+    isLoading.value = true;
     final result = await tapNotification(notificationId);
 
     result.fold(
       (l) {
         AppUtils.logApp('Error');
+        isLoading.value = false;
       },
       (r) async {
         AppUtils.logApp('Success');
+        isLoading.value = false;
         tapNotificationData.value = r;
 
         final route = tapNotificationData.value.data.route;
@@ -219,25 +218,40 @@ class NotificationsController extends GetxController {
           } else {
             switch (route) {
               case 'My Teams':
-                Get.toNamed(Routes.MY_TEAMS);
+                Get.offNamedUntil(
+                    Routes.MY_TEAMS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Webtel':
-                Get.toNamed(Routes.WEBTEL);
+                Get.offNamedUntil(
+                    Routes.WEBTEL, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Tracking Documents':
-                Get.toNamed(Routes.TRACKING_DOCUMENT);
+                Get.offNamedUntil(Routes.TRACKING_DOCUMENT,
+                    ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Tasks':
-                Get.toNamed(Routes.TASKS);
+                Get.offNamedUntil(
+                    Routes.TASKS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Payroll':
-                Get.toNamed(Routes.PIN);
+                Get.offNamedUntil(
+                    Routes.PIN, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Dashboard':
-                Get.toNamed(Routes.DASHBOARD);
+                Get.offNamedUntil(
+                    Routes.DASHBOARD, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               case 'Visit':
-                Get.toNamed(Routes.VISIT);
+                Get.offNamedUntil(
+                    Routes.VISIT, ModalRoute.withName(Routes.BOTTOMNAVBAR));
+                break;
+              case 'Notifications':
+                Get.offNamedUntil(Routes.NOTIFICATIONS,
+                    ModalRoute.withName(Routes.BOTTOMNAVBAR));
+                break;
+              case 'Leaves':
+                Get.offNamedUntil(
+                    Routes.LEAVES, ModalRoute.withName(Routes.BOTTOMNAVBAR));
                 break;
               default:
                 null;

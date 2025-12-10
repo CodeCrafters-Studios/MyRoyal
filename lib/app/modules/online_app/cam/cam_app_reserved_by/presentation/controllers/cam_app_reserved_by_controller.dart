@@ -42,8 +42,6 @@ class CamAppReservedByController extends GetxController {
       (l) {
         isLoading.value = false;
         AppUtils.logApp('ERROR $l');
-        // final m = l.properties[0] as ApiException;
-        // AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) async {
         isLoading.value = false;
@@ -68,8 +66,6 @@ class CamAppReservedByController extends GetxController {
       (l) {
         isLoading.value = false;
         AppUtils.logApp('ERROR $l');
-        // final m = l.properties[0] as ApiException;
-        // AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) async {
         isLoading.value = false;

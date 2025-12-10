@@ -45,12 +45,14 @@ class RasAppReleaseOrderView extends GetView<RasAppReleaseOrderController> {
                     SizedBox(height: 20),
                     InputPrimary(
                       controller: controller.textEditingController,
-                      hint: 'eg. 1234',
-                      onChanged: (e) {},
+                      hint: 'ex. 1234',
+                      onChanged: (e) {
+                        controller.serial.value = e;
+                      },
                       color: white,
                       outlineColor: grey,
                       suffixIcon: IconButton(
-                        onPressed: controller.textEditingController.text.isEmpty
+                        onPressed: controller.serial.isEmpty
                             ? null
                             : controller.getReleaseOrder,
                         icon: const Icon(Icons.search),

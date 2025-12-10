@@ -24,10 +24,6 @@ class ReleaseOrderRemoteDatasourceImpl implements ReleaseOrderRemoteDatasource {
         showPopUp: true,
         params: params,
       );
-
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = ReleaseOrderModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -50,10 +46,6 @@ class ReleaseOrderRemoteDatasourceImpl implements ReleaseOrderRemoteDatasource {
         showPopUp: true,
         params: params,
       );
-
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
       final response = UpdateReleaseOrderModel.fromJson(r);
       return response;
     } on ServerFailure {

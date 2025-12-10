@@ -23,7 +23,6 @@ import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usec
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
@@ -304,8 +303,6 @@ class LeaveSummaryController extends GetxController {
 
     r.fold((l) {
       isLoading(false);
-      final m = l.properties[0] as ApiException;
-      AppUtils.logApp('${m.message}');
     }, (r) {
       isLoading(false);
       createFormRes.value = r;
@@ -338,8 +335,6 @@ class LeaveSummaryController extends GetxController {
     r.fold((l) {
       Get.back();
       isLoading(false);
-      final m = l.properties[0] as ApiException;
-      AppDialogImpl().showErrorDialog(description: m.message);
     }, (r) {
       Get.back();
       isLoading(false);
@@ -444,8 +439,6 @@ class LeaveSummaryController extends GetxController {
     r.fold(
       (l) {
         isLoading(false);
-        final m = l.properties[0] as ApiException;
-        AppUtils.logApp('${m.message}');
       },
       (r) {
         isLoading(false);

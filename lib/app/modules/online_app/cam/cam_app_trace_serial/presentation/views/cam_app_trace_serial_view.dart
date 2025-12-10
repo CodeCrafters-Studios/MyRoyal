@@ -21,7 +21,7 @@ class CamAppTraceSerialView extends GetView<CamAppTraceSerialController> {
       appBar: AppBar(
         centerTitle: true,
         scrolledUnderElevation: 0.0,
-        backgroundColor: primary,
+        backgroundColor: secondary,
         iconTheme: IconThemeData(color: white),
         toolbarHeight: 70.h,
         title: Text(
@@ -68,13 +68,14 @@ class CamAppTraceSerialView extends GetView<CamAppTraceSerialController> {
                           Expanded(
                             child: InputPrimary(
                               controller: controller.textEditingController,
-                              hint: 'eg. 0231IUISAUDHIA',
-                              onChanged: (e) {},
+                              hint: 'ex. 0231IUISAUDHIA',
+                              onChanged: (e) {
+                                controller.serial.value = e;
+                              },
                               color: white,
                               outlineColor: grey,
                               suffixIcon: IconButton(
-                                onPressed: controller
-                                        .textEditingController.text.isEmpty
+                                onPressed: controller.serial.isEmpty
                                     ? null
                                     : controller.getTraceSerial,
                                 icon: const Icon(Icons.search),
@@ -106,10 +107,14 @@ class CamAppTraceSerialView extends GetView<CamAppTraceSerialController> {
                       Column(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              controller.isExpand.value =
-                                  !controller.isExpand.value;
-                            },
+                            onTap: controller.traceSerialData.value.data?.mutasi
+                                        ?.isNotEmpty ==
+                                    true
+                                ? () {
+                                    controller.isExpand.value =
+                                        !controller.isExpand.value;
+                                  }
+                                : null,
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 25, vertical: 5),
@@ -191,8 +196,12 @@ class CamAppTraceSerialView extends GetView<CamAppTraceSerialController> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              controller.isExpandStatus.value =
-                                  !controller.isExpandStatus.value;
+                              controller.traceSerialData.value.data?.stock
+                                          ?.isNotEmpty ==
+                                      true
+                                  ? controller.isExpandStatus.value =
+                                      !controller.isExpandStatus.value
+                                  : null;
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(

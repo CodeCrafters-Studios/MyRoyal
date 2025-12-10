@@ -18,7 +18,7 @@ class CamAppView extends GetView<CamAppController> {
       appBar: AppBar(
         centerTitle: true,
         scrolledUnderElevation: 0.0,
-        backgroundColor: primary,
+        backgroundColor: secondary,
         iconTheme: IconThemeData(color: white),
         toolbarHeight: 70.h,
         title: Text(

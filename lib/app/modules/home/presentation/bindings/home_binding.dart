@@ -18,10 +18,6 @@ import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_leave_useca
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_permit_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/get_subtitute_employee_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
-import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
-import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
-import 'package:iroyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
 import 'package:iroyal/app/modules/notifications/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
@@ -53,33 +49,34 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get
       // My Teams
-      ..lazyPut<MyTeamsController>(
-        () => MyTeamsController(
-          getMyTeams: Get.find(),
-          getUser: Get.find(),
-        ),
-      )
-      ..lazyPut<MyTeamsRemoteDataSourcesImpl>(
-        () => MyTeamsRemoteDataSourcesImpl(
-          httpService: Get.find(),
-        ),
-      )
-      ..lazyPut<MyTeamsRepositoryImpl>(
-        () => MyTeamsRepositoryImpl(
-          remoteData: Get.find<MyTeamsRemoteDataSourcesImpl>(),
-        ),
-      )
-      ..lazyPut(
-        () => GetMyTeams(
-          Get.find<MyTeamsRepositoryImpl>(),
-        ),
-      )
+      // ..lazyPut<MyTeamsController>(
+      //   () => MyTeamsController(
+      //     getMyTeams: Get.find(),
+      //     getUser: Get.find(),
+      //   ),
+      // )
+      // ..lazyPut<MyTeamsRemoteDataSourcesImpl>(
+      //   () => MyTeamsRemoteDataSourcesImpl(
+      //     httpService: Get.find(),
+      //   ),
+      // )
+      // ..lazyPut<MyTeamsRepositoryImpl>(
+      //   () => MyTeamsRepositoryImpl(
+      //     remoteData: Get.find<MyTeamsRemoteDataSourcesImpl>(),
+      //   ),
+      // )
+      // ..lazyPut(
+      //   () => GetMyTeams(
+      //     Get.find<MyTeamsRepositoryImpl>(),
+      //   ),
+      // )
 
       // Tracking Document
       ..lazyPut<TrackingDocumentController>(
         () => TrackingDocumentController(
           getTrackingDocumentOnProgress: Get.find(),
           getTrackingDocumentHistory: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       )
       ..lazyPut<TrackingDocumentRemoteDataSourcesImpl>(
@@ -197,12 +194,11 @@ class HomeBinding extends Bindings {
               Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
-          getUser: Get.find(),
-          getDashboard: Get.find(),
-          getDetailLateUsecase: Get.find(),
-          getDetailPermitRequestUsecase: Get.find(),
-          getDetailSpecialLeaveRequestUsecase: Get.find(),
-        ),
+            getDashboard: Get.find(),
+            getDetailLateUsecase: Get.find(),
+            getDetailPermitRequestUsecase: Get.find(),
+            getDetailSpecialLeaveRequestUsecase: Get.find(),
+            appDialog: Get.find<AppDialogImpl>()),
       )
 
       // Leave Summary

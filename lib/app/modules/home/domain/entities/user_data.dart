@@ -16,6 +16,7 @@ class UserData extends Equatable {
   final String absentEndTime;
   final bool canAccessLeave;
   final String username;
+  final int countNotification;
 
   const UserData({
     required this.employeeId,
@@ -33,6 +34,7 @@ class UserData extends Equatable {
     required this.absentEndTime,
     required this.canAccessLeave,
     required this.username,
+    required this.countNotification,
   });
 
   @override
@@ -52,5 +54,6 @@ class UserData extends Equatable {
         absentEndTime,
         canAccessLeave,
         username,
+        countNotification,
       ];
 }

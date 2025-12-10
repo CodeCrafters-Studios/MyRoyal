@@ -9,7 +9,7 @@ import 'package:iroyal/base/utils/storage/app_storage.dart';
 
 abstract class HomeLocalData {
   Future<void> cacheUserResponse(UserModel userResponse);
-  Future<UserDataModel> getCacheUserLogin();
+  Future<UserDataModel> getCacheUser();
 }
 
 class HomeLocalDataSourceImpl implements HomeLocalData {
@@ -24,7 +24,7 @@ class HomeLocalDataSourceImpl implements HomeLocalData {
   }
 
   @override
-  Future<UserDataModel> getCacheUserLogin() async {
+  Future<UserDataModel> getCacheUser() async {
     final jsonString = await appStorage.read(CACHE_USER);
     if (jsonString != null) {
       return UserDataModel.fromJson(jsonDecode(jsonString));

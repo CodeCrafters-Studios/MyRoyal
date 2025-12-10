@@ -19,7 +19,7 @@ class CamAppReleaseOrderView extends GetView<CamAppReleaseOrderController> {
       appBar: AppBar(
         centerTitle: true,
         scrolledUnderElevation: 0.0,
-        backgroundColor: primary,
+        backgroundColor: secondary,
         iconTheme: IconThemeData(color: white),
         toolbarHeight: 70.h,
         title: Text(
@@ -45,12 +45,15 @@ class CamAppReleaseOrderView extends GetView<CamAppReleaseOrderController> {
                     SizedBox(height: 20),
                     InputPrimary(
                       controller: controller.textEditingController,
-                      hint: 'eg. 1234',
-                      onChanged: (e) {},
+                      keyboardType: TextInputType.number,
+                      hint: 'ex. 1234',
+                      onChanged: (e) {
+                        controller.serial.value = e;
+                      },
                       color: white,
                       outlineColor: grey,
                       suffixIcon: IconButton(
-                        onPressed: controller.textEditingController.text.isEmpty
+                        onPressed: controller.serial.isEmpty
                             ? null
                             : controller.getReleaseOrder,
                         icon: const Icon(Icons.search),

@@ -6,7 +6,6 @@ import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_u
 import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_params_model.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
@@ -14,10 +13,12 @@ class ApprovalController extends GetxController {
   ApprovalController({
     required this.getLeaveApprovalUsecase,
     required this.actionFormLeaveUsecase,
+    required this.appDialog,
   });
 
   final GetLeaveApprovalUsecase getLeaveApprovalUsecase;
   final ActionFormLeaveUsecase actionFormLeaveUsecase;
+  final AppDialog appDialog;
 
   TextEditingController search = TextEditingController();
 
@@ -51,7 +52,6 @@ class ApprovalController extends GetxController {
 
     r.fold((l) {
       isLoading.value = false;
-      AppUtils.logApp(l.toString());
     }, (r) {
       listLeaveApprovalRes.value = r;
       filterApprovalLeaveData.value = listLeaveApprovalRes;
@@ -113,8 +113,6 @@ class ApprovalController extends GetxController {
       (l) {
         isLoading(false);
         reasonText.value = '';
-        final m = l.properties[0] as ApiException;
-        AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) {
         isLoading(false);

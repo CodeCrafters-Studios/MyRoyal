@@ -4,6 +4,7 @@ import 'package:iroyal/app/modules/articles/data/repositories/articles_repositor
 import 'package:iroyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
 import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
 import 'package:iroyal/base/services/http_service.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/articles_controller.dart';
 
@@ -27,7 +28,8 @@ class ArticlesBinding extends Bindings {
       ..lazyPut<ArticlesController>(
         () => ArticlesController(
             getArticlesDetailUsecase: Get.find<GetArticlesDetailUsecase>(),
-            getBooksDetailUsecase: Get.find<GetBooksDetailUsecase>()),
+            getBooksDetailUsecase: Get.find<GetBooksDetailUsecase>(),
+            appDialog: Get.find<AppDialogImpl>()),
       );
   }
 }

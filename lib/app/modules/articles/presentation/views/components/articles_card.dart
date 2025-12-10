@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
+import 'package:iroyal/base/widgets/card/card_app.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 
 class ArticlesCard extends StatelessWidget {
@@ -24,57 +25,54 @@ class ArticlesCard extends StatelessWidget {
         horizontal: 6,
         vertical: 10,
       ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: white,
-          border: Border.all(color: primary),
-          borderRadius: Corners.medBorder,
-        ),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Row(
-            children: [
-              Flexible(
-                fit: FlexFit.loose,
-                flex: 2,
-                child: ListTile(
-                  minVerticalPadding: 0,
-                  title: EPadding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      title,
-                      style: TS.titleSmall,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  subtitle: Text(
-                    subtitle,
-                    style: TS.bodySmall,
+      child: CardApp(
+        color: white,
+        isShadow: true,
+        shadows: Shadows.small,
+        padding: REdgeInsets.all(8),
+        onTap: onTap,
+        child: Row(
+          children: [
+            Flexible(
+              fit: FlexFit.loose,
+              flex: 2,
+              child: ListTile(
+                minVerticalPadding: 0,
+                title: EPadding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    title,
+                    style: TS.titleSmall,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    softWrap: true,
+                  ),
+                ),
+                subtitle: Text(
+                  subtitle,
+                  style: TS.bodySmall,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  softWrap: true,
+                ),
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: ClipRRect(
+                borderRadius: Corners.smBorder,
+                child: SizedBox(
+                  height: 85.h,
+                  width: 85.w,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    alignment: FractionalOffset(.5, .0),
+                    child: CachedNetworkImage(
+                      imageUrl: imgUrl,
+                    ),
                   ),
                 ),
               ),
-              Flexible(
-                flex: 1,
-                child: ClipRRect(
-                  borderRadius: Corners.smBorder,
-                  child: SizedBox(
-                    height: 85.h,
-                    width: 85.w,
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      alignment: FractionalOffset(.5, .0),
-                      child: CachedNetworkImage(
-                        imageUrl: imgUrl,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

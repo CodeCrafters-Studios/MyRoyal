@@ -24,6 +24,7 @@ class CamAppTraceSerialController extends GetxController {
   final GetTraceSerialUsecase getTraceSerialUsecase;
 
   final Rx<TraceSerialModel> traceSerialData = TraceSerialModel.empty().obs;
+  final RxString serial = ''.obs;
 
   @override
   void onClose() {

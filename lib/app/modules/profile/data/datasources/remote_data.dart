@@ -22,9 +22,17 @@ class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
         method: Method.GET,
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final profileResponse = ProfileModel.fromJson(r);
       return profileResponse;
     } on ServerFailure {

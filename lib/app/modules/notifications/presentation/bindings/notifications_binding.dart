@@ -103,8 +103,7 @@ class NotificationsBinding extends Bindings {
       // Home
       ..lazyPut<HomeController>(
         () => HomeController(
-            getUser: Get.find(),
-            getNotifications: Get.find(),
+            getUser: Get.find<GetUser>(),
             appDialog: Get.find<AppDialogImpl>(),
             deviceInfo: Get.find<DeviceInfo>(),
             firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
@@ -126,11 +125,6 @@ class NotificationsBinding extends Bindings {
         () => HomeRepositoryImpl(
           localData: Get.find<HomeLocalDataSourceImpl>(),
           remoteData: Get.find<HomeRemoteDataSourceImpl>(),
-        ),
-      )
-      ..lazyPut(
-        () => GetUser(
-          Get.find<HomeRepositoryImpl>(),
         ),
       )
       ..lazyPut(
@@ -174,7 +168,6 @@ class NotificationsBinding extends Bindings {
       )
       ..lazyPut(
         () => SettingsController(
-          getUser: Get.find(),
           // getCacheLogin: Get.find(),
           logoutApp: Get.find(),
           appStorage: Get.find(),
@@ -188,7 +181,8 @@ class NotificationsBinding extends Bindings {
       ..lazyPut<MyTeamsController>(
         () => MyTeamsController(
           getMyTeams: Get.find(),
-          getUser: Get.find(),
+          getCacheUser: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       )
       ..lazyPut<MyTeamsRemoteDataSourcesImpl>(
@@ -248,6 +242,7 @@ class NotificationsBinding extends Bindings {
       ..lazyPut<WebtelController>(
         () => WebtelController(
           getWebtel: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       )
       ..lazyPut<WebtelRemoteDataSourcesImpl>(
@@ -302,11 +297,11 @@ class NotificationsBinding extends Bindings {
               Get.find<DashboardRepositoryImpl>()))
       ..lazyPut<DashboardController>(
         () => DashboardController(
-          getUser: Get.find(),
           getDashboard: Get.find(),
           getDetailLateUsecase: Get.find(),
           getDetailPermitRequestUsecase: Get.find(),
           getDetailSpecialLeaveRequestUsecase: Get.find(),
+          appDialog: Get.find<AppDialogImpl>(),
         ),
       )
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 
@@ -75,8 +76,7 @@ class StatusStockCard extends StatelessWidget {
             ),
             title: Text(
               ': $serial',
-              style: TS.bodyMedium
-                  .copyWith(fontWeight: FontWeight.bold, color: primary),
+              style: TS.bodyMediumBold.copyWith(color: primary),
               maxLines: 2,
               overflow: TextOverflow.visible,
             ),
@@ -205,7 +205,7 @@ class StatusStockCard extends StatelessWidget {
               SizedBox(width: 30),
               Container(
                 padding: EdgeInsets.symmetric(vertical: 5),
-                width: 90,
+                width: 120.w,
                 decoration: BoxDecoration(
                   color: red.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(28),
@@ -213,7 +213,7 @@ class StatusStockCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     expiredDate,
-                    style: TS.titleSmall.copyWith(color: red),
+                    style: TS.bodyMediumBold.copyWith(color: red),
                     maxLines: 2,
                     overflow: TextOverflow.visible,
                   ),

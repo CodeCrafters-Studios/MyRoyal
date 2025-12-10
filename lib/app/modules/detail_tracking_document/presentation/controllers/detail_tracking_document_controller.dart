@@ -8,7 +8,6 @@ import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/get_
 import 'package:iroyal/app/modules/tracking_document/presentation/controllers/tracking_document_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/widgets/others/ticker_provider.dart';
 
@@ -16,6 +15,7 @@ class DetailTrackingDocumentController extends GetxController {
   DetailTrackingDocumentController({
     required this.getDetailTrackingDocumentUseCase,
     required this.postActionTrackingDocument,
+    required this.appDialog,
   });
 
   late final TabController tabController;
@@ -23,6 +23,7 @@ class DetailTrackingDocumentController extends GetxController {
   TextEditingController reason = TextEditingController();
   final TrackingDocumentController controllerTrackingDocument =
       Get.find<TrackingDocumentController>();
+  final AppDialog appDialog;
 
   RxBool isLoading = false.obs;
   RxString reasonText = ''.obs;
@@ -150,8 +151,6 @@ class DetailTrackingDocumentController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
-        final m = l.properties[0] as ApiException;
-        AppDialogImpl().showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;

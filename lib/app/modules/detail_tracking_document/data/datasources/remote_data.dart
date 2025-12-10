@@ -29,9 +29,17 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
         showPopUp: true,
         params: {'labor_id': params},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = DetailTrackingDocumentModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -59,6 +67,18 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
       if (r['code'] != 200) {
         throw ApiException(r['message']);
       }
+
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = ActionTrackingDocumentModel.fromJson(r);
       return response;
     } on ServerFailure {

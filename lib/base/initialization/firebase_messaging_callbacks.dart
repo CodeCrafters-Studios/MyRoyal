@@ -15,7 +15,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -76,28 +75,39 @@ void onDidReceiveBackgroundNotificationResponse(
     } else {
       switch (notificationResponse.payload) {
         case 'My Teams':
-          Get.toNamed(Routes.MY_TEAMS);
+          Get.offNamedUntil(
+              Routes.MY_TEAMS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Webtel':
-          Get.toNamed(Routes.WEBTEL);
+          Get.offNamedUntil(
+              Routes.WEBTEL, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tracking Documents':
-          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          Get.offNamedUntil(Routes.TRACKING_DOCUMENT,
+              ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tasks':
-          Get.toNamed(Routes.TASKS);
+          Get.offNamedUntil(
+              Routes.TASKS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Payroll':
-          Get.toNamed(Routes.PIN);
+          Get.offNamedUntil(
+              Routes.PIN, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Dashboard':
-          Get.toNamed(Routes.DASHBOARD);
+          Get.offNamedUntil(
+              Routes.DASHBOARD, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Visit':
-          Get.toNamed(Routes.VISIT);
+          Get.offNamedUntil(
+              Routes.VISIT, ModalRoute.withName(Routes.BOTTOMNAVBAR));
+          break;
+        case 'Leaves':
+          Get.offNamedUntil(
+              Routes.LEAVES, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         default:
-          Get.to(() => const ComingSoonScreen());
+          Get.toNamed(Routes.BOTTOMNAVBAR);
           break;
       }
     }
@@ -139,28 +149,39 @@ Future<void> onMessageOpenedFromBackground(
     } else if (!route.toString().contains('/storage')) {
       switch (route) {
         case 'My Teams':
-          Get.toNamed(Routes.MY_TEAMS);
+          Get.offNamedUntil(
+              Routes.MY_TEAMS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Webtel':
-          Get.toNamed(Routes.WEBTEL);
+          Get.offNamedUntil(
+              Routes.WEBTEL, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tracking Documents':
-          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          Get.offNamedUntil(Routes.TRACKING_DOCUMENT,
+              ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tasks':
-          Get.toNamed(Routes.TASKS);
+          Get.offNamedUntil(
+              Routes.TASKS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Payroll':
-          Get.toNamed(Routes.PIN);
+          Get.offNamedUntil(
+              Routes.PIN, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Dashboard':
-          Get.toNamed(Routes.DASHBOARD);
+          Get.offNamedUntil(
+              Routes.DASHBOARD, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Visit':
-          Get.toNamed(Routes.VISIT);
+          Get.offNamedUntil(
+              Routes.VISIT, ModalRoute.withName(Routes.BOTTOMNAVBAR));
+          break;
+        case 'Leaves':
+          Get.offNamedUntil(
+              Routes.LEAVES, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         default:
-          Get.to(() => const ComingSoonScreen());
+          Get.toNamed(Routes.BOTTOMNAVBAR);
           break;
       }
     }
@@ -203,28 +224,39 @@ void onDidReceiveNotificationResponse(
     } else if (!route.toString().contains('/storage')) {
       switch (notificationResponse.payload) {
         case 'My Teams':
-          Get.toNamed(Routes.MY_TEAMS);
+          Get.offNamedUntil(
+              Routes.MY_TEAMS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Webtel':
-          Get.toNamed(Routes.WEBTEL);
+          Get.offNamedUntil(
+              Routes.WEBTEL, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tracking Documents':
-          Get.toNamed(Routes.TRACKING_DOCUMENT);
+          Get.offNamedUntil(Routes.TRACKING_DOCUMENT,
+              ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Tasks':
-          Get.toNamed(Routes.TASKS);
+          Get.offNamedUntil(
+              Routes.TASKS, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Payroll':
-          Get.toNamed(Routes.PIN);
+          Get.offNamedUntil(
+              Routes.PIN, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Dashboard':
-          Get.toNamed(Routes.DASHBOARD);
+          Get.offNamedUntil(
+              Routes.DASHBOARD, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         case 'Visit':
-          Get.toNamed(Routes.VISIT);
+          Get.offNamedUntil(
+              Routes.VISIT, ModalRoute.withName(Routes.BOTTOMNAVBAR));
+          break;
+        case 'Leaves':
+          Get.offNamedUntil(
+              Routes.LEAVES, ModalRoute.withName(Routes.BOTTOMNAVBAR));
           break;
         default:
-          Get.to(() => const ComingSoonScreen());
+          Get.toNamed(Routes.BOTTOMNAVBAR);
           break;
       }
     }

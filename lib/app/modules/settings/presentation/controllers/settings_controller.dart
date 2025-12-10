@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
 import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
@@ -12,13 +11,11 @@ class SettingsController extends GetxController {
   SettingsController({
     required this.logoutApp,
     required this.biometricsApp,
-    required this.getUser,
     required this.appStorage,
     required this.authBiometrics,
     required this.deviceInfo,
   });
 
-  final GetUser getUser;
   final LogoutApp logoutApp;
   final BiometricsApp biometricsApp;
   final AppStorage appStorage;

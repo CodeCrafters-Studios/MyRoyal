@@ -12,7 +12,8 @@ class MyTeamsBinding extends Bindings {
       ..lazyPut<MyTeamsController>(
         () => MyTeamsController(
           getMyTeams: Get.find(),
-          getUser: Get.find(),
+          getCacheUser: Get.find(),
+          appDialog: Get.find(),
         ),
       )
       ..lazyPut<MyTeamsRemoteDataSourcesImpl>(

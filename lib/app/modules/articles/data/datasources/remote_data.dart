@@ -21,7 +21,19 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
         withToken: true,
         endpoint: 'api/shelves/$id',
         method: Method.GET,
+        showPopUp: true,
       );
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final articlesDetailResponse = ArticlesDetailModel.fromJson(r);
       return articlesDetailResponse;
     } catch (e) {
@@ -36,7 +48,19 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
         withToken: true,
         endpoint: 'api/books/$id',
         method: Method.GET,
+        showPopUp: true,
       );
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final booksDetailResponse = BooksDetailModel.fromJson(r);
       return booksDetailResponse;
     } on ServerFailure {

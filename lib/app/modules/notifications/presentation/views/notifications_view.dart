@@ -36,7 +36,7 @@ class NotificationsViewImpl extends StatelessWidget {
       child: Obx(
         () => controller.isLoading.value &&
                 controller.notificationsDataList.isEmpty
-            ? _buildLoadingNotificationsList()
+            ? _buildLoadingNotificationsList(context)
             : controller.notificationsDataList.isEmpty
                 ? const NoNotificationsView()
                 : Column(
@@ -54,31 +54,41 @@ class NotificationsViewImpl extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingNotificationsList() {
-    return ListView.builder(
-      controller: controller.scrollController,
-      padding: REdgeInsets.only(bottom: 100),
-      itemCount: 10,
-      itemBuilder: (_, index) {
-        return ListTile(
-          title: EPadding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: ShimmerText(
-              height: 15.h,
-              width: 150.w,
-            ),
+  Widget _buildLoadingNotificationsList(BuildContext context) {
+    return Column(
+      children: [
+        AppbarSpacer(
+          height:
+              AppConfig.iAppBarHeight + MediaQuery.of(context).viewPadding.top,
+        ),
+        Expanded(
+          child: ListView.builder(
+            controller: controller.scrollController,
+            padding: REdgeInsets.only(bottom: 100),
+            itemCount: 10,
+            itemBuilder: (_, index) {
+              return ListTile(
+                title: EPadding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: ShimmerText(
+                    height: 15.h,
+                    width: 150.w,
+                  ),
+                ),
+                subtitle: ShimmerText(
+                  height: 15.h,
+                  width: 150.w,
+                ),
+                isThreeLine: true,
+                trailing: ShimmerText(
+                  height: 15.h,
+                  width: 60.w,
+                ),
+              );
+            },
           ),
-          subtitle: ShimmerText(
-            height: 15.h,
-            width: 150.w,
-          ),
-          isThreeLine: true,
-          trailing: ShimmerText(
-            height: 15.h,
-            width: 60.w,
-          ),
-        );
-      },
+        ),
+      ],
     );
   }
 

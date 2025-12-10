@@ -13,17 +13,16 @@ import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_useca
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
 import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class DashboardController extends GetxController {
   DashboardController({
-    required this.getUser,
     required this.getDashboard,
     required this.getDetailLateUsecase,
     required this.getDetailPermitRequestUsecase,
     required this.getDetailSpecialLeaveRequestUsecase,
+    required this.appDialog,
   });
   final dataMap = <String, double>{};
 
@@ -72,11 +71,11 @@ class DashboardController extends GetxController {
   //   children: [],
   // ).obs;
 
-  final GetUser getUser;
   final GetDashboardUsecase getDashboard;
   final GetDetailLateUsecase getDetailLateUsecase;
   final GetDetailPermitRequestUsecase getDetailPermitRequestUsecase;
   final GetDetailSpecialLeaveRequestUsecase getDetailSpecialLeaveRequestUsecase;
+  final AppDialog appDialog;
 
   RxBool isLoading = false.obs;
   RxBool hasTeams = false.obs;
@@ -89,34 +88,12 @@ class DashboardController extends GetxController {
 
   @override
   void onInit() async {
-    await _getIdCacheUser();
     // hasTeams.value ? _getMyTeamsData() : null;
     _getDashboard();
     _getDetailPermitRequest();
     _getDetailLate();
     _getDetailSpecialLeaves();
     super.onInit();
-  }
-
-  Future<void> _getIdCacheUser() async {
-    isLoading.value = true;
-    final r = await getUser();
-
-    r.fold(
-      (l) {
-        isLoading.value = false;
-        getIdState = 'getIdRejected';
-        AppUtils.logApp(l.toString());
-      },
-      (r) {
-        getIdState = 'getIdSuccess';
-        // id(r.employee.id.toString());
-        // remainingLeave(r.employee.availableLeave);
-        // hasTeams(r.children);
-        AppUtils.logApp('USER ID ::::::$id');
-        isLoading.value = false;
-      },
-    );
   }
 
   Future<void> _getDashboard() async {

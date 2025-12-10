@@ -23,10 +23,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         withToken: true,
         endpoint: 'oauth/user',
         method: Method.GET,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
+      if (r['code'] != 200) throw ApiException(r['message']);
       final userResponse = UserModel.fromJson(r);
       return userResponse;
     } on ServerFailure {
@@ -36,7 +35,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw ApiException(e.message ?? 'An error occurred');
     } catch (e, stackTrace) {
       AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
-      rethrow;
+      if (e is ApiException) rethrow;
+      throw ApiException(e.toString());
     }
   }
 
@@ -47,7 +47,19 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         withToken: true,
         endpoint: 'api/shelves',
         method: Method.GET,
+        showPopUp: true,
       );
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final articlesResponse = ArticlesModel.fromJson(r);
       return articlesResponse;
     } catch (e) {
@@ -62,12 +74,21 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         withToken: true,
         endpoint: 'trackproduct/getUserJde',
         params: params,
+        showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+
+      if (r == null) {
+        throw ApiException('No response from server');
       }
-      final response = UserJdeModel.fromJson(r);
-      return response;
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
+      return UserJdeModel.fromJson(r);
     } on ServerFailure {
       throw ApiException('Server error occurred');
     } on ApiException catch (e) {
@@ -75,7 +96,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw ApiException(e.message ?? 'An error occurred');
     } catch (e, stackTrace) {
       AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
-      rethrow;
+      throw ApiException(e.toString());
     }
   }
 }

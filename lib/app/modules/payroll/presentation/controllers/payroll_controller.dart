@@ -10,7 +10,6 @@ import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_u
 import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
 import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class PayrollController extends GetxController {
@@ -74,8 +73,6 @@ class PayrollController extends GetxController {
     result.fold(
       (l) {
         isLoading.value = false;
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
       },
       (r) {
         isLoading.value = false;

@@ -1,21 +1,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
 import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
 import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class MyTeamsController extends GetxController {
   MyTeamsController({
     required this.getMyTeams,
-    required this.getUser,
+    required this.getCacheUser,
+    required this.appDialog,
   });
 
   final TextEditingController searchE = TextEditingController();
   final GetMyTeams getMyTeams;
-  final GetUser getUser;
+  final GetCacheUser getCacheUser;
+  final AppDialog appDialog;
 
   final RxBool isLoading = false.obs;
 
@@ -42,7 +45,7 @@ class MyTeamsController extends GetxController {
 
   Future<void> _getIdCacheUser() async {
     isLoading.value = true;
-    final r = await getUser();
+    final r = await getCacheUser();
 
     r.fold(
       (l) {

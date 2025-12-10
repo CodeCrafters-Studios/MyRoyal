@@ -24,6 +24,7 @@ class RasAppTraceSerialController extends GetxController {
   final GetTraceSerialUsecase getTraceSerialUsecase;
 
   final Rx<TraceSerialModel> traceSerialData = TraceSerialModel.empty().obs;
+  RxString serial = ''.obs;
 
   @override
   void onClose() {

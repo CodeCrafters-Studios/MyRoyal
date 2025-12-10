@@ -18,7 +18,19 @@ class MyTeamsRemoteDataSourcesImpl extends MyTeamsRemoteDataSources {
         withToken: true,
         endpoint: '/api/v1/employees/$id/children',
         method: Method.GET,
+        showPopUp: true,
       );
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final myTeamsResponse = MyTeamsModel.fromJson(r);
       return myTeamsResponse;
     } on ApiException {

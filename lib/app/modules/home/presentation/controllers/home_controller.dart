@@ -13,10 +13,6 @@ import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
-import 'package:iroyal/app/modules/notifications/data/models/notification_data_list_model.dart';
-import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
-import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
-import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
@@ -31,7 +27,6 @@ import 'package:url_launcher/url_launcher.dart';
 class HomeController extends GetxController {
   HomeController({
     required this.getUser,
-    required this.getNotifications,
     required this.deviceInfo,
     required this.firebaseRemoteConfig,
     required this.appDialog,
@@ -50,8 +45,6 @@ class HomeController extends GetxController {
   RxInt indexSlider = 0.obs;
 
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
-  RxList<NotificationDataListModel> filterNewNotif =
-      <NotificationDataListModel>[].obs;
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
@@ -136,43 +129,34 @@ class HomeController extends GetxController {
 
   Rx<User> userData =
       User(code: 0, message: '', data: UserDataModel.empty()).obs;
-  Rx<NotificationEntities> notificationsData = const NotificationEntities(
-          code: 0,
-          message: '',
-          data: NotificationDataModel(currentPage: 0, data: [], totalPage: 0))
-      .obs;
   Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
   Rx<UserJdeModel> userJdeData = UserJdeModel.empty().obs;
 
   final GetUser getUser;
-  final GetNotifications getNotifications;
   final GetArticlesUsecase getArticles;
   final GetUserJdeUsecase getUserJde;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
+  late var newUpdate;
 
   @override
   void onInit() {
-    _initial();
     super.onInit();
+    _initial();
   }
 
   Future<void> onRefresh() async {
+    checkVersion();
     await _getUserData();
     _getAllMenu();
-    await _getNotifications();
-    _filterNewNotifications(notificationsData().data.data);
-    checkVersion();
   }
 
   void _initial() async {
+    checkVersion();
     await _getUserData();
     _getAllMenu();
-    await _getNotifications();
-    _filterNewNotifications(notificationsData().data.data);
-    checkVersion();
     // _showEventDialog();
     // _getArticles();
   }
@@ -191,15 +175,12 @@ class HomeController extends GetxController {
         firebaseRemoteConfig.getRecommendedMinimumVersion());
 
     // Get new update popup
-    final newUpdate = await appStorage.read('new-update');
+    newUpdate = await appStorage.read('new-update');
+
+    AppUtils.logApp('NEW UPDATE $newUpdate');
 
     final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
-    AppUtils.logApp('APP NEW UPDATE :::: $newUpdate');
-    AppUtils.logApp('APP VERSION :::: $appVersion');
-    AppUtils.logApp('APP VERSION REQUIRED :::: $requiredMinVersion');
-    AppUtils.logApp('APP VERSION RECOMMENDED :::: $recommendedMinVersion');
-    AppUtils.logApp('APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
     // Compare the versions and display a dialog if the app version is lower than
     // the required or recommended version
     if (appVersion < requiredMinVersion) {
@@ -208,12 +189,6 @@ class HomeController extends GetxController {
     } else if (appVersion < recommendedMinVersion) {
       _showUpdateVersionDialog(forceUpdateVersion,
           firebaseRemoteConfig.getRecommendedMinimumVersion());
-    } else {
-      if (newUpdate == 'true') {
-        _showWhatsNewDialog();
-      } else {
-        emptyBox;
-      }
     }
   }
 
@@ -248,31 +223,9 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> _getAllMenu() async {
-    // isLoading(true);
-    // final cacheMenu = await getCacheMenu();
-    // cacheMenu.fold(
-    //   (l) => homeMenuState = 'getCacheMenuFailed',
-    //   (r) {
-    //     isLoading(false);
-    //     homeMenuState = 'getCacheMenuSuccess';
-    //     mainMenu(generateMenu(r));
-    //     mainMenu.refresh();
-    //   },
-    // );
-
-    // final getAllMenu = await getMenu();
-    // isLoading(false);
-    // getAllMenu.fold(
-    //   (l) => dashboardState = 'getMenuFailed',
-    //   (r) {
-    //     dashboardState = 'getMenuSuccess';
-    //     mainMenu(generateMenu(r));
-    //     mainMenu.refresh();
-    //   },
-    // );
+  void _getAllMenu() {
     mainMenu(generateHomeMenu(getAllMenu));
-    //     mainMenu.refresh();
+    mainMenu.refresh();
   }
 
   List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {
@@ -300,19 +253,22 @@ class HomeController extends GetxController {
         userState = 'getUserFailed';
         isLoading.value = false;
       },
-      (r) {
+      (r) async {
         userState = 'getUserSuccess';
-        isLoading.value = false;
         userData.value = r;
         userData.value.data.profilePicture.isNotEmpty ||
                 userData.value.data.profilePicture != ''
             ? isImageAvailable.value = true
             : isImageAvailable.value;
+        isLoading.value = false;
+        await Future.delayed(Duration(milliseconds: 500));
+        newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }
 
   Future<void> getUserJDE(String company, String username) async {
+    Get.back();
     appDialog.showLoading();
 
     final result = await getUserJde.call(
@@ -326,9 +282,14 @@ class HomeController extends GetxController {
       (l) {
         AppDialogImpl().hideLoading();
         Get.back();
-        AppUtils.logApp('ERROR R ${l.properties}');
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
+        if (l.properties.isNotEmpty && l.properties[0] is ApiException) {
+          final m = l.properties[0] as ApiException;
+          appDialog.showErrorDialog(
+              description: m.message, textButton: 'Close');
+        } else {
+          appDialog.showErrorDialog(
+              description: 'Unexpected error occurred', textButton: 'Close');
+        }
       },
       (r) async {
         AppDialogImpl().hideLoading();
@@ -345,72 +306,69 @@ class HomeController extends GetxController {
     );
   }
 
-  Future<void> _getNotifications() async {
-    isLoading.value = true;
-
-    final result = await getNotifications(1);
-
-    result.fold(
-      (l) {
-        isLoading.value = false;
-      },
-      (r) {
-        isLoading.value = false;
-        notificationsData.value = r;
-      },
-    );
-  }
-
-  List<NotificationDataListModel> _filterNewNotifications(
-      List<NotificationDataListModel> getNewNotifications) {
-    filterNewNotif.clear();
-    filterNewNotif.addAll(
-        getNewNotifications.where((notif) => notif.isRead == false).toList());
-
-    return filterNewNotif;
-  }
-
-  // void _showEventDialog() {
-  //   appDialog.showEventDialog(
-  //     isImg: true,
-  //     imagePath: 'assets/images/img_banner_new.jpg',
-  //   );
-  // }
-
   void _showWhatsNewDialog() {
     appDialog.showWhatsNewDialog(
         title: "✨ What's new? 🎉",
         description: 'MyRoyal ${deviceInfo.packageInfo.version}',
         children: [
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Remove event banner Independence Day of Indonesia',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
           Row(
             children: [
-              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
               SizedBox(width: 10),
               Flexible(
                 fit: FlexFit.loose,
                 child: Text(
-                  'Remove event banner Independence Day of Indonesia',
+                  'Fixed several issues on notifications',
                   style: TS.bodyMedium,
                   textAlign: TextAlign.start,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Improvement performence low end device',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
+          // SizedBox(height: 8),
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Remove border royal wiki article',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 8),
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Optimize app performance',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
         onPress: () async {
           await appStorage.write(

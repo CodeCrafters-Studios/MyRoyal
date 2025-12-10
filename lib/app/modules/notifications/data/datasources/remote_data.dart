@@ -25,9 +25,17 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
         showPopUp: true,
         params: {'page': params},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = NotificationModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -50,9 +58,17 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
         showPopUp: true,
         params: {'notification_id': params},
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
       }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
       final response = TapNotificationModel.fromJson(r);
       return response;
     } on ServerFailure {

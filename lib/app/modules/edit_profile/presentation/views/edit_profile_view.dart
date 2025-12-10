@@ -252,7 +252,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   isLoading: controller.isLoading.value,
                   enable: controller.enableButton.value,
                   fullWidth: true,
-                  margin: REdgeInsets.only(left: 16, bottom: 20, right: 16),
+                  margin: REdgeInsets.only(bottom: 25),
                   text: 'Continue',
                   onPressed: () => controller.editProfile(),
                 )

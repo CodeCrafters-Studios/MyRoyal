@@ -8,7 +8,6 @@ import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profi
 import 'package:iroyal/app/modules/home/data/models/user_data.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
@@ -181,8 +180,6 @@ class EditProfileController extends GetxController {
     r.fold((l) {
       isLoading(false);
       AppUtils.logApp(l.toString());
-      final m = l.properties[0] as ApiException;
-      appDialog.showErrorDialog(description: m.message);
     }, (r) {
       isLoading(false);
       AppUtils.logApp('Success');

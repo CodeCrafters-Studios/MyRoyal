@@ -26,10 +26,6 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
         method: Method.GET,
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
-      }
-
       final response = PayrollPeriodModel.fromJson(r);
       return response;
     } on ServerFailure {
@@ -83,8 +79,15 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
         params: params,
         showPopUp: true,
       );
-      if (r['code'] != 200) {
-        throw ApiException(r['message']);
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
       }
 
       final response = PayrollDataOverviewModel.fromJson(r);

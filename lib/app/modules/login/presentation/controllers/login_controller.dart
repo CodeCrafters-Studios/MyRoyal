@@ -12,7 +12,6 @@ import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/config/environment_config.dart';
-import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_remote_config.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -250,8 +249,6 @@ class LoginController extends GetxController {
     r.fold((l) {
       isLoading(false);
       loginState = 'getParamsFailed';
-      final m = l.properties[0] as ApiException;
-      appDialog.showErrorDialog(description: m.message);
     }, (r) {
       loginState = 'getParamsSuccess';
       loginParams(LoginParamsModel(
@@ -270,18 +267,16 @@ class LoginController extends GetxController {
 
   Future<void> login() async {
     final r = await loginApp(loginParams().toJson());
-    isLoading(false);
     r.fold(
       (l) {
         loginState = 'loginFailed';
-        final m = l.properties[0] as ApiException;
-        appDialog.showErrorDialog(description: m.message);
       },
       (r) {
         loginState = 'loginSuccess';
         Get.offAllNamed(Routes.BOTTOMNAVBAR);
       },
     );
+    isLoading(false);
   }
 
   Future<void> getCacheUser() async {
