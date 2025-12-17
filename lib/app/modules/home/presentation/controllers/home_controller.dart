@@ -157,7 +157,7 @@ class HomeController extends GetxController {
     checkVersion();
     await _getUserData();
     _getAllMenu();
-    // _showEventDialog();
+    _showEventDialog();
     // _getArticles();
   }
 
@@ -377,6 +377,13 @@ class HomeController extends GetxController {
           );
           Get.back();
         });
+  }
+
+  void _showEventDialog() {
+    appDialog.showEventDialog(
+      isImg: true,
+      imagePath: 'assets/images/img_banner_newyears.png',
+    );
   }
 
   // Future<void> _getArticles() async {
