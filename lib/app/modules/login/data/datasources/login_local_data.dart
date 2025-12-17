@@ -184,8 +184,7 @@ class LoginLocalDataSourceImpl implements LoginLocalDataSource {
 
     // final later = now.add(const Duration(milliseconds: 60000));
     final later = now.add(Duration(milliseconds: convertExp ?? 0));
-    AppUtils.logApp('FIRST DATE TIME NOW :::::::$now');
-    AppUtils.logApp('FIRST GET TOKEN :::::::$later');
+    AppUtils.logApp('[INFO] FIRST GET TOKEN ::::::: $later');
 
     await appStorage.write(CACHE_EXPIRES_TOKEN, later.toString());
   }

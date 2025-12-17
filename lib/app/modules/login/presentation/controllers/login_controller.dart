@@ -74,16 +74,11 @@ class LoginController extends GetxController {
   @override
   void onInit() async {
     focusNodeUsername.addListener(_onFocusChange);
-    AppUtils.logApp(
-        'FOCUS :::::::::$focusNodeUsername.addListener(_onFocusChange);');
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
-      AppUtils.logApp('BIO :::::::::TRUE');
-      AppUtils.logApp('${isAllowBiometrics.value}');
       biometricAuthentication();
     } else {
-      AppUtils.logApp('BIO :::::::::FALSE');
       null;
     }
     super.onInit();
@@ -131,8 +126,8 @@ class LoginController extends GetxController {
     await appStorage.write('device-id', deviceId);
     await appStorage.write('device-user', deviceUser);
 
-    AppUtils.logApp('DEVICE ID :::: $deviceId');
-    AppUtils.logApp('DEVICE USER :::: $deviceUser');
+    AppUtils.logApp('[INFO] DEVICE ID :::: $deviceId');
+    AppUtils.logApp('[INFO] DEVICE USER :::: $deviceUser');
 
     // Get the required min version from Firebase Remote Config
     final requiredMinVersion = _getExtendedVersionNumber(
@@ -144,10 +139,12 @@ class LoginController extends GetxController {
 
     final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
-    AppUtils.logApp('APP VERSION :::: $appVersion');
-    AppUtils.logApp('APP VERSION REQUIRED :::: $requiredMinVersion');
-    AppUtils.logApp('APP VERSION RECOMMENDED :::: $recommendedMinVersion');
-    AppUtils.logApp('APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
+    AppUtils.logApp('[FIREBASE] APP VERSION :::: $appVersion');
+    AppUtils.logApp('[FIREBASE] APP VERSION REQUIRED :::: $requiredMinVersion');
+    AppUtils.logApp(
+        '[FIREBASE] APP VERSION RECOMMENDED :::: $recommendedMinVersion');
+    AppUtils.logApp(
+        '[FIREBASE] APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
     // Compare the versions and display a dialog if the app version is lower than
     // the required or recommended version
     if (appVersion < requiredMinVersion) {

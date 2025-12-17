@@ -152,7 +152,7 @@ Future<void> _setupNotifications() async {
     String fcmToken = token.toString();
     await appStorage.write(CACHE_FCM_TOKEN, fcmToken);
 
-    AppUtils.logApp('FCM TOKEN :::: $fcmToken');
+    AppUtils.logApp('[FIREBASE] FCM TOKEN :::: $fcmToken');
   });
 
   if (!kIsWeb) {

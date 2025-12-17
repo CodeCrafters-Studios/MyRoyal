@@ -19,7 +19,7 @@ class HomeLocalDataSourceImpl implements HomeLocalData {
   @override
   Future<void> cacheUserResponse(UserModel userResponse) async {
     final jsonString = jsonEncode(userResponse.data.toJson());
-    AppUtils.logApp('CACHE USER :::: $jsonString');
+    AppUtils.logApp('[INFO] CACHE USER :::: $jsonString');
     return appStorage.write(CACHE_USER, jsonString);
   }
 

@@ -139,7 +139,7 @@ class HomeController extends GetxController {
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
-  late var newUpdate;
+  // late var newUpdate;
 
   @override
   void onInit() {
@@ -157,7 +157,7 @@ class HomeController extends GetxController {
     checkVersion();
     await _getUserData();
     _getAllMenu();
-    _showEventDialog();
+
     // _getArticles();
   }
 
@@ -175,9 +175,9 @@ class HomeController extends GetxController {
         firebaseRemoteConfig.getRecommendedMinimumVersion());
 
     // Get new update popup
-    newUpdate = await appStorage.read('new-update');
+    // newUpdate = await appStorage.read('new-update');
 
-    AppUtils.logApp('NEW UPDATE $newUpdate');
+    // AppUtils.logApp('NEW UPDATE $newUpdate');
 
     final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
@@ -262,7 +262,8 @@ class HomeController extends GetxController {
             : isImageAvailable.value;
         isLoading.value = false;
         await Future.delayed(Duration(milliseconds: 500));
-        newUpdate == 'true' ? _showWhatsNewDialog() : null;
+        _showEventDialog();
+        // newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }
@@ -380,10 +381,15 @@ class HomeController extends GetxController {
   }
 
   void _showEventDialog() {
-    appDialog.showEventDialog(
-      isImg: true,
-      imagePath: 'assets/images/img_banner_newyears.png',
-    );
+    final showEvent = firebaseRemoteConfig.showEvent();
+    AppUtils.logApp('[FIREBASE] SHOW EVENT :::: $showEvent');
+
+    (showEvent)
+        ? appDialog.showEventDialog(
+            isImg: true,
+            imagePath: 'assets/images/img_banner_newyears.png',
+          )
+        : null;
   }
 
   // Future<void> _getArticles() async {

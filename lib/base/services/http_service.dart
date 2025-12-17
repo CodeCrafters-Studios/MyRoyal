@@ -237,7 +237,7 @@ class HttpService extends getx.GetxService {
       catchError(message, showPopUp: showPopUp);
 
       if (code == 401) {
-        Get.offAllNamed(Routes.LOGIN);
+        catchError(message, showPopUp: showPopUp);
       }
 
       return {'code': code, 'message': message};
@@ -257,7 +257,7 @@ class HttpService extends getx.GetxService {
       catchError(message, showPopUp: showPopUp);
 
       if (code == 401) {
-        Get.offAllNamed(Routes.LOGIN);
+        catchError(message, showPopUp: showPopUp);
       }
 
       return {'code': code, 'message': message};
@@ -364,8 +364,8 @@ class HttpService extends getx.GetxService {
       if (response.statusCode == 200) {
         return response.data;
       } else if (response.statusCode == 401) {
-        catchError('Unauthorized', showPopUp: showPopUp);
-        Routes.LOGIN;
+        final message = _extractServerMessage(response.data);
+        catchError(message, showPopUp: showPopUp);
       } else if (response.statusCode == 422) {
         catchError('Error System', showPopUp: showPopUp);
       } else if (response.statusCode == 500) {

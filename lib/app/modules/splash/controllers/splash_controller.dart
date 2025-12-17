@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/initial_route.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
@@ -24,7 +23,6 @@ class SplashController extends GetxController {
     final everLogin = await appStorage.read('ever-login');
 
     isLoading.value = true;
-    AppUtils.logApp('IS LOADING :::${isLoading.value}');
     await Future.delayed(const Duration(milliseconds: 800));
     await checkRoutes();
 
