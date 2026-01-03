@@ -58,8 +58,6 @@ Future<void> setupAndRunApp(
     ignoreSsl: true,
   );
 
-  AppUtils.logApp('RUNNING ENV ${environment.environment}');
-
   runApp(
     environment.environment == EnvironmentType.production
         ? appWidget

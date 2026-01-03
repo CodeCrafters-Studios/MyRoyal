@@ -13,8 +13,9 @@ import 'package:iroyal/app/modules/home/data/datasources/local_data.dart';
 import 'package:iroyal/app/modules/home/data/datasources/remote_data.dart';
 import 'package:iroyal/app/modules/home/data/repositories/home_repository_impl.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_banner_event_usecase.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_user_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user_jde_usecase.dart';
 import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
@@ -77,13 +78,15 @@ class BottomnavbarBinding extends Bindings {
       // Home
       ..lazyPut<HomeController>(
         () => HomeController(
-            getUser: Get.find<GetUser>(),
-            appDialog: Get.find<AppDialogImpl>(),
-            deviceInfo: Get.find<DeviceInfo>(),
-            firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
-            appStorage: Get.find<AppStorage>(),
-            getArticles: Get.find<GetArticlesUsecase>(),
-            getUserJde: Get.find<GetUserJdeUsecase>()),
+          getUserUsecase: Get.find<GetUserUsecase>(),
+          appDialog: Get.find<AppDialogImpl>(),
+          deviceInfo: Get.find<DeviceInfo>(),
+          firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
+          appStorage: Get.find<AppStorage>(),
+          getArticlesUsecase: Get.find<GetArticlesUsecase>(),
+          getUserJdeUsecase: Get.find<GetUserJdeUsecase>(),
+          getBannerEventUsecase: Get.find<GetBannerEventUsecase>(),
+        ),
       )
       ..lazyPut<HomeLocalDataSourceImpl>(
         () => HomeLocalDataSourceImpl(
@@ -102,12 +105,12 @@ class BottomnavbarBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () => GetUser(
+        () => GetUserUsecase(
           Get.find<HomeRepositoryImpl>(),
         ),
       )
       ..lazyPut(
-        () => GetCacheUser(
+        () => GetCacheUserUsecase(
           Get.find<HomeRepositoryImpl>(),
         ),
       )
@@ -118,6 +121,11 @@ class BottomnavbarBinding extends Bindings {
       )
       ..lazyPut(
         () => GetUserJdeUsecase(
+          Get.find<HomeRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut(
+        () => GetBannerEventUsecase(
           Get.find<HomeRepositoryImpl>(),
         ),
       )
@@ -342,7 +350,7 @@ class BottomnavbarBinding extends Bindings {
           getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
           createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
           actionFormLeaveUsecase: Get.find<ActionFormLeaveUsecase>(),
-          getCacheUser: Get.find<GetCacheUser>(),
+          getCacheUserUsecase: Get.find<GetCacheUserUsecase>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
         ),
       )

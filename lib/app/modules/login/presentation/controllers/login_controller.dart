@@ -74,6 +74,7 @@ class LoginController extends GetxController {
   @override
   void onInit() async {
     focusNodeUsername.addListener(_onFocusChange);
+    checkVersion();
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
@@ -82,7 +83,6 @@ class LoginController extends GetxController {
       null;
     }
     super.onInit();
-    checkVersion();
   }
 
   @override
@@ -148,11 +148,11 @@ class LoginController extends GetxController {
     // Compare the versions and display a dialog if the app version is lower than
     // the required or recommended version
     if (appVersion < requiredMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion);
+      _showUpdateVersionDialog(
+          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
     } else if (appVersion < recommendedMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion);
-    } else {
-      emptyBox;
+      _showUpdateVersionDialog(forceUpdateVersion,
+          firebaseRemoteConfig.getRecommendedMinimumVersion());
     }
   }
 
@@ -166,23 +166,25 @@ class LoginController extends GetxController {
         versionNumbers[2];
   }
 
-  void _showUpdateVersionDialog(bool isForceUpdateVersion) {
+  void _showUpdateVersionDialog(
+      bool isForceUpdateVersion, String recommendedMinVersion) {
     appDialog.showAppVersionInfoDialog(
-        isForceUpdateVersion: isForceUpdateVersion,
-        title: 'New version available',
-        description:
-            'There is a new version available in the Google Play Store. Would you like to update?',
-        onPressLater: Get.back,
-        onPressUpdate: () async {
-          String url =
-              "https://play.google.com/store/apps/details?id=com.iroyal";
-          if (await canLaunchUrl(Uri.parse(url))) {
-            await launchUrl(Uri.parse(url),
-                mode: LaunchMode.externalApplication);
-          } else {
-            throw 'Could not launch $url';
-          }
-        });
+      isForceUpdateVersion: isForceUpdateVersion,
+      title: 'New version available',
+      description:
+          'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
+      onPressLater: Get.back,
+      onPressUpdate: () async {
+        await appStorage.write('new-update', 'true');
+        Get.back();
+        String url = "https://play.google.com/store/apps/details?id=com.iroyal";
+        if (await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        } else {
+          throw 'Could not launch $url';
+        }
+      },
+    );
   }
 
   void validateForm() {

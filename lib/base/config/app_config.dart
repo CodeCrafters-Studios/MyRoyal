@@ -6,9 +6,6 @@ class AppConfig {
 
   static void loadEnvironment(String env) {
     switch (env) {
-      case 'staging':
-        environment = const EnvironmentConfig.staging();
-        break;
       case 'production':
         environment = const EnvironmentConfig.production();
         break;

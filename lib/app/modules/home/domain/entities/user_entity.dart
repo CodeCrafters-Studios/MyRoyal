@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
 
-class User extends Equatable {
-  const User({
+class UserEntity extends Equatable {
+  const UserEntity({
     required this.code,
     required this.message,
     required this.data,

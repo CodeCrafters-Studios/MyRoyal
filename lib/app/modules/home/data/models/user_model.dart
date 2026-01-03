@@ -1,7 +1,7 @@
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
-import 'package:iroyal/app/modules/home/domain/entities/user.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:iroyal/app/modules/home/domain/entities/user_entity.dart';
 
-class UserModel extends User {
+class UserModel extends UserEntity {
   const UserModel({
     required super.code,
     required super.message,

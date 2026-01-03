@@ -607,6 +607,7 @@ class HttpService extends getx.GetxService {
             },
           );
         } else {
+          AppUtils.logApp('ERR HERE');
           AppDialogImpl().showErrorDialog(
             description: message,
             textButton: 'Close',

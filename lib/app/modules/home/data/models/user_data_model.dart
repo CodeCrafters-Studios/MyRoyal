@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/home/domain/entities/user_data.dart';
+import 'package:iroyal/app/modules/home/domain/entities/user_data_entity.dart';
 
-class UserDataModel extends UserData {
+class UserDataModel extends UserDataEntity {
   const UserDataModel({
     required super.employeeId,
     required super.email,

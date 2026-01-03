@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:iroyal/app/modules/home/data/models/banner_event_model.dart';
+import 'package:iroyal/app/modules/home/data/models/user_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_jde_params_model.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_banner_event_usecase.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_user_jde_usecase.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
-import 'package:iroyal/app/modules/home/domain/entities/articles_entites.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:iroyal/app/modules/home/domain/entities/articles_entity.dart';
 import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
-import 'package:iroyal/app/modules/home/domain/entities/user.dart';
 import 'package:iroyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_user_usecase.dart';
 import 'package:iroyal/app/modules/home/presentation/views/components/home_menu.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_constants.dart';
@@ -26,13 +28,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
   HomeController({
-    required this.getUser,
+    required this.getUserUsecase,
     required this.deviceInfo,
     required this.firebaseRemoteConfig,
     required this.appDialog,
     required this.appStorage,
-    required this.getArticles,
-    required this.getUserJde,
+    required this.getArticlesUsecase,
+    required this.getUserJdeUsecase,
+    required this.getBannerEventUsecase,
   });
 
   String userState = '';
@@ -127,19 +130,21 @@ class HomeController extends GetxController {
     ),
   ];
 
-  Rx<User> userData =
-      User(code: 0, message: '', data: UserDataModel.empty()).obs;
+  Rx<UserModel> userData =
+      UserModel(code: 0, message: '', data: UserDataModel.empty()).obs;
   Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
   Rx<UserJdeModel> userJdeData = UserJdeModel.empty().obs;
+  Rx<BannerEventModel> bannerEventData = BannerEventModel.empty().obs;
 
-  final GetUser getUser;
-  final GetArticlesUsecase getArticles;
-  final GetUserJdeUsecase getUserJde;
+  final GetUserUsecase getUserUsecase;
+  final GetArticlesUsecase getArticlesUsecase;
+  final GetUserJdeUsecase getUserJdeUsecase;
+  final GetBannerEventUsecase getBannerEventUsecase;
   final DeviceInfo deviceInfo;
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
-  // late var newUpdate;
+  late var newUpdate;
 
   @override
   void onInit() {
@@ -175,9 +180,9 @@ class HomeController extends GetxController {
         firebaseRemoteConfig.getRecommendedMinimumVersion());
 
     // Get new update popup
-    // newUpdate = await appStorage.read('new-update');
+    newUpdate = await appStorage.read('new-update');
 
-    // AppUtils.logApp('NEW UPDATE $newUpdate');
+    AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
 
     final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
@@ -228,6 +233,91 @@ class HomeController extends GetxController {
     mainMenu.refresh();
   }
 
+  void _showEventDialog(String url) {
+    final showEvent = firebaseRemoteConfig.showEvent();
+    AppUtils.logApp('[FIREBASE] SHOW EVENT :::: $showEvent');
+
+    (showEvent)
+        ? appDialog.showEventDialog(
+            isImg: true,
+            imageUrl: url,
+          )
+        : null;
+  }
+
+  void _showWhatsNewDialog() {
+    appDialog.showWhatsNewDialog(
+        title: "✨ What's new? 🎉",
+        description: 'MyRoyal ${deviceInfo.packageInfo.version}',
+        children: [
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Remove event banner Independence Day of Indonesia',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_fix.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Fixed several issues on notifications',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 8),
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Remove border royal wiki article',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // SizedBox(height: 8),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Add Banner Happy New Years & Merry Christmas',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
+        ],
+        onPress: () async {
+          await appStorage.write(
+            'new-update',
+            'false',
+          );
+          Get.back();
+        });
+  }
+
   List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {
     final homeMenu = <HomeMenu>[];
 
@@ -247,7 +337,7 @@ class HomeController extends GetxController {
 
   Future<void> _getUserData() async {
     isLoading.value = true;
-    final result = await getUser();
+    final result = await getUserUsecase();
     result.fold(
       (l) {
         userState = 'getUserFailed';
@@ -260,10 +350,8 @@ class HomeController extends GetxController {
                 userData.value.data.profilePicture != ''
             ? isImageAvailable.value = true
             : isImageAvailable.value;
-        isLoading.value = false;
-        await Future.delayed(Duration(milliseconds: 500));
-        _showEventDialog();
-        // newUpdate == 'true' ? _showWhatsNewDialog() : null;
+        _getBannerEvent();
+        newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }
@@ -272,7 +360,7 @@ class HomeController extends GetxController {
     Get.back();
     appDialog.showLoading();
 
-    final result = await getUserJde.call(
+    final result = await getUserJdeUsecase.call(
       UserJdeParamsModel(
         username: username,
         company: company,
@@ -307,89 +395,21 @@ class HomeController extends GetxController {
     );
   }
 
-  void _showWhatsNewDialog() {
-    appDialog.showWhatsNewDialog(
-        title: "✨ What's new? 🎉",
-        description: 'MyRoyal ${deviceInfo.packageInfo.version}',
-        children: [
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Remove event banner Independence Day of Indonesia',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Fixed several issues on notifications',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
-          // SizedBox(height: 8),
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Remove border royal wiki article',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 8),
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Optimize app performance',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
-        onPress: () async {
-          await appStorage.write(
-            'new-update',
-            'false',
-          );
-          Get.back();
-        });
-  }
-
-  void _showEventDialog() {
-    final showEvent = firebaseRemoteConfig.showEvent();
-    AppUtils.logApp('[FIREBASE] SHOW EVENT :::: $showEvent');
-
-    (showEvent)
-        ? appDialog.showEventDialog(
-            isImg: true,
-            imagePath: 'assets/images/img_banner_newyears.png',
-          )
-        : null;
+  Future<void> _getBannerEvent() async {
+    isLoading.value = true;
+    final result = await getBannerEventUsecase();
+    result.fold(
+      (l) {
+        userState = 'getUserFailed';
+        isLoading.value = false;
+      },
+      (r) async {
+        bannerEventData.value = r;
+        isLoading.value = false;
+        await Future.delayed(Duration(milliseconds: 500));
+        _showEventDialog(bannerEventData.value.data);
+      },
+    );
   }
 
   // Future<void> _getArticles() async {

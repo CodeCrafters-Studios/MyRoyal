@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
 import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
 import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
@@ -17,7 +17,7 @@ class MyTeamsController extends GetxController {
 
   final TextEditingController searchE = TextEditingController();
   final GetMyTeams getMyTeams;
-  final GetCacheUser getCacheUser;
+  final GetCacheUserUsecase getCacheUser;
   final AppDialog appDialog;
 
   final RxBool isLoading = false.obs;

@@ -1,16 +1,16 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/home/domain/entities/user.dart';
+import 'package:iroyal/app/modules/home/data/models/banner_event_model.dart';
 import 'package:iroyal/app/modules/home/domain/repositories/home_repository.dart';
 import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/usecases/usecase.dart';
 
-class GetUser implements UseCaseNoParams {
-  GetUser(this.repository);
+class GetBannerEventUsecase implements UseCaseNoParams {
+  GetBannerEventUsecase(this.repository);
 
   final HomeRepository repository;
 
   @override
-  Future<Either<Failure, User>> call() {
-    return repository.getUser();
+  Future<Either<Failure, BannerEventModel>> call() {
+    return repository.getBannerEvent();
   }
 }

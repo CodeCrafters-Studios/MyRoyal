@@ -8,7 +8,8 @@ import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_
 import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
 import 'package:iroyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
+
 import 'package:iroyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
 import 'package:iroyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
@@ -234,7 +235,7 @@ class HomeBinding extends Bindings {
           getSubtituteEmployeeUsecase: Get.find<GetSubtituteEmployeeUsecase>(),
           createFormLeaveUsecase: Get.find<CreateFormLeaveUsecase>(),
           actionFormLeaveUsecase: Get.find<ActionFormLeaveUsecase>(),
-          getCacheUser: Get.find<GetCacheUser>(),
+          getCacheUserUsecase: Get.find<GetCacheUserUsecase>(),
           createFormPermitUsecase: Get.find<CreateFormPermitUsecase>(),
         ),
       )

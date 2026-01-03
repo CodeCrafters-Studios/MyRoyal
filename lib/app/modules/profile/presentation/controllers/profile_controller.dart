@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
 import 'package:iroyal/app/modules/profile/data/models/personal.dart';
 import 'package:iroyal/app/modules/profile/data/models/professional.dart';
 import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
@@ -25,7 +25,7 @@ class ProfileController extends GetxController {
   late final TabController tabController;
 
   final GetProfile getProfile;
-  final GetCacheUser getCacheUser;
+  final GetCacheUserUsecase getCacheUser;
   final AppDialog appDialog;
   final DownloadFile downloadFile;
 

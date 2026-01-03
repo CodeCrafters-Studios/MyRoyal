@@ -111,7 +111,7 @@ abstract class AppDialog {
   });
 
   Future<void> showEventDialog({
-    String? imagePath,
+    String? imageUrl,
     bool? isImg,
     Function()? onPress,
   });
@@ -882,7 +882,7 @@ class AppDialogImpl implements AppDialog {
 
   @override
   Future<void> showEventDialog({
-    String? imagePath,
+    String? imageUrl,
     bool? isImg,
     Function()? onPress,
   }) async {
@@ -895,9 +895,9 @@ class AppDialogImpl implements AppDialog {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             isImg == true
-                ? Image.asset(imagePath.toString())
+                ? Image.network(imageUrl.toString())
                 : Lottie.asset(
-                    imagePath.toString(),
+                    imageUrl.toString(),
                     height: 500.h,
                   ),
             15.verticalSpace,

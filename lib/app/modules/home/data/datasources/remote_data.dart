@@ -1,6 +1,7 @@
+import 'package:iroyal/app/modules/home/data/models/banner_event_model.dart';
 import 'package:iroyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:iroyal/app/modules/home/data/models/articles_model.dart';
-import 'package:iroyal/app/modules/home/data/models/user.dart';
+import 'package:iroyal/app/modules/home/data/models/user_model.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/errors/failures.dart';
 import 'package:iroyal/base/services/http_service.dart';
@@ -10,6 +11,7 @@ abstract class HomeRemoteDataSource {
   Future<UserModel> getUser();
   Future<ArticlesModel> getArticles();
   Future<UserJdeModel> getUserJde(params);
+  Future<BannerEventModel> getBannerEvent();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -89,6 +91,39 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       }
 
       return UserJdeModel.fromJson(r);
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      throw ApiException(e.message ?? 'An error occurred');
+    } catch (e, stackTrace) {
+      AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
+      throw ApiException(e.toString());
+    }
+  }
+
+  @override
+  Future<BannerEventModel> getBannerEvent() async {
+    try {
+      final r = await httpService.request(
+        withToken: true,
+        endpoint: 'dashboard/banner',
+        showPopUp: true,
+        method: Method.GET,
+      );
+
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
+      return BannerEventModel.fromJson(r);
     } on ServerFailure {
       throw ApiException('Server error occurred');
     } on ApiException catch (e) {

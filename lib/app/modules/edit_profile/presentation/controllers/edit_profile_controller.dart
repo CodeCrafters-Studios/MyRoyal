@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/edit_profile/data/model/employee_params_model.dart';
 import 'package:iroyal/app/modules/edit_profile/domain/usecases/patch_edit_profile.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
 import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
 import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
 import 'package:iroyal/base/utils/app_utils.dart';

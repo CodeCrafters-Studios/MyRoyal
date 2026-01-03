@@ -58,6 +58,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
   Future<void> _configureFCM() async {
     /// Initialize the FCM callbacks
     await FirebaseMessaging.instance.getInitialMessage();
@@ -102,12 +108,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()!
         .requestNotificationsPermission();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   @override

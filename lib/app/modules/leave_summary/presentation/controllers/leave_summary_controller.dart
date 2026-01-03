@@ -1,8 +1,8 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_params_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_params_model.dart';
 import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_params_model.dart';
@@ -34,7 +34,7 @@ class LeaveSummaryController extends GetxController {
     required this.getSubtituteEmployeeUsecase,
     required this.createFormLeaveUsecase,
     required this.actionFormLeaveUsecase,
-    required this.getCacheUser,
+    required this.getCacheUserUsecase,
     required this.createFormPermitUsecase,
   });
 
@@ -142,7 +142,7 @@ class LeaveSummaryController extends GetxController {
   final GetSubtituteEmployeeUsecase getSubtituteEmployeeUsecase;
   final CreateFormLeaveUsecase createFormLeaveUsecase;
   final ActionFormLeaveUsecase actionFormLeaveUsecase;
-  final GetCacheUser getCacheUser;
+  final GetCacheUserUsecase getCacheUserUsecase;
   final CreateFormPermitUsecase createFormPermitUsecase;
 
   @override
@@ -192,7 +192,7 @@ class LeaveSummaryController extends GetxController {
 
   Future<void> _getCacheUser() async {
     isLoading.value = true;
-    final r = await getCacheUser();
+    final r = await getCacheUserUsecase();
     r.fold((l) {
       isLoading.value = false;
       AppUtils.logApp(l.toString());

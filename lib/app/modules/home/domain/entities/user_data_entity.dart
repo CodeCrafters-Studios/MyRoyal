@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class UserData extends Equatable {
+class UserDataEntity extends Equatable {
   final int employeeId;
   final String email;
   final String fullName;
@@ -18,7 +18,7 @@ class UserData extends Equatable {
   final String username;
   final int countNotification;
 
-  const UserData({
+  const UserDataEntity({
     required this.employeeId,
     required this.email,
     required this.fullName,

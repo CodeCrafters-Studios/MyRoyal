@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/home/domain/entities/articles_entites.dart';
+import 'package:iroyal/app/modules/home/domain/entities/articles_entity.dart';
 
 class ArticlesModel extends ArticlesEntites {
   const ArticlesModel({required super.data, required super.total});

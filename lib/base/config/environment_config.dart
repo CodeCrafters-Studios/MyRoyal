@@ -5,12 +5,7 @@ enum EnvironmentType { development, staging, production }
 class EnvironmentConfig {
   const EnvironmentConfig.development()
       : environment = EnvironmentType.development,
-        androidBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/',
-        iosBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/';
-
-  const EnvironmentConfig.staging()
-      : environment = EnvironmentType.staging,
-        androidBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/',
+        androidBaseUrl = 'https://apiems.royalcorp.co.id/api/v1/',
         iosBaseUrl = 'https://dev-api.royalcorp.co.id/api/v1/';
 
   const EnvironmentConfig.production()

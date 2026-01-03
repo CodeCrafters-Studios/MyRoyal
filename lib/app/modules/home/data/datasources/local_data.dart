@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:iroyal/app/modules/home/data/models/user.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data.dart';
+import 'package:iroyal/app/modules/home/data/models/user_model.dart';
+import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/utils/app_utils.dart';

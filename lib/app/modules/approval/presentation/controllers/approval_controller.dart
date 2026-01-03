@@ -119,7 +119,7 @@ class ApprovalController extends GetxController {
         reasonText.value = '';
         _getLeaveApprovalSummary();
         actionFormRes.value = r;
-        AppDialogImpl().showCustomInfoDialog(
+        appDialog.showCustomInfoDialog(
           title: type == 'approved'
               ? 'Your Approval has been updated!'
               : 'Request Successfully rejected!',
