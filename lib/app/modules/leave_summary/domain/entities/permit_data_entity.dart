@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/dashboard/domain/entities/detail_late_entity.dart';
 
 class PermitDataEntity extends Equatable {
   final int id;
@@ -39,4 +38,24 @@ class PermitDataEntity extends Equatable {
         canCancel,
         status,
       ];
+}
+
+class PeriodTime {
+  final String start;
+  final String end;
+
+  PeriodTime({
+    required this.start,
+    required this.end,
+  });
+
+  factory PeriodTime.fromJson(Map<String, dynamic> json) => PeriodTime(
+        start: json["start"],
+        end: json["end"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "start": start,
+        "end": end,
+      };
 }

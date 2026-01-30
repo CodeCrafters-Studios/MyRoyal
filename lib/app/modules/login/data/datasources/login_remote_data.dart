@@ -18,6 +18,7 @@ class LoginRemoteDataSourceImpl implements LoginRemoteDataSource {
       final r = await httpService.request(
         params: loginParams,
         endpoint: 'oauth/token',
+        showPopUp: true,
       );
       return LoginResponseModel.fromJson(r);
     } on ServerFailure {

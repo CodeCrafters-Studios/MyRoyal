@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
 import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/custom_detail_card.dart';
 import 'package:iroyal/base/design/colors.dart';
@@ -37,12 +38,16 @@ class DetailLateCheckInView extends GetView<DashboardController> {
                           child: ListView.separated(
                             padding: EdgeInsets.zero,
                             separatorBuilder: (_, __) => 18.verticalSpace,
-                            itemCount: 5,
-                            itemBuilder: (_, __) {
+                            itemCount: controller.detailLateData().data.length,
+                            itemBuilder: (_, index) {
+                              final data =
+                                  controller.detailLateData().data[index];
+
                               return CustomDetailCard(
                                 borderSideColor: errorColor,
-                                time: '08:15',
-                                dateStart: '08 November 2024',
+                                time: data.shiftstartAbsence.time,
+                                dateStart: DateFormat('dd MMMM yyyy')
+                                    .format(data.shiftstartAbsence.date),
                                 dateEnd: '',
                                 typeRequest: 'Late',
                               );

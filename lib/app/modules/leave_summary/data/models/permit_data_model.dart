@@ -1,4 +1,3 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/detail_late_entity.dart';
 import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_data_entity.dart';
 
 class PermitDataModel extends PermitDataEntity {

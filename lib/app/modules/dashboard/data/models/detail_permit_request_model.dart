@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/detail_late_entity.dart';
+import 'package:iroyal/app/modules/dashboard/domain/entities/detail_permit_request_entity.dart';
 
-class DetailPermitRequestModel extends DetailLateEntity {
+class DetailPermitRequestModel extends DetailPermitRequestEntity {
   const DetailPermitRequestModel(
       {required super.code, required super.message, required super.data});
 
@@ -8,8 +8,8 @@ class DetailPermitRequestModel extends DetailLateEntity {
       DetailPermitRequestModel(
         code: json["code"],
         message: json["message"],
-        data: List<DetailLateData>.from(
-            json["data"].map((x) => DetailLateData.fromJson(x))),
+        data: List<DetailPermitRequestData>.from(
+            json["data"].map((x) => DetailPermitRequestData.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

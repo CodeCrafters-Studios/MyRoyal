@@ -231,14 +231,12 @@ class HttpService extends getx.GetxService {
 
       if (code == 200) {
         return response.data;
+      } else if (code == 401) {
+        catchError(message, showPopUp: showPopUp);
       }
 
       // --- Handle Error Codes ---
       catchError(message, showPopUp: showPopUp);
-
-      if (code == 401) {
-        catchError(message, showPopUp: showPopUp);
-      }
 
       return {'code': code, 'message': message};
     } on SocketException catch (e) {
@@ -253,12 +251,8 @@ class HttpService extends getx.GetxService {
       final code = e.response?.statusCode ?? 0;
       final message = _extractServerMessage(e.response?.data);
 
-      AppUtils.logApp('Dio exc $e ${e.message}');
+      AppUtils.logApp('Dio exc code: $code, Error message:$message');
       catchError(message, showPopUp: showPopUp);
-
-      if (code == 401) {
-        catchError(message, showPopUp: showPopUp);
-      }
 
       return {'code': code, 'message': message};
     } catch (e, s) {
