@@ -65,9 +65,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   Future<void> _configureFCM() async {
-    /// Initialize the FCM callbacks
+    String topicName = widget.config == const EnvironmentConfig.production()
+        ? 'All'
+        : 'All_Dev';
+
     await FirebaseMessaging.instance.getInitialMessage();
-    FirebaseMessaging.instance.subscribeToTopic('All');
+
+    await FirebaseMessaging.instance.subscribeToTopic(topicName);
+
+    String oppositeTopic = topicName == 'All' ? 'All_Dev' : 'All';
+    await FirebaseMessaging.instance.unsubscribeFromTopic(oppositeTopic);
+
     FirebaseMessaging.instance.onTokenRefresh
         .listen((token) => onFCMTokenRefresh(context, token));
     FirebaseMessaging.onMessage

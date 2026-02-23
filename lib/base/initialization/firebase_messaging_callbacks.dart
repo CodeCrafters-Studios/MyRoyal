@@ -33,6 +33,9 @@ Future<void> onForegroundMessage(
 
   if (notification != null) {
     final androidNotification = notification.android;
+    bool isDev = !kReleaseMode;
+    String title =
+        isDev ? "[DEV] ${notification.title}" : "${notification.title}";
 
     // Present the foreground notification on Android only
     // https://firebase.flutter.dev/docs/messaging/notifications/#application-in-foreground
@@ -48,8 +51,8 @@ Future<void> onForegroundMessage(
       const platformChannelSpecifics =
           NotificationDetails(android: androidPlatformChannelSpecifics);
       await flutterLocalNotificationsPlugin.show(
-        0, // notification id
-        notification.title,
+        notification.hashCode, // notification id
+        title,
         notification.body,
         platformChannelSpecifics,
         payload: data["route"],

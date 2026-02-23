@@ -44,13 +44,13 @@ class DropDownPrimary extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           width: Get.width,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: borderColor ?? grey)),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: borderColor ?? grey),
+          ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               isExpanded: true,
               icon: icon,
-              menuMaxHeight: 200.h,
               alignment: Alignment.centerLeft,
               dropdownColor: white,
               style: const TextStyle(color: Colors.black),
