@@ -35,13 +35,11 @@ class ProfileLocalDataSourcesImpl extends ProfileLocalDataSources {
   }
 
   Future<Directory?> _getDownloadDirectory() async {
-    return await getDownloadsDirectory();
-    // if (Platform.isAndroid) {
-
-    //   return await getExternalStorageDirectory();
-    // } else {
-    //   return await getDownloadsDirectory();
-    // }
+    if (Platform.isAndroid) {
+      return await getExternalStorageDirectory();
+    } else {
+      return await getDownloadsDirectory();
+    }
   }
 
   Future<String> _getUniqueFilePath(

@@ -523,17 +523,21 @@ class HttpService extends getx.GetxService {
         if (contentType != null && contentType.contains('application/pdf')) {
           try {
             final file = File(uniqueFilePath);
+
             if (response.data is List<int>) {
               await file.writeAsBytes(response.data as List<int>, flush: true);
-              AppUtils.logApp('File downloaded to: $uniqueFilePath');
+
+              AppUtils.logApp("File saved successfully: $uniqueFilePath");
+
               await showDownloadNotification(fileName, uniqueFilePath);
-              return;
             } else {
-              throw ApiException('Invalid file format received from server.');
+              throw ApiException('Invalid file format.');
             }
-          } catch (e) {
-            AppUtils.logApp('Error saving file: $e');
-            throw ApiException('Gagal menyimpan file: $e');
+          } catch (e, s) {
+            AppUtils.logApp("FILE WRITE ERROR: $e");
+            AppUtils.logApp("STACK: $s");
+
+            rethrow;
           }
         }
       } else {
