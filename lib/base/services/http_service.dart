@@ -1,5 +1,4 @@
-// ignore_for_file: constant_identifier_names
-
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,7 +8,7 @@ import 'package:dio/io.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart' as getx;
+import 'package:get/Get.dart' as getx;
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
@@ -22,10 +21,13 @@ import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
+import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -39,6 +41,8 @@ class HttpService extends getx.GetxService {
     required this.networkInfo,
     required this.appEncrypt,
     required this.connectivity,
+    required this.deviceInfo,
+    required this.appPermission,
   });
 
   final Dio dio;
@@ -48,6 +52,8 @@ class HttpService extends getx.GetxService {
   final AppEncrypt appEncrypt;
   final Connectivity connectivity;
   final getx.RxString connectionStatus = ''.obs;
+  final DeviceInfo deviceInfo;
+  final AppPermission appPermission;
 
   @override
   void onReady() {
@@ -62,9 +68,16 @@ class HttpService extends getx.GetxService {
           return handler.next(requestOptions);
         },
         onResponse: (response, handler) {
-          AppUtils.logApp(
-            '[${response.statusCode}] ${response.realUri}|||${jsonEncode(response.data)}',
-          );
+          if (response.requestOptions.responseType != ResponseType.bytes) {
+            AppUtils.logApp(
+              '[${response.statusCode}] ${response.realUri}|||${response.data}',
+            );
+          } else {
+            AppUtils.logApp(
+              '[${response.statusCode}] ${response.realUri}|||<FILE DOWNLOAD>',
+            );
+          }
+
           return handler.next(response);
         },
         onError: (err, handler) {
@@ -171,7 +184,6 @@ class HttpService extends getx.GetxService {
     Response response;
     final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + endpoint : url;
 
-    // --- Set Headers ---
     if (headers == null) {
       final defaultHeader = {
         'Content-Type': 'application/json',
@@ -190,7 +202,6 @@ class HttpService extends getx.GetxService {
       dio.options.headers = headers;
     }
 
-    // --- Allow bad certificates (DEV) ---
     final isTest = Platform.environment.containsKey('FLUTTER_TEST');
     if (!isTest) {
       dio.httpClientAdapter = IOHttpClientAdapter(
@@ -203,7 +214,6 @@ class HttpService extends getx.GetxService {
       );
     }
 
-    // --- Log request ---
     try {
       AppUtils.logApp(
           '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}');
@@ -213,7 +223,6 @@ class HttpService extends getx.GetxService {
     }
 
     try {
-      // --- Perform HTTP Request ---
       if (method == Method.POST) {
         response = await dio.post(newUrl, data: paramsImg ?? params);
       } else if (method == Method.DELETE) {
@@ -235,7 +244,6 @@ class HttpService extends getx.GetxService {
         catchError(message, showPopUp: showPopUp);
       }
 
-      // --- Handle Error Codes ---
       catchError(message, showPopUp: showPopUp);
 
       return {'code': code, 'message': message};
@@ -280,7 +288,6 @@ class HttpService extends getx.GetxService {
     Response response;
     final newUrl = url + endpoint;
 
-    ///SET Default Headers
     if (headers == null) {
       final defaultHeader = {
         'Content-Type': 'application/json',
@@ -319,24 +326,7 @@ class HttpService extends getx.GetxService {
       }
     }
 
-    // --- Encrypt Params ---
-
-    // final encryptedParams =
-    //     params != null ? appEncrypt.encryptParams(params) : null;
-
-    // initInterceptors();
     try {
-      // var expToken = await appStorage.read(CACHE_EXPIRES_TOKEN);
-      // final expiresIn = DateTime.parse(expToken ?? '');
-      // final now = DateTime.now();
-      // AppTokenImpl appTokenImpl = AppTokenImpl(
-      //   appStorage: appStorage,
-      //   http: this,
-      // );
-      // if (expToken != null && now.compareTo(expiresIn) > 0) {
-      //   return appTokenImpl.getToken();
-      // }
-
       if (method == Method.POST) {
         response = await dio.post(
           newUrl,
@@ -396,40 +386,6 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  // Future<bool> _requestStoragePermission() async {
-  //   if (Platform.isAndroid) {
-  //     final androidInfo = await DeviceInfoPlugin().androidInfo;
-  //     final sdkInt = androidInfo.version.sdkInt;
-
-  //     if (sdkInt >= 33) {
-  //       final status = await Permission.photos.request();
-  //       return status.isGranted;
-  //     } else {
-  //       final status = await Permission.storage.request();
-  //       return status.isGranted;
-  //     }
-  //   } else {
-  //     final status = await Permission.storage.request();
-  //     return status.isGranted;
-  //   }
-  // }
-
-  Future<Directory?> _getDownloadDirectory() async {
-    if (Platform.isIOS) {
-      return await getDownloadsDirectory();
-    } else {
-      var directory = "/storage/emulated/0/Download/";
-
-      var dirDownloadExists = await Directory(directory).exists();
-      if (dirDownloadExists) {
-        directory = "/storage/emulated/0/Download/";
-      } else {
-        directory = "/storage/emulated/0/Downloads/";
-      }
-      return Directory(directory);
-    }
-  }
-
   bool canCreateFile(String filePath) {
     try {
       final file = File(filePath);
@@ -442,129 +398,118 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  Future<String> _getUniqueFilePath(
-      String directoryPath, String fileName) async {
-    int counter = 1;
-    String baseName = path.basenameWithoutExtension(fileName);
-    String extension = path.extension(fileName);
-    String candidate = path.join(directoryPath, fileName);
-
-    while (!canCreateFile(candidate)) {
-      candidate = path.join(directoryPath, '$baseName($counter)$extension');
-      counter++;
-    }
-
-    return candidate;
-  }
-
   Future<dynamic> downloadFilePost({
     required String endpoint,
+    required Map<String, dynamic> body,
     required String fileName,
-    Map<String, dynamic>? params,
-    Map<String, dynamic>? headers,
-    bool withToken = false,
-    Function(int received, int total)? onReceiveProgress,
   }) async {
-    if (!await networkInfo.isConnected) {
-      catchError('No Internet Connection!');
-      return;
-    }
-
-    // final hasPermission = await _requestStoragePermission();
-    // if (!hasPermission) {
-    //   catchError('Storage permission denied');
-    //   return;
-    // }
-
-    final url = AppConfig.environment.baseUrl + endpoint;
-
-    // Set headers
-    final defaultHeader = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    };
-
-    if (withToken) {
-      final token = await appStorage.read(CACHE_ACCESS_TOKEN);
-      dio.options.headers = {
-        'Authorization': 'Bearer $token',
-        ...?headers,
-        ...defaultHeader,
-      };
-    } else {
-      dio.options.headers = {
-        ...?headers,
-        ...defaultHeader,
-      };
-    }
-
     try {
-      final directory = await _getDownloadDirectory();
-      if (directory == null) {
-        catchError('Download directory not found');
-        return;
-      }
+      final fullUrl = AppConfig.environment.baseUrl + endpoint;
+      final token = await appStorage.read(CACHE_ACCESS_TOKEN);
 
-      final uniqueFilePath = await _getUniqueFilePath(directory.path, fileName);
-
-      final response = await dio.post<dynamic>(
-        url,
-        data: params,
-        options: Options(
+      final dioDownload = Dio(
+        BaseOptions(
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+          sendTimeout: const Duration(seconds: 30),
           responseType: ResponseType.bytes,
+          validateStatus: (status) => true,
           followRedirects: false,
-          validateStatus: (status) => status != null,
         ),
-        onReceiveProgress: onReceiveProgress,
       );
 
+      dioDownload.options.headers = {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      };
+
+      final response = await dioDownload.post(
+        fullUrl,
+        data: body,
+      );
+
+      AppUtils.logApp("STATUS CODE: ${response.statusCode}");
+
       if (response.statusCode == 200) {
-        final contentType = response.headers.value('content-type');
-        if (contentType != null && contentType.contains('application/pdf')) {
-          try {
-            final file = File(uniqueFilePath);
-
-            if (response.data is List<int>) {
-              await file.writeAsBytes(response.data as List<int>, flush: true);
-
-              AppUtils.logApp("File saved successfully: $uniqueFilePath");
-
-              await showDownloadNotification(fileName, uniqueFilePath);
-            } else {
-              throw ApiException('Invalid file format.');
-            }
-          } catch (e, s) {
-            AppUtils.logApp("FILE WRITE ERROR: $e");
-            AppUtils.logApp("STACK: $s");
-
-            rethrow;
-          }
-        }
-      } else {
-        final responseString = utf8.decode(response.data as List<int>);
-        final decoded = jsonDecode(responseString);
-        final message = decoded['message'] ?? 'Unknown server message.';
-        throw ApiException(message);
+        final bytes = response.data as List<int>;
+        final savedPath =
+            await saveToPublicDownload(bytes: bytes, fileName: fileName);
+        await showDownloadNotification(fileName, savedPath);
+        return savedPath;
       }
-    } on DioException catch (e) {
-      AppUtils.logApp('Download DioException: $e');
 
-      if (e.response?.data != null) {
-        final String responseString =
-            utf8.decode(e.response!.data as List<int>);
-        final Map<String, dynamic> decoded = jsonDecode(responseString);
-        final String message =
-            decoded['message'] ?? 'Unknown error from server.';
-        throw ApiException(message);
-      }
-      throw ApiException(e.message ?? 'Unknown download error.');
+      final responseBytes = response.data as List<int>;
+      final responseString = utf8.decode(responseBytes);
+
+      Map<String, dynamic>? errorJson;
+
+      try {
+        errorJson = jsonDecode(responseString);
+      } catch (_) {}
+
+      throw ApiException(
+        errorJson?["message"] ?? "Terjadi kesalahan (${response.statusCode})",
+      );
     } on ApiException catch (e) {
-      AppUtils.logApp('API Exception: ${e.message}');
-      catchError(e.message!);
+      AppUtils.logApp("CATCH ERR ::: ${e.message}");
+      catchError(e.message.toString(), showPopUp: true);
+      rethrow;
     } catch (e) {
-      AppUtils.logApp('Unexpected error: $e');
-      catchError('Terjadi kesalahan tak terduga: $e');
+      AppUtils.logApp("Download error: $e");
+      throw ApiException(e.toString());
     }
+  }
+
+  Future<String> saveToPublicDownload({
+    required List<int> bytes,
+    required String fileName,
+  }) async {
+    String sanitizedName =
+        fileName.replaceAll(RegExp(r'[^\w\s\-]'), '').replaceAll(' ', '_');
+
+    String finalName = sanitizedName.toLowerCase().endsWith(".pdf")
+        ? sanitizedName
+        : "$sanitizedName.pdf";
+
+    final androidInfo = await deviceInfo.deviceInfoPlugin.androidInfo;
+    int sdkInt = androidInfo.version.sdkInt;
+
+    AppUtils.logApp("Saving file: $finalName | SDK: $sdkInt");
+
+    if (sdkInt == 29) {
+      Directory? dir = await getExternalStorageDirectory();
+      if (dir == null) throw Exception("Cannot access storage");
+
+      final file = File("${dir.path}/$finalName");
+      await file.writeAsBytes(bytes);
+
+      return file.path;
+    }
+
+    await MediaStore.ensureInitialized();
+    MediaStore.appFolder = "MyRoyal";
+
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = path.join(tempDir.path, finalName);
+    File tempFile = await File(tempPath).writeAsBytes(bytes);
+
+    SaveInfo? saveInfo = await MediaStore().saveFile(
+      tempFilePath: tempPath,
+      dirType: DirType.download,
+      dirName: DirName.download,
+      relativePath: "Payroll",
+    );
+
+    try {
+      await tempFile.delete();
+    } catch (_) {}
+
+    if (saveInfo == null) {
+      throw Exception("Failed to save file to MediaStore.");
+    }
+
+    return finalName;
   }
 
   Future<void> showDownloadNotification(

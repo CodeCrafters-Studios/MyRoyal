@@ -7,5 +7,9 @@
        <domain includeSubdomains="true">https://dev-hr.royalcorp.co.id</domain>
        <domain includeSubdomains="true">https://dev-api.royalcorp.co.id</domain>
     </domain-config>
-    <base-config cleartextTrafficPermitted="false"/>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
 </network-security-config>

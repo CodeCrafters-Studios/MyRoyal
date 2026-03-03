@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -31,6 +33,7 @@ import 'package:iroyal/base/utils/storage/app_storage.dart';
 import 'package:iroyal/base/utils/token/app_token.dart';
 import 'package:iroyal/firebase_options.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 /// This is the main entry point of the app which performs any setups before
@@ -41,6 +44,11 @@ Future<void> setupAndRunApp(
 }) async {
   // enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid) {
+    await MediaStore.ensureInitialized();
+  }
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -129,6 +137,11 @@ Future configureApp(EnvironmentConfig envConfig) async {
         networkInfo: Get.find<NetworkInfoImpl>(),
         appEncrypt: Get.find<AppEncryptImpl>(),
         connectivity: connectivity,
+        deviceInfo: DeviceInfo(
+          deviceInfoPlugin: deviceInfoPlugin,
+          packageInfo: packageInfo,
+        ),
+        appPermission: AppPermissionImpl(),
       ),
     )
     ..put(

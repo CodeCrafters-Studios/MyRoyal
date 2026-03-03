@@ -25,8 +25,10 @@ class PayrollPeriodRepositoryImpl implements PayrollPeriodRepository {
     try {
       await remoteData.payrollDownloadUrl(params);
       return const Right(null);
-    } on ApiException {
-      return const Left(ServerFailure());
+    } catch (e) {
+      return Left(
+        ServerFailure(properties: [e]),
+      );
     }
   }
 

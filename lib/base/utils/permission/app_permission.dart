@@ -24,7 +24,7 @@ class AppPermissionImpl implements AppPermission {
       final AndroidDeviceInfo info = await deviceInfoPlugin.androidInfo;
 
       if (info.version.sdkInt >= 33) {
-        return true; // Android 13 and above have different permission requirements.
+        return true;
       } else {
         status = await Permission.storage.request();
       }

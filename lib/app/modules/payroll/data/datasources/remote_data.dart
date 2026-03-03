@@ -46,26 +46,16 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
       await httpService.downloadFilePost(
         endpoint: 'payroll/downloadSlip',
         fileName: '${params["filename"]}.pdf',
-        params: params,
-        withToken: true,
-        onReceiveProgress: (received, total) {
-          if (total <= 0) {
-            AppUtils.logApp('Download progress: unknown (received: $received)');
-          } else {
-            final progress = (received / total * 100).toStringAsFixed(0);
-            AppUtils.logApp('Download progress: $progress%');
-          }
-        },
+        body: params,
       );
-      // final response = PayrollDownloadUrlModel.fromJson(r);
     } on ServerFailure {
       throw ApiException('Server error occurred');
     } on ApiException catch (e) {
       AppUtils.logApp('CATCH ERR ::: ${e.message}');
-      throw ApiException(e.message ?? 'An error occurred');
-    } catch (e, stackTrace) {
-      AppUtils.logApp('Error: $e\n$stackTrace');
       rethrow;
+    } catch (e) {
+      AppUtils.logApp('Download error: $e');
+      throw ApiException(e.toString());
     }
   }
 

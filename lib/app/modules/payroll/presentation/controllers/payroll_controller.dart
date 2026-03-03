@@ -10,6 +10,7 @@ import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_u
 import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
 import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
 import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
+import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 
 class PayrollController extends GetxController {
@@ -103,7 +104,7 @@ class PayrollController extends GetxController {
   //   );
   // }
 
-  void downloadSlipUrl(String payrollPeriod, String fileName) {
+  Future<void> downloadSlipUrl(String payrollPeriod, String fileName) async {
     appDialog.showInfoDialog(
       title: 'Disclaimer',
       description: '''
@@ -124,23 +125,29 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
       textButton: 'Download',
       isLoading: isLoading.value,
       onPress: () async {
-        isLoading.value = true;
         Get.back();
 
-        final result = await payrollDownloadUrlUsecase(
-          PayrollPeriodParamsModel(
-              payrollPeriod: payrollPeriod, filename: fileName),
-        );
+        isLoading.value = true;
 
-        result.fold(
-          (l) {
-            isLoading.value = false;
-          },
-          (r) {
-            isLoading.value = false;
-            // payrollDownloadUrlRes.value = r;
-          },
-        );
+        await Future.delayed(Duration(milliseconds: 200));
+
+        try {
+          final result = await payrollDownloadUrlUsecase(
+            PayrollPeriodParamsModel(
+              payrollPeriod: payrollPeriod,
+              filename: fileName,
+            ),
+          );
+
+          result.fold(
+            (l) {},
+            (r) {},
+          );
+        } catch (e) {
+          AppUtils.logApp("Controller error: $e");
+        } finally {
+          isLoading.value = false;
+        }
       },
     );
   }
