@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -29,21 +28,21 @@ class VisitView extends GetView<VisitController> {
               const AppbarSpacer(),
               Obx(
                 () {
-                  if (controller.currentPosition.value == null) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                  // if (controller.currentPosition.value == null) {
+                  //   return const Center(child: CircularProgressIndicator());
+                  // }
                   return SizedBox(
                     height: 300.h,
-                    child: GoogleMap(
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: true,
-                      initialCameraPosition: CameraPosition(
-                        target: controller.currentPosition.value!,
-                        zoom: 18,
-                      ),
-                      onMapCreated: controller.onMapCreated,
-                      markers: controller.markers.toSet(),
-                    ),
+                    // child: GoogleMap(
+                    //   myLocationEnabled: true,
+                    //   myLocationButtonEnabled: true,
+                    //   initialCameraPosition: CameraPosition(
+                    //     target: controller.currentPosition.value!,
+                    //     zoom: 18,
+                    //   ),
+                    //   onMapCreated: controller.onMapCreated,
+                    //   markers: controller.markers.toSet(),
+                    // ),
                   );
                 },
               ),
@@ -101,7 +100,7 @@ class VisitView extends GetView<VisitController> {
                             itemCount: controller.locationsData.length,
                             itemBuilder: (ctx, index) {
                               final data = controller.locationsData[index];
-                              final getIndex = index;
+                              // final getIndex = index;
 
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -113,13 +112,13 @@ class VisitView extends GetView<VisitController> {
                                   10.verticalSpace,
                                   InkWellTap(
                                     onTap: () {
-                                      if (getIndex == index) {
-                                        controller.setLocation(
-                                          data.lat,
-                                          data.long,
-                                          index,
-                                        );
-                                      }
+                                      // if (getIndex == index) {
+                                      //   controller.setLocation(
+                                      //     data.lat,
+                                      //     data.long,
+                                      //     index,
+                                      //   );
+                                      // }
                                     },
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,

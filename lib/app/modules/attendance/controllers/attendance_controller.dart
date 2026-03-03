@@ -2,97 +2,136 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/attendance/views/components/selfie_camera_view.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:latlong2/latlong.dart';
 
 class AttendanceController extends GetxController {
+  /// ================================
+  /// TIME STATE
+  /// ================================
   final currentTime = DateTime.now().obs;
   final checkInTime = DateTime.now().obs;
   final checkOutTime = DateTime.now().obs;
   final breakTime = DateTime.now().obs;
-  final Completer<GoogleMapController> mapCompleter = Completer();
-  final currentPosition = Rxn<LatLng>();
-  final locationError = RxnString();
-  final officeLocation = const LatLng(-6.8617228, 107.5010659);
-  final officeRadius = 10.0;
+  final breakEndTime = Rxn<DateTime>();
+  final breakDuration = ''.obs;
+  final hasTakenBreak = false.obs;
 
+  /// ================================
+  /// MAP & LOCATION
+  /// ================================
+  final currentPosition = Rxn<LatLng>();
+  final MapController mapController = MapController();
+  final officeLocation = const LatLng(-6.8617228, 107.5010659);
+  final officeRadius = 50.0;
+
+  final isGpsActive = false.obs;
+  final isMockLocation = false.obs;
+  final isGpsSpoofing = false.obs;
+  final isLocationValid = false.obs;
+
+  Position? _previousPosition;
+  StreamSubscription<Position>? _positionStream;
+
+  /// ================================
+  /// ATTENDANCE STATE
+  /// ================================
   RxBool isCheckIn = false.obs;
   RxBool isCheckOut = false.obs;
   RxBool isBreakTime = false.obs;
-  RxBool isLocationValid = false.obs;
+  final buttonEnabled = false.obs;
+
+  /// ================================
+  /// CAMERA
+  /// ================================
   RxBool isFacingCamera = false.obs;
   final cameras = RxList<CameraDescription>();
   final cameraController = Rxn<CameraController>();
   final takenPhoto = Rxn<File>();
-  final buttonEnabled = false.obs;
 
+  /// ================================
+  /// TIMER
+  /// ================================
+  late Timer _timer;
+  Timer? countingTimer;
+  Duration myDuration = Duration.zero;
   RxString totalHours = ''.obs;
   RxString countTimes = '--:--:--'.obs;
 
-  late Timer _timer;
-  Timer? countingTimer;
-  Duration myDuration = const Duration();
-
-  Position? _previousPosition;
-  final isGpsSpoofing = false.obs;
-
+  /// ================================
+  /// INIT
+  /// ================================
   @override
   void onInit() {
     super.onInit();
     _startTimer();
-    _checkPermissions();
+    _initLocation();
   }
 
   @override
   void onClose() {
-    super.onClose();
     _timer.cancel();
-    cameraController.value?.dispose();
+    countingTimer?.cancel();
+    _positionStream?.cancel();
+    super.onClose();
   }
 
-  Future<void> _checkPermissions() async {
-    var cameraStatus = await Permission.camera.request();
+  /// ================================
+  /// INIT LOCATION
+  /// ================================
+  Future<void> _initLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    isGpsActive.value = serviceEnabled;
 
-    if (cameraStatus.isGranted) {
-      _initCamera();
-      _startLocationStream();
-    } else {
-      Get.snackbar('Permission Denied',
-          'Please grant camera permissions to use this feature.');
+    if (!serviceEnabled) return;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
+
+    if (permission == LocationPermission.deniedForever) return;
+
+    _startLocationStream();
   }
 
-  Future<void> _initCamera() async {
-    try {
-      cameras.value = await availableCameras();
-      final frontCamera = cameras.firstWhere(
-          (camera) => camera.lensDirection == CameraLensDirection.front);
-      cameraController.value = CameraController(
-          frontCamera, ResolutionPreset.high,
-          enableAudio: false);
-      await cameraController.value!.initialize();
-      isFacingCamera.value = true;
-    } catch (e) {
-      AppUtils.logApp('Error initializing camera: $e');
-    }
-  }
-
+  /// ================================
+  /// LOCATION STREAM (LIVE + AUTO CENTER)
+  /// ================================
   void _startLocationStream() {
-    Geolocator.getPositionStream(
-            locationSettings:
-                const LocationSettings(accuracy: LocationAccuracy.best))
-        .listen((Position position) {
-      _handleLocationUpdate(position);
-    });
+    const locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 5,
+    );
+
+    _positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      _handleLocationUpdate,
+      onError: (error) {
+        isGpsActive.value = false;
+        AppUtils.logApp("Location Stream Error: $error");
+      },
+    );
   }
 
+  /// ================================
+  /// HANDLE LOCATION UPDATE
+  /// ================================
   void _handleLocationUpdate(Position newPosition) {
+    isGpsActive.value = true;
+
+    /// MOCK GPS DETECTION
+    isMockLocation.value = newPosition.isMocked;
+    if (isMockLocation.value) {
+      isGpsSpoofing.value = true;
+    }
+
+    /// JUMP / SPEED DETECTION
     if (_previousPosition != null) {
       final distance = Geolocator.distanceBetween(
         _previousPosition!.latitude,
@@ -100,122 +139,164 @@ class AttendanceController extends GetxController {
         newPosition.latitude,
         newPosition.longitude,
       );
-      final timeDifference = newPosition.timestamp
+
+      final timeDiff = newPosition.timestamp
           .difference(_previousPosition!.timestamp)
           .inSeconds;
 
-      if (timeDifference > 0 && distance / timeDifference > 100) {
-        isGpsSpoofing.value = true;
-        buttonEnabled.value = false;
-        Get.snackbar('Location Tampering Detected!',
-            'Your attendance cannot be recorded due to suspicious location changes.');
-        return;
+      if (timeDiff > 0) {
+        final speed = distance / timeDiff;
+
+        if (speed > 60) {
+          isGpsSpoofing.value = true;
+          Get.snackbar(
+            "Suspicious Movement",
+            "Pergerakan tidak wajar terdeteksi",
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+          );
+        }
       }
     }
 
     _previousPosition = newPosition;
+
     currentPosition.value = LatLng(newPosition.latitude, newPosition.longitude);
 
-    double distance = Geolocator.distanceBetween(
+    /// AUTO CENTER MAP
+    try {
+      mapController.move(currentPosition.value!, 17);
+    } catch (_) {}
+
+    /// CHECK RADIUS
+    double meter = Geolocator.distanceBetween(
       currentPosition.value!.latitude,
       currentPosition.value!.longitude,
       officeLocation.latitude,
       officeLocation.longitude,
     );
-    isLocationValid.value = distance <= officeRadius;
+
+    isLocationValid.value = meter <= officeRadius;
+
+    /// VALIDASI KELUAR RADIUS SETELAH CHECK IN
+    if (isCheckIn.value && !isLocationValid.value) {
+      Get.snackbar(
+        "Warning",
+        "Anda keluar dari radius kantor!",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
 
     buttonEnabled.value =
         isLocationValid.value && isFacingCamera.value && !isGpsSpoofing.value;
   }
 
-  void onMapCreated(GoogleMapController controller) {
-    if (!mapCompleter.isCompleted) {
-      mapCompleter.complete(controller);
-    }
-  }
-
+  /// ================================
+  /// TIMER
+  /// ================================
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       currentTime.value = DateTime.now();
     });
   }
 
+  /// ================================
+  /// CHECK IN
+  /// ================================
   Future<void> checkIn() async {
     if (!isLocationValid.value) {
-      Get.snackbar(
-          'Gagal Check In', 'Anda harus berada di dalam radius kantor.');
+      Get.snackbar("Gagal", "Anda harus berada di dalam radius kantor.");
       return;
     }
 
-    await Get.to(() => SelfieCameraView());
+    if (isGpsSpoofing.value) {
+      Get.snackbar("Gagal", "Fake GPS terdeteksi!");
+      return;
+    }
+
+    isCheckIn.value = true;
+    checkInTime.value = DateTime.now();
+
+    Get.snackbar("Success", "Check-in successful!");
   }
 
+  /// ================================
+  /// CHECK OUT (RESET SEMUA)
+  /// ================================
   void checkOut() {
     AppDialogImpl().showChoiceDialog(
       title: 'Confirmation',
       description: 'Are you sure want to Checkout?',
       onPressedYes: () {
-        Get.back();
+        countingTimer?.cancel();
+
         isCheckOut.value = true;
+        isBreakTime.value = false;
+        hasTakenBreak.value = false;
+        isGpsSpoofing.value = false;
+
         checkOutTime.value = DateTime.now();
-        _timer.cancel();
+
+        breakDuration.value = '';
+        countTimes.value = '--:--:--';
+        myDuration = Duration.zero;
+
         _totalHours();
+        Get.back();
       },
     );
   }
 
+  /// ================================
+  /// TOTAL HOURS
+  /// ================================
   void _totalHours() {
-    AppUtils.logApp(DateFormat('hh:mm a').format(checkInTime.value));
-    AppUtils.logApp(DateFormat('hh:mm a').format(checkOutTime.value));
-
     Duration dif = checkOutTime.value.difference(checkInTime.value);
 
-    AppUtils.logApp(dif.toString());
-    AppUtils.logApp(dif.toString().substring(0, 4));
-
-    String negativeSign = dif.isNegative ? '-' : '';
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(dif.inMinutes.remainder(60).abs());
 
     totalHours.value =
-        "$negativeSign${twoDigits(dif.inHours)}h ${twoDigitMinutes}m";
-
-    AppUtils.logApp(totalHours.value);
+        "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
   }
 
+  /// ================================
+  /// BREAK TIME (ONLY ONCE)
+  /// ================================
   void startBreakTime() {
-    isBreakTime.value = true;
-    breakTime.value = DateTime.now();
-    _startCountingTimer();
-  }
+    if (hasTakenBreak.value) return;
 
-  void _startCountingTimer() {
+    breakTime.value = DateTime.now();
+    isBreakTime.value = true;
+    hasTakenBreak.value = true;
+
     countingTimer =
         Timer.periodic(const Duration(seconds: 1), (_) => setCountingTimer());
   }
 
   void endBreakTime() {
-    countingTimer!.cancel();
+    countingTimer?.cancel();
+
+    breakEndTime.value = DateTime.now();
+
+    Duration dif = breakEndTime.value!.difference(breakTime.value);
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+
+    breakDuration.value =
+        "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+
     countTimes.value = '--:--:--';
     isBreakTime.value = false;
     myDuration = Duration.zero;
-
-    AppUtils.logApp(countTimes.value);
-    AppUtils.logApp('$myDuration');
   }
 
   void setCountingTimer() {
-    const addSecondsBy = 1;
-    final countSeconds = myDuration.inSeconds + addSecondsBy;
-    myDuration = Duration(seconds: countSeconds);
+    myDuration = Duration(seconds: myDuration.inSeconds + 1);
 
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    final hours = twoDigits(myDuration.inHours.remainder(24));
-    final minutes = twoDigits(myDuration.inMinutes.remainder(60));
-    final seconds = twoDigits(myDuration.inSeconds.remainder(60));
 
-    countTimes.value = "$hours:$minutes:$seconds";
-
-    AppUtils.logApp(countTimes.value);
+    countTimes.value =
+        "${twoDigits(myDuration.inHours)}:${twoDigits(myDuration.inMinutes.remainder(60))}:${twoDigits(myDuration.inSeconds.remainder(60))}";
   }
 }

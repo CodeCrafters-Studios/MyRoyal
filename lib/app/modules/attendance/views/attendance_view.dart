@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/attendance/controllers/attendance_controller.dart';
 import 'package:iroyal/base/design/colors.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/widgets/app_divider.dart';
@@ -11,11 +12,8 @@ import 'package:iroyal/base/widgets/buttons/button_primary.dart';
 import 'package:iroyal/base/widgets/inkwell_tap.dart';
 import 'package:iroyal/base/widgets/padding.dart';
 import 'package:iroyal/base/widgets/page_base.dart';
-import '../controllers/attendance_controller.dart';
 
 class AttendanceView extends GetView<AttendanceController> {
-  const AttendanceView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return PageBase(
@@ -25,7 +23,6 @@ class AttendanceView extends GetView<AttendanceController> {
       title: 'Attendance',
       textStyle: TS.headlineSmall.copyWith(color: white),
       child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
         padding: REdgeInsets.only(bottom: 100),
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -33,6 +30,7 @@ class AttendanceView extends GetView<AttendanceController> {
             () => Column(
               children: [
                 const AppbarSpacer(),
+                5.verticalSpace,
                 _buildGreeting(controller),
                 15.verticalSpace,
                 _buildAttendanceContent(controller),
@@ -78,11 +76,12 @@ class AttendanceView extends GetView<AttendanceController> {
   Widget _buildAttendanceContent(AttendanceController controller) {
     return Column(
       children: [
-        _buildBackgroundImage(controller),
+        // _buildBackgroundImage(controller),
         if (!controller.isCheckIn.value)
           _buildGoogleMapsLocation(controller)
         else
-          _buildPhotoPreview(controller),
+          // _buildPhotoPreview(controller),
+          _buildBackgroundImage(controller),
         10.verticalSpace,
         _buildTimeDisplay(controller),
         _buildTimesInfo(controller),
@@ -97,56 +96,111 @@ class AttendanceView extends GetView<AttendanceController> {
       height: 300.h,
       width: Get.width,
       child: Obx(() {
-        // Show loading indicator until currentPosition is available
         if (controller.currentPosition.value == null) {
           return const Center(child: CircularProgressIndicator());
         }
-        return GoogleMap(
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          initialCameraPosition: CameraPosition(
-            target: controller.currentPosition.value!,
-            zoom: 17,
-          ),
-          onMapCreated: controller.onMapCreated,
-          circles: {
-            Circle(
-              circleId: const CircleId('office_radius'),
-              center: controller.officeLocation,
-              radius: controller.officeRadius,
-              strokeColor: Colors.green,
-              strokeWidth: 2,
-              fillColor: Colors.green.withOpacity(0.2),
-            ),
-          },
-          markers: {
-            Marker(
-              markerId: const MarkerId('office_marker'),
-              position: controller.officeLocation,
-            ),
-            Marker(
-              markerId: const MarkerId('user_marker'),
-              position: controller.currentPosition.value!,
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueBlue),
-            ),
-          },
-        );
-      }),
-    );
-  }
 
-  Widget _buildPhotoPreview(AttendanceController controller) {
-    return SizedBox(
-      height: 300.h,
-      width: Get.width,
-      child: Obx(() {
-        if (controller.takenPhoto.value == null) {
-          return const Center(child: Text('No Photo Taken'));
-        }
-        return Image.file(
-          controller.takenPhoto.value!,
-          fit: BoxFit.cover,
+        return Stack(
+          children: [
+            FlutterMap(
+              mapController: controller.mapController,
+              options: MapOptions(
+                initialCenter: controller.currentPosition.value!,
+                initialZoom: 17,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  userAgentPackageName: 'com.iroyal.dev',
+                ),
+
+                /// RADIUS KANTOR
+                CircleLayer(
+                  circles: [
+                    CircleMarker(
+                      point: controller.officeLocation,
+                      radius: controller.officeRadius,
+                      useRadiusInMeter: true,
+                      color: controller.isLocationValid.value
+                          ? Colors.green.withOpacity(0.2)
+                          : Colors.red.withOpacity(0.2),
+                      borderColor: controller.isLocationValid.value
+                          ? Colors.green
+                          : Colors.red,
+                      borderStrokeWidth: 2,
+                    ),
+                  ],
+                ),
+
+                /// MARKER
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: controller.officeLocation,
+                      width: 40,
+                      height: 40,
+                      child: const Icon(
+                        Icons.location_on,
+                        color: Colors.red,
+                        size: 40,
+                      ),
+                    ),
+                    Marker(
+                      point: controller.currentPosition.value!,
+                      width: 40,
+                      height: 40,
+                      child: const Icon(
+                        Icons.person_pin_circle,
+                        color: Colors.blue,
+                        size: 40,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            /// GPS STATUS
+            Positioned(
+              top: 10,
+              right: 10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: controller.isGpsActive.value
+                          ? Colors.green
+                          : Colors.red,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      controller.isGpsActive.value ? "GPS ACTIVE" : "GPS OFF",
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+
+                  /// FAKE GPS INDICATOR
+                  if (controller.isGpsSpoofing.value)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        "SUSPICIOUS LOCATION",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
         );
       }),
     );
@@ -229,35 +283,44 @@ class AttendanceView extends GetView<AttendanceController> {
                   fullWidth: true,
                   color: white,
                   onPressed: controller.endBreakTime,
-                  text: 'End',
+                  text: 'End Break',
                   textColor: primary,
                   borderSide: const BorderSide(color: primary),
                 )
               else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ButtonPrimary(
-                      padding:
-                          REdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                      color: white,
-                      onPressed: controller.checkOut,
-                      text: 'Check Out',
-                      textColor: primary,
-                      borderSide: const BorderSide(color: primary),
-                    ),
-                    10.horizontalSpace,
-                    ButtonPrimary(
-                      padding:
-                          REdgeInsets.symmetric(horizontal: 22, vertical: 5),
-                      onPressed: controller.startBreakTime,
-                      text: 'Take a Break',
-                    ),
-                  ],
-                ),
+                controller.hasTakenBreak.value
+                    ? ButtonPrimary(
+                        padding:
+                            REdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                        color: white,
+                        onPressed: controller.checkOut,
+                        text: 'Check Out',
+                        textColor: primary,
+                        borderSide: const BorderSide(color: primary),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonPrimary(
+                            padding: REdgeInsets.symmetric(
+                                horizontal: 8, vertical: 5),
+                            color: white,
+                            onPressed: controller.checkOut,
+                            text: 'Check Out',
+                            textColor: primary,
+                            borderSide: const BorderSide(color: primary),
+                          ),
+                          10.horizontalSpace,
+                          ButtonPrimary(
+                            padding: REdgeInsets.symmetric(
+                                horizontal: 22, vertical: 5),
+                            onPressed: controller.startBreakTime,
+                            text: 'Take a Break',
+                          ),
+                        ],
+                      ),
             20.verticalSpace,
             const AppDivider(thickness: 2),
-            20.verticalSpace,
             _buildAttendanceInfo(controller),
           ],
         ),
@@ -289,45 +352,74 @@ class AttendanceView extends GetView<AttendanceController> {
                 ),
               )),
           10.verticalSpace,
-          Obx(() => Text(
-                controller.isLocationValid.value
-                    ? "Check in and get started on your successful day."
-                    : "Anda berada di luar radius kantor.",
-                style: TS.bodyMedium.copyWith(
-                    color: controller.isLocationValid.value
-                        ? Colors.black
-                        : Colors.red),
+
+          /// STATUS MESSAGE
+          Obx(() {
+            if (controller.isGpsSpoofing.value) {
+              return Text(
+                "Terdeteksi manipulasi lokasi.",
+                style: TS.bodyMedium.copyWith(color: Colors.orange),
                 textAlign: TextAlign.center,
-              )),
+              );
+            }
+
+            if (!controller.isGpsActive.value) {
+              return Text(
+                "GPS tidak aktif.",
+                style: TS.bodyMedium.copyWith(color: Colors.red),
+                textAlign: TextAlign.center,
+              );
+            }
+
+            if (!controller.isLocationValid.value) {
+              return Text(
+                "Anda berada di luar radius kantor.",
+                style: TS.bodyMedium.copyWith(color: Colors.red),
+                textAlign: TextAlign.center,
+              );
+            }
+
+            return Text(
+              "Check in dan mulai hari produktif Anda.",
+              style: TS.bodyMedium,
+              textAlign: TextAlign.center,
+            );
+          }),
         ],
       );
     }
   }
 
   Widget _buildAttendanceInfo(AttendanceController controller) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
       children: [
-        _buildAttendanceDetail(
-          icon: Icons.more_time_outlined,
-          time: controller.isCheckIn.value
-              ? DateFormat('hh:mm a').format(controller.checkInTime.value)
-              : '--:-- AM',
-          label: 'Check in',
-        ),
-        _buildAttendanceDetail(
-          icon: Icons.timer_off_outlined,
-          time: controller.isCheckOut.value
-              ? DateFormat('hh:mm a').format(controller.checkOutTime.value)
-              : '--:-- PM',
-          label: 'Check out',
-        ),
-        _buildAttendanceDetail(
-          icon: Icons.check_circle_outline_rounded,
-          time: controller.isCheckOut.value
-              ? controller.totalHours.value
-              : '--h --m',
-          label: 'Total Hours',
+        _buildBreakInfo(controller),
+        30.verticalSpace,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildAttendanceDetail(
+              icon: Icons.more_time_outlined,
+              time: controller.isCheckIn.value
+                  ? DateFormat('hh:mm a').format(controller.checkInTime.value)
+                  : '--:-- AM',
+              label: 'Check in',
+            ),
+            _buildAttendanceDetail(
+              icon: Icons.timer_off_outlined,
+              time: controller.isCheckOut.value
+                  ? DateFormat('hh:mm a').format(controller.checkOutTime.value)
+                  : '--:-- PM',
+              label: 'Check out',
+            ),
+            _buildAttendanceDetail(
+              icon: Icons.check_circle_outline_rounded,
+              time: controller.isCheckOut.value
+                  ? controller.totalHours.value
+                  : '--h --m',
+              label: 'Total Hours',
+            ),
+          ],
         ),
       ],
     );
@@ -343,5 +435,43 @@ class AttendanceView extends GetView<AttendanceController> {
         Text(label, style: TS.bodyMedium),
       ],
     );
+  }
+
+  Widget _buildBreakInfo(AttendanceController controller) {
+    return Obx(() {
+      if (controller.breakEndTime.value == null) {
+        return const SizedBox();
+      }
+
+      return Container(
+        width: Get.width,
+        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: secondary2.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            Text(
+              "Break Time",
+              style: TS.titleSmall.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "${DateFormat('hh:mm a').format(controller.breakTime.value)}"
+              " - "
+              "${DateFormat('hh:mm a').format(controller.breakEndTime.value!)}",
+              style: TS.bodyMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "Duration: ${controller.breakDuration.value}",
+              style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
