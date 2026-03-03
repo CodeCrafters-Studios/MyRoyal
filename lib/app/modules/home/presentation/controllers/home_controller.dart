@@ -264,20 +264,20 @@ class HomeController extends GetxController {
           //     ),
           //   ],
           // ),
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_fix.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Fixed several issues on notifications',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'Fixed several issues on download payroll',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
           // SizedBox(height: 8),
           // Row(
           //   children: [
@@ -294,20 +294,20 @@ class HomeController extends GetxController {
           //   ],
           // ),
           // SizedBox(height: 8),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Add Banner Happy New Years & Merry Christmas',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
+          //     SizedBox(width: 10),
+          //     Flexible(
+          //       fit: FlexFit.loose,
+          //       child: Text(
+          //         'Add Banner Happy New Years & Merry Christmas',
+          //         style: TS.bodyMedium,
+          //         textAlign: TextAlign.start,
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
         onPress: () async {
           await appStorage.write(

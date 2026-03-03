@@ -509,7 +509,7 @@ class HttpService extends getx.GetxService {
       throw Exception("Failed to save file to MediaStore.");
     }
 
-    return finalName;
+    return saveInfo.uri.toString();
   }
 
   Future<void> showDownloadNotification(
@@ -573,7 +573,6 @@ class HttpService extends getx.GetxService {
     return 'Unknown error';
   }
 
-  static String errorLogin =
-      "Incorrect username or password. Please try again.";
-  static String errorSystem = "Error System";
+  String errorLogin = "Incorrect username or password. Please try again.";
+  String errorSystem = "Error System";
 }
