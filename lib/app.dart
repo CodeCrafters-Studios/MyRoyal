@@ -1,3 +1,5 @@
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -102,12 +104,23 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
+          (NotificationResponse notificationResponse) async {
         final payload = notificationResponse.payload;
-        if (payload != null && payload.isNotEmpty) {
-          _openFile(payload);
+
+        if (payload == null || payload.isEmpty) return;
+
+        if (payload.startsWith("content://")) {
+          final intent = AndroidIntent(
+            action: 'action_view',
+            data: payload,
+            flags: <int>[Flag.FLAG_GRANT_READ_URI_PERMISSION],
+            type: 'application/pdf',
+          );
+          await intent.launch();
+          return;
         }
-        onDidReceiveNotificationResponse(notificationResponse);
+
+        await _openFile(payload);
       },
       onDidReceiveBackgroundNotificationResponse:
           onDidReceiveBackgroundNotificationResponse,

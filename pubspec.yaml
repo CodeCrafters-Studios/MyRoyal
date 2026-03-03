@@ -1,5 +1,6 @@
 name: iroyal
 version: 1.5.0+54
+version: 1.4.17+54
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -7,6 +8,7 @@ environment:
 
 dependencies:
   android_id: ^0.4.0
+  android_intent_plus: ^6.0.0
   another_stepper: ^1.2.2
   cached_network_image: ^3.4.1
   calendar_date_picker2: ^2.0.1
@@ -24,7 +26,7 @@ dependencies:
   encrypt: ^5.0.3
   equatable: ^2.0.5
   firebase_core: ^4.1.0
-  firebase_crashlytics: ^5.0.7
+  firebase_crashlytics: ^5.0.8
   firebase_messaging: ^16.0.1
   firebase_remote_config: ^6.0.1
   flutter:
