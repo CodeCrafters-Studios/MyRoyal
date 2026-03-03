@@ -1,6 +1,5 @@
 name: iroyal
 version: 1.5.0+54
-version: 1.4.17+54
 publish_to: none
 description: A new Flutter project.
 environment:
