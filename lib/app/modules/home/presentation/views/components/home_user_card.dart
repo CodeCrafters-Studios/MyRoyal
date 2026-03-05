@@ -60,8 +60,35 @@ class HomeUserCard extends StatelessWidget {
                             errorWidget: (context, url, error) {
                               AppUtils.logApp(error.toString());
                               return Image.network(
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                },
                                 'https://avatar.iran.liara.run/public',
                                 fit: BoxFit.cover,
+                                errorBuilder: (BuildContext context,
+                                    Object exception, StackTrace? stackTrace) {
+                                  return const Icon(
+                                    Icons.error,
+                                    size: 40,
+                                    color: red,
+                                  );
+                                },
                               );
                             },
                           ),

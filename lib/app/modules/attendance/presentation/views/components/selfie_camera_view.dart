@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:camera/camera.dart';
-import 'package:iroyal/app/modules/attendance/controllers/attendance_controller.dart';
+import 'package:iroyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
 
 class SelfieCameraView extends GetView<AttendanceController> {
   const SelfieCameraView({super.key});
@@ -46,7 +46,7 @@ class SelfieCameraView extends GetView<AttendanceController> {
                           .takePicture();
                       controller.takenPhoto.value = File(photo.path);
 
-                      controller.isCheckIn.value = true;
+                      // controller.isCheckIn.value = true;
                       controller.checkInTime.value = DateTime.now();
 
                       Get.back();

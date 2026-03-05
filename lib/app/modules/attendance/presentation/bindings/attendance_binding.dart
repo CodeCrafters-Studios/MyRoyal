@@ -1,0 +1,40 @@
+import 'package:get/get.dart';
+import 'package:iroyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
+import 'package:iroyal/app/modules/attendance/data/repositories/attendance_repository_impl.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
+import 'package:iroyal/base/services/http_service.dart';
+
+import '../controllers/attendance_controller.dart';
+
+class AttendanceBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get
+      ..lazyPut<AttendanceRemoteDataSourceImpl>(
+        () => AttendanceRemoteDataSourceImpl(
+          httpService: Get.find<HttpService>(),
+        ),
+      )
+      ..lazyPut<AttendanceRepositoryImpl>(
+        () => AttendanceRepositoryImpl(
+            remoteDataSource: Get.find<AttendanceRemoteDataSourceImpl>()),
+      )
+      ..lazyPut<RecordAttendanceUsecase>(
+        () => RecordAttendanceUsecase(
+          repository: Get.find<AttendanceRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<GetAttendanceTodayUsecase>(
+        () => GetAttendanceTodayUsecase(
+          repository: Get.find<AttendanceRepositoryImpl>(),
+        ),
+      )
+      ..lazyPut<AttendanceController>(
+        () => AttendanceController(
+          getAttendanceTodayUsecase: Get.find<GetAttendanceTodayUsecase>(),
+          recordAttendanceUsecase: Get.find<RecordAttendanceUsecase>(),
+        ),
+      );
+  }
+}

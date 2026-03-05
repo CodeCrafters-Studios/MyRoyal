@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/attendance/views/attendance_view.dart';
+import 'package:iroyal/app/modules/attendance/presentation/views/attendance_view.dart';
 import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/bindings/cam_app_binding.dart';
 import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/views/cam_app_view.dart';
 import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/presentation/bindings/cam_app_release_order_binding.dart';
@@ -21,7 +21,7 @@ import '../modules/approval/presentation/bindings/approval_binding.dart';
 import '../modules/approval/presentation/views/approval_view.dart';
 import '../modules/articles/presentation/bindings/articles_binding.dart';
 import '../modules/articles/presentation/views/articles_view.dart';
-import '../modules/attendance/bindings/attendance_binding.dart';
+import '../modules/attendance/presentation/bindings/attendance_binding.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';

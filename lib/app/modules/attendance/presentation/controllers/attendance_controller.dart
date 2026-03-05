@@ -6,11 +6,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:iroyal/app/modules/attendance/domain/entities/attendance_record_entity.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:latlong2/latlong.dart';
 
+enum AttendanceStatus {
+  notStarted,
+  checkedIn,
+  breakStart,
+  breakEnd,
+  checkedOut
+}
+
+extension AttendanceStatusX on AttendanceStatus {
+  static AttendanceStatus fromString(String status) {
+    switch (status) {
+      case "checked_in":
+        return AttendanceStatus.checkedIn;
+      case "break_start":
+        return AttendanceStatus.breakStart;
+      case "break_end":
+        return AttendanceStatus.breakEnd;
+      case "checked_out":
+        return AttendanceStatus.checkedOut;
+      default:
+        return AttendanceStatus.notStarted;
+    }
+  }
+}
+
 class AttendanceController extends GetxController {
+  AttendanceController({
+    required this.getAttendanceTodayUsecase,
+    required this.recordAttendanceUsecase,
+  });
+
   /// ================================
   /// TIME STATE
   /// ================================
@@ -21,14 +55,16 @@ class AttendanceController extends GetxController {
   final breakEndTime = Rxn<DateTime>();
   final breakDuration = ''.obs;
   final hasTakenBreak = false.obs;
+  final isLoadingAttendance = true.obs;
 
   /// ================================
   /// MAP & LOCATION
   /// ================================
   final currentPosition = Rxn<LatLng>();
   final MapController mapController = MapController();
-  final officeLocation = const LatLng(-6.8617228, 107.5010659);
-  final officeRadius = 50.0;
+  // final officeLocation = const LatLng(-6.8617228, 107.5010659);
+  final officeLocation = LatLng(-6.862034, 107.500803);
+  final officeRadius = 80.0;
 
   final isGpsActive = false.obs;
   final isMockLocation = false.obs;
@@ -41,10 +77,8 @@ class AttendanceController extends GetxController {
   /// ================================
   /// ATTENDANCE STATE
   /// ================================
-  RxBool isCheckIn = false.obs;
-  RxBool isCheckOut = false.obs;
-  RxBool isBreakTime = false.obs;
   final buttonEnabled = false.obs;
+  final attendanceStatus = AttendanceStatus.notStarted.obs;
 
   /// ================================
   /// CAMERA
@@ -62,6 +96,13 @@ class AttendanceController extends GetxController {
   Duration myDuration = Duration.zero;
   RxString totalHours = ''.obs;
   RxString countTimes = '--:--:--'.obs;
+  final workDurationMinutes = 0.obs;
+
+  /// ================================
+  /// API
+  /// ================================
+  final GetAttendanceTodayUsecase getAttendanceTodayUsecase;
+  final RecordAttendanceUsecase recordAttendanceUsecase;
 
   /// ================================
   /// INIT
@@ -69,8 +110,8 @@ class AttendanceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _getAttendanceToday();
     _startTimer();
-    _initLocation();
   }
 
   @override
@@ -79,6 +120,53 @@ class AttendanceController extends GetxController {
     countingTimer?.cancel();
     _positionStream?.cancel();
     super.onClose();
+  }
+
+  /// ================================
+  /// ATTENDANCE STATUS
+  /// ================================
+  Future<void> _getAttendanceToday() async {
+    isLoadingAttendance.value = true;
+
+    final result = await getAttendanceTodayUsecase();
+
+    result.fold(
+      (l) {},
+      (r) {
+        attendanceStatus.value = AttendanceStatusX.fromString(r.status);
+
+        if (r.checkedInTime != null) {
+          final now = DateTime.now();
+          final parsed = DateFormat("HH:mm:ss").parse(r.checkedInTime!);
+
+          checkInTime.value = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            parsed.hour,
+            parsed.minute,
+            parsed.second,
+          );
+        }
+
+        if (r.checkedOutTime != null) {
+          checkOutTime.value = DateFormat("HH:mm:ss").parse(r.checkedOutTime!);
+        }
+
+        if (r.breakStartTime != null) {
+          breakTime.value = DateFormat("HH:mm:ss").parse(r.breakStartTime!);
+          hasTakenBreak.value = true;
+        }
+
+        if (r.breakEndTime != null) {
+          breakEndTime.value = DateFormat("HH:mm:ss").parse(r.breakEndTime!);
+        }
+      },
+    );
+
+    await _initLocation();
+
+    isLoadingAttendance.value = false;
   }
 
   /// ================================
@@ -179,14 +267,14 @@ class AttendanceController extends GetxController {
     isLocationValid.value = meter <= officeRadius;
 
     /// VALIDASI KELUAR RADIUS SETELAH CHECK IN
-    if (isCheckIn.value && !isLocationValid.value) {
-      Get.snackbar(
-        "Warning",
-        "Anda keluar dari radius kantor!",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
+    // if (isCheckIn.value && !isLocationValid.value) {
+    //   Get.snackbar(
+    //     "Warning",
+    //     "Anda keluar dari radius kantor!",
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    // }
 
     buttonEnabled.value =
         isLocationValid.value && isFacingCamera.value && !isGpsSpoofing.value;
@@ -215,10 +303,31 @@ class AttendanceController extends GetxController {
       return;
     }
 
-    isCheckIn.value = true;
-    checkInTime.value = DateTime.now();
+    isLoadingAttendance.value = true;
 
-    Get.snackbar("Success", "Check-in successful!");
+    final entity = AttendanceRecordEntity(
+      status: "checked_in",
+      date: DateTime.now(),
+      time: DateTime.now(),
+      latitude: currentPosition.value!.latitude,
+      longitude: currentPosition.value!.longitude,
+      workDurationMinutes: 0,
+    );
+
+    final result = await recordAttendanceUsecase(entity);
+
+    result.fold(
+      (l) {
+        Get.snackbar("Error", "Check-in gagal");
+        isLoadingAttendance.value = false;
+      },
+      (r) async {
+        await _getAttendanceToday();
+        isLoadingAttendance.value = false;
+
+        Get.snackbar("Success", "Check-in successful!");
+      },
+    );
   }
 
   /// ================================
@@ -228,22 +337,44 @@ class AttendanceController extends GetxController {
     AppDialogImpl().showChoiceDialog(
       title: 'Confirmation',
       description: 'Are you sure want to Checkout?',
-      onPressedYes: () {
+      onPressedYes: () async {
+        Get.back();
+        isLoadingAttendance.value = true;
         countingTimer?.cancel();
-
-        isCheckOut.value = true;
-        isBreakTime.value = false;
-        hasTakenBreak.value = false;
-        isGpsSpoofing.value = false;
 
         checkOutTime.value = DateTime.now();
 
-        breakDuration.value = '';
-        countTimes.value = '--:--:--';
-        myDuration = Duration.zero;
-
         _totalHours();
-        Get.back();
+
+        final entity = AttendanceRecordEntity(
+          status: "checked_out",
+          date: checkOutTime.value,
+          time: checkOutTime.value,
+          latitude: currentPosition.value!.latitude,
+          longitude: currentPosition.value!.longitude,
+          workDurationMinutes: workDurationMinutes.value,
+        );
+
+        final result = await recordAttendanceUsecase(entity);
+
+        result.fold(
+          (l) {
+            Get.snackbar("Error", "Check-in gagal");
+            isLoadingAttendance.value = true;
+          },
+          (r) async {
+            await _getAttendanceToday();
+
+            countTimes.value = '--:--:--';
+            myDuration = Duration.zero;
+            hasTakenBreak.value = false;
+            isGpsSpoofing.value = false;
+
+            _positionStream?.cancel();
+            _positionStream = null;
+            isLoadingAttendance.value = true;
+          },
+        );
       },
     );
   }
@@ -258,37 +389,81 @@ class AttendanceController extends GetxController {
 
     totalHours.value =
         "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+
+    workDurationMinutes.value = dif.inMinutes;
   }
 
   /// ================================
   /// BREAK TIME (ONLY ONCE)
   /// ================================
-  void startBreakTime() {
+  void startBreakTime() async {
     if (hasTakenBreak.value) return;
-
     breakTime.value = DateTime.now();
-    isBreakTime.value = true;
-    hasTakenBreak.value = true;
 
-    countingTimer =
-        Timer.periodic(const Duration(seconds: 1), (_) => setCountingTimer());
+    isLoadingAttendance.value = true;
+
+    final entity = AttendanceRecordEntity(
+      status: "break_start",
+      date: breakTime.value,
+      time: breakTime.value,
+      latitude: currentPosition.value!.latitude,
+      longitude: currentPosition.value!.longitude,
+      workDurationMinutes: 0,
+    );
+
+    final result = await recordAttendanceUsecase(entity);
+
+    result.fold(
+      (l) {
+        Get.snackbar("Error", "Gagal record Break Start");
+        isLoadingAttendance.value = false;
+      },
+      (r) async {
+        await _getAttendanceToday();
+
+        countingTimer = Timer.periodic(
+            const Duration(seconds: 1), (_) => setCountingTimer());
+        isLoadingAttendance.value = false;
+      },
+    );
   }
 
-  void endBreakTime() {
+  void endBreakTime() async {
     countingTimer?.cancel();
 
-    breakEndTime.value = DateTime.now();
+    isLoadingAttendance.value = true;
 
-    Duration dif = breakEndTime.value!.difference(breakTime.value);
+    final entity = AttendanceRecordEntity(
+      status: "break_end",
+      date: DateTime.now(),
+      time: DateTime.now(),
+      latitude: currentPosition.value!.latitude,
+      longitude: currentPosition.value!.longitude,
+      workDurationMinutes: 0,
+    );
 
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    final result = await recordAttendanceUsecase(entity);
 
-    breakDuration.value =
-        "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+    result.fold(
+      (l) {
+        Get.snackbar("Error", "Gagal record Break End");
+        isLoadingAttendance.value = false;
+      },
+      (r) async {
+        await _getAttendanceToday();
 
-    countTimes.value = '--:--:--';
-    isBreakTime.value = false;
-    myDuration = Duration.zero;
+        Duration dif = breakEndTime.value!.difference(breakTime.value);
+
+        String twoDigits(int n) => n.toString().padLeft(2, "0");
+
+        breakDuration.value =
+            "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+
+        countTimes.value = '--:--:--';
+        myDuration = Duration.zero;
+        isLoadingAttendance.value = false;
+      },
+    );
   }
 
   void setCountingTimer() {
@@ -299,4 +474,13 @@ class AttendanceController extends GetxController {
     countTimes.value =
         "${twoDigits(myDuration.inHours)}:${twoDigits(myDuration.inMinutes.remainder(60))}:${twoDigits(myDuration.inSeconds.remainder(60))}";
   }
+
+  bool get isCheckIn =>
+      attendanceStatus.value == AttendanceStatus.checkedIn ||
+      attendanceStatus.value == AttendanceStatus.breakStart ||
+      attendanceStatus.value == AttendanceStatus.breakEnd;
+
+  bool get isBreakTime => attendanceStatus.value == AttendanceStatus.breakStart;
+
+  bool get isCheckOut => attendanceStatus.value == AttendanceStatus.checkedOut;
 }

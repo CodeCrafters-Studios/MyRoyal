@@ -232,10 +232,10 @@ class LoginController extends GetxController {
         grantType: 'password',
         clientId: envConfig.environment == EnvironmentType.production
             ? '9d6240c2-9c30-4b5e-97d2-c0a57a461190'
-            : '9e069d0f-2a06-4e0b-a9fe-cff32a262371',
+            : 'a137b23e-eb2f-4daa-b793-da58b4953f34',
         clientSecret: envConfig.environment == EnvironmentType.production
             ? 'K5JsI2WCZ5dIjQANC6xWx1WdwVUVftpgkCXFtl7W'
-            : 'o9nbgKJMRUvEJw8AZbAwVZdGrcOZEpBjLHiOMoYN',
+            : 'mUu7DvJCulddNkAFovTnlpEmDBACyAcNr4iRQeY5',
         username: username(),
         password: password(),
         scope: '*',
