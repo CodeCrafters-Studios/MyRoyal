@@ -41,4 +41,14 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       return Left(ServerFailure(properties: [e]));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> getAttendanceLocation() async {
+    try {
+      final r = await remoteDataSource.getAttendanceLocation();
+      return Right(r);
+    } catch (e) {
+      return Left(ServerFailure(properties: [e]));
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:iroyal/app/modules/attendance/domain/entities/attendance_record_entity.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_location_usecase.dart';
 import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
 import 'package:iroyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -43,6 +44,7 @@ class AttendanceController extends GetxController {
   AttendanceController({
     required this.getAttendanceTodayUsecase,
     required this.recordAttendanceUsecase,
+    required this.getAttendanceLocationUsecase,
   });
 
   /// ================================
@@ -62,9 +64,12 @@ class AttendanceController extends GetxController {
   /// ================================
   final currentPosition = Rxn<LatLng>();
   final MapController mapController = MapController();
-  // final officeLocation = const LatLng(-6.8617228, 107.5010659);
-  final officeLocation = LatLng(-6.862034, 107.500803);
-  final officeRadius = 80.0;
+
+  /// OFFICE AREA
+  final officeRadius = 0.0.obs;
+  final officeLocation = Rxn<LatLng>();
+  final officePolygon = <LatLng>[].obs;
+  final officeType = ''.obs;
 
   final isGpsActive = false.obs;
   final isMockLocation = false.obs;
@@ -103,14 +108,16 @@ class AttendanceController extends GetxController {
   /// ================================
   final GetAttendanceTodayUsecase getAttendanceTodayUsecase;
   final RecordAttendanceUsecase recordAttendanceUsecase;
+  final GetAttendanceLocationUsecase getAttendanceLocationUsecase;
 
   /// ================================
   /// INIT
   /// ================================
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    _getAttendanceToday();
+    await _getAttendanceLocation();
+    await _getAttendanceToday();
     _startTimer();
   }
 
@@ -120,6 +127,53 @@ class AttendanceController extends GetxController {
     countingTimer?.cancel();
     _positionStream?.cancel();
     super.onClose();
+  }
+
+  /// ================================
+  /// ATTENDANCE LOCATION COORDINATE
+  /// ================================
+  Future<void> _getAttendanceLocation() async {
+    isLoadingAttendance.value = true;
+
+    final result = await getAttendanceLocationUsecase();
+
+    result.fold((l) {}, (r) {
+      final location = r.first;
+
+      officeType.value = location.typeArea;
+
+      if (location.typeArea == "radius") {
+        officeLocation.value = LatLng(
+          location.standard.latitude,
+          location.standard.longtitude,
+        );
+
+        officeRadius.value = location.standard.radius.toDouble();
+      }
+
+      if (location.typeArea == "polygon") {
+        officePolygon.value =
+            location.polygon.map<LatLng>((e) => LatLng(e[0], e[1])).toList();
+      }
+    });
+  }
+
+  bool isPointInsidePolygon(LatLng point, List<LatLng> polygon) {
+    int intersectCount = 0;
+
+    for (int j = 0; j < polygon.length - 1; j++) {
+      if (((polygon[j].latitude > point.latitude) !=
+              (polygon[j + 1].latitude > point.latitude)) &&
+          (point.longitude <
+              (polygon[j + 1].longitude - polygon[j].longitude) *
+                      (point.latitude - polygon[j].latitude) /
+                      (polygon[j + 1].latitude - polygon[j].latitude) +
+                  polygon[j].longitude)) {
+        intersectCount++;
+      }
+    }
+
+    return (intersectCount % 2) == 1;
   }
 
   /// ================================
@@ -257,14 +311,21 @@ class AttendanceController extends GetxController {
     } catch (_) {}
 
     /// CHECK RADIUS
-    double meter = Geolocator.distanceBetween(
-      currentPosition.value!.latitude,
-      currentPosition.value!.longitude,
-      officeLocation.latitude,
-      officeLocation.longitude,
-    );
+    if (officeType.value == "radius") {
+      double meter = Geolocator.distanceBetween(
+        currentPosition.value!.latitude,
+        currentPosition.value!.longitude,
+        officeLocation.value!.latitude,
+        officeLocation.value!.longitude,
+      );
 
-    isLocationValid.value = meter <= officeRadius;
+      isLocationValid.value = meter <= officeRadius.value;
+    }
+
+    if (officeType.value == "polygon") {
+      isLocationValid.value =
+          isPointInsidePolygon(currentPosition.value!, officePolygon);
+    }
 
     /// VALIDASI KELUAR RADIUS SETELAH CHECK IN
     // if (isCheckIn.value && !isLocationValid.value) {

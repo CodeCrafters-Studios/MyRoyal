@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
 import 'package:iroyal/app/modules/attendance/data/repositories/attendance_repository_impl.dart';
+import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_location_usecase.dart';
 import 'package:iroyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
 import 'package:iroyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:iroyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
@@ -314,10 +315,17 @@ class BottomnavbarBinding extends Bindings {
           repository: Get.find<AttendanceRepositoryImpl>(),
         ),
       )
+      ..lazyPut<GetAttendanceLocationUsecase>(
+        () => GetAttendanceLocationUsecase(
+          repository: Get.find<AttendanceRepositoryImpl>(),
+        ),
+      )
       ..lazyPut<AttendanceController>(
         () => AttendanceController(
             getAttendanceTodayUsecase: Get.find<GetAttendanceTodayUsecase>(),
-            recordAttendanceUsecase: Get.find<RecordAttendanceUsecase>()),
+            recordAttendanceUsecase: Get.find<RecordAttendanceUsecase>(),
+            getAttendanceLocationUsecase:
+                Get.find<GetAttendanceLocationUsecase>()),
       )
 
       // Dashboard

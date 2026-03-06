@@ -110,6 +110,9 @@ class ArticlesViewImpl extends StatelessWidget {
         children: [
           CachedNetworkImage(
             imageUrl: controller.dataArticle.imgUrl,
+            width: Get.width,
+            height: 250.h,
+            fit: BoxFit.cover,
           ),
           10.verticalSpace,
           EPadding(

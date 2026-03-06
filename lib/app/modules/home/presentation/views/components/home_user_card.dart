@@ -81,12 +81,10 @@ class HomeUserCard extends StatelessWidget {
                                 },
                                 'https://avatar.iran.liara.run/public',
                                 fit: BoxFit.cover,
-                                errorBuilder: (BuildContext context,
-                                    Object exception, StackTrace? stackTrace) {
-                                  return const Icon(
-                                    Icons.error,
-                                    size: 40,
-                                    color: red,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return CachedNetworkImage(
+                                    imageUrl:
+                                        "https://api.dicebear.com/7.x/initials/png?seed=${initial}",
                                   );
                                 },
                               );

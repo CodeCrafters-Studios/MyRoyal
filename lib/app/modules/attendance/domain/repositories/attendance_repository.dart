@@ -8,4 +8,5 @@ abstract class AttendanceRepository {
   Future<Either<Failure, void>> recordAttendance(
     AttendanceRecordEntity entity,
   );
+  Future<Either<Failure, void>> getAttendanceLocation();
 }

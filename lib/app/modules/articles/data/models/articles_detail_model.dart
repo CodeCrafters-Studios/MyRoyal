@@ -34,6 +34,33 @@ class ArticlesDetailModel extends ArticlesDetailEntity {
         books: List<Book>.from(json["books"].map((x) => Book.fromJson(x))),
       );
 
+  factory ArticlesDetailModel.empty() => ArticlesDetailModel(
+        id: 0,
+        name: '',
+        slug: '',
+        description: '',
+        createdBy: EdBy(id: 0, name: '', slug: ''),
+        updatedBy: EdBy(id: 0, name: '', slug: ''),
+        createdAt: DateTime(0),
+        updatedAt: DateTime(0),
+        ownedBy: EdBy(id: 0, name: '', slug: ''),
+        descriptionHtml: '',
+        tags: [],
+        cover: Cover(
+          id: 0,
+          name: '',
+          url: '',
+          createdAt: DateTime(0),
+          updatedAt: DateTime(0),
+          createdBy: 0,
+          updatedBy: 0,
+          path: '',
+          type: '',
+          uploadedTo: 0,
+        ),
+        books: [],
+      );
+
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,

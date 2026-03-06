@@ -207,29 +207,47 @@ class AttendanceView extends GetView<AttendanceController> {
                   userAgentPackageName: 'com.iroyal.dev',
                 ),
 
-                /// RADIUS KANTOR
-                CircleLayer(
-                  circles: [
-                    CircleMarker(
-                      point: controller.officeLocation,
-                      radius: controller.officeRadius,
-                      useRadiusInMeter: true,
-                      color: controller.isLocationValid.value
-                          ? Colors.green.withOpacity(0.2)
-                          : Colors.red.withOpacity(0.2),
-                      borderColor: controller.isLocationValid.value
-                          ? Colors.green
-                          : Colors.red,
-                      borderStrokeWidth: 2,
-                    ),
-                  ],
-                ),
+                /// RADIUS AREA
+                if (controller.officeType.value == "radius")
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(
+                        point: controller.officeLocation.value!,
+                        radius: controller.officeRadius.value,
+                        useRadiusInMeter: true,
+                        color: controller.isLocationValid.value
+                            ? Colors.green.withOpacity(0.2)
+                            : Colors.red.withOpacity(0.2),
+                        borderColor: controller.isLocationValid.value
+                            ? Colors.green
+                            : Colors.red,
+                        borderStrokeWidth: 2,
+                      ),
+                    ],
+                  ),
+
+                /// POLYGON AREA
+                if (controller.officeType.value == "polygon")
+                  PolygonLayer(
+                    polygons: [
+                      Polygon(
+                        points: controller.officePolygon,
+                        color: controller.isLocationValid.value
+                            ? Colors.green.withOpacity(0.2)
+                            : Colors.red.withOpacity(0.2),
+                        borderColor: controller.isLocationValid.value
+                            ? Colors.green
+                            : Colors.red,
+                        borderStrokeWidth: 2,
+                      ),
+                    ],
+                  ),
 
                 /// MARKER
                 MarkerLayer(
                   markers: [
                     Marker(
-                      point: controller.officeLocation,
+                      point: controller.currentPosition.value!,
                       width: 40,
                       height: 40,
                       child: const Icon(
@@ -443,26 +461,44 @@ class AttendanceView extends GetView<AttendanceController> {
             );
           }
 
-          return CircleAvatar(
-            backgroundColor: primary30.withOpacity(0.2),
-            radius: 80.r,
-            child: InkWellTap(
-              radius: 72.r,
-              color: controller.isLocationValid.value
-                  ? primary.withOpacity(0.3)
-                  : Colors.grey.withOpacity(0.3),
-              onTap:
-                  controller.isLocationValid.value ? controller.checkIn : null,
-              child: CircleAvatar(
-                backgroundColor:
-                    controller.isLocationValid.value ? primary : Colors.grey,
-                radius: 72.r,
-                child: Text(
-                  'Check in',
-                  style: TS.bodyLarge.copyWith(color: white),
+          return Column(
+            children: [
+              CircleAvatar(
+                backgroundColor: primary30.withOpacity(0.2),
+                radius: 80.r,
+                child: InkWellTap(
+                  radius: 72.r,
+                  color: controller.isLocationValid.value
+                      ? primary.withOpacity(0.3)
+                      : Colors.grey.withOpacity(0.3),
+                  onTap: controller.isLocationValid.value
+                      ? controller.checkIn
+                      : null,
+                  child: CircleAvatar(
+                    backgroundColor: controller.isLocationValid.value
+                        ? primary
+                        : Colors.grey,
+                    radius: 72.r,
+                    child: Text(
+                      'Check in',
+                      style: TS.bodyLarge.copyWith(color: white),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              10.verticalSpace,
+              Text(
+                controller.isLocationValid.value
+                    ? "Check in and get started on your successful day."
+                    : "Anda berada di luar radius kantor.",
+                style: TS.bodyMedium.copyWith(
+                  color: controller.isLocationValid.value
+                      ? Colors.black
+                      : Colors.red,
+                ),
+                textAlign: TextAlign.center,
+              )
+            ],
           );
         }),
         10.verticalSpace,
