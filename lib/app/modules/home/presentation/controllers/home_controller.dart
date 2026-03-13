@@ -146,7 +146,7 @@ class HomeController extends GetxController {
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
-  // late var newUpdate;
+  late var newUpdate;
 
   @override
   void onInit() {
@@ -179,47 +179,47 @@ class HomeController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    // checkVersion();
+    checkVersion();
     await _getUserData();
   }
 
   void _initial() async {
-    // checkVersion();
+    checkVersion();
     await _getUserData();
 
     // _getArticles();
   }
 
-  // void checkVersion() async {
-  //   // Get the current app version
-  //   final appVersion =
-  //       _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+  void checkVersion() async {
+    // Get the current app version
+    final appVersion =
+        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
 
-  //   // Get the required min version from Firebase Remote Config
-  //   final requiredMinVersion = _getExtendedVersionNumber(
-  //       firebaseRemoteConfig.getRequiredMinimumVersion());
+    // Get the required min version from Firebase Remote Config
+    final requiredMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRequiredMinimumVersion());
 
-  //   // Get the recommended min version from Firebase Remote Config
-  //   final recommendedMinVersion = _getExtendedVersionNumber(
-  //       firebaseRemoteConfig.getRecommendedMinimumVersion());
+    // Get the recommended min version from Firebase Remote Config
+    final recommendedMinVersion = _getExtendedVersionNumber(
+        firebaseRemoteConfig.getRecommendedMinimumVersion());
 
-  //   // Get new update popup
-  //   newUpdate = await appStorage.read('new-update');
+    // Get new update popup
+    newUpdate = await appStorage.read('new-update');
 
-  //   AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
+    AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
 
-  //   final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
-  //   // Compare the versions and display a dialog if the app version is lower than
-  //   // the required or recommended version
-  //   if (appVersion < requiredMinVersion) {
-  //     _showUpdateVersionDialog(
-  //         forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
-  //   } else if (appVersion < recommendedMinVersion) {
-  //     _showUpdateVersionDialog(forceUpdateVersion,
-  //         firebaseRemoteConfig.getRecommendedMinimumVersion());
-  //   }
-  // }
+    // Compare the versions and display a dialog if the app version is lower than
+    // the required or recommended version
+    if (appVersion < requiredMinVersion) {
+      _showUpdateVersionDialog(
+          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
+    } else if (appVersion < recommendedMinVersion) {
+      _showUpdateVersionDialog(forceUpdateVersion,
+          firebaseRemoteConfig.getRecommendedMinimumVersion());
+    }
+  }
 
   // Helper method to compare two semver versions.
   int _getExtendedVersionNumber(String version) {
@@ -274,20 +274,20 @@ class HomeController extends GetxController {
         title: "✨ What's new? 🎉",
         description: 'MyRoyal ${deviceInfo.packageInfo.version}',
         children: [
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Remove event banner Independence Day of Indonesia',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          Row(
+            children: [
+              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
+              SizedBox(width: 10),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  'New Feature Attendance',
+                  style: TS.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ],
+          ),
           Row(
             children: [
               SvgPicture.asset('assets/icons/ic_update_fix.svg'),
@@ -295,7 +295,7 @@ class HomeController extends GetxController {
               Flexible(
                 fit: FlexFit.loose,
                 child: Text(
-                  'Fixed several issues on download payroll',
+                  'Fixed several issues bottom navigation',
                   style: TS.bodyMedium,
                   textAlign: TextAlign.start,
                 ),
@@ -375,7 +375,7 @@ class HomeController extends GetxController {
             ? isImageAvailable.value = true
             : isImageAvailable.value;
         _getBannerEvent();
-        // newUpdate == 'true' ? _showWhatsNewDialog() : null;
+        newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }
