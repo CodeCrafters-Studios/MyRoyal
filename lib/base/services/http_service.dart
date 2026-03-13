@@ -6,17 +6,13 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/Get.dart' as getx;
 import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/snackbar/snackbar.dart';
 import 'package:iroyal/app/routes/app_pages.dart';
 import 'package:iroyal/base/config/app_config.dart';
 import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/data/app_encryption.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
@@ -25,8 +21,6 @@ import 'package:iroyal/base/utils/get_device_info.dart';
 import 'package:iroyal/base/utils/network/network_info.dart';
 import 'package:iroyal/base/utils/permission/app_permission.dart';
 import 'package:iroyal/base/utils/storage/app_storage.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
-import 'package:iroyal/base/widgets/padding.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
@@ -58,6 +52,7 @@ class HttpService extends getx.GetxService {
   @override
   void onReady() {
     initInterceptors();
+    _initConnectionStatus();
     super.onReady();
   }
 
@@ -97,72 +92,17 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  void _updateConnectionStatus(List<ConnectivityResult> connectivityResult) {
-    if (connectivityResult.isEmpty) {
+  Future<void> _initConnectionStatus() async {
+    final result = await connectivity.checkConnectivity();
+    _updateConnectionStatus(result);
+  }
+
+  void _updateConnectionStatus(List<ConnectivityResult> result) {
+    if (result.contains(ConnectivityResult.none)) {
       connectionStatus.value = "No connection";
       AppUtils.logApp(connectionStatus.value);
-      getx.Get.showSnackbar(
-        GetSnackBar(
-          duration: null,
-          title: "No Internet Connection",
-          messageText: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Please check your internet connection',
-                style: TS.caption.copyWith(color: white),
-              ),
-              InkWellTap(
-                onTap: () {
-                  getx.Get.back();
-                },
-                child: Text(
-                  'Dismiss',
-                  style: TS.caption.copyWith(color: white),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: red,
-          margin: EdgeInsets.zero,
-          snackStyle: SnackStyle.GROUNDED,
-          icon: const EPadding(
-            padding: EdgeInsets.symmetric(horizontal: 5),
-            child: Icon(
-              Icons.wifi_off,
-              color: Colors.white,
-              size: 35,
-            ),
-          ),
-        ),
-      );
     } else {
-      if (connectionStatus.value == "No connection") {
-        connectionStatus.value = "Connected";
-        getx.Get.back();
-        getx.Get.showSnackbar(
-          GetSnackBar(
-            duration: const Duration(seconds: 1),
-            title: "Connected!",
-            messageText: Text(
-              'You are connected to the internet',
-              style: TS.caption.copyWith(color: white),
-            ),
-            backgroundColor: green,
-            isDismissible: true,
-            margin: EdgeInsets.zero,
-            snackStyle: SnackStyle.GROUNDED,
-            icon: const EPadding(
-              padding: EdgeInsets.only(right: 10),
-              child: Icon(
-                Icons.wifi,
-                color: Colors.white,
-                size: 35,
-              ),
-            ),
-          ),
-        );
-      }
+      connectionStatus.value = "Connected";
     }
   }
 

@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:android_id/android_id.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iroyal/app/modules/login/data/models/login_params.dart';
@@ -74,7 +72,7 @@ class LoginController extends GetxController {
   @override
   void onInit() async {
     focusNodeUsername.addListener(_onFocusChange);
-    checkVersion();
+    // checkVersion();
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
@@ -100,61 +98,61 @@ class LoginController extends GetxController {
     }
   }
 
-  void checkVersion() async {
-    String deviceUser = '';
-    String deviceId = '';
+  // void checkVersion() async {
+  //   String deviceUser = '';
+  //   String deviceId = '';
 
-    // Get the current app version
-    final appVersion =
-        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+  //   // Get the current app version
+  //   final appVersion =
+  //       _getExtendedVersionNumber(deviceInfo.packageInfo.version);
 
-    // Get Device Id iOS
-    final info = await deviceInfo.info();
+  //   // Get Device Id iOS
+  //   final info = await deviceInfo.info();
 
-    // Get Android Id
-    final String? androidId = await AndroidId().getId();
+  //   // Get Android Id
+  //   final String? androidId = await AndroidId().getId();
 
-    if (Platform.isAndroid) {
-      deviceId = androidId.toString();
-      deviceUser = '${info.model}-${info.brand}-${info.osVersion}';
-    } else if (Platform.isIOS) {
-      deviceId = info.id;
-      deviceUser =
-          '${info.model}-${info.brand}-${info.hardware}-${info.osVersion}';
-    }
+  //   if (Platform.isAndroid) {
+  //     deviceId = androidId.toString();
+  //     deviceUser = '${info.model}-${info.brand}-${info.osVersion}';
+  //   } else if (Platform.isIOS) {
+  //     deviceId = info.id;
+  //     deviceUser =
+  //         '${info.model}-${info.brand}-${info.hardware}-${info.osVersion}';
+  //   }
 
-    await appStorage.write('device-id', deviceId);
-    await appStorage.write('device-user', deviceUser);
+  //   await appStorage.write('device-id', deviceId);
+  //   await appStorage.write('device-user', deviceUser);
 
-    AppUtils.logApp('[INFO] DEVICE ID :::: $deviceId');
-    AppUtils.logApp('[INFO] DEVICE USER :::: $deviceUser');
+  //   AppUtils.logApp('[INFO] DEVICE ID :::: $deviceId');
+  //   AppUtils.logApp('[INFO] DEVICE USER :::: $deviceUser');
 
-    // Get the required min version from Firebase Remote Config
-    final requiredMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRequiredMinimumVersion());
+  //   // Get the required min version from Firebase Remote Config
+  //   final requiredMinVersion = _getExtendedVersionNumber(
+  //       firebaseRemoteConfig.getRequiredMinimumVersion());
 
-    // Get the recommended min version from Firebase Remote Config
-    final recommendedMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRecommendedMinimumVersion());
+  //   // Get the recommended min version from Firebase Remote Config
+  //   final recommendedMinVersion = _getExtendedVersionNumber(
+  //       firebaseRemoteConfig.getRecommendedMinimumVersion());
 
-    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+  //   final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
-    AppUtils.logApp('[FIREBASE] APP VERSION :::: $appVersion');
-    AppUtils.logApp('[FIREBASE] APP VERSION REQUIRED :::: $requiredMinVersion');
-    AppUtils.logApp(
-        '[FIREBASE] APP VERSION RECOMMENDED :::: $recommendedMinVersion');
-    AppUtils.logApp(
-        '[FIREBASE] APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
-    // Compare the versions and display a dialog if the app version is lower than
-    // the required or recommended version
-    if (appVersion < requiredMinVersion) {
-      _showUpdateVersionDialog(
-          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
-    } else if (appVersion < recommendedMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion,
-          firebaseRemoteConfig.getRecommendedMinimumVersion());
-    }
-  }
+  //   AppUtils.logApp('[FIREBASE] APP VERSION :::: $appVersion');
+  //   AppUtils.logApp('[FIREBASE] APP VERSION REQUIRED :::: $requiredMinVersion');
+  //   AppUtils.logApp(
+  //       '[FIREBASE] APP VERSION RECOMMENDED :::: $recommendedMinVersion');
+  //   AppUtils.logApp(
+  //       '[FIREBASE] APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
+  //   // Compare the versions and display a dialog if the app version is lower than
+  //   // the required or recommended version
+  //   if (appVersion < requiredMinVersion) {
+  //     _showUpdateVersionDialog(
+  //         forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
+  //   } else if (appVersion < recommendedMinVersion) {
+  //     _showUpdateVersionDialog(forceUpdateVersion,
+  //         firebaseRemoteConfig.getRecommendedMinimumVersion());
+  //   }
+  // }
 
   // Helper method to compare two semver versions.
   int _getExtendedVersionNumber(String version) {

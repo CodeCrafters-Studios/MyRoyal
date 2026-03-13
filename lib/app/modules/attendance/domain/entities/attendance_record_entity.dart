@@ -1,29 +1,35 @@
 import 'package:equatable/equatable.dart';
 
 class AttendanceRecordEntity extends Equatable {
+  final int id;
   final String status;
   final DateTime date;
   final DateTime time;
   final double latitude;
   final double longitude;
   final int workDurationMinutes;
+  final String file;
 
   const AttendanceRecordEntity({
+    required this.id,
     required this.status,
     required this.date,
     required this.time,
     required this.latitude,
     required this.longitude,
     required this.workDurationMinutes,
+    required this.file,
   });
 
   @override
   List<Object?> get props => [
+        id,
         status,
         date,
         time,
         latitude,
         longitude,
         workDurationMinutes,
+        file,
       ];
 }

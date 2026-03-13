@@ -19,11 +19,9 @@ class DetailSpecialLeaveView extends GetView<DashboardController> {
       title: 'Special Leave Requests',
       child: Obx(
         () => controller.detailSpeacialLeaveRequestData().data.isEmpty
-            ? SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [EmptyDataWidget()],
-                ),
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [EmptyDataWidget()],
               )
             : EPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),

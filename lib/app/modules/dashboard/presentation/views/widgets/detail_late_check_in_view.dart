@@ -20,11 +20,9 @@ class DetailLateCheckInView extends GetView<DashboardController> {
       title: 'Late Check-In',
       child: Obx(
         () => controller.detailLateData().data.isEmpty
-            ? SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [EmptyDataWidget()],
-                ),
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [EmptyDataWidget()],
               )
             : EPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),

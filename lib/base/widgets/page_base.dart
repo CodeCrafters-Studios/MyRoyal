@@ -28,6 +28,7 @@ class PageBase extends StatelessWidget {
     this.showBackground = true,
     this.bottomBarDecoration,
     this.showBackgroundLogin = false,
+    this.floatingActionButton,
   });
   final Widget child;
   final Widget? appBar;
@@ -50,6 +51,7 @@ class PageBase extends StatelessWidget {
   final bool showBackground;
   final bool showBackgroundLogin;
   final BoxDecoration? bottomBarDecoration;
+  final Widget? floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class PageBase extends StatelessWidget {
         onBack != null ? onBack!() : Get.back();
       },
       child: Scaffold(
+        floatingActionButton: floatingActionButton,
         key: key,
         backgroundColor: bgColors ?? (Get.isDarkMode ? bgColorDark : bgColor),
         resizeToAvoidBottomInset: resizeInsetsBottom,

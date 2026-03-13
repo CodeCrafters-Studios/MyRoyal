@@ -45,6 +45,8 @@ Future<void> setupAndRunApp(
   // enableFlutterDriverExtension();
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
   if (Platform.isAndroid) {
     await MediaStore.ensureInitialized();
   }

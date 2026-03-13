@@ -21,7 +21,7 @@ class CustomButtomBar extends StatelessWidget {
       radius: 30,
       isShadow: true,
       shadows: Shadows.universal,
-      margin: REdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      margin: REdgeInsets.all(20),
       padding: REdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

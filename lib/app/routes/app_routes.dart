@@ -43,6 +43,7 @@ abstract class Routes {
   static const RAS_APP_RELEASE_ORDER = _Paths.RAS_APP_RELEASE_ORDER;
   static const RAS_APP_RESERVED_BY = _Paths.RAS_APP_RESERVED_BY;
   static const RAS_APP_TRACE_SERIAL = _Paths.RAS_APP_TRACE_SERIAL;
+  static const VALIDATION_SELFIE = _Paths.VALIDATION_SELFIE;
 }
 
 abstract class _Paths {
@@ -85,4 +86,5 @@ abstract class _Paths {
   static const RAS_APP_RELEASE_ORDER = '/ras-app-release-order';
   static const RAS_APP_RESERVED_BY = '/ras-app-reserved-by';
   static const RAS_APP_TRACE_SERIAL = '/ras-app-trace-serial';
+  static const VALIDATION_SELFIE = '/validation-selfie';
 }

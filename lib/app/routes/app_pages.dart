@@ -1,27 +1,11 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/attendance/presentation/views/attendance_view.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/bindings/cam_app_binding.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app/presentation/views/cam_app_view.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/presentation/bindings/cam_app_release_order_binding.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/presentation/views/cam_app_release_order_view.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/presentation/bindings/cam_app_reserved_by_binding.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/presentation/views/cam_app_reserved_by_view.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/presentation/bindings/cam_app_trace_serial_binding.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/presentation/views/cam_app_trace_serial_view.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app/bindings/ras_app_binding.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app/views/ras_app_view.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_release_order/bindings/ras_app_release_order_binding.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_release_order/views/ras_app_release_order_view.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_reserved_by/bindings/ras_app_reserved_by_binding.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_reserved_by/views/ras_app_reserved_by_view.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_trace_serial/bindings/ras_app_trace_serial_binding.dart';
-import 'package:iroyal/app/modules/online_app/ras/ras_app_trace_serial/views/ras_app_trace_serial_view.dart';
 
 import '../modules/approval/presentation/bindings/approval_binding.dart';
 import '../modules/approval/presentation/views/approval_view.dart';
 import '../modules/articles/presentation/bindings/articles_binding.dart';
 import '../modules/articles/presentation/views/articles_view.dart';
 import '../modules/attendance/presentation/bindings/attendance_binding.dart';
+import '../modules/attendance/presentation/views/attendance_view.dart';
 import '../modules/bottomnavbar/presentation/bindings/bottomnavbar_binding.dart';
 import '../modules/bottomnavbar/presentation/views/bottomnavbar_view.dart';
 import '../modules/change_password/bindings/change_password_binding.dart';
@@ -55,13 +39,28 @@ import '../modules/notifications/presentation/bindings/notifications_binding.dar
 import '../modules/notifications/presentation/views/notifications_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
+import '../modules/online_app/cam/cam_app/presentation/bindings/cam_app_binding.dart';
+import '../modules/online_app/cam/cam_app/presentation/views/cam_app_view.dart';
+import '../modules/online_app/cam/cam_app_release_order/presentation/bindings/cam_app_release_order_binding.dart';
+import '../modules/online_app/cam/cam_app_release_order/presentation/views/cam_app_release_order_view.dart';
+import '../modules/online_app/cam/cam_app_reserved_by/presentation/bindings/cam_app_reserved_by_binding.dart';
+import '../modules/online_app/cam/cam_app_reserved_by/presentation/views/cam_app_reserved_by_view.dart';
+import '../modules/online_app/cam/cam_app_trace_serial/presentation/bindings/cam_app_trace_serial_binding.dart';
+import '../modules/online_app/cam/cam_app_trace_serial/presentation/views/cam_app_trace_serial_view.dart';
+import '../modules/online_app/ras/ras_app/bindings/ras_app_binding.dart';
+import '../modules/online_app/ras/ras_app/views/ras_app_view.dart';
+import '../modules/online_app/ras/ras_app_release_order/bindings/ras_app_release_order_binding.dart';
+import '../modules/online_app/ras/ras_app_release_order/views/ras_app_release_order_view.dart';
+import '../modules/online_app/ras/ras_app_reserved_by/bindings/ras_app_reserved_by_binding.dart';
+import '../modules/online_app/ras/ras_app_reserved_by/views/ras_app_reserved_by_view.dart';
+import '../modules/online_app/ras/ras_app_trace_serial/bindings/ras_app_trace_serial_binding.dart';
+import '../modules/online_app/ras/ras_app_trace_serial/views/ras_app_trace_serial_view.dart';
 import '../modules/payroll/presentation/bindings/payroll_binding.dart';
 import '../modules/payroll/presentation/views/payroll_view.dart';
 import '../modules/pin/bindings/pin_binding.dart';
 import '../modules/pin/views/pin_view.dart';
 import '../modules/profile/presentation/bindings/profile_binding.dart';
 import '../modules/profile/presentation/views/profile_view.dart';
-
 import '../modules/settings/presentation/bindings/settings_binding.dart';
 import '../modules/settings/presentation/views/settings_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
@@ -72,6 +71,8 @@ import '../modules/terms_and_policies/bindings/terms_and_policies_binding.dart';
 import '../modules/terms_and_policies/views/terms_and_policies_view.dart';
 import '../modules/tracking_document/presentation/bindings/tracking_document_binding.dart';
 import '../modules/tracking_document/presentation/views/tracking_document_view.dart';
+import '../modules/validation_selfie/bindings/validation_selfie_binding.dart';
+import '../modules/validation_selfie/views/validation_selfie_view.dart';
 import '../modules/visit/presentation/bindings/visit_binding.dart';
 import '../modules/visit/presentation/views/visit_view.dart';
 import '../modules/webtel/presentation/bindings/webtel_binding.dart';
@@ -276,6 +277,11 @@ class AppPages {
       name: _Paths.RAS_APP_TRACE_SERIAL,
       page: () => const RasAppTraceSerialView(),
       binding: RasAppTraceSerialBinding(),
+    ),
+    GetPage(
+      name: _Paths.VALIDATION_SELFIE,
+      page: () => const ValidationSelfieView(),
+      binding: ValidationSelfieBinding(),
     ),
   ];
 }

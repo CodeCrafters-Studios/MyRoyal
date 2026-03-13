@@ -22,68 +22,66 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          isDoubleLayer ? 130.verticalSpace : const Spacer(flex: 2),
-          isDoubleLayer
-              ? Align(
-                  alignment: Alignment.topCenter,
-                  child: SizedBox(
-                    height: 312.h,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Lottie.asset(
-                            width: width.w,
-                            lottieImage2,
-                          ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        isDoubleLayer ? 130.verticalSpace : const Spacer(flex: 2),
+        isDoubleLayer
+            ? Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  height: 312.h,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        child: Lottie.asset(
+                          width: width.w,
+                          lottieImage2,
                         ),
-                        Positioned(
-                          left: 20.w,
-                          top: 73.h,
-                          child: Lottie.asset(
-                            width: width.w,
-                            lottieImage,
-                          ),
+                      ),
+                      Positioned(
+                        left: 20.w,
+                        top: 73.h,
+                        child: Lottie.asset(
+                          width: width.w,
+                          lottieImage,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                )
-              : Lottie.asset(
-                  width: width.w,
-                  lottieImage,
                 ),
-          const Spacer(),
-          EPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                Text(
-                  subtitle,
+              )
+            : Lottie.asset(
+                width: width.w,
+                lottieImage,
+              ),
+        const Spacer(),
+        EPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: [
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: TS.titleLarge.copyWith(color: primary),
+              ),
+              Container(
+                padding: REdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                  color: secondary2,
+                ),
+                child: Text(
+                  subtitle2,
                   textAlign: TextAlign.center,
-                  style: TS.titleLarge.copyWith(color: primary),
+                  style: TS.titleLarge.copyWith(color: white),
                 ),
-                Container(
-                  padding: REdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                    color: secondary2,
-                  ),
-                  child: Text(
-                    subtitle2,
-                    textAlign: TextAlign.center,
-                    style: TS.titleLarge.copyWith(color: white),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          isDoubleLayer ? 174.verticalSpace : const Spacer(flex: 2),
-        ],
-      ),
+        ),
+        isDoubleLayer ? 174.verticalSpace : const Spacer(flex: 2),
+      ],
     );
   }
 }

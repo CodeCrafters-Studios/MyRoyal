@@ -20,11 +20,10 @@ class DetailPermitRequestView extends GetView<DashboardController> {
       title: 'Permit Request',
       child: Obx(
         () => controller.detailPermitRequestData().data.isEmpty
-            ? SafeArea(
-                child: Column(
+            ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [EmptyDataWidget()],
-              ))
+              )
             : EPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: SingleChildScrollView(

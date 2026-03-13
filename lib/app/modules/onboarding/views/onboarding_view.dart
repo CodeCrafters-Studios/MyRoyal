@@ -24,36 +24,33 @@ class OnboardingView extends GetView<OnboardingController> {
             ),
             Align(
               alignment: Alignment.topCenter,
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    50.verticalSpace,
-                    Text(
-                      controller.currentPageIndex.value == 0
-                          ? 'Welcome !'
+              child: Column(
+                children: [
+                  50.verticalSpace,
+                  Text(
+                    controller.currentPageIndex.value == 0
+                        ? 'Welcome !'
+                        : controller.currentPageIndex.value == 1
+                            ? 'Quick & Easy to Use'
+                            : 'Ready to Start?',
+                    style: TS.titleLarge.copyWith(color: primary),
+                  ),
+                  30.verticalSpace,
+                  EPadding(
+                    padding: REdgeInsets.symmetric(horizontal: 50),
+                    child: LinearProgressIndicator(
+                      minHeight: 10,
+                      borderRadius: const BorderRadius.all(Radius.circular(28)),
+                      color: primary,
+                      backgroundColor: greyHint,
+                      value: controller.currentPageIndex.value == 0
+                          ? 0.1
                           : controller.currentPageIndex.value == 1
-                              ? 'Quick & Easy to Use'
-                              : 'Ready to Start?',
-                      style: TS.titleLarge.copyWith(color: primary),
+                              ? 0.5
+                              : 1,
                     ),
-                    30.verticalSpace,
-                    EPadding(
-                      padding: REdgeInsets.symmetric(horizontal: 50),
-                      child: LinearProgressIndicator(
-                        minHeight: 10,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(28)),
-                        color: primary,
-                        backgroundColor: greyHint,
-                        value: controller.currentPageIndex.value == 0
-                            ? 0.1
-                            : controller.currentPageIndex.value == 1
-                                ? 0.5
-                                : 1,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             PageView(

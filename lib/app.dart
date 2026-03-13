@@ -46,24 +46,37 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.transparent,
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
-    _configureFCM();
-    _requestNotificationPermissions();
+    super.initState();
 
     WidgetsBinding.instance.addObserver(this);
-    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _hideSystemUI();
+    });
+
+    _configureFCM();
+    _requestNotificationPermissions();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _hideSystemUI() {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.immersiveSticky,
+      overlays: [],
+    );
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
   }
 
   Future<void> _configureFCM() async {
@@ -137,6 +150,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
     switch (state) {
       case AppLifecycleState.resumed:
+        _hideSystemUI();
         break;
       case AppLifecycleState.inactive:
         // widget is inactive
@@ -154,6 +168,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _hideSystemUI();
+
     return GetMaterialApp(
       navigatorObservers: [
         GetObserver(),

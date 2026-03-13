@@ -20,6 +20,7 @@ import 'package:iroyal/base/config/app_constants.dart';
 import 'package:iroyal/base/design/styles.dart';
 import 'package:iroyal/base/errors/exception.dart';
 import 'package:iroyal/base/initialization/firebase_remote_config.dart';
+import 'package:iroyal/base/services/http_service.dart';
 import 'package:iroyal/base/utils/app_utils.dart';
 import 'package:iroyal/base/utils/dialog/app_dialog.dart';
 import 'package:iroyal/base/utils/get_device_info.dart';
@@ -44,6 +45,7 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;
   RxBool isImageAvailable = false.obs;
+  bool _isInitialized = false;
 
   RxInt indexSlider = 0.obs;
 
@@ -144,58 +146,80 @@ class HomeController extends GetxController {
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
-  late var newUpdate;
+  // late var newUpdate;
 
   @override
   void onInit() {
     super.onInit();
+
+    _getAllMenu();
+
+    final httpService = Get.find<HttpService>();
+
+    ever(httpService.connectionStatus, (String status) {
+      if (status == "No connection") {
+        isLoading.value = true;
+      } else {
+        _runInitialOnce();
+      }
+    });
+
+    _runInitialOnce();
+  }
+
+  void _runInitialOnce() {
+    if (_isInitialized) return;
+
+    final httpService = Get.find<HttpService>();
+
+    if (httpService.connectionStatus.value == "No connection") return;
+
+    _isInitialized = true;
     _initial();
   }
 
   Future<void> onRefresh() async {
-    checkVersion();
+    // checkVersion();
     await _getUserData();
-    _getAllMenu();
   }
 
   void _initial() async {
-    checkVersion();
+    // checkVersion();
     await _getUserData();
-    _getAllMenu();
 
     // _getArticles();
   }
 
-  void checkVersion() async {
-    // Get the current app version
-    final appVersion =
-        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+  // void checkVersion() async {
+  //   // Get the current app version
+  //   final appVersion =
+  //       _getExtendedVersionNumber(deviceInfo.packageInfo.version);
 
-    // Get the required min version from Firebase Remote Config
-    final requiredMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRequiredMinimumVersion());
+  //   // Get the required min version from Firebase Remote Config
+  //   final requiredMinVersion = _getExtendedVersionNumber(
+  //       firebaseRemoteConfig.getRequiredMinimumVersion());
 
-    // Get the recommended min version from Firebase Remote Config
-    final recommendedMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRecommendedMinimumVersion());
+  //   // Get the recommended min version from Firebase Remote Config
+  //   final recommendedMinVersion = _getExtendedVersionNumber(
+  //       firebaseRemoteConfig.getRecommendedMinimumVersion());
 
-    // Get new update popup
-    newUpdate = await appStorage.read('new-update');
+  //   // Get new update popup
+  //   newUpdate = await appStorage.read('new-update');
 
-    AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
+  //   AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
 
-    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+  //   final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
-    // Compare the versions and display a dialog if the app version is lower than
-    // the required or recommended version
-    if (appVersion < requiredMinVersion) {
-      _showUpdateVersionDialog(
-          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
-    } else if (appVersion < recommendedMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion,
-          firebaseRemoteConfig.getRecommendedMinimumVersion());
-    }
-  }
+  //   // Compare the versions and display a dialog if the app version is lower than
+  //   // the required or recommended version
+  //   if (appVersion < requiredMinVersion) {
+  //     _showUpdateVersionDialog(
+  //         forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
+  //   } else if (appVersion < recommendedMinVersion) {
+  //     _showUpdateVersionDialog(forceUpdateVersion,
+  //         firebaseRemoteConfig.getRecommendedMinimumVersion());
+  //   }
+  // }
 
   // Helper method to compare two semver versions.
   int _getExtendedVersionNumber(String version) {
@@ -351,7 +375,7 @@ class HomeController extends GetxController {
             ? isImageAvailable.value = true
             : isImageAvailable.value;
         _getBannerEvent();
-        newUpdate == 'true' ? _showWhatsNewDialog() : null;
+        // newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }

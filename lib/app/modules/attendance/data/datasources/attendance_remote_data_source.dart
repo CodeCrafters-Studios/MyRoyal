@@ -1,3 +1,4 @@
+import 'package:iroyal/app/modules/attendance/data/models/attendance_location_model.dart';
 import 'package:iroyal/app/modules/attendance/data/models/attendance_record_model.dart';
 import 'package:iroyal/app/modules/attendance/data/models/attendance_today_model.dart';
 import 'package:iroyal/base/errors/exception.dart';
@@ -6,7 +7,7 @@ import 'package:iroyal/base/services/http_service.dart';
 abstract class AttendanceRemoteDataSource {
   Future<AttendanceTodayModel> getAttendanceToday();
   Future<void> recordAttendance(AttendanceRecordModel model);
-  Future<AttendanceTodayModel> getAttendanceLocation();
+  Future<List<AttendanceLocationModel>> getAttendanceLocation();
 }
 
 class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
@@ -61,7 +62,7 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
   }
 
   @override
-  Future<AttendanceTodayModel> getAttendanceLocation() async {
+  Future<List<AttendanceLocationModel>> getAttendanceLocation() async {
     final r = await httpService.request(
       withToken: true,
       endpoint: 'myroyalattendance/location',
@@ -77,7 +78,10 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
       throw ApiException(r['message'] ?? 'Unknown error');
     }
 
-    final response = AttendanceTodayModel.fromJson(r['data']);
+    final List<AttendanceLocationModel> response = (r['data'] as List)
+        .map((x) => AttendanceLocationModel.fromJson(x))
+        .toList();
+
     return response;
   }
 }

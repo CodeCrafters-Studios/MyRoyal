@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:iroyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
+import 'package:iroyal/app/modules/attendance/data/models/attendance_location_model.dart';
 import 'package:iroyal/app/modules/attendance/data/models/attendance_record_model.dart';
 import 'package:iroyal/app/modules/attendance/data/models/attendance_today_model.dart';
 import 'package:iroyal/app/modules/attendance/domain/entities/attendance_record_entity.dart';
@@ -26,12 +27,14 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
       AttendanceRecordEntity entity) async {
     try {
       final model = AttendanceRecordModel(
+        id: entity.id,
         status: entity.status,
         date: entity.date,
         time: entity.time,
         latitude: entity.latitude,
         longitude: entity.longitude,
         workDurationMinutes: entity.workDurationMinutes,
+        file: entity.file,
       );
 
       await remoteDataSource.recordAttendance(model);
@@ -43,7 +46,8 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
   }
 
   @override
-  Future<Either<Failure, void>> getAttendanceLocation() async {
+  Future<Either<Failure, List<AttendanceLocationModel>>>
+      getAttendanceLocation() async {
     try {
       final r = await remoteDataSource.getAttendanceLocation();
       return Right(r);
