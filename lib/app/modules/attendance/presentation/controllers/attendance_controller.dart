@@ -61,6 +61,7 @@ class AttendanceController extends GetxController {
   final hasTakenBreak = false.obs;
   final isLoadingAttendance = true.obs;
   final isMapReady = false.obs;
+  final displayTime = DateTime.now().obs;
 
   final currentPosition = Rxn<LatLng>();
   final MapController mapController = MapController();
@@ -141,17 +142,24 @@ class AttendanceController extends GetxController {
     _loadInitialData();
   }
 
-  void _loadInitialData() {
+  void _loadInitialData() async {
     if (attendanceStatus.value == AttendanceStatus.notStarted) {
+      countTimes.value = '--:--:--';
+      hasTakenBreak.value = false;
+      breakTime.value = null;
+      breakEndTime.value = null;
+      breakDuration.value = '';
+      countTimes.value = '--:--:--';
+
       _getAttendanceLocation();
     }
 
-    _getAttendanceToday();
+    await _getAttendanceToday();
     _startTimer();
   }
 
-  Future<void> refreshOfficeLocation() async {
-    await _getAttendanceLocation();
+  Future<void> onRefresh() async {
+    _loadInitialData();
     if (isMapReady.value) {
       _fitMapBounds(officeCircles.map((c) => c.point).toList() +
           officePolygons.expand((p) => p.points).toList());
@@ -292,10 +300,6 @@ class AttendanceController extends GetxController {
 
   Future<void> _getAttendanceToday() async {
     isLoadingAttendance.value = true;
-    breakTime.value = null;
-    breakEndTime.value = null;
-    breakDuration.value = '';
-    countTimes.value = '--:--:--';
 
     final result = await getAttendanceTodayUsecase();
 
@@ -515,8 +519,42 @@ class AttendanceController extends GetxController {
   void _startTimer() {
     if (_timer?.isActive ?? false) return;
 
+    final serverTimeStr = attendanceTodayRes.value.serverTime;
+
+    /// ✅ guard
+    if (serverTimeStr == null || serverTimeStr.isEmpty) {
+      return;
+    }
+
+    DateTime parsed;
+
+    try {
+      parsed = DateFormat("HH:mm:ss").parse(serverTimeStr);
+    } catch (e) {
+      AppUtils.logApp("INVALID SERVER TIME: $serverTimeStr");
+      return;
+    }
+
+    final now = DateTime.now();
+
+    _serverTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      parsed.hour,
+      parsed.minute,
+      parsed.second,
+    );
+
+    _deviceTimeAtSync = now;
+
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      currentTime.value = DateTime.now();
+      final nowDevice = DateTime.now();
+      final elapsed = nowDevice.difference(_deviceTimeAtSync!);
+
+      final currentServerTime = _serverTime!.add(elapsed);
+
+      displayTime.value = currentServerTime;
     });
   }
 
@@ -546,8 +584,6 @@ class AttendanceController extends GetxController {
     } else {
       _totalHours();
       await _getAttendanceToday();
-      countTimes.value = '--:--:--';
-      hasTakenBreak.value = false;
       isGpsSpoofing.value = false;
       _positionStream?.cancel();
       _positionStream = null;
@@ -605,20 +641,26 @@ class AttendanceController extends GetxController {
   }
 
   void startBreakTimerFromServer(String serverTime, String breakStart) {
-    final now = DateTime.now();
+    if (serverTime.isEmpty || breakStart.isEmpty) return;
 
-    final server = DateFormat("HH:mm:ss").parse(serverTime);
-    final start = DateFormat("HH:mm:ss").parse(breakStart);
+    try {
+      final now = DateTime.now();
 
-    _serverTime = DateTime(now.year, now.month, now.day, server.hour,
-        server.minute, server.second);
+      final server = DateFormat("HH:mm:ss").parse(serverTime);
+      final start = DateFormat("HH:mm:ss").parse(breakStart);
 
-    _breakStartTime = DateTime(
-        now.year, now.month, now.day, start.hour, start.minute, start.second);
+      _serverTime = DateTime(now.year, now.month, now.day, server.hour,
+          server.minute, server.second);
 
-    _deviceTimeAtSync = now;
+      _breakStartTime = DateTime(
+          now.year, now.month, now.day, start.hour, start.minute, start.second);
 
-    _runBreakTimer();
+      _deviceTimeAtSync = now;
+
+      _runBreakTimer();
+    } catch (e) {
+      AppUtils.logApp("ERROR PARSE BREAK TIME: $e");
+    }
   }
 
   void _runBreakTimer() {
@@ -831,5 +873,15 @@ class AttendanceController extends GetxController {
     }
 
     return minDistance;
+  }
+
+  String get formattedDisplayTime {
+    if (attendanceStatus.value == AttendanceStatus.breakStart) {
+      return countTimes.value;
+    } else if (attendanceStatus.value == AttendanceStatus.checkedOut) {
+      return DateFormat('hh:mm:ss a').format(checkOutTime.value);
+    }
+
+    return DateFormat('hh:mm:ss a').format(displayTime.value);
   }
 }

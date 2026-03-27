@@ -57,14 +57,16 @@ class ValidationSelfieView extends GetView<ValidationSelfieController> {
                     return Text(
                       "Align your face in the oval",
                       textAlign: TextAlign.center,
-                      style: TS.bodyLarge.copyWith(color: white),
+                      style: TS.bodyLarge
+                          .copyWith(fontWeight: FontWeight.bold, color: red),
                     );
                   }
 
                   return Text(
                     "Liveness verified ✓",
                     textAlign: TextAlign.center,
-                    style: TS.bodyLarge.copyWith(color: white),
+                    style: TS.bodyLarge
+                        .copyWith(fontWeight: FontWeight.bold, color: green),
                   );
                 }),
               ),

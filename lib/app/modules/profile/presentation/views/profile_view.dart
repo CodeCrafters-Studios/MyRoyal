@@ -112,8 +112,28 @@ class ProfileViewImpl extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorWidget: (context, url, error) {
                     return Image.network(
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
                       'https://avatar.iran.liara.run/public',
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return CachedNetworkImage(
+                          imageUrl:
+                              "https://api.dicebear.com/7.x/initials/png?seed=${controller.userData.value.initialName}",
+                        );
+                      },
                     );
                   },
                 ),

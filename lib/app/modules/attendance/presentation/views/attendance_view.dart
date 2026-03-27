@@ -42,22 +42,19 @@ class AttendanceView extends GetView<AttendanceController> {
           return RefreshIndicator(
             backgroundColor: white,
             color: primary,
-            onRefresh: controller.refreshOfficeLocation,
+            onRefresh: controller.onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: EPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Column(
-                  children: [
-                    if (controller.attendanceStatus.value ==
-                        AttendanceStatus.checkedOut) ...[
-                      10.verticalSpace,
-                      _buildGreeting(),
-                      10.verticalSpace,
-                    ],
-                    _buildAttendanceContent(),
+              child: Column(
+                children: [
+                  if (controller.attendanceStatus.value ==
+                      AttendanceStatus.checkedOut) ...[
+                    10.verticalSpace,
+                    _buildGreeting(),
+                    10.verticalSpace,
                   ],
-                ),
+                  _buildAttendanceContent(),
+                ],
               ),
             ),
           );
@@ -96,7 +93,6 @@ class AttendanceView extends GetView<AttendanceController> {
   Widget _buildMap() {
     return SizedBox(
       height: 330.h,
-      width: Get.width,
       child: controller.currentPosition.value == null
           ? _buildMapShimmer()
           : AttendanceMap(controller),
@@ -128,24 +124,7 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildTimeDisplay() {
     return Obx(() {
-      final status = controller.attendanceStatus.value;
-
-      String displayTime;
-
-      if (status == AttendanceStatus.checkedIn) {
-        displayTime =
-            DateFormat('hh:mm:ss a').format(controller.currentTime.value);
-      } else if (status == AttendanceStatus.breakStart) {
-        displayTime = controller.countTimes.value;
-      } else if (controller.breakTime.value != null) {
-        displayTime =
-            DateFormat('hh:mm:ss a').format(controller.breakTime.value!);
-      } else {
-        displayTime =
-            DateFormat('hh:mm:ss a').format(controller.checkOutTime.value);
-      }
-
-      return Text(displayTime, style: TS.headlineSmall);
+      return Text(controller.formattedDisplayTime, style: TS.headlineSmall);
     });
   }
 
@@ -188,8 +167,9 @@ class AttendanceView extends GetView<AttendanceController> {
     return Column(
       children: [
         _buildActionButtons(status),
-        20.verticalSpace,
+        10.verticalSpace,
         const AppDivider(thickness: 2),
+        10.verticalSpace,
         _buildAttendanceInfo(),
       ],
     );
@@ -202,36 +182,46 @@ class AttendanceView extends GetView<AttendanceController> {
       final hasCheckIn = status != AttendanceStatus.notStarted;
       final hasCheckOut = status == AttendanceStatus.checkedOut;
 
-      return Column(
-        children: [
-          _buildBreakInfo(controller),
-          20.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildAttendanceDetail(
-                icon: Icons.more_time_outlined,
-                time: hasCheckIn
-                    ? DateFormat('hh:mm a').format(controller.checkInTime.value)
-                    : '--:-- AM',
-                label: 'Check In',
-              ),
-              _buildAttendanceDetail(
-                icon: Icons.timer_off_outlined,
-                time: hasCheckOut
-                    ? DateFormat('hh:mm a')
-                        .format(controller.checkOutTime.value)
-                    : '--:-- PM',
-                label: 'Check Out',
-              ),
-              _buildAttendanceDetail(
-                icon: Icons.check_circle_outline_rounded,
-                time: hasCheckOut ? controller.totalHours.value : '--h --m',
-                label: 'Total Hours',
-              ),
-            ],
-          ),
-        ],
+      return EPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildAttendanceDetail(
+                  icon: Icons.login_outlined,
+                  color: green,
+                  time: hasCheckIn
+                      ? DateFormat('hh:mm a')
+                          .format(controller.checkInTime.value)
+                      : '--:-- AM',
+                  label: 'Check In',
+                ),
+                50.horizontalSpace,
+                _buildAttendanceDetail(
+                  icon: Icons.logout_outlined,
+                  color: red,
+                  time: hasCheckOut
+                      ? DateFormat('hh:mm a')
+                          .format(controller.checkOutTime.value)
+                      : '--:-- PM',
+                  label: 'Check Out',
+                ),
+                50.horizontalSpace,
+                _buildAttendanceDetail(
+                  icon: Icons.access_time_rounded,
+                  color: primary30,
+                  time: hasCheckOut ? controller.totalHours.value : '--h --m',
+                  label: 'Total Hours',
+                ),
+              ],
+            ),
+            15.verticalSpace,
+            _buildBreakInfo(controller)
+          ],
+        ),
       );
     });
   }
@@ -240,10 +230,14 @@ class AttendanceView extends GetView<AttendanceController> {
     required IconData icon,
     required String time,
     required String label,
+    Color? color,
   }) {
     return Column(
       children: [
-        Icon(icon),
+        Icon(
+          icon,
+          color: color,
+        ),
         5.verticalSpace,
         Text(time, style: TS.titleSmall),
         Text(label, style: TS.bodyMedium),
@@ -253,6 +247,10 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildBreakInfo(AttendanceController controller) {
     return Obx(() {
+      final status = controller.attendanceStatus.value;
+
+      final hasBreak = status != AttendanceStatus.breakStart;
+
       final breakStart = controller.breakTime.value;
       final breakEnd = controller.breakEndTime.value;
 
@@ -260,33 +258,33 @@ class AttendanceView extends GetView<AttendanceController> {
         return const SizedBox();
       }
 
-      return Container(
-        width: Get.width,
-        margin: const EdgeInsets.only(top: 20),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: secondary2.withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          children: [
-            Text(
-              "Break Time",
-              style: TS.titleSmall.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "${DateFormat('hh:mm a').format(breakStart)} - "
-              "${DateFormat('hh:mm a').format(breakEnd)}",
-              style: TS.bodyMedium,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              "Duration: ${controller.breakDuration.value}",
-              style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildAttendanceDetail(
+            icon: Icons.restaurant_rounded,
+            color: primaryAccent,
+            time: hasBreak
+                ? DateFormat('hh:mm a').format(breakStart)
+                : '--:-- AM',
+            label: 'Break Start',
+          ),
+          50.horizontalSpace,
+          _buildAttendanceDetail(
+            icon: Icons.timer_off_outlined,
+            color: urgentColor,
+            time:
+                hasBreak ? DateFormat('hh:mm a').format(breakEnd) : '--:-- PM',
+            label: 'Break End',
+          ),
+          50.horizontalSpace,
+          _buildAttendanceDetail(
+            icon: Icons.access_time_rounded,
+            color: primary30,
+            time: hasBreak ? controller.breakDuration.value : '--h --m',
+            label: 'Duration',
+          ),
+        ],
       );
     });
   }
@@ -386,6 +384,7 @@ class AttendanceView extends GetView<AttendanceController> {
 
     return ButtonPrimary(
       fullWidth: true,
+      margin: EdgeInsets.symmetric(horizontal: 14),
       text: 'End Break',
       color: enabled ? white : Colors.grey,
       textColor: enabled ? primary : Colors.grey,

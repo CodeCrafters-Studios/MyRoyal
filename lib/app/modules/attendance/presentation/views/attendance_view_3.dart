@@ -46,7 +46,7 @@ class AttendanceView3 extends GetView<AttendanceController> {
             return RefreshIndicator(
               backgroundColor: white,
               color: primary,
-              onRefresh: controller.refreshOfficeLocation,
+              onRefresh: controller.onRefresh,
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 child: EPadding(
@@ -249,8 +249,14 @@ class AttendanceView3 extends GetView<AttendanceController> {
       final status = controller.attendanceStatus.value;
 
       if (status == AttendanceStatus.checkedOut) {
+        final breakTime = controller.breakTime.value;
+
+        if (breakTime == null) {
+          return Text('--:--:--', style: TS.headlineSmall);
+        }
+
         return Text(
-          DateFormat('hh:mm:ss a').format(controller.breakTime.value!),
+          DateFormat('hh:mm:ss a').format(breakTime),
           style: TS.headlineSmall,
         );
       }
