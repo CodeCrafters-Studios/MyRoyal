@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
-import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
-import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/child_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/entities/my_teams.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class MyTeamsController extends GetxController {
   MyTeamsController({

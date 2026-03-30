@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/permit_data_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/permit_data_model.dart';
 
 class PermitEntity extends Equatable {
   const PermitEntity(

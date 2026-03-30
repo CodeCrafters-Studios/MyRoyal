@@ -13,8 +13,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

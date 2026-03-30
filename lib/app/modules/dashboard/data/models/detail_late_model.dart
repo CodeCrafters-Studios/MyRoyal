@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/detail_late_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/detail_late_entity.dart';
 
 class DetailLateModel extends DetailLateEntity {
   const DetailLateModel(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/colors.dart';
 
 class AppDivider extends StatelessWidget {
   const AppDivider({super.key, this.color, this.thickness});

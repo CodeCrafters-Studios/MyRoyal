@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
 
 class NotificationDataListModel extends NotificationDataListEntities {
   const NotificationDataListModel({

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/tasks/domain/entities/task_dummy_data.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/task_type_card.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/widgets/others/ticker_provider.dart';
+import 'package:MyRoyal/app/modules/tasks/domain/entities/task_dummy_data.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/task_type_card.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/widgets/others/ticker_provider.dart';
 
 class TasksController extends GetxController {
   TasksController({required this.appDialog});

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/action_tracking_document_entity.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/action_tracking_document_entity.dart';
 
 class ActionTrackingDocumentModel extends ActionTrackingDocumentEntity {
   const ActionTrackingDocumentModel({

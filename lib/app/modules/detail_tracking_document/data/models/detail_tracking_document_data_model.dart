@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_progress_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_ptk_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_data_entities.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_progress_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_ptk_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_data_entities.dart';
 
 class DetailTrackingDocumentDataModel
     extends DetailTrackingDocumentDataEntities {

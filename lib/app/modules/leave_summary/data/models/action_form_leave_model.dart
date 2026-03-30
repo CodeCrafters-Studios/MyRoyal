@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
 
 class ActionFormLeaveModel extends ActionFormLeaveEntity {
   const ActionFormLeaveModel({required super.id, required super.codeNo});

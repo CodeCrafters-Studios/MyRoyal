@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/leave_balance_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/leave_balance_entity.dart';
 
 class LeaveBalanceModel extends LeaveBalanceEntity {
   const LeaveBalanceModel(super.balance, super.used);

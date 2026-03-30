@@ -1,7 +1,7 @@
-import 'package:iroyal/app/modules/articles/data/models/articles_detail_model.dart';
-import 'package:iroyal/app/modules/articles/data/models/books_detail_model.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/services/http_service.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/articles_detail_model.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/books_detail_model.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
 
 abstract class ArticlesRemoteDataSources {
   Future<ArticlesDetailModel> getArticlesDetail(String id);

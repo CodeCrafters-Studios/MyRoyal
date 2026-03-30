@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 class OnboardingController extends GetxController {
   OnboardingController({

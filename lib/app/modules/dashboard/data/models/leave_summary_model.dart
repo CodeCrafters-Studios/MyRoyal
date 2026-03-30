@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/leave_summary_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/leave_summary_entity.dart';
 
 class LeaveSummaryModel extends LeaveSummaryEntity {
   const LeaveSummaryModel(super.late, super.absent, super.specialLeaves);

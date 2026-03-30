@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/others/success_change_security_view.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:iroyal/base/widgets/textfield/input_password.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/widgets/others/success_change_security_view.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_password.dart';
 
 import '../controllers/change_pin_controller.dart';
 

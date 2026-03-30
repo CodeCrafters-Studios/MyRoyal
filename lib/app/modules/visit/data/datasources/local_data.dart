@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:iroyal/app/modules/visit/data/models/locations_model.dart';
+import 'package:MyRoyal/app/modules/visit/data/models/locations_model.dart';
 
-import 'package:iroyal/app/modules/visit/domain/entities/locations.dart';
+import 'package:MyRoyal/app/modules/visit/domain/entities/locations.dart';
 
 abstract class VisitLocalDataSources {
   Future<List<Locations>> fetchLocations();

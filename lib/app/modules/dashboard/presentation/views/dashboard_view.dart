@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_late_check_in_view.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_permit_request_view.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/detail_special_leave_view.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/detail_late_check_in_view.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/detail_permit_request_view.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/detail_special_leave_view.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/dashboard_controller.dart';

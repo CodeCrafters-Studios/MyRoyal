@@ -1,17 +1,17 @@
-import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/create_form_leave_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/create_form_permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/leave_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/subtitute_employee_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/action_form_leave_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/create_form_leave_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/create_form_permit_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/leave_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/permit_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/subtitute_employee_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/create_form_leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class LeaveRemoteDataSources {
   Future<LeaveModel> getLeave();

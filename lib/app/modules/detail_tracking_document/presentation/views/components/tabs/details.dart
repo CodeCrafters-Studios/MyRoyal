@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/presentation/controllers/detail_tracking_document_controller.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/presentation/controllers/detail_tracking_document_controller.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 class DetailsDocumentView extends StatelessWidget {
   const DetailsDocumentView({super.key, required this.controller});

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_list_history_entity.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_list_history_entity.dart';
 
 class TrackingDocumentListHistoryModel
     extends TrackingDocumentListHistoryEntity {

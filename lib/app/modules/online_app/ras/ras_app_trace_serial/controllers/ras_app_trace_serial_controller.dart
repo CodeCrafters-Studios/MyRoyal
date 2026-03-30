@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/data/models/trace_serial_model.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/data/models/trace_serial_params_model.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/domain/usecases/get_trace_serial_usecase.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/widgets/animations/animated_scanner_overlay.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_trace_serial/data/models/trace_serial_model.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_trace_serial/data/models/trace_serial_params_model.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_trace_serial/domain/usecases/get_trace_serial_usecase.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/widgets/animations/animated_scanner_overlay.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class RasAppTraceSerialController extends GetxController {

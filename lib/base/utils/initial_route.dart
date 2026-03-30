@@ -1,7 +1,7 @@
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 abstract class InitialRoute {
   Future<String> get route;

@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/profile_data_model.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/profile.dart';
 
 class ProfileModel extends Profile {
   const ProfileModel({

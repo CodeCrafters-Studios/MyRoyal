@@ -1,8 +1,8 @@
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 abstract class SettingsLocalData {
   Future<bool> logout();

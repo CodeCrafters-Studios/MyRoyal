@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:iroyal/base/config/environment_config.dart';
+import 'package:MyRoyal/base/config/environment_config.dart';
 
 class AppConfig {
   static late EnvironmentConfig environment;

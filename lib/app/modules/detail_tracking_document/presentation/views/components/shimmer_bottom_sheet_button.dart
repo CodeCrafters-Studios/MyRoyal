@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerBottomSheetButton extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/home/domain/entities/banner_event_entity.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/banner_event_entity.dart';
 
 class BannerEventModel extends BannerEventEntity {
   BannerEventModel({

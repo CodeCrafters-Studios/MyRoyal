@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 class ComingSoonScreen extends StatelessWidget {
   const ComingSoonScreen({super.key});

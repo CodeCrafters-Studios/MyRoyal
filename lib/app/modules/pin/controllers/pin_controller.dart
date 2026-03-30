@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/colors.dart';
 
 class PinController extends GetxController {
   var pin = ''.obs;

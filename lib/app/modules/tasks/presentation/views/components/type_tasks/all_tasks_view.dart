@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/tabs/tab_all_tasks.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/tabs/tab_completed.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/tabs/tab_in_progress.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/tabs/tab_todo.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/tabs/tab_all_tasks.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/tabs/tab_completed.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/tabs/tab_in_progress.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/tabs/tab_todo.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 class AllTasksView extends StatelessWidget {
   const AllTasksView({super.key, required this.controller});

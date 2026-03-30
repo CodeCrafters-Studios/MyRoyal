@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
 
 class SearchBarCustom extends StatelessWidget {
   const SearchBarCustom({

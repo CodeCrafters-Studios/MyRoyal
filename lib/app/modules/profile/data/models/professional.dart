@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/profile/domain/entities/professional.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/professional.dart';
 
 class ProfessionalModel extends Professional {
   const ProfessionalModel({

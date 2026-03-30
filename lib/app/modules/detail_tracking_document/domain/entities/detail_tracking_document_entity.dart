@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_data_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_data_model.dart';
 
 class DetailTrackingDocumentEntity extends Equatable {
   const DetailTrackingDocumentEntity(

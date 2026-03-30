@@ -1,9 +1,9 @@
-import 'package:iroyal/app/modules/notifications/data/models/notification_model.dart';
-import 'package:iroyal/app/modules/notifications/data/models/tap_notification_model.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/notifications/data/models/notification_model.dart';
+import 'package:MyRoyal/app/modules/notifications/data/models/tap_notification_model.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class NotificationsDataSources {
   Future<NotificationModel> getNotifications(params);

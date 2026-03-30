@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
-import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/app_divider.dart';
-import 'package:iroyal/base/widgets/card/card_app.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
+import 'package:MyRoyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/app_divider.dart';
+import 'package:MyRoyal/base/widgets/card/card_app.dart';
 
 class AttachmentsTaskView extends StatelessWidget {
   const AttachmentsTaskView({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
 
 class CommentTaskView extends StatelessWidget {
   const CommentTaskView({super.key});

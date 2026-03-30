@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/child_model.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 class ExpansionTileControllerApp extends StatefulWidget {
   const ExpansionTileControllerApp({

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_ptk_entities.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/detail_ptk_entities.dart';
 
 class DetailPtkModel extends DetailPtkEntities {
   const DetailPtkModel({

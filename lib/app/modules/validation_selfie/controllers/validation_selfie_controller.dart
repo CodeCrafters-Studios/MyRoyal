@@ -9,11 +9,11 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/attendance/data/models/attendance_record_model.dart';
-import 'package:iroyal/app/modules/attendance/data/models/attendance_today_model.dart';
-import 'package:iroyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_record_model.dart';
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_today_model.dart';
+import 'package:MyRoyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 

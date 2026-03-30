@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/bottomnavbar/domain/entities/bottomnavbar_menu.dart';
+import 'package:MyRoyal/app/modules/bottomnavbar/domain/entities/bottomnavbar_menu.dart';
 
 class BottomnavbarController extends GetxController {
   final tabController = PageController();

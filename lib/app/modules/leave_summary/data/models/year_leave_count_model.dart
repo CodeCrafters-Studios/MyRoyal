@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/year_leave_count_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/year_leave_count_entity.dart';
 
 class YearLeaveCountModel extends YearLeaveCountEntity {
   const YearLeaveCountModel(

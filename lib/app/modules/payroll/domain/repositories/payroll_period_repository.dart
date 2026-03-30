@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_period_model.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_period_model.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 abstract class PayrollPeriodRepository {
   Future<Either<Failure, PayrollPeriodModel>> getPayrollPeriod();

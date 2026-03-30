@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
+import 'package:MyRoyal/app/modules/webtel/data/models/webtel_data_model.dart';
 
 class Webtel extends Equatable {
   const Webtel({

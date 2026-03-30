@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/home_slide.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/home_user_info.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/home_user_menu.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/home_user_status.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/image.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/home_slide.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_info.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_menu.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_status.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/image.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 import '../controllers/home_controller.dart';
 

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/cache_user_login.dart';
 
 class CacheUserLoginModel extends CacheUserLogin {
   const CacheUserLoginModel({

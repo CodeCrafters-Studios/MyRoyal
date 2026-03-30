@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/description_detail_task.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/header_detail_task.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/comment_task_view.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/attachments_task_view.dart';
-import 'package:iroyal/app/modules/detail_tasks/views/components/tabs/tab_subtask_view.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/linear_progress.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/views/components/description_detail_task.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/views/components/header_detail_task.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/views/components/tabs/comment_task_view.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/views/components/tabs/attachments_task_view.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/views/components/tabs/tab_subtask_view.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/linear_progress.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/detail_tasks_controller.dart';
 

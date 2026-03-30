@@ -3,13 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/image.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/widgets/image.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/splash_controller.dart';
 

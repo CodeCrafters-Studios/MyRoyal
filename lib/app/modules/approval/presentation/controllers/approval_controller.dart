@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/approval/domain/entities/approval_entity.dart';
-import 'package:iroyal/app/modules/approval/domain/usecases/get_leave_approval_usecase.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/action_form_leave_params_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/approval/domain/entities/approval_entity.dart';
+import 'package:MyRoyal/app/modules/approval/domain/usecases/get_leave_approval_usecase.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/action_form_leave_params_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class ApprovalController extends GetxController {
   ApprovalController({

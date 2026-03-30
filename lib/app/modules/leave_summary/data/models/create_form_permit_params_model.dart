@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_params_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/create_form_permit_params_entity.dart';
 
 class CreateFormPermitParamsModel extends CreateFormPermitParamsEntity {
   const CreateFormPermitParamsModel({

@@ -1,7 +1,7 @@
-import 'package:iroyal/app/modules/profile/data/models/documents_model.dart';
-import 'package:iroyal/app/modules/profile/data/models/personal.dart';
-import 'package:iroyal/app/modules/profile/data/models/professional.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/profile_data.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/documents_model.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/personal.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/professional.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/profile_data.dart';
 
 class ProfileDataModel extends ProfileData {
   const ProfileDataModel({

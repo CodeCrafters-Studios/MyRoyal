@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
-import 'package:iroyal/app/modules/home/domain/entities/user_entity.dart';
+import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({

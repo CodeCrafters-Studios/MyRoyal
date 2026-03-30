@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_data_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/permit_data_entity.dart';
 
 class PermitDataModel extends PermitDataEntity {
   const PermitDataModel({

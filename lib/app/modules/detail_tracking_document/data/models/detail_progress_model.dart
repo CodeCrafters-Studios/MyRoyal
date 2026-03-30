@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_progress_entities.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/detail_progress_entities.dart';
 
 class DetailProgressModel extends DetailProgressEntities {
   const DetailProgressModel({

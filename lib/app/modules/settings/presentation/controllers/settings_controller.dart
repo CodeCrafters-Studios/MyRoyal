@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/settings/domain/usecases/biometrics_app.dart';
-import 'package:iroyal/app/modules/settings/domain/usecases/logout_app.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/biometrics.dart';
-import 'package:iroyal/base/utils/get_device_info.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/modules/settings/domain/usecases/biometrics_app.dart';
+import 'package:MyRoyal/app/modules/settings/domain/usecases/logout_app.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/biometrics.dart';
+import 'package:MyRoyal/base/utils/get_device_info.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 class SettingsController extends GetxController {
   SettingsController({

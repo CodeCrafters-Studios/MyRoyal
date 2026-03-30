@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/check_password/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/check_password/data/repositories/check_password_repository_impl.dart';
-import 'package:iroyal/app/modules/check_password/domain/usecases/check_password_usecase.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/check_password/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/check_password/data/repositories/check_password_repository_impl.dart';
+import 'package:MyRoyal/app/modules/check_password/domain/usecases/check_password_usecase.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/check_password_controller.dart';
 

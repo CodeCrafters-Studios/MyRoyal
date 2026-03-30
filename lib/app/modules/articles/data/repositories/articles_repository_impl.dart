@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/articles/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/articles/data/models/articles_detail_model.dart';
-import 'package:iroyal/app/modules/articles/data/models/books_detail_model.dart';
-import 'package:iroyal/app/modules/articles/domain/repositories/articles_repository.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/articles/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/articles_detail_model.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/books_detail_model.dart';
+import 'package:MyRoyal/app/modules/articles/domain/repositories/articles_repository.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class ArticlesRepositoryImpl implements ArticlesRepository {
   final ArticlesRemoteDataSources remoteData;

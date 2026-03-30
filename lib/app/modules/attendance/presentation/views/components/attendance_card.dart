@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 
 class AttendanceCard extends StatelessWidget {
   const AttendanceCard({

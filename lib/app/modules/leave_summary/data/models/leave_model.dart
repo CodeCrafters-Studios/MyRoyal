@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/leave_summary/data/models/leave_data_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/leave_data_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/leave_entity.dart';
 
 class LeaveModel extends LeaveEntity {
   const LeaveModel(

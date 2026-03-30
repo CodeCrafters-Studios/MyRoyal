@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 abstract class AppPermission {

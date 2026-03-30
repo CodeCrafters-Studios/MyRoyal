@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/articles/data/models/articles_detail_model.dart';
-import 'package:iroyal/app/modules/articles/data/models/books_detail_model.dart';
-import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entity.dart';
-import 'package:iroyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
-import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
-import 'package:iroyal/app/modules/articles/presentation/views/components/books_view.dart';
-import 'package:iroyal/app/modules/home/domain/entities/home_slider.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/articles_detail_model.dart';
+import 'package:MyRoyal/app/modules/articles/data/models/books_detail_model.dart';
+import 'package:MyRoyal/app/modules/articles/domain/entities/books_detail_entity.dart';
+import 'package:MyRoyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
+import 'package:MyRoyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
+import 'package:MyRoyal/app/modules/articles/presentation/views/components/books_view.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/home_slider.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class ArticlesController extends GetxController {
   ArticlesController({

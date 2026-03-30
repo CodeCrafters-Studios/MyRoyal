@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/domain/entities/release_order_entity.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/domain/entities/release_order_entity.dart';
 
 class ReleaseOrderModel extends ReleaseOrderEntity {
   ReleaseOrderModel(

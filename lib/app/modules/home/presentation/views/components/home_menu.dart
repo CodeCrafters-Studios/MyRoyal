@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/domain/entities/menu.dart';
-import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
-import 'package:iroyal/base/widgets/others/coming_soon.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/menu.dart';
+import 'package:MyRoyal/app/modules/home/presentation/controllers/home_controller.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
+import 'package:MyRoyal/base/widgets/others/coming_soon.dart';
 
 class HomeMenu extends GetView<HomeController> {
   HomeMenu({

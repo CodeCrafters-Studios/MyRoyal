@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/controllers/home_controller.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/home_user_card.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card/card_app.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/home/presentation/controllers/home_controller.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_card.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/card/card_app.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeUserInfo extends GetView<HomeController> {

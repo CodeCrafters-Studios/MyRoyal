@@ -1,5 +1,5 @@
-name: iroyal
-version: 1.5.1+56
+name: MyRoyal
+version: 1.0.0+56
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -13,6 +13,7 @@ dependencies:
   calendar_date_picker2: ^2.0.1
   camera: ^0.11.2
   carousel_slider: ^5.0.0
+  change_app_package_name: ^1.5.0
   collection: ^1.18.0
   connectivity_plus: ^6.1.0
   crypto: ^3.0.3

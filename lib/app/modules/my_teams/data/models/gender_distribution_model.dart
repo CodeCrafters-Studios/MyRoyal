@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/my_teams/domain/entities/gender_distribution.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/entities/gender_distribution.dart';
 
 class GenderDistributionModel extends GenderDistribution {
   const GenderDistributionModel({

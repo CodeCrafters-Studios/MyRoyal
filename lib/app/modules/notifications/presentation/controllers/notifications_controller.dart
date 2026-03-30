@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/notifications/data/models/notification_data_model.dart';
-import 'package:iroyal/app/modules/notifications/data/models/tap_notification_data_model.dart';
-import 'package:iroyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
-import 'package:iroyal/app/modules/notifications/domain/entities/notification_entities.dart';
-import 'package:iroyal/app/modules/notifications/domain/entities/tap_notification_entities.dart';
-import 'package:iroyal/app/modules/notifications/domain/usecases/get_notifications.dart';
-import 'package:iroyal/app/modules/notifications/domain/usecases/tap_notification.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/notifications/data/models/notification_data_model.dart';
+import 'package:MyRoyal/app/modules/notifications/data/models/tap_notification_data_model.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/entities/notification_entities.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/entities/tap_notification_entities.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/usecases/tap_notification.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsController extends GetxController {

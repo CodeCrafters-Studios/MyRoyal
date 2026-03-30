@@ -1,9 +1,9 @@
-import 'package:iroyal/app/modules/webtel/data/models/webtel_model.dart';
-import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/webtel/data/models/webtel_model.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class WebtelRemoteDataSources {
   Future<Webtel> getWebtel();

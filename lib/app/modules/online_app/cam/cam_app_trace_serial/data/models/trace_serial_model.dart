@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/online_app/cam/cam_app_trace_serial/domain/entities/trace_serial_entity.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_trace_serial/domain/entities/trace_serial_entity.dart';
 
 class TraceSerialModel extends TraceSerialEntity {
   const TraceSerialModel(

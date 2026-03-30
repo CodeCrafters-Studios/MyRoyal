@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_on_progress_model.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/models/tracking_document_list_on_progress_model.dart';
 
 class TrackingDocumentOnProgress extends Equatable {
   const TrackingDocumentOnProgress(this.code, this.message, this.data);

@@ -4,10 +4,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
 
 import '../controllers/cam_app_release_order_controller.dart';
 

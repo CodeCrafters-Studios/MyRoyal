@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/data/repositories/release_order_repository_impl.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/get_release_order_usecase.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/update_release_order_usecase.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/data/repositories/release_order_repository_impl.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/get_release_order_usecase.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/update_release_order_usecase.dart';
 
 import '../controllers/cam_app_release_order_controller.dart';
 

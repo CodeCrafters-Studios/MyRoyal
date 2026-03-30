@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/detail_permit_request_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/detail_permit_request_entity.dart';
 
 class DetailPermitRequestModel extends DetailPermitRequestEntity {
   const DetailPermitRequestModel(

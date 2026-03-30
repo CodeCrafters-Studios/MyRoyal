@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/home/domain/entities/user_data_entity.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/user_data_entity.dart';
 
 class UserDataModel extends UserDataEntity {
   const UserDataModel({

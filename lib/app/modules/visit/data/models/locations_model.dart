@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/visit/domain/entities/locations.dart';
+import 'package:MyRoyal/app/modules/visit/domain/entities/locations.dart';
 
 class LocationsModel extends Locations {
   const LocationsModel({

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/help_and_support/entities/popular_questions.dart';
+import 'package:MyRoyal/app/modules/help_and_support/entities/popular_questions.dart';
 
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/app_divider.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/app_divider.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/help_and_support_controller.dart';
 

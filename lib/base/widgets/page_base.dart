@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/config/app_config.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/app_pop_scope.dart';
-import 'package:iroyal/base/widgets/appbar_default.dart';
+import 'package:MyRoyal/base/config/app_config.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/app_pop_scope.dart';
+import 'package:MyRoyal/base/widgets/appbar_default.dart';
 
 class PageBase extends StatelessWidget {
   const PageBase({

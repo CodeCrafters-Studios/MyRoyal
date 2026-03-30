@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/download_params.dart';
-import 'package:iroyal/app/modules/profile/domain/repositories/profile_repository.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/usecases/usecase.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/download_params.dart';
+import 'package:MyRoyal/app/modules/profile/domain/repositories/profile_repository.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/usecases/usecase.dart';
 
 class DownloadFile implements UseCase<DownloadParams, ParamsDownload> {
   DownloadFile(this.repository);

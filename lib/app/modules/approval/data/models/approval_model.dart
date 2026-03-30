@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
-import 'package:iroyal/app/modules/approval/domain/entities/approval_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
+import 'package:MyRoyal/app/modules/approval/domain/entities/approval_entity.dart';
 
 class ApprovalModel extends ApprovalEntity {
   const ApprovalModel({

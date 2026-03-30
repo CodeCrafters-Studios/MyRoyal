@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_period_params_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_period_params_entity.dart';
 
 class PayrollPeriodParamsModel extends PayrollPeriodParamsEntity {
   const PayrollPeriodParamsModel(

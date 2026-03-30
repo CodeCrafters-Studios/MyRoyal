@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/articles/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/articles/data/repositories/articles_repository_impl.dart';
-import 'package:iroyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
-import 'package:iroyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/articles/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/articles/data/repositories/articles_repository_impl.dart';
+import 'package:MyRoyal/app/modules/articles/domain/usecases/get_articles_detail_usecase.dart';
+import 'package:MyRoyal/app/modules/articles/domain/usecases/get_books_detail_usecase.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/articles_controller.dart';
 

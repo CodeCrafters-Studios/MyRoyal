@@ -2,17 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 
-import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
-import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
-import 'package:iroyal/app/modules/profile/presentation/views/components/tabs/tab_professional.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/tabs/tab_documents.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/tabs/tab_personal.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/tabs/tab_professional.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/profile_controller.dart';

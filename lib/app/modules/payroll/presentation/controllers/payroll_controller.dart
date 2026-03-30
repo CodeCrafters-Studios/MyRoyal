@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_period_params_model.dart';
-import 'package:iroyal/app/modules/payroll/data/models/payroll_period_model.dart';
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_data_overview_entity.dart';
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_download_url_entity.dart';
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_period_entity.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_period_params_model.dart';
+import 'package:MyRoyal/app/modules/payroll/data/models/payroll_period_model.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_data_overview_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_download_url_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_period_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
+import 'package:MyRoyal/app/modules/profile/domain/usecases/download_file.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class PayrollController extends GetxController {
   final DownloadFile downloadFile;

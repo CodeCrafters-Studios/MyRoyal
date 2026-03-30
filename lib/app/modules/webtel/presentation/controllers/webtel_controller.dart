@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
-import 'package:iroyal/app/modules/webtel/domain/entities/branch.dart';
-import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
-import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/webtel/data/models/webtel_data_model.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/branch.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/usecases/get_webtel.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class WebtelController extends GetxController {
   WebtelController({required this.getWebtel, required this.appDialog});

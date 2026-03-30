@@ -1,11 +1,11 @@
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_history_model.dart';
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_on_progress_model.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/models/tracking_document_history_model.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/models/tracking_document_on_progress_model.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class TrackingDocumentRemoteDataSources {
   Future<TrackingDocumentOnProgress> getTrackingDocumentOnProgress();

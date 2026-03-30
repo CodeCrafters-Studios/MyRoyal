@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
-import 'package:iroyal/app/modules/profile/presentation/views/components/shared/profile_information.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/shared/profile_information.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 class TabPersonalView extends StatelessWidget {
   const TabPersonalView({super.key, required this.controller});

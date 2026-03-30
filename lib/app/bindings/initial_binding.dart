@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/controllers/user_info_controller.dart';
-import 'package:iroyal/app/controllers/utility_controller.dart';
-import 'package:iroyal/app/shared/data/datasources/local_data.dart';
-import 'package:iroyal/app/shared/data/datasources/remote_data.dart';
-import 'package:iroyal/app/shared/data/repositories/global_repository_impl.dart';
-import 'package:iroyal/app/shared/domain/usecases/get_cache_login.dart';
+import 'package:MyRoyal/app/controllers/user_info_controller.dart';
+import 'package:MyRoyal/app/controllers/utility_controller.dart';
+import 'package:MyRoyal/app/shared/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/shared/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/shared/data/repositories/global_repository_impl.dart';
+import 'package:MyRoyal/app/shared/domain/usecases/get_cache_login.dart';
 
 class InitialBinding extends Bindings {
   @override

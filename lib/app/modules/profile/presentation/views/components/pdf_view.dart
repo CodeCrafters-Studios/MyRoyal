@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 
 class PDFView extends StatelessWidget {
   const PDFView({super.key, required this.title, required this.url});

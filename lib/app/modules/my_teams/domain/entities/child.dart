@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/my_teams_job_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/child_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/my_teams_job_model.dart';
 
 class Child extends Equatable {
   const Child({

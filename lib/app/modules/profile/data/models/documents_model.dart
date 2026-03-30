@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/profile/domain/entities/documents.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/documents.dart';
 
 class DocumentsModel extends Documents {
   const DocumentsModel({

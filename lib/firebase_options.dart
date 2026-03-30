@@ -43,10 +43,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDOfroxveXhJ1UIV_g7QutTrKXFZLNxXSo',
-    appId: '1:830784728566:android:812318b4b1149778bfebd7',
+    appId: '1:830784728566:android:47c298d97d4b5504bfebd7',
     messagingSenderId: '830784728566',
     projectId: 'iroyal-14dea',
-    storageBucket: 'iroyal-14dea.appspot.com',
+    storageBucket: 'iroyal-14dea.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

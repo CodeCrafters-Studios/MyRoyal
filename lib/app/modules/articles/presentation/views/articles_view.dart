@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/articles/presentation/views/components/recommendation_book_card.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/articles/presentation/views/components/recommendation_book_card.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 import '../controllers/articles_controller.dart';
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/card/card_app.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/card/card_app.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 class DashboardCard extends StatelessWidget {
   const DashboardCard({

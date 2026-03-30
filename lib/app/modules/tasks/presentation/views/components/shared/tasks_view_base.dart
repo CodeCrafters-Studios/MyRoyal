@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/search_bar_custom.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_list_view.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/search_bar_custom.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/tasks_list_view.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 class TaskViewBase extends StatelessWidget {
   const TaskViewBase({

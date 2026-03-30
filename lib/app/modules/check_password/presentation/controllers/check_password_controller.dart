@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/check_password/data/models/check_password_model.dart';
-import 'package:iroyal/app/modules/check_password/domain/usecases/check_password_usecase.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/check_password/data/models/check_password_model.dart';
+import 'package:MyRoyal/app/modules/check_password/domain/usecases/check_password_usecase.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class CheckPasswordController extends GetxController {
   CheckPasswordController({

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/articles/domain/entities/books_detail_entity.dart';
+import 'package:MyRoyal/app/modules/articles/domain/entities/books_detail_entity.dart';
 
 class BooksDetailModel extends BooksDetailEntity {
   const BooksDetailModel({

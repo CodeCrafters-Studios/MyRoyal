@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
 
 class UserEntity extends Equatable {
   const UserEntity({

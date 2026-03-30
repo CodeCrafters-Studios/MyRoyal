@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:iroyal/app/modules/login/data/models/login_response.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/modules/login/data/models/login_response.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 abstract class GlobalLocalData {
   Future<LoginResponseModel> getCacheLogin();

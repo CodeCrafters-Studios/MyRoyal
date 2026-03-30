@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_list_on_progress_entity.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_list_on_progress_entity.dart';
 
 class TrackingDocumentListOnProgressModel
     extends TrackingDocumentListOnProgress {

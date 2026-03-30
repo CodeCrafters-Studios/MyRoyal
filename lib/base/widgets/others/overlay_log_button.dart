@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/others/log_button.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/others/log_button.dart';
 
 class OverlayLogButton extends StatefulWidget {
   const OverlayLogButton({super.key, required this.onTap});

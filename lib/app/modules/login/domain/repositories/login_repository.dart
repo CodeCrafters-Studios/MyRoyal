@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_params.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_response.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/cache_user_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_params.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_response.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 abstract class LoginRepository {
   Future<Either<Failure, LoginParams>> getLoginParam({

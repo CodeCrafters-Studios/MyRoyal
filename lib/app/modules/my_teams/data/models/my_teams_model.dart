@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/my_teams/data/models/child_model.dart';
-import 'package:iroyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
-import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/child_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/gender_distribution_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/entities/my_teams.dart';
 
 class MyTeamsModel extends MyTeams {
   const MyTeamsModel({

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/dashboard_data_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/dashboard_data_model.dart';
 
 class DashboardEntity extends Equatable {
   final int code;

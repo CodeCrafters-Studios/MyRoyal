@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
 
 class CardApp extends StatelessWidget {
   const CardApp({

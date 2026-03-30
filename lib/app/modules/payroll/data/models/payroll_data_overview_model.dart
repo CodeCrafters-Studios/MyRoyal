@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_data_overview_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_data_overview_entity.dart';
 
 class PayrollDataOverviewModel extends PayrollDataOverviewEntity {
   const PayrollDataOverviewModel({required super.data});

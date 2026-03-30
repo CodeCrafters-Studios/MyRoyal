@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/tasks_controller.dart';
 

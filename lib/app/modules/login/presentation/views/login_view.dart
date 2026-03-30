@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/login/presentation/views/components/biometric_login.dart';
-import 'package:iroyal/app/modules/login/presentation/views/components/have_no_account.dart';
-import 'package:iroyal/app/modules/login/presentation/views/components/or_login_with.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/app_images/logo.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/card/card_app.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
-import 'package:iroyal/base/widgets/textfield/input_password.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:MyRoyal/app/modules/login/presentation/views/components/biometric_login.dart';
+import 'package:MyRoyal/app/modules/login/presentation/views/components/have_no_account.dart';
+import 'package:MyRoyal/app/modules/login/presentation/views/components/or_login_with.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/app_images/logo.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/widgets/card/card_app.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_password.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
 
 import '../controllers/login_controller.dart';
 

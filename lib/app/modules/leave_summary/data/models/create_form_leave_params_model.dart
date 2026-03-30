@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/create_form_leave_params_entity.dart';
 
 class CreateFormLeaveParamsModel extends CreateFormLeaveParamsEntity {
   const CreateFormLeaveParamsModel({

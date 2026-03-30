@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/data_leave_entity.dart';
 
 class DataLeaveModel extends DataLeaveEntity {
   const DataLeaveModel({

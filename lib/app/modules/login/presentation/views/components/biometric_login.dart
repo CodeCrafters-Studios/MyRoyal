@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
 
 class BiometricsLogin extends StatelessWidget {
   const BiometricsLogin({super.key, required this.onTap});

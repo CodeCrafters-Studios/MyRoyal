@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/attendance/presentation/views/attendance_view.dart';
-import 'package:iroyal/app/modules/bottomnavbar/presentation/views/components/custom_bottomnavbar.dart';
-import 'package:iroyal/app/modules/home/presentation/views/home_view.dart';
-import 'package:iroyal/app/modules/settings/presentation/views/settings_view.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/attendance/presentation/views/attendance_view.dart';
+import 'package:MyRoyal/app/modules/bottomnavbar/presentation/views/components/custom_bottomnavbar.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/home_view.dart';
+import 'package:MyRoyal/app/modules/settings/presentation/views/settings_view.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/bottomnavbar_controller.dart';
 

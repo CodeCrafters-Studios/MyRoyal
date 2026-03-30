@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/domain/entities/update_reserved_by_entity.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_reserved_by/domain/entities/update_reserved_by_entity.dart';
 
 class UpdateReservedByModel extends UpdateReservedByEntity {
   UpdateReservedByModel(

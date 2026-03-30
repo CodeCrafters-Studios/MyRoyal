@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/visit/data/datasources/local_data.dart';
-import 'package:iroyal/app/modules/visit/data/repositories/visit_repository_impl.dart';
-import 'package:iroyal/app/modules/visit/domain/usecases/get_locations.dart';
+import 'package:MyRoyal/app/modules/visit/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/modules/visit/data/repositories/visit_repository_impl.dart';
+import 'package:MyRoyal/app/modules/visit/domain/usecases/get_locations.dart';
 
 import '../controllers/visit_controller.dart';
 

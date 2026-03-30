@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_history_model.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/models/tracking_document_list_history_model.dart';
 
 class TrackingDocumentHistory extends Equatable {
   const TrackingDocumentHistory(

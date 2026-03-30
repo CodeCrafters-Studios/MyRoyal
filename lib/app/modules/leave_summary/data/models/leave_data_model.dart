@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/leave_summary/data/models/data_leave_model.dart';
-import 'package:iroyal/app/modules/leave_summary/data/models/year_leave_count_model.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/leave_data_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/data_leave_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/models/year_leave_count_model.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/leave_data_entity.dart';
 
 class LeaveDataModel extends LeaveDataEntity {
   const LeaveDataModel(

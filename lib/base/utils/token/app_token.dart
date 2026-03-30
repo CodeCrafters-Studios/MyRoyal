@@ -1,5 +1,5 @@
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 abstract class AppToken {
   // Future<bool> isValid(String token);

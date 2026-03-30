@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
 
 class ToDoTasksView extends StatelessWidget {
   const ToDoTasksView({super.key, required this.controller});

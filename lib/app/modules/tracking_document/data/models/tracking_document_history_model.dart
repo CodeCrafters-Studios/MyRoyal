@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/tracking_document/data/models/tracking_document_list_history_model.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/models/tracking_document_list_history_model.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
 
 class TrackingDocumentHistoryModel extends TrackingDocumentHistory {
   const TrackingDocumentHistoryModel(

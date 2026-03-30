@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
-import 'package:iroyal/app/modules/profile/presentation/views/components/file_view.dart';
-import 'package:iroyal/app/modules/profile/presentation/views/components/pdf_view.dart';
-import 'package:iroyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/file_view.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/views/components/pdf_view.dart';
+import 'package:MyRoyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:lottie/lottie.dart';
 
 class TabDocumentsView extends StatelessWidget {

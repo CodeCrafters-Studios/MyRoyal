@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/check_password/domain/entities/check_password_entity.dart';
+import 'package:MyRoyal/app/modules/check_password/domain/entities/check_password_entity.dart';
 
 class CheckPasswordModel extends CheckPasswordEntity {
   const CheckPasswordModel(

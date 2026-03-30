@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/profile_data_model.dart';
 
 class Profile extends Equatable {
   const Profile({

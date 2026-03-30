@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:iroyal/app/modules/profile/data/models/download_params_model.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/permission/app_permission.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/download_params_model.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/permission/app_permission.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;

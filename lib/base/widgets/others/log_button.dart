@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 
 class LogButton extends StatelessWidget {
   const LogButton({super.key, required this.color, required this.onTap});

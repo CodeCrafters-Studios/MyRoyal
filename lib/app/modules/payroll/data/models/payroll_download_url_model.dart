@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/payroll/domain/entities/payroll_download_url_entity.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/payroll_download_url_entity.dart';
 
 class PayrollDownloadUrlModel extends PayrollDownloadUrlEntity {
   const PayrollDownloadUrlModel(

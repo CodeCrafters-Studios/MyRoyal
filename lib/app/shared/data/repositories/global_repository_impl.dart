@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_response.dart';
-import 'package:iroyal/app/shared/data/datasources/local_data.dart';
-import 'package:iroyal/app/shared/data/datasources/remote_data.dart';
-import 'package:iroyal/app/shared/domain/repositories/global_repository.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_response.dart';
+import 'package:MyRoyal/app/shared/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/shared/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/shared/domain/repositories/global_repository.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class GlobalRepositoryImpl implements GlobalRepository {
   GlobalRepositoryImpl({required this.localData, required this.remoteData});

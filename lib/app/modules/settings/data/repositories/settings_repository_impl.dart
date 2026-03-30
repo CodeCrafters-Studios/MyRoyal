@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/settings/data/datasources/local_data.dart';
-import 'package:iroyal/app/modules/settings/domain/repositories/settings_repository.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/settings/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/modules/settings/domain/repositories/settings_repository.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
   SettingsRepositoryImpl({required this.localData});

@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_remote_data.dart';
-import 'package:iroyal/app/modules/login/data/models/cache_user_login.dart';
-import 'package:iroyal/app/modules/login/domain/entities/cache_user_login.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_params.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_response.dart';
-import 'package:iroyal/app/modules/login/domain/repositories/login_repository.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/login/data/datasources/login_local_data.dart';
+import 'package:MyRoyal/app/modules/login/data/datasources/login_remote_data.dart';
+import 'package:MyRoyal/app/modules/login/data/models/cache_user_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/cache_user_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_params.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_response.dart';
+import 'package:MyRoyal/app/modules/login/domain/repositories/login_repository.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class LoginRepositoryImpl implements LoginRepository {
   LoginRepositoryImpl({required this.localData, required this.remoteData});

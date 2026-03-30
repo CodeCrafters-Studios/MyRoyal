@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_progress_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_ptk_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_progress_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_ptk_model.dart';
 
 class DetailTrackingDocumentDataEntities extends Equatable {
   final DetailPtkModel detailPtk;

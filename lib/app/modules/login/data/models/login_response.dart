@@ -1,6 +1,6 @@
-import 'package:iroyal/app/modules/login/data/models/login_data.dart';
-import 'package:iroyal/app/modules/login/data/models/token_response.dart';
-import 'package:iroyal/app/modules/login/domain/entities/login_response.dart';
+import 'package:MyRoyal/app/modules/login/data/models/login_data.dart';
+import 'package:MyRoyal/app/modules/login/data/models/token_response.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_response.dart';
 
 class LoginResponseModel extends LoginResponse {
   const LoginResponseModel({

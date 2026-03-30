@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/edit_profile/data/datasources/edit_profile_remote.dart';
-import 'package:iroyal/app/modules/edit_profile/data/model/employee_params_model.dart';
-import 'package:iroyal/app/modules/edit_profile/domain/repositories/edit_profile_repository.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/edit_profile/data/datasources/edit_profile_remote.dart';
+import 'package:MyRoyal/app/modules/edit_profile/data/model/employee_params_model.dart';
+import 'package:MyRoyal/app/modules/edit_profile/domain/repositories/edit_profile_repository.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class EditProfileRepositoryImpl implements EditProfileRepository {
   EditProfileRepositoryImpl({required this.remoteData});

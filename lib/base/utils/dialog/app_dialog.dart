@@ -6,12 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary_outlined.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary_outlined.dart';
+import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../controllers/terms_and_policies_controller.dart';

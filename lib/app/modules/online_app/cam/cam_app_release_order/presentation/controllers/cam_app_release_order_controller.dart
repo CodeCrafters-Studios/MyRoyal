@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/data/models/release_order_model.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/data/models/release_order_params_model.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/data/models/update_release_order_params_model.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/get_release_order_usecase.dart';
-import 'package:iroyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/update_release_order_usecase.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/data/models/release_order_model.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/data/models/release_order_params_model.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/data/models/update_release_order_params_model.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/get_release_order_usecase.dart';
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_release_order/domain/usecases/update_release_order_usecase.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 class CamAppReleaseOrderController extends GetxController {
   CamAppReleaseOrderController({

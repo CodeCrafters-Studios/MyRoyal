@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/login/domain/entities/token_response.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/token_response.dart';
 
 class TokenResponseModel extends TokenResponse {
   const TokenResponseModel({

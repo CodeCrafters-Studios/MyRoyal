@@ -1,6 +1,6 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 class MellotippetFirebaseRemoteConfig extends GetxService {
   final remoteConfig = FirebaseRemoteConfig.instance;

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/create_form_permit_entity.dart';
 
 class CreateFormPermitModel extends CreateFormPermitEntity {
   const CreateFormPermitModel({required super.id, required super.codeNo});

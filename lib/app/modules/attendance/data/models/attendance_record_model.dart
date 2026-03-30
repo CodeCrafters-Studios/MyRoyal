@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/attendance/domain/entities/attendance_record_entity.dart';
+import 'package:MyRoyal/app/modules/attendance/domain/entities/attendance_record_entity.dart';
 
 class AttendanceRecordModel extends AttendanceRecordEntity {
   const AttendanceRecordModel({

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/notifications/data/models/tap_notification_data_model.dart';
+import 'package:MyRoyal/app/modules/notifications/data/models/tap_notification_data_model.dart';
 
 class TapNotificationEntities extends Equatable {
   const TapNotificationEntities(this.code, this.message, this.data);

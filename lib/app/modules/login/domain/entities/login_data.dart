@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/login/data/models/token_response.dart';
+import 'package:MyRoyal/app/modules/login/data/models/token_response.dart';
 
 class LoginDataResponse extends Equatable {
   const LoginDataResponse({required this.token});

@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/webtel/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
-import 'package:iroyal/app/modules/webtel/domain/usecases/get_webtel.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/webtel/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/webtel/data/repositories/webtel_repository_impl.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/usecases/get_webtel.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/webtel_controller.dart';
 

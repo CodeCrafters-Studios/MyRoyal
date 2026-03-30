@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FileView extends StatelessWidget {

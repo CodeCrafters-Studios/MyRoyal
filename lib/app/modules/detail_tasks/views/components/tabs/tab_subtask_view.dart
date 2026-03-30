@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/app/modules/detail_tasks/controllers/detail_tasks_controller.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 
 class TabSubTaskView extends StatelessWidget {
   const TabSubTaskView({super.key, required this.controller});

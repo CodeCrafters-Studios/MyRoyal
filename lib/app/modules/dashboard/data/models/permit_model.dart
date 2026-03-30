@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/permit_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/permit_entity.dart';
 
 class DashboardPermitModel extends DashboardPermitEntity {
   const DashboardPermitModel({required super.count});

@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/payroll/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/payroll/data/repositories/payroll_period_repository_impl.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
-import 'package:iroyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
-import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
-import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
-import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/permission/app_permission.dart';
+import 'package:MyRoyal/app/modules/payroll/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/payroll/data/repositories/payroll_period_repository_impl.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/get_payroll_periode_usecase.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/payroll_data_overview_usecase.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/payroll_download_url_usecase.dart';
+import 'package:MyRoyal/app/modules/profile/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/modules/profile/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/profile/data/repositories/profile_repository_impl.dart';
+import 'package:MyRoyal/app/modules/profile/domain/usecases/download_file.dart';
+import 'package:MyRoyal/app/modules/profile/domain/usecases/get_profile.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/permission/app_permission.dart';
 
 import '../controllers/payroll_controller.dart';
 

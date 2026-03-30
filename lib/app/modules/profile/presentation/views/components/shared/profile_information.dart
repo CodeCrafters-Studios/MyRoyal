@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/modules/profile/presentation/controllers/profile_controller.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/app_divider.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/app/modules/profile/presentation/controllers/profile_controller.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/app_divider.dart';
 
 class ProfileInformation extends StatelessWidget {
   const ProfileInformation({

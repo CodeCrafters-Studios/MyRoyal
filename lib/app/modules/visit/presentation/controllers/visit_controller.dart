@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/visit/domain/entities/locations.dart';
-import 'package:iroyal/app/modules/visit/domain/usecases/get_locations.dart';
+import 'package:MyRoyal/app/modules/visit/domain/entities/locations.dart';
+import 'package:MyRoyal/app/modules/visit/domain/usecases/get_locations.dart';
 
 class VisitController extends GetxController {
   VisitController({

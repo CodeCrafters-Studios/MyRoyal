@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/articles/domain/entities/articles_detail_entity.dart';
+import 'package:MyRoyal/app/modules/articles/domain/entities/articles_detail_entity.dart';
 
 class ArticlesDetailModel extends ArticlesDetailEntity {
   ArticlesDetailModel({

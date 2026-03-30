@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/details.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/status.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/presentation/views/components/tabs/header.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:iroyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/widgets/inkwell_tap.dart';
-import 'package:iroyal/base/widgets/padding.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/presentation/views/components/tabs/details.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/presentation/views/components/tabs/status.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/presentation/views/components/tabs/header.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/app/modules/tracking_document/presentation/views/components/status_approval.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
 

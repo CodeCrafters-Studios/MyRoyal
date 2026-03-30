@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/profile/domain/entities/personal.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/personal.dart';
 
 class PersonalModel extends Personal {
   PersonalModel({

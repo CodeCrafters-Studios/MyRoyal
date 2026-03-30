@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/repositories/detail_tracking_document_repositories_impl.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/action_tracking_document.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/domain/usecases/get_detail_tracking_document.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/repositories/detail_tracking_document_repositories_impl.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/usecases/action_tracking_document.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/usecases/get_detail_tracking_document.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 import '../controllers/detail_tracking_document_controller.dart';
 

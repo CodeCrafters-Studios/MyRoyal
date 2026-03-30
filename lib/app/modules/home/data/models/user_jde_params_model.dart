@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/home/domain/entities/user_jde_params_entity.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/user_jde_params_entity.dart';
 
 class UserJdeParamsModel extends UserJdeParamsEntity {
   UserJdeParamsModel({required super.username, required super.company});

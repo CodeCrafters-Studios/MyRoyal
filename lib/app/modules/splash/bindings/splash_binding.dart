@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:iroyal/base/utils/get_device_info.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/utils/get_device_info.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 import '../controllers/splash_controller.dart';
 

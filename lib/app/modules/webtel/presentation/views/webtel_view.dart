@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/webtel/presentation/views/components/card_branch.dart';
-import 'package:iroyal/app/modules/webtel/presentation/views/components/branch_page.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/webtel/presentation/views/components/card_branch.dart';
+import 'package:MyRoyal/app/modules/webtel/presentation/views/components/branch_page.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controllers/webtel_controller.dart';

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/my_teams/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
-import 'package:iroyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/repositories/my_teams_repository_impl.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 
 import '../controllers/my_teams_controller.dart';
 

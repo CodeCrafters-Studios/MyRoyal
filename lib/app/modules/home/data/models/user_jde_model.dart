@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/home/domain/entities/user_jde_entity.dart';
+import 'package:MyRoyal/app/modules/home/domain/entities/user_jde_entity.dart';
 
 class UserJdeModel extends UserJdeEntity {
   UserJdeModel(

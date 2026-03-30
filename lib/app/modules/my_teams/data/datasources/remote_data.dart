@@ -1,7 +1,7 @@
-import 'package:iroyal/app/modules/my_teams/data/models/my_teams_model.dart';
-import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/services/http_service.dart';
+import 'package:MyRoyal/app/modules/my_teams/data/models/my_teams_model.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/entities/my_teams.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
 
 abstract class MyTeamsRemoteDataSources {
   Future<MyTeams> getMyTeams(String id);

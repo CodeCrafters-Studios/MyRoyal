@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/leave_balance_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/leave_summary_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/ptk_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_balance_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_summary_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/permit_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/ptk_model.dart';
 
 class DashboardDataEntity extends Equatable {
   const DashboardDataEntity({

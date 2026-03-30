@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/my_teams/domain/entities/my_teams_job.dart';
+import 'package:MyRoyal/app/modules/my_teams/domain/entities/my_teams_job.dart';
 
 class MyTeamsJobModel extends MyTeamsJob {
   const MyTeamsJobModel({

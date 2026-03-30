@@ -1,11 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/profile/data/datasources/local_data.dart';
-import 'package:iroyal/app/modules/profile/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/download_params.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
-import 'package:iroyal/app/modules/profile/domain/repositories/profile_repository.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/profile/data/datasources/local_data.dart';
+import 'package:MyRoyal/app/modules/profile/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/download_params.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/profile.dart';
+import 'package:MyRoyal/app/modules/profile/domain/repositories/profile_repository.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class ProfileRepositoryImpl extends ProfileRepository {
   ProfileRepositoryImpl({

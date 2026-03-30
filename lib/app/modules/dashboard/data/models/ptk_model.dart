@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/dashboard/domain/entities/ptk_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/ptk_entity.dart';
 
 class PtkModel extends PtkEntity {
   const PtkModel(super.open, super.closed, super.total);

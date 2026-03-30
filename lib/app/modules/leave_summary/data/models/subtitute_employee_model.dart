@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/subtitute_employee_entity.dart';
 
 class SubtituteEmployeeModel extends SubtituteEmployeeEntity {
   const SubtituteEmployeeModel(

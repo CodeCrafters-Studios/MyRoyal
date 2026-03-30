@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
-import 'package:iroyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
-import 'package:iroyal/app/modules/profile/data/models/personal.dart';
-import 'package:iroyal/app/modules/profile/data/models/professional.dart';
-import 'package:iroyal/app/modules/profile/data/models/profile_data_model.dart';
-import 'package:iroyal/app/modules/profile/domain/entities/profile.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/download_file.dart';
-import 'package:iroyal/app/modules/profile/domain/usecases/get_profile.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/widgets/others/ticker_provider.dart';
+import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/personal.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/professional.dart';
+import 'package:MyRoyal/app/modules/profile/data/models/profile_data_model.dart';
+import 'package:MyRoyal/app/modules/profile/domain/entities/profile.dart';
+import 'package:MyRoyal/app/modules/profile/domain/usecases/download_file.dart';
+import 'package:MyRoyal/app/modules/profile/domain/usecases/get_profile.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/widgets/others/ticker_provider.dart';
 
 class ProfileController extends GetxController {
   ProfileController({

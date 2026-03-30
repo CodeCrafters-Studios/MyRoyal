@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/notifications/domain/entities/tap_notification_data_entities.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/entities/tap_notification_data_entities.dart';
 
 class TapNotificationDataModel extends TapNotificationDataEntities {
   const TapNotificationDataModel(super.id, super.recipientType, super.route);

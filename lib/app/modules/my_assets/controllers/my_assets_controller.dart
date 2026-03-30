@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:signature/signature.dart';
 
 class MyAssetsController extends GetxController {

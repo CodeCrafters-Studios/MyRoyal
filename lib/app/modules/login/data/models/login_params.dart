@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/login/domain/entities/login_params.dart';
+import 'package:MyRoyal/app/modules/login/domain/entities/login_params.dart';
 
 class LoginParamsModel extends LoginParams {
   const LoginParamsModel({

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class AppDeviceId {
@@ -10,7 +10,7 @@ class AppDeviceId {
   static Future<String> getDeviceId() async {
     String? deviceId = await appStorage.read(_deviceIdKey);
 
-    if (deviceId == null || deviceId.isEmpty) {
+    if (deviceId!.isEmpty) {
       deviceId = _uuid.v4();
       await appStorage.write(_deviceIdKey, deviceId);
     }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/base/config/app_config.dart';
-import 'package:iroyal/base/design/colors.dart';
+import 'package:MyRoyal/base/config/app_config.dart';
+import 'package:MyRoyal/base/design/colors.dart';
 
 ThemeData appTheme(BuildContext context) {
   return ThemeData(

@@ -1,8 +1,8 @@
-import 'package:iroyal/app/modules/attendance/data/models/attendance_location_model.dart';
-import 'package:iroyal/app/modules/attendance/data/models/attendance_record_model.dart';
-import 'package:iroyal/app/modules/attendance/data/models/attendance_today_model.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/services/http_service.dart';
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_location_model.dart';
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_record_model.dart';
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_today_model.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
 
 abstract class AttendanceRemoteDataSource {
   Future<AttendanceTodayModel> getAttendanceToday();

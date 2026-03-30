@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/leave_summary/domain/entities/permit_type_entity.dart';
-import 'package:iroyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/widgets/buttons/button_primary.dart';
-import 'package:iroyal/base/widgets/dropdown/dropdown_primary.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/textfield/input_primary.dart';
+import 'package:MyRoyal/app/modules/leave_summary/domain/entities/permit_type_entity.dart';
+import 'package:MyRoyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:MyRoyal/base/widgets/dropdown/dropdown_primary.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
 
 class CreatePermitRequestView extends StatelessWidget {
   const CreatePermitRequestView({super.key, required this.controller});

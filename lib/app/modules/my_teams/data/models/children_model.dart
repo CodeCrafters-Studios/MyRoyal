@@ -1,5 +1,5 @@
-// import 'package:iroyal/app/modules/my_teams/data/models/my_teams_job_model.dart';
-// import 'package:iroyal/app/modules/my_teams/domain/entities/children.dart';
+// import 'package:MyRoyal/app/modules/my_teams/data/models/my_teams_job_model.dart';
+// import 'package:MyRoyal/app/modules/my_teams/domain/entities/children.dart';
 
 // class ChildrenModel extends Children {
 //   const ChildrenModel({

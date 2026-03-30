@@ -7,14 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/bindings/initial_binding.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/config/environment_config.dart';
-import 'package:iroyal/base/design/styles.dart';
-import 'package:iroyal/base/initialization/firebase_messaging_callbacks.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/widgets/others/overlay_log_button.dart';
+import 'package:MyRoyal/app/bindings/initial_binding.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/config/environment_config.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/initialization/firebase_messaging_callbacks.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/widgets/others/overlay_log_button.dart';
 import 'package:open_filex/open_filex.dart';
 
 class BaseApp extends StatelessWidget {

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
-import 'package:iroyal/app/modules/dashboard/presentation/views/widgets/custom_detail_card.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/others/empty_data_widget.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/controllers/dashboard_controller.dart';
+import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/custom_detail_card.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/others/empty_data_widget.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 class DetailLateCheckInView extends GetView<DashboardController> {
   const DetailLateCheckInView({super.key});

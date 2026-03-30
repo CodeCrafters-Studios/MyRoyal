@@ -70,6 +70,50 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830784728566:android:47c298d97d4b5504bfebd7",
+        "android_client_info": {
+          "package_name": "com.myroyal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOfroxveXhJ1UIV_g7QutTrKXFZLNxXSo"
+        },
+        {
+          "current_key": "AIzaSyCTXlGpvnUgLFDv3FJDFnaDFHSWzBNeTvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830784728566:android:830184cd6236b403bfebd7",
+        "android_client_info": {
+          "package_name": "com.myroyal.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOfroxveXhJ1UIV_g7QutTrKXFZLNxXSo"
+        },
+        {
+          "current_key": "AIzaSyCTXlGpvnUgLFDv3FJDFnaDFHSWzBNeTvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

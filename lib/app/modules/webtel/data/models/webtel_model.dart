@@ -1,5 +1,5 @@
-import 'package:iroyal/app/modules/webtel/data/models/webtel_data_model.dart';
-import 'package:iroyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/app/modules/webtel/data/models/webtel_data_model.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
 
 class WebtelModel extends Webtel {
   const WebtelModel(

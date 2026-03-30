@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:iroyal/app/modules/tracking_document/data/datasources/remote_data.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
-import 'package:iroyal/app/modules/tracking_document/domain/repositories/tracking_document_repositories.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
+import 'package:MyRoyal/app/modules/tracking_document/data/datasources/remote_data.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_history.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/entities/tracking_document_on_progress.dart';
+import 'package:MyRoyal/app/modules/tracking_document/domain/repositories/tracking_document_repositories.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
 
 class TrackingDocumentRepositoriesImpl extends TrackingDocumentRepository {
   TrackingDocumentRepositoriesImpl({required this.remoteData});

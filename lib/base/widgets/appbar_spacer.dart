@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:iroyal/base/config/app_config.dart';
+import 'package:MyRoyal/base/config/app_config.dart';
 
 class AppbarSpacer extends StatelessWidget {
   const AppbarSpacer({

@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/attendance/domain/entities/attendance_location_entity.dart';
+import 'package:MyRoyal/app/modules/attendance/domain/entities/attendance_location_entity.dart';
 
 class AttendanceLocationModel extends AttendanceLocationEntity {
   AttendanceLocationModel({

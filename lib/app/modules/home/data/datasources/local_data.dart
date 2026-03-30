@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:iroyal/app/modules/home/data/models/user_model.dart';
-import 'package:iroyal/app/modules/home/data/models/user_data_model.dart';
-import 'package:iroyal/base/config/app_constants.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
-import 'package:iroyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/app/modules/home/data/models/user_model.dart';
+import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
+import 'package:MyRoyal/base/config/app_constants.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 abstract class HomeLocalData {
   Future<void> cacheUserResponse(UserModel userResponse);

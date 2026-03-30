@@ -1,8 +1,8 @@
-import 'package:iroyal/app/modules/dashboard/data/models/leave_balance_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/leave_summary_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/ptk_model.dart';
-import 'package:iroyal/app/modules/dashboard/domain/entities/dashboard_data_entity.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_balance_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_summary_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/permit_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/ptk_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/entities/dashboard_data_entity.dart';
 
 class DashboardDataModel extends DashboardDataEntity {
   const DashboardDataModel({

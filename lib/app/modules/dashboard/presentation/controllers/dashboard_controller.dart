@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/dashboard_data_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/dashboard_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/detail_late_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/detail_permit_request_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/detail_special_leave_request_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/leave_balance_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/leave_summary_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/permit_model.dart';
-import 'package:iroyal/app/modules/dashboard/data/models/ptk_model.dart';
-import 'package:iroyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
-import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
-import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
-import 'package:iroyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/dashboard_data_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/dashboard_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/detail_late_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/detail_permit_request_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/detail_special_leave_request_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_balance_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/leave_summary_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/permit_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/models/ptk_model.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_permit_request_usecase.dart';
+import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_special_leave_request_usecase.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 class DashboardController extends GetxController {
   DashboardController({

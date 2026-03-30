@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
-import 'package:iroyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
-import 'package:iroyal/app/routes/app_pages.dart';
-import 'package:iroyal/base/design/styles.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/controllers/tasks_controller.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/tasks_card.dart';
+import 'package:MyRoyal/app/modules/tasks/presentation/views/components/shared/tasks_view_base.dart';
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/design/styles.dart';
 
 class CancelTasksView extends StatelessWidget {
   const CancelTasksView({super.key, required this.controller});

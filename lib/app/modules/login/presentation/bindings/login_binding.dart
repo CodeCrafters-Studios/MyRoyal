@@ -1,18 +1,18 @@
 // ignore_for_file: unused_import
 
 import 'package:get/get.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_local_data.dart';
-import 'package:iroyal/app/modules/login/data/datasources/login_remote_data.dart';
-import 'package:iroyal/app/modules/login/data/repositories/login_repository_impl.dart';
-import 'package:iroyal/app/modules/login/domain/usecases/auth_biometrics_login.dart';
-import 'package:iroyal/app/modules/login/domain/usecases/get_cache_user_login.dart';
-import 'package:iroyal/app/modules/login/domain/usecases/get_login_param.dart';
-import 'package:iroyal/app/modules/login/domain/usecases/login_app.dart';
-import 'package:iroyal/base/initialization/firebase_remote_config.dart';
-import 'package:iroyal/base/utils/biometrics.dart';
-import 'package:iroyal/base/utils/dialog/app_dialog.dart';
-import 'package:iroyal/base/utils/get_device_info.dart';
-import 'package:iroyal/base/utils/location/app_location.dart';
+import 'package:MyRoyal/app/modules/login/data/datasources/login_local_data.dart';
+import 'package:MyRoyal/app/modules/login/data/datasources/login_remote_data.dart';
+import 'package:MyRoyal/app/modules/login/data/repositories/login_repository_impl.dart';
+import 'package:MyRoyal/app/modules/login/domain/usecases/auth_biometrics_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/usecases/get_cache_user_login.dart';
+import 'package:MyRoyal/app/modules/login/domain/usecases/get_login_param.dart';
+import 'package:MyRoyal/app/modules/login/domain/usecases/login_app.dart';
+import 'package:MyRoyal/base/initialization/firebase_remote_config.dart';
+import 'package:MyRoyal/base/utils/biometrics.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/get_device_info.dart';
+import 'package:MyRoyal/base/utils/location/app_location.dart';
 
 import '../controllers/login_controller.dart';
 

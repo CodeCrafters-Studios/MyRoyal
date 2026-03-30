@@ -1,4 +1,4 @@
-import 'package:iroyal/app/modules/online_app/cam/cam_app_reserved_by/domain/entities/reserved_by_entity.dart'; // Ensure this path is correct
+import 'package:MyRoyal/app/modules/online_app/cam/cam_app_reserved_by/domain/entities/reserved_by_entity.dart'; // Ensure this path is correct
 
 class ReservedByModel extends ReservedByEntity {
   const ReservedByModel({

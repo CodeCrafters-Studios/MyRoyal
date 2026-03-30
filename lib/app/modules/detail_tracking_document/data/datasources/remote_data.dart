@@ -1,11 +1,11 @@
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/action_tracking_document_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_model.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/action_tracking_document_entity.dart';
-import 'package:iroyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_entity.dart';
-import 'package:iroyal/base/errors/exception.dart';
-import 'package:iroyal/base/errors/failures.dart';
-import 'package:iroyal/base/services/http_service.dart';
-import 'package:iroyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/action_tracking_document_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/data/models/detail_tracking_document_model.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/action_tracking_document_entity.dart';
+import 'package:MyRoyal/app/modules/detail_tracking_document/domain/entities/detail_tracking_document_entity.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/errors/failures.dart';
+import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class DetailTrackingDocumentRemoteDataSources {
   Future<DetailTrackingDocumentEntity> getDetailTrackingDocument(params);

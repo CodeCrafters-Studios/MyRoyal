@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:iroyal/app/modules/home/presentation/views/components/shimmer_text.dart';
+import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 
-import 'package:iroyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
-import 'package:iroyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
-import 'package:iroyal/base/config/app_config.dart';
-import 'package:iroyal/base/design/colors.dart';
-import 'package:iroyal/base/widgets/appbar_spacer.dart';
-import 'package:iroyal/base/widgets/padding.dart';
-import 'package:iroyal/base/widgets/page_base.dart';
+import 'package:MyRoyal/app/modules/notifications/presentation/views/components/no_notifications_view.dart';
+import 'package:MyRoyal/app/modules/notifications/presentation/views/components/notifications_card.dart';
+import 'package:MyRoyal/base/config/app_config.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
+import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/notifications_controller.dart';
 
