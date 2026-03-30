@@ -175,7 +175,6 @@ class LoginController extends GetxController {
           'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
       onPressLater: Get.back,
       onPressUpdate: () async {
-        await appStorage.write('new-update', 'true');
         Get.back();
         String url = "https://play.google.com/store/apps/details?id=com.iroyal";
         if (await canLaunchUrl(Uri.parse(url))) {

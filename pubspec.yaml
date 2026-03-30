@@ -1,5 +1,5 @@
 name: iroyal
-version: 1.5.0+55
+version: 1.5.1+56
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -33,6 +33,7 @@ dependencies:
   flutter_animate: ^4.5.0
   flutter_cached_pdfview: ^0.4.2
   flutter_downloader: ^1.11.8
+  flutter_image_compress: ^2.4.0
   flutter_launcher_icons: ^0.14.1
   flutter_local_notifications: ^19.4.1
   flutter_map: ^8.2.2

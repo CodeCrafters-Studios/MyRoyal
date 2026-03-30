@@ -42,4 +42,5 @@ class MellotippetFirebaseRemoteConfig extends GetxService {
 
   bool getForceUpdateVersion() => remoteConfig.getBool('forceUpdateVersion');
   bool showEvent() => remoteConfig.getBool('showEvent');
+  bool newUpdate() => remoteConfig.getBool('newUpdate');
 }

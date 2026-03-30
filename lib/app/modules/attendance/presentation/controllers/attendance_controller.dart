@@ -521,7 +521,6 @@ class AttendanceController extends GetxController {
 
     final serverTimeStr = attendanceTodayRes.value.serverTime;
 
-    /// ✅ guard
     if (serverTimeStr == null || serverTimeStr.isEmpty) {
       return;
     }

@@ -203,12 +203,10 @@ class HomeController extends GetxController {
     final recommendedMinVersion = _getExtendedVersionNumber(
         firebaseRemoteConfig.getRecommendedMinimumVersion());
 
-    // Get new update popup
-    newUpdate = await appStorage.read('new-update');
+    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
+    newUpdate = firebaseRemoteConfig.newUpdate();
 
     AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
-
-    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
 
     // Compare the versions and display a dialog if the app version is lower than
     // the required or recommended version
@@ -240,7 +238,6 @@ class HomeController extends GetxController {
           'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
       onPressLater: Get.back,
       onPressUpdate: () async {
-        await appStorage.write('new-update', 'true');
         Get.back();
         String url = "https://play.google.com/store/apps/details?id=com.iroyal";
         if (await canLaunchUrl(Uri.parse(url))) {

@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:intl/intl.dart';
@@ -34,16 +36,19 @@ class ValidationSelfieController extends GetxController {
 
   bool _captured = false;
 
-  bool _isCameraActive = true;
+  RxBool isCameraActive = true.obs;
   DateTime? _lastRun;
   RxBool isFacingCamera = false.obs;
   RxBool isLoading = false.obs;
   String status = '';
+  int _faceMissCount = 0;
+  int _faceHitCount = 0;
 
   final cameras = RxList<CameraDescription>();
   final cameraController = Rxn<CameraController>();
   final takenPhoto = Rxn<File>();
   final currentPosition = Rxn<LatLng>();
+  final debugFaceRect = Rxn<Rect>();
 
   Rx<AttendanceTodayModel> attendanceTodayRes =
       AttendanceTodayModel.empty().obs;
@@ -64,22 +69,39 @@ class ValidationSelfieController extends GetxController {
 
   @override
   void onClose() {
-    _isCameraActive = false;
+    isCameraActive.value = false;
     cameraController.value?.dispose();
     _faceDetector.close();
     super.onClose();
   }
 
   Future<String> convertImageToBase64(File imageFile) async {
-    final bytes = await imageFile.readAsBytes();
+    final filePath = imageFile.absolute.path;
+    final outPath = "${filePath}_compressed.jpg";
+
+    final XFile? compressedXFile =
+        await FlutterImageCompress.compressAndGetFile(
+      filePath,
+      outPath,
+      minWidth: 480,
+      minHeight: 640,
+      quality: 75,
+      format: CompressFormat.jpeg,
+    );
+
+    if (compressedXFile == null) return "";
+
+    final bytes = await compressedXFile.readAsBytes();
 
     final sizeKB = bytes.length / 1024;
-    print("IMAGE ORIGINAL SIZE: ${sizeKB.toStringAsFixed(2)} KB");
+    print("COMPRESSED IMAGE SIZE: ${sizeKB.toStringAsFixed(2)} KB");
 
     final base64Image = base64Encode(bytes);
 
     final base64SizeKB = base64Image.length / 1024;
-    print("BASE64 SIZE: ${base64SizeKB.toStringAsFixed(2)} KB");
+    print("BASE64 REQUEST SIZE: ${base64SizeKB.toStringAsFixed(2)} KB");
+
+    File(outPath).delete();
 
     return base64Image;
   }
@@ -111,12 +133,18 @@ class ValidationSelfieController extends GetxController {
         ResolutionPreset.medium,
         enableAudio: false,
         imageFormatGroup: Platform.isAndroid
-            ? ImageFormatGroup.yuv420
+            ? ImageFormatGroup.nv21
             : ImageFormatGroup.bgra8888,
       );
 
       cameraController.value = controller;
 
+      AppUtils.logApp(
+          'SENSOR orientation: ${cameraController.value!.description.sensorOrientation}');
+      AppUtils.logApp(
+          'LENS direction: ${cameraController.value!.description.lensDirection}');
+      AppUtils.logApp(
+          'DEVICE orientation: ${cameraController.value!.value.deviceOrientation}');
       await controller.initialize();
 
       cameraController.refresh();
@@ -133,21 +161,21 @@ class ValidationSelfieController extends GetxController {
   }
 
   Future<void> _processCameraImage(CameraImage image) async {
-    if (!_isCameraActive) return;
-    if (_captured) return;
-    if (_isProcessing) return;
-    if (cameraController.value == null) return;
+    if (!isCameraActive.value || _captured || _isProcessing) return;
+
     if (_lastRun != null &&
         DateTime.now().difference(_lastRun!) <
-            const Duration(milliseconds: 300)) {
-      return;
-    }
-
-    if (!cameraController.value!.value.isStreamingImages) return;
+            const Duration(milliseconds: 200)) return;
 
     _isProcessing = true;
 
     try {
+      final inputFormat = Platform.isAndroid
+          ? InputImageFormat.nv21
+          : InputImageFormat.bgra8888;
+
+      final rotation = _getInputImageRotation();
+
       final WriteBuffer allBytes = WriteBuffer();
       for (Plane plane in image.planes) {
         allBytes.putUint8List(plane.bytes);
@@ -159,8 +187,8 @@ class ValidationSelfieController extends GetxController {
         bytes: bytes,
         metadata: InputImageMetadata(
           size: Size(image.width.toDouble(), image.height.toDouble()),
-          rotation: InputImageRotation.rotation0deg,
-          format: InputImageFormat.nv21,
+          rotation: rotation,
+          format: inputFormat,
           bytesPerRow: image.planes.first.bytesPerRow,
         ),
       );
@@ -168,20 +196,42 @@ class ValidationSelfieController extends GetxController {
       final faces = await _faceDetector.processImage(inputImage);
 
       if (faces.isEmpty) {
-        isFaceDetected.value = false;
+        _faceMissCount++;
+        _faceHitCount = 0;
+
+        if (_faceMissCount > 5) {
+          isFaceDetected.value = false;
+        }
         return;
       }
 
-      if (faces.length > 1) return;
-
       final face = faces.first;
-      if (face.boundingBox.width < 200) return;
 
-      isFaceDetected.value = true;
+      final isInside = _isFaceInsideFrame(
+        rotation: rotation,
+        faceRect: face.boundingBox,
+        imageSize: Size(image.width.toDouble(), image.height.toDouble()),
+      );
 
-      await Future.delayed(Duration(milliseconds: 400));
+      if (isInside) {
+        _faceHitCount++;
+        _faceMissCount = 0;
 
-      await _autoCapture();
+        if (_faceHitCount > 2) {
+          isFaceDetected.value = true;
+        }
+
+        if (_faceHitCount > 5 && !_captured) {
+          _captured = true;
+          _autoCapture();
+        }
+      } else {
+        _faceMissCount++;
+
+        if (_faceMissCount > 3) {
+          isFaceDetected.value = false;
+        }
+      }
     } catch (e) {
       AppUtils.logApp('ERROR LIVENESS $e');
     } finally {
@@ -190,10 +240,79 @@ class ValidationSelfieController extends GetxController {
     }
   }
 
+  InputImageRotation _getInputImageRotation() {
+    final cam = cameraController.value;
+    if (cam == null) return InputImageRotation.rotation90deg;
+
+    final sensorOrientation = cam.description.sensorOrientation;
+
+    if (Platform.isIOS) {
+      return InputImageRotation.rotation0deg;
+    }
+
+    switch (sensorOrientation) {
+      case 0:
+        return InputImageRotation.rotation0deg;
+      case 90:
+        return InputImageRotation.rotation90deg;
+      case 180:
+        return InputImageRotation.rotation180deg;
+      case 270:
+        return InputImageRotation.rotation270deg;
+      default:
+        return InputImageRotation.rotation90deg;
+    }
+  }
+
+  bool _isFaceInsideFrame({
+    required Rect faceRect,
+    required Size imageSize,
+    required InputImageRotation rotation,
+  }) {
+    final screenW = Get.width;
+    final screenH = Get.height;
+
+    double left = faceRect.left / imageSize.width;
+    double top = faceRect.top / imageSize.height;
+    double right = faceRect.right / imageSize.width;
+    double bottom = faceRect.bottom / imageSize.height;
+
+    double nx = (left + right) / 2;
+    double ny = (top + bottom) / 2;
+
+    nx = 1 - nx;
+
+    final cam = cameraController.value!;
+    final previewSize = cam.value.previewSize!;
+    final previewW = previewSize.height;
+    final previewH = previewSize.width;
+
+    final scale = math.max(screenW / previewW, screenH / previewH);
+    final displayW = previewW * scale;
+    final displayH = previewH * scale;
+    final offsetX = (screenW - displayW) / 2;
+    final offsetY = (screenH - displayH) / 2;
+
+    final px = nx * displayW + offsetX;
+    final py = ny * displayH + offsetY;
+
+    debugFaceRect.value =
+        Rect.fromCenter(center: Offset(px, py), width: 10, height: 10);
+
+    final ovalFrame = Rect.fromCenter(
+      center: Offset(screenW / 2, screenH * 0.45),
+      width: screenW * 0.60,
+      height: screenH * 0.56,
+    );
+
+    return ovalFrame.inflate(30).contains(Offset(px, py));
+  }
+
   Future<void> _autoCapture() async {
-    _isCameraActive = false;
+    isCameraActive.value = false;
 
     final cam = cameraController.value;
+
     if (cam == null) return;
 
     if (cam.value.isStreamingImages) {
@@ -205,8 +324,6 @@ class ValidationSelfieController extends GetxController {
     final photo = await cam.takePicture();
     takenPhoto.value = File(photo.path);
 
-    await Future.delayed(const Duration(milliseconds: 700));
-
     await _disposeCamera();
 
     recordAttendance(status);
@@ -214,12 +331,16 @@ class ValidationSelfieController extends GetxController {
 
   Future<void> _disposeCamera() async {
     try {
+      isCameraActive.value = false;
+
       final cam = cameraController.value;
       if (cam == null) return;
 
       if (cam.value.isStreamingImages) {
         await cam.stopImageStream();
       }
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       await cam.dispose();
       cameraController.value = null;
@@ -261,7 +382,9 @@ class ValidationSelfieController extends GetxController {
 
     result.fold(
       (l) {
-        AppDialogImpl().showErrorSnackBar(description: "Check-in gagal");
+        AppDialogImpl().showErrorSnackBar(
+            description:
+                status == 'checked_in' ? "Checkin gagal" : "Checkout gagal");
         isLoading.value = false;
       },
       (r) async {
