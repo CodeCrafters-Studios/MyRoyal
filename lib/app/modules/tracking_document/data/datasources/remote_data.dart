@@ -25,7 +25,6 @@ class TrackingDocumentRemoteDataSourcesImpl
         withToken: true,
         endpoint: 'ptk/allPtkOnProgress',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');
@@ -58,7 +57,6 @@ class TrackingDocumentRemoteDataSourcesImpl
         withToken: true,
         endpoint: 'ptk/allPtkComplete',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

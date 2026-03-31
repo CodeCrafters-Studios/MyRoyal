@@ -26,5 +26,5 @@ class AppConfig {
   static set fontFamily(String v) {}
 
   static String get fileName =>
-      'I-ROYAL-${DateFormat('ddMMyyyyHHmmss').format(DateTime.now())}';
+      'MY-ROYAL-${DateFormat('ddMMyyyyHHmmss').format(DateTime.now())}';
 }

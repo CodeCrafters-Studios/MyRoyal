@@ -2,6 +2,7 @@ import 'package:MyRoyal/app/modules/attendance/domain/entities/attendance_locati
 
 class AttendanceLocationModel extends AttendanceLocationEntity {
   AttendanceLocationModel({
+    required super.locationID,
     required super.fullName,
     required super.location,
     required super.typeArea,
@@ -10,6 +11,7 @@ class AttendanceLocationModel extends AttendanceLocationEntity {
   });
 
   factory AttendanceLocationModel.empty() => AttendanceLocationModel(
+        locationID: 0,
         fullName: '',
         location: '',
         typeArea: '',
@@ -23,6 +25,7 @@ class AttendanceLocationModel extends AttendanceLocationEntity {
 
   factory AttendanceLocationModel.fromJson(Map<String, dynamic> json) =>
       AttendanceLocationModel(
+        locationID: json["location_id"],
         fullName: json["full_name"],
         location: json["location"],
         typeArea: json["type_area"],
@@ -40,6 +43,7 @@ class AttendanceLocationModel extends AttendanceLocationEntity {
       );
 
   Map<String, dynamic> toJson() => {
+        "location_id": locationID,
         "full_name": fullName,
         "location": location,
         "type_area": typeArea,

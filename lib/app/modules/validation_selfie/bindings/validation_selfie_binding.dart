@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:MyRoyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
+import 'package:MyRoyal/app/modules/attendance/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/attendance/data/repositories/attendance_repository_impl.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_location_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';

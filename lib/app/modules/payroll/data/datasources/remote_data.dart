@@ -24,7 +24,6 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
         withToken: true,
         endpoint: 'payroll/getActivePayroll',
         method: Method.GET,
-        showPopUp: true,
       );
       final response = PayrollPeriodModel.fromJson(r);
       return response;
@@ -43,7 +42,7 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
   Future<void> payrollDownloadUrl(Map<String, dynamic> params) async {
     AppUtils.logApp('PARAMS $params');
     try {
-      await httpService.downloadFilePost(
+      await httpService.download(
         endpoint: 'payroll/downloadSlip',
         fileName: '${params["filename"]}.pdf',
         body: params,
@@ -67,7 +66,6 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
         withToken: true,
         endpoint: 'payroll/viewPayroll',
         params: params,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

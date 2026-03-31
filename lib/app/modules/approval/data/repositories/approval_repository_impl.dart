@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:MyRoyal/app/modules/approval/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/approval/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/approval/data/models/approval_model.dart';
 import 'package:MyRoyal/app/modules/approval/domain/repositories/approval_repository.dart';
 import 'package:MyRoyal/base/errors/failures.dart';

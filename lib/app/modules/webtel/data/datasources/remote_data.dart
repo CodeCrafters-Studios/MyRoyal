@@ -20,7 +20,6 @@ class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
         withToken: true,
         endpoint: 'webtel/getAll',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

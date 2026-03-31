@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class AttendanceLocationEntity extends Equatable {
+  final int locationID;
   final String fullName;
   final String location;
   final String typeArea;
@@ -8,6 +9,7 @@ class AttendanceLocationEntity extends Equatable {
   final Stkamurd stkamurd;
 
   AttendanceLocationEntity({
+    required this.locationID,
     required this.fullName,
     required this.location,
     required this.typeArea,
@@ -16,7 +18,8 @@ class AttendanceLocationEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [fullName, location, typeArea, polygon, stkamurd];
+  List<Object?> get props =>
+      [locationID, fullName, location, typeArea, polygon, stkamurd];
 }
 
 class Stkamurd {

@@ -26,7 +26,6 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         withToken: true,
         endpoint: 'dashboard/index',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');
@@ -59,7 +58,6 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         withToken: true,
         endpoint: 'dashboard/getData',
         method: Method.GET,
-        showPopUp: true,
         params: {"type": "specialLeave"},
       );
       if (r == null) {
@@ -93,7 +91,6 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         withToken: true,
         endpoint: 'dashboard/getData',
         method: Method.GET,
-        showPopUp: true,
         params: {"type": "lateAttendance"},
       );
       if (r == null) {
@@ -127,7 +124,6 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
         withToken: true,
         endpoint: 'dashboard/getData',
         method: Method.GET,
-        showPopUp: true,
         params: {"type": "permitRequest"},
       );
       if (r == null) {

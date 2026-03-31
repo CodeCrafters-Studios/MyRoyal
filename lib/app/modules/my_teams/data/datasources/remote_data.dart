@@ -18,7 +18,6 @@ class MyTeamsRemoteDataSourcesImpl extends MyTeamsRemoteDataSources {
         withToken: true,
         endpoint: '/api/v1/employees/$id/children',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

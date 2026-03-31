@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/leave_summary/data/models/leave_model.dart';
 import 'package:MyRoyal/app/modules/leave_summary/data/models/permit_model.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/entities/action_form_leave_entity.dart';

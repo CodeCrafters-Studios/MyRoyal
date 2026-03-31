@@ -21,7 +21,6 @@ class ReservedByRemoteDatasoureceImpl implements ReservedByRemoteDatasource {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'trackproduct/getDataReserved',
-        showPopUp: true,
         params: params,
       );
       final response = ReservedByModel.fromJson(r);
@@ -43,7 +42,6 @@ class ReservedByRemoteDatasoureceImpl implements ReservedByRemoteDatasource {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'trackproduct/updateReservedBy',
-        showPopUp: true,
         params: params,
       );
       final response = UpdateReservedByModel.fromJson(r);

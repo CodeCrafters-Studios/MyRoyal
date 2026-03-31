@@ -2,24 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/Get.dart' as getx;
-import 'package:get/get_core/src/get_main.dart';
-import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/config/app_config.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
-import 'package:MyRoyal/base/data/app_encryption.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/initialization/firebase_messaging_callbacks.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
-import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:MyRoyal/base/utils/get_device_info.dart';
 import 'package:MyRoyal/base/utils/network/network_info.dart';
-import 'package:MyRoyal/base/utils/permission/app_permission.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,69 +23,71 @@ import 'package:path/path.dart' as path;
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
+enum RequestType {
+  json,
+  download,
+  multipart,
+}
+
 class HttpService extends getx.GetxService {
+  final Dio dio;
+  final DioRequestInspector inspector;
+  final AppStorage appStorage;
+  final DeviceInfo deviceInfo;
+  final NetworkInfo networkInfo;
+  final Connectivity connectivity;
+  final getx.RxString connectionStatus = ''.obs;
+
   HttpService({
     required this.dio,
     required this.inspector,
     required this.appStorage,
-    required this.networkInfo,
-    required this.appEncrypt,
-    required this.connectivity,
     required this.deviceInfo,
-    required this.appPermission,
+    required this.networkInfo,
+    required this.connectivity,
   });
-
-  final Dio dio;
-  final DioRequestInspector inspector;
-  final AppStorage appStorage;
-  final NetworkInfo networkInfo;
-  final AppEncrypt appEncrypt;
-  final Connectivity connectivity;
-  final getx.RxString connectionStatus = ''.obs;
-  final DeviceInfo deviceInfo;
-  final AppPermission appPermission;
 
   @override
   void onReady() {
-    initInterceptors();
+    _initInterceptors();
     _initConnectionStatus();
     super.onReady();
   }
 
-  void initInterceptors() {
+  void _initInterceptors() {
+    dio.interceptors.add(inspector.getDioRequestInterceptor());
+
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (requestOptions, handler) {
-          return handler.next(requestOptions);
-        },
-        onResponse: (response, handler) {
-          if (response.requestOptions.responseType != ResponseType.bytes) {
-            AppUtils.logApp(
-              '[${response.statusCode}] ${response.realUri}|||${response.data}',
-            );
+        onRequest: (options, handler) {
+          if (options.data is FormData) {
+            final formData = options.data as FormData;
+
+            AppUtils.logApp("📤 MULTIPART REQUEST:");
+            for (var field in formData.fields) {
+              AppUtils.logApp("Field: ${field.key} = ${field.value}");
+            }
+            for (var file in formData.files) {
+              AppUtils.logApp("File: ${file.key} = ${file.value.filename}");
+            }
           } else {
-            AppUtils.logApp(
-              '[${response.statusCode}] ${response.realUri}|||<FILE DOWNLOAD>',
-            );
+            AppUtils.logApp("📤 BODY: ${options.data}");
           }
 
-          return handler.next(response);
+          handler.next(options);
         },
-        onError: (err, handler) {
-          AppUtils.logApp('Error Status Code[${err.response?.statusCode}]');
-          errorSystem = err.response?.data['message'] ?? '';
-          AppUtils.logApp("ERROR MESSAGE :::: $errorSystem");
-          return handler.next(err);
+        onResponse: (response, handler) {
+          AppUtils.logApp(
+            "✅ ${response.statusCode} ${response.requestOptions.uri}",
+          );
+          handler.next(response);
+        },
+        onError: (e, handler) {
+          AppUtils.logApp("❌ ERROR ${e.response?.statusCode} ${e.message}");
+          handler.next(e);
         },
       ),
     );
-
-    connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
-
-    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
-    if (!isTest) {
-      dio.interceptors.add(inspector.getDioRequestInterceptor());
-    }
   }
 
   Future<void> _initConnectionStatus() async {
@@ -106,298 +104,158 @@ class HttpService extends getx.GetxService {
     }
   }
 
-  Future<dynamic> request({
-    String url = '',
-    String endpoint = '',
+  Future<dynamic> _execute({
+    required String endpoint,
     Method method = Method.POST,
-    Map<String, dynamic>? params,
-    Map<String, dynamic>? headers,
-    FormData? paramsImg,
+    dynamic params,
     bool withToken = false,
-    bool showPopUp = false,
+    bool showPopUp = true,
+    RequestType type = RequestType.json,
+    String? fileName,
   }) async {
     if (!await networkInfo.isConnected) {
-      catchError('No Internet Connection!', showPopUp: showPopUp);
-      return {'code': 0, 'message': 'No Internet Connection!'};
+      throw ApiException('No Internet Connection');
     }
 
-    Response response;
-    final newUrl = url.isEmpty ? AppConfig.environment.baseUrl + endpoint : url;
+    final url = AppConfig.environment.baseUrl + endpoint;
 
-    if (headers == null) {
-      final defaultHeader = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      };
-      dio.options.headers = defaultHeader;
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
 
-      if (withToken) {
-        final token = await appStorage.read(CACHE_ACCESS_TOKEN);
-        dio.options.headers = {
-          'Authorization': 'Bearer $token',
-          ...defaultHeader,
-        };
-      }
-    } else {
-      dio.options.headers = headers;
+    if (withToken) {
+      final token = await appStorage.read(CACHE_ACCESS_TOKEN);
+      headers['Authorization'] = 'Bearer $token';
     }
 
-    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
-    if (!isTest) {
-      dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final client = HttpClient(context: SecurityContext());
-          client.badCertificateCallback =
-              (X509Certificate cert, String host, int port) => true;
-          return client;
-        },
+    try {
+      final isMultipart = type == RequestType.multipart;
+
+      final options = Options(
+        headers: headers,
+        responseType: type == RequestType.download
+            ? ResponseType.bytes
+            : ResponseType.json,
+        contentType: isMultipart ? 'multipart/form-data' : 'application/json',
       );
-    }
 
-    try {
-      AppUtils.logApp(
-          '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}');
-      AppUtils.logApp(newUrl);
-    } catch (e) {
-      AppUtils.logApp('ERROR ENCODE $e');
-    }
+      Response response;
 
-    try {
-      if (method == Method.POST) {
-        response = await dio.post(newUrl, data: paramsImg ?? params);
-      } else if (method == Method.DELETE) {
-        response = await dio.delete(newUrl);
-      } else if (method == Method.PATCH) {
-        response = await dio.patch(newUrl, data: params);
-      } else if (method == Method.PUT) {
-        response = await dio.put(newUrl, data: params);
-      } else {
-        response = await dio.get(newUrl, queryParameters: params);
+      switch (method) {
+        case Method.GET:
+          response =
+              await dio.get(url, queryParameters: params, options: options);
+          break;
+        case Method.POST:
+          response = await dio.post(url, data: params, options: options);
+          break;
+        case Method.PUT:
+          response = await dio.put(url, data: params, options: options);
+          break;
+        case Method.DELETE:
+          response = await dio.delete(url, options: options);
+          break;
+        case Method.PATCH:
+          response = await dio.patch(url, data: params, options: options);
+          break;
+      }
+
+      if (type == RequestType.download) {
+        return await _handleDownload(response, fileName ?? "file.pdf");
       }
 
       final code = response.statusCode ?? 0;
-      final message = _extractServerMessage(response.data);
+      final message = _extractMessage(response.data);
 
       if (code == 200) {
         return response.data;
-      } else if (code == 401) {
-        catchError(message, showPopUp: showPopUp);
       }
 
-      catchError(message, showPopUp: showPopUp);
-
-      return {'code': code, 'message': message};
-    } on SocketException catch (e) {
-      AppUtils.logApp(e.toString());
-      catchError('No Internet Connection', showPopUp: showPopUp);
-      return {'code': 0, 'message': 'No Internet Connection'};
-    } on FormatException catch (e) {
-      AppUtils.logApp(e.toString());
-      catchError('Bad response format', showPopUp: showPopUp);
-      return {'code': 0, 'message': 'Bad response format'};
+      _handleError(message, showPopUp);
+      throw ApiException(message);
     } on DioException catch (e) {
-      final code = e.response?.statusCode ?? 0;
-      final message = _extractServerMessage(e.response?.data);
+      final message = _extractMessage(e.response?.data);
+      _handleError(message, showPopUp);
+      throw ApiException(message);
+    } catch (e) {
+      final message = e.toString();
 
-      AppUtils.logApp('Dio exc code: $code, Error message:$message');
-      catchError(message, showPopUp: showPopUp);
+      _handleError(message, showPopUp);
 
-      return {'code': code, 'message': message};
-    } catch (e, s) {
-      AppUtils.logApp('Unknown exc $e\n$s');
-      catchError(e.toString(), showPopUp: showPopUp);
-      return {'code': 0, 'message': e.toString()};
+      throw ApiException(e.toString());
     }
   }
 
-  Future<dynamic> customRequest({
-    String url = baseUrlRoyalWiki,
-    String endpoint = '',
+  Future<dynamic> request({
+    required String endpoint,
     Method method = Method.POST,
     Map<String, dynamic>? params,
-    Map<String, dynamic>? headers,
-    FormData? paramsImg,
     bool withToken = false,
-    bool showPopUp = false,
-  }) async {
-    if (!await networkInfo.isConnected) {
-      catchError('No Internet Connection!', showPopUp: showPopUp);
-      return;
-    }
-
-    Response response;
-    final newUrl = url + endpoint;
-
-    if (headers == null) {
-      final defaultHeader = {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      };
-      dio.options.headers = defaultHeader;
-      if (withToken) {
-        dio.options.headers = {
-          'Authorization': 'Token $tokenID:$tokenSecret',
-          ...defaultHeader,
-        };
-      }
-    } else {
-      dio.options.headers = headers;
-    }
-
-    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
-    if (!isTest) {
-      dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          final client = HttpClient(context: SecurityContext());
-          client.badCertificateCallback =
-              (X509Certificate cert, String host, int port) => true;
-          return client;
-        },
-      );
-      try {
-        AppUtils.logApp(
-          '${jsonEncode(dio.options.headers)}|||${jsonEncode(params)}',
-        );
-        AppUtils.logApp(
-          newUrl,
-        );
-      } catch (e) {
-        AppUtils.logApp('ERROR ENCODE $e');
-      }
-    }
-
-    try {
-      if (method == Method.POST) {
-        response = await dio.post(
-          newUrl,
-          data: paramsImg ?? params,
-        );
-      } else if (method == Method.DELETE) {
-        response = await dio.delete(newUrl);
-      } else if (method == Method.PATCH) {
-        response = await dio.patch(newUrl, data: params);
-      } else if (method == Method.PUT) {
-        response = await dio.put(newUrl, data: params);
-      } else {
-        response = await dio.get(
-          newUrl,
-          queryParameters: params,
-        );
-      }
-
-      if (response.statusCode == 200) {
-        return response.data;
-      } else if (response.statusCode == 401) {
-        final message = _extractServerMessage(response.data);
-        catchError(message, showPopUp: showPopUp);
-      } else if (response.statusCode == 422) {
-        catchError('Error System', showPopUp: showPopUp);
-      } else if (response.statusCode == 500) {
-        catchError('Internal Server Error', showPopUp: showPopUp);
-      } else {
-        catchError("Something went wrong", showPopUp: showPopUp);
-      }
-    } on SocketException catch (e) {
-      AppUtils.logApp(e.toString());
-      catchError('No Internet Connection', showPopUp: showPopUp);
-    } on FormatException catch (e) {
-      AppUtils.logApp(e.toString());
-      catchError('Bad response format', showPopUp: showPopUp);
-    } on DioException catch (e) {
-      AppUtils.logApp('Dio exc $e ${e.message}');
-      if (e.type == DioExceptionType.unknown) {
-        catchError(errorSystem, showPopUp: showPopUp);
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.sendTimeout) {
-        catchError('Request timeout', showPopUp: showPopUp);
-      } else if (e.error is SocketException) {
-        catchError(e.error.toString(), showPopUp: showPopUp);
-      } else if (e.response?.statusCode == 400) {
-        AppUtils.logApp('LOGIN ERROR HERE');
-        catchError(errorLogin, showPopUp: showPopUp);
-      } else {
-        AppUtils.logApp('ANY ERROR HERE');
-        catchError(errorSystem, showPopUp: showPopUp);
-      }
-    } catch (e) {
-      AppUtils.logApp('unknown exc $e');
-      catchError(errorSystem, showPopUp: showPopUp);
-    }
+  }) {
+    return _execute(
+      endpoint: endpoint,
+      method: method,
+      params: params,
+      withToken: withToken,
+      type: RequestType.json,
+    );
   }
 
-  bool canCreateFile(String filePath) {
-    try {
-      final file = File(filePath);
-      final raf = file.openSync(mode: FileMode.writeOnlyAppend);
-      raf.closeSync();
-      file.deleteSync();
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  Future<dynamic> downloadFilePost({
+  Future<String> download({
     required String endpoint,
     required Map<String, dynamic> body,
     required String fileName,
+    bool withToken = true,
   }) async {
+    final result = await _execute(
+      endpoint: endpoint,
+      method: Method.POST,
+      params: body,
+      withToken: withToken,
+      type: RequestType.download,
+      fileName: fileName,
+    );
+
+    return result as String;
+  }
+
+  Future<dynamic> multipart({
+    required String endpoint,
+    required FormData formData,
+    bool withToken = true,
+  }) {
+    return _execute(
+      endpoint: endpoint,
+      method: Method.POST,
+      params: formData,
+      withToken: withToken,
+      type: RequestType.multipart,
+    );
+  }
+
+  Future<String> _handleDownload(Response response, String fileName) async {
+    if (response.statusCode == 200) {
+      final bytes = response.data as List<int>;
+
+      final path = await saveToPublicDownload(
+        bytes: bytes,
+        fileName: fileName,
+      );
+
+      await showDownloadNotification(fileName, path);
+
+      return path;
+    }
+
+    final bytes = response.data as List<int>;
+    final text = utf8.decode(bytes);
+
     try {
-      final fullUrl = AppConfig.environment.baseUrl + endpoint;
-      final token = await appStorage.read(CACHE_ACCESS_TOKEN);
-
-      final dioDownload = Dio(
-        BaseOptions(
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 30),
-          sendTimeout: const Duration(seconds: 30),
-          responseType: ResponseType.bytes,
-          validateStatus: (status) => true,
-          followRedirects: false,
-        ),
-      );
-
-      dioDownload.options.headers = {
-        "Authorization": "Bearer $token",
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      };
-
-      final response = await dioDownload.post(
-        fullUrl,
-        data: body,
-      );
-
-      AppUtils.logApp("STATUS CODE: ${response.statusCode}");
-
-      if (response.statusCode == 200) {
-        final bytes = response.data as List<int>;
-        final savedPath =
-            await saveToPublicDownload(bytes: bytes, fileName: fileName);
-        await showDownloadNotification(fileName, savedPath);
-        return savedPath;
-      }
-
-      final responseBytes = response.data as List<int>;
-      final responseString = utf8.decode(responseBytes);
-
-      Map<String, dynamic>? errorJson;
-
-      try {
-        errorJson = jsonDecode(responseString);
-      } catch (_) {}
-
-      throw ApiException(
-        errorJson?["message"] ?? "Terjadi kesalahan (${response.statusCode})",
-      );
-    } on ApiException catch (e) {
-      AppUtils.logApp("CATCH ERR ::: ${e.message}");
-      catchError(e.message.toString(), showPopUp: true);
-      rethrow;
-    } catch (e) {
-      AppUtils.logApp("Download error: $e");
-      throw ApiException(e.toString());
+      final json = jsonDecode(text);
+      throw ApiException(json["message"]);
+    } catch (_) {
+      throw ApiException("Download failed (${response.statusCode})");
     }
   }
 
@@ -476,43 +334,38 @@ class HttpService extends getx.GetxService {
     );
   }
 
-  void catchError(String message, {bool showPopUp = true}) {
-    if (showPopUp) {
-      if (message.isNotEmpty) {
-        if (message == "Unauthenticated.") {
-          AppDialogImpl().showErrorDialog(
-            description: message,
-            textButton: 'Back to Login',
-            onPress: () async {
-              await appStorage.delete(CACHE_ACCESS_TOKEN);
-              await appStorage.delete(CACHE_REFRESH_TOKEN);
-              Get.offAllNamed(Routes.LOGIN);
-            },
-          );
-        } else {
-          AppUtils.logApp('ERR HERE');
-          AppDialogImpl().showErrorDialog(
-            description: message,
-            textButton: 'Close',
-          );
-        }
-      } else {
-        AppDialogImpl().showErrorDialog(title: 'Failed', description: message);
-      }
-    }
-  }
-
-  String _extractServerMessage(dynamic data) {
-    if (data == null) return 'Unknown error';
-    if (data is String) return data;
-    if (data is Map<String, dynamic>) {
-      if (data['message'] != null) return data['message'].toString();
-      if (data['error'] != null) return data['error'].toString();
-      if (data['msg'] != null) return data['msg'].toString();
+  String _extractMessage(dynamic data) {
+    if (data is Map && data['message'] != null) {
+      return data['message'].toString();
     }
     return 'Unknown error';
   }
 
-  String errorLogin = "Incorrect username or password. Please try again.";
-  String errorSystem = "Error System";
+  void _handleError(String message, bool showPopUp) {
+    if (!showPopUp) return;
+
+    if (message.isNotEmpty) {
+      if (message == "Unauthenticated.") {
+        AppDialogImpl().showErrorDialog(
+          description: message,
+          textButton: 'Back to Login',
+          onPress: () async {
+            await appStorage.delete(CACHE_ACCESS_TOKEN);
+            await appStorage.delete(CACHE_REFRESH_TOKEN);
+            getx.Get.offAllNamed(Routes.LOGIN);
+          },
+        );
+      } else {
+        AppDialogImpl().showErrorDialog(
+          description: message,
+          textButton: 'Close',
+        );
+      }
+    } else {
+      AppDialogImpl().showErrorDialog(
+        title: 'Failed',
+        description: message,
+      );
+    }
+  }
 }

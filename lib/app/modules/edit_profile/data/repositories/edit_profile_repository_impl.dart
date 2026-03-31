@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:MyRoyal/app/modules/edit_profile/data/datasources/edit_profile_remote.dart';
+import 'package:MyRoyal/app/modules/edit_profile/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/edit_profile/data/model/employee_params_model.dart';
 import 'package:MyRoyal/app/modules/edit_profile/domain/repositories/edit_profile_repository.dart';
 import 'package:MyRoyal/base/errors/failures.dart';

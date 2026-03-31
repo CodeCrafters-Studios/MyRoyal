@@ -25,7 +25,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         withToken: true,
         endpoint: 'oauth/user',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r['code'] != 200) throw ApiException(r['message']);
       final userResponse = UserModel.fromJson(r);
@@ -45,11 +44,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<ArticlesModel> getArticles() async {
     try {
-      final r = await httpService.customRequest(
+      final r = await httpService.request(
         withToken: true,
         endpoint: 'api/shelves',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');
@@ -76,7 +74,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         withToken: true,
         endpoint: 'trackproduct/getUserJde',
         params: params,
-        showPopUp: true,
       );
 
       if (r == null) {
@@ -108,7 +105,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'dashboard/banner',
-        showPopUp: true,
         method: Method.GET,
       );
 

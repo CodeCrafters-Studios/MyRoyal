@@ -20,7 +20,6 @@ class ProfileRemoteDataSourcesImpl extends ProfileRemoteDataSources {
         withToken: true,
         endpoint: 'oauth/profile',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:MyRoyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
+import 'package:MyRoyal/app/modules/attendance/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/attendance/data/models/attendance_location_model.dart';
 import 'package:MyRoyal/app/modules/attendance/data/models/attendance_record_model.dart';
 import 'package:MyRoyal/app/modules/attendance/data/models/attendance_today_model.dart';
@@ -28,6 +28,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
     try {
       final model = AttendanceRecordModel(
         id: entity.id,
+        locationID: entity.locationID,
         status: entity.status,
         date: entity.date,
         time: entity.time,

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-const String appTitle = 'I-ROYAL';
+const String appTitle = 'MyRoyal';
 const Size designSize = Size(375, 812);
 const emptyBox = SizedBox();
 

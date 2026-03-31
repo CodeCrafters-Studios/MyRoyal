@@ -48,11 +48,10 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
           AppUtils.logApp(
               'File Field: ${file.key} Filename: ${file.value.filename}');
         }
-        final r = await httpService.request(
+        final r = await httpService.multipart(
           withToken: true,
-          paramsImg: formData,
+          formData: formData,
           endpoint: 'oauth/updateProfile',
-          showPopUp: true,
         );
         if (r == null) {
           throw ApiException('No response from server');
@@ -84,7 +83,6 @@ class EditProfileRemoteSourceImpl implements EditProfileRemoteDataSource {
             "profile": editProfileParams.profilePicture,
           },
           endpoint: 'oauth/updateProfile',
-          showPopUp: true,
         );
         if (r == null) {
           throw ApiException('No response from server');

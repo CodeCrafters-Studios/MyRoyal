@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:MyRoyal/app/modules/attendance/data/datasources/attendance_remote_data_source.dart';
+import 'package:MyRoyal/app/modules/attendance/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/attendance/data/repositories/attendance_repository_impl.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_location_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
-import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
@@ -23,7 +23,7 @@ import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_user_usecase.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_user_jde_usecase.dart';
 import 'package:MyRoyal/app/modules/home/presentation/controllers/home_controller.dart';
-import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';

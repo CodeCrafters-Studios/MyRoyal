@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:MyRoyal/app/modules/attendance/domain/entities/neares_office_info_entity.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -49,6 +50,7 @@ class ValidationSelfieController extends GetxController {
   final takenPhoto = Rxn<File>();
   final currentPosition = Rxn<LatLng>();
   final debugFaceRect = Rxn<Rect>();
+  NearestOfficeInfo? nearestOffice;
 
   Rx<AttendanceTodayModel> attendanceTodayRes =
       AttendanceTodayModel.empty().obs;
@@ -59,6 +61,7 @@ class ValidationSelfieController extends GetxController {
     status = Get.arguments[0];
     attendanceTodayRes.value = Get.arguments[1];
     currentPosition.value = Get.arguments[2];
+    nearestOffice = Get.arguments[3];
   }
 
   @override
@@ -363,6 +366,7 @@ class ValidationSelfieController extends GetxController {
 
     final entity = AttendanceRecordModel(
       id: attendanceTodayRes.value.attendanceId!,
+      locationID: nearestOffice?.locationId ?? 0,
       status: status,
       date: DateTime.now(),
       time: DateFormat("HH:mm:ss").parse(attendanceTodayRes.value.serverTime!),

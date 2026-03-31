@@ -21,7 +21,6 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
       withToken: true,
       endpoint: 'myroyalattendance/today',
       method: Method.GET,
-      showPopUp: true,
     );
     if (r == null) {
       throw ApiException('No response from server');
@@ -49,7 +48,6 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
       endpoint: 'myroyalattendance/record_attendance',
       method: Method.POST,
       params: model.toJson(),
-      showPopUp: true,
     );
 
     if (r == null) {
@@ -67,7 +65,6 @@ class AttendanceRemoteDataSourceImpl implements AttendanceRemoteDataSource {
       withToken: true,
       endpoint: 'myroyalattendance/location',
       method: Method.GET,
-      showPopUp: true,
     );
 
     if (r == null) {

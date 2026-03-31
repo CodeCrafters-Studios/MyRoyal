@@ -14,11 +14,10 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
   final HttpService httpService;
   @override
   Future<ArticlesDetailModel> getArticlesDetail(String id) async {
-    final r = await httpService.customRequest(
+    final r = await httpService.request(
       withToken: true,
       endpoint: 'api/shelves/$id',
       method: Method.GET,
-      showPopUp: true,
     );
 
     if (r == null) {
@@ -31,11 +30,10 @@ class ArticlesRemoteDataSourcesImpl implements ArticlesRemoteDataSources {
 
   @override
   Future<BooksDetailModel> getBooksDetail(String id) async {
-    final r = await httpService.customRequest(
+    final r = await httpService.request(
       withToken: true,
       endpoint: 'api/books/$id',
       method: Method.GET,
-      showPopUp: true,
     );
 
     if (r == null) {

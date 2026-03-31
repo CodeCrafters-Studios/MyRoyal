@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';
@@ -10,7 +10,7 @@ import 'package:MyRoyal/app/modules/detail_tasks/controllers/detail_tasks_contro
 import 'package:MyRoyal/app/modules/help_and_support/controllers/help_and_support_controller.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
 
-import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';

@@ -518,7 +518,7 @@ class _AttendanceMapState extends State<AttendanceMap>
           children: [
             TileLayer(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              userAgentPackageName: 'com.iroyal',
+              userAgentPackageName: 'com.myroyal',
               maxNativeZoom: 19,
             ),
 

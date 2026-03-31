@@ -19,7 +19,6 @@ class TraceSerialDataSourcesImpl implements TraceSerialDataSources {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'trackproduct/getDataProduct',
-        showPopUp: true,
         params: params,
       );
       final response = TraceSerialModel.fromJson(r);

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_dashboard_usecase.dart';
 import 'package:MyRoyal/app/modules/dashboard/domain/usecases/get_detail_late_usecase.dart';

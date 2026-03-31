@@ -3,6 +3,7 @@ import 'package:MyRoyal/app/modules/attendance/domain/entities/attendance_record
 class AttendanceRecordModel extends AttendanceRecordEntity {
   const AttendanceRecordModel({
     required super.id,
+    required super.locationID,
     required super.status,
     required super.date,
     required super.time,

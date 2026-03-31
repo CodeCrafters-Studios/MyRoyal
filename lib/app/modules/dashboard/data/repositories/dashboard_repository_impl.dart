@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/dashboard/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/models/dashboard_model.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/models/detail_late_model.dart';
 import 'package:MyRoyal/app/modules/dashboard/data/models/detail_permit_request_model.dart';

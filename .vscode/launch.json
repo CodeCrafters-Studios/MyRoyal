@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "i-Royal",
+      "name": "MyRoyal",
       "request": "launch",
       "type": "dart"
     },
@@ -14,7 +14,7 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "args": ["--flavor", "prod", "--release"]
+      "args": ["--flavor", "prod", "--debug"]
     },
     {
       "name": "DEVELOPMENT",

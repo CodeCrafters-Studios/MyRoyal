@@ -21,7 +21,6 @@ class ReleaseOrderRemoteDatasourceImpl implements ReleaseOrderRemoteDatasource {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'trackproduct/getDataReleaseOrder',
-        showPopUp: true,
         params: params,
       );
       final response = ReleaseOrderModel.fromJson(r);
@@ -43,7 +42,6 @@ class ReleaseOrderRemoteDatasourceImpl implements ReleaseOrderRemoteDatasource {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'trackproduct/updateReleaseOrder',
-        showPopUp: true,
         params: params,
       );
       final response = UpdateReleaseOrderModel.fromJson(r);

@@ -40,7 +40,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/getDataLeave',
         method: Method.GET,
-        showPopUp: true,
       );
       final response = LeaveModel.fromJson(r);
       return response;
@@ -62,7 +61,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/getDataForm',
         method: Method.GET,
-        showPopUp: true,
       );
 
       final response = SubtituteEmployeeModel.fromJson(r["data"]);
@@ -86,7 +84,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/submission',
         params: createFormLeaveParams,
-        showPopUp: true,
       );
       final response = CreateFormLeaveModel.fromJson(r["data"]);
       return response;
@@ -109,7 +106,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/approval',
         params: actionFormLeaveParams,
-        showPopUp: true,
       );
       final response = ActionFormLeaveModel.fromJson(r["data"]);
       return response;
@@ -132,7 +128,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         withToken: true,
         endpoint: 'attendance/submissionPermit',
         params: createFormPermitParams,
-        showPopUp: true,
       );
       final response = CreateFormPermitModel.fromJson(r["data"]);
       return response;
@@ -155,7 +150,6 @@ class LeaveRemoteDataSourcesImpl implements LeaveRemoteDataSources {
         endpoint: 'dashboard/getData',
         method: Method.GET,
         params: {"type": "permitRequest"},
-        showPopUp: true,
       );
       final response = PermitModel.fromJson(r);
       return response;

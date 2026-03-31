@@ -26,7 +26,6 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
         withToken: true,
         endpoint: 'ptk/detail',
         method: Method.GET,
-        showPopUp: true,
         params: {'labor_id': params},
       );
       if (r == null) {
@@ -61,7 +60,6 @@ class DetailTrackingDocumentRemoteDataSourcesImpl
         withToken: true,
         endpoint: 'ptk/approval',
         method: Method.GET,
-        showPopUp: true,
         params: params,
       );
       if (r['code'] != 200) {

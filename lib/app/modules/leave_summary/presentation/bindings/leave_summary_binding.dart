@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/home/data/repositories/home_repository_impl.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
-import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_datasource.dart';
+import 'package:MyRoyal/app/modules/leave_summary/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/leave_summary/data/repositories/leave_repository_impl.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/action_form_leave_usecase.dart';
 import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/create_form_leave_usecase.dart';

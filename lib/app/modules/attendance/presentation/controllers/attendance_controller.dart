@@ -575,6 +575,7 @@ class AttendanceController extends GetxController {
         status,
         attendanceTodayRes.value,
         currentPosition.value,
+        nearestOffice.value,
       ],
     );
 
@@ -616,6 +617,7 @@ class AttendanceController extends GetxController {
 
     final entity = AttendanceRecordEntity(
       id: attendanceTodayRes.value.attendanceId!,
+      locationID: _getNearestLocationId(),
       status: "break_start",
       date: breakTime.value!,
       time: breakTime.value!,
@@ -691,6 +693,7 @@ class AttendanceController extends GetxController {
 
     final entity = AttendanceRecordEntity(
       id: attendanceTodayRes.value.attendanceId!,
+      locationID: _getNearestLocationId(),
       status: "break_end",
       date: DateTime.now(),
       time: DateTime.now(),
@@ -788,6 +791,7 @@ class AttendanceController extends GetxController {
 
           nearest = NearestOfficeInfo(
             locationName: loc.location,
+            locationId: loc.locationID,
             type: "radius",
             distanceToCenter: centerDistance,
             distanceToBoundary: boundaryDistance,
@@ -811,6 +815,7 @@ class AttendanceController extends GetxController {
 
           nearest = NearestOfficeInfo(
             locationName: loc.location,
+            locationId: loc.locationID,
             type: "polygon",
             distanceToCenter: boundaryDistance,
             distanceToBoundary: inside ? 0.0 : boundaryDistance,
@@ -882,5 +887,19 @@ class AttendanceController extends GetxController {
     }
 
     return DateFormat('hh:mm:ss a').format(displayTime.value);
+  }
+
+  int _getNearestLocationId() {
+    final nearest = nearestOffice.value;
+
+    if (nearest == null) {
+      throw Exception("Lokasi kantor tidak ditemukan");
+    }
+
+    if (!nearest.inside) {
+      throw Exception("Anda berada di luar area kantor");
+    }
+
+    return nearest.locationId;
   }
 }

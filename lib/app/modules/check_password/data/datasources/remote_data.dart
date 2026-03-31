@@ -21,7 +21,6 @@ class CheckPasswordRemoteDataSourceImpl
         withToken: true,
         endpoint: 'user/checkPassword',
         params: params,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

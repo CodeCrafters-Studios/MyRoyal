@@ -21,9 +21,8 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'notification/notifyPagination',
-        method: Method.GET,
-        showPopUp: true,
         params: {'page': params},
+        method: Method.GET,
       );
       if (r == null) {
         throw ApiException('No response from server');
@@ -55,7 +54,6 @@ class NotificationsRemoteDataSourcesImpl implements NotificationsDataSources {
       final r = await httpService.request(
         withToken: true,
         endpoint: 'notification/clickNotification',
-        showPopUp: true,
         params: {'notification_id': params},
       );
       if (r == null) {

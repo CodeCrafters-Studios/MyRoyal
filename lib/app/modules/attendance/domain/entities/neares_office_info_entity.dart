@@ -1,5 +1,6 @@
 class NearestOfficeInfo {
   final String locationName;
+  final int locationId;
   final String type;
   final double distanceToCenter;
   final double distanceToBoundary;
@@ -8,6 +9,7 @@ class NearestOfficeInfo {
 
   NearestOfficeInfo({
     required this.locationName,
+    required this.locationId,
     required this.type,
     required this.distanceToCenter,
     required this.distanceToBoundary,

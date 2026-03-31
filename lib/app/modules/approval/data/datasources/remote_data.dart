@@ -20,7 +20,6 @@ class ApprovalRemoteDataSourceImpl implements ApprovalRemoteDataSource {
         withToken: true,
         endpoint: 'attendance/getDataLeaveApproval',
         method: Method.GET,
-        showPopUp: true,
       );
       if (r == null) {
         throw ApiException('No response from server');

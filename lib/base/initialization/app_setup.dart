@@ -137,13 +137,11 @@ Future configureApp(EnvironmentConfig envConfig) async {
         inspector: Get.find(),
         appStorage: Get.find(),
         networkInfo: Get.find<NetworkInfoImpl>(),
-        appEncrypt: Get.find<AppEncryptImpl>(),
         connectivity: connectivity,
         deviceInfo: DeviceInfo(
           deviceInfoPlugin: deviceInfoPlugin,
           packageInfo: packageInfo,
         ),
-        appPermission: AppPermissionImpl(),
       ),
     )
     ..put(

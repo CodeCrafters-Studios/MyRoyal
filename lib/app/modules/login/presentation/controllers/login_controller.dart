@@ -176,7 +176,8 @@ class LoginController extends GetxController {
       onPressLater: Get.back,
       onPressUpdate: () async {
         Get.back();
-        String url = "https://play.google.com/store/apps/details?id=com.iroyal";
+        String url =
+            "https://play.google.com/store/apps/details?id=com.myroyal";
         if (await canLaunchUrl(Uri.parse(url))) {
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         } else {
