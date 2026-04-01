@@ -24,6 +24,7 @@ class AttendanceRecordModel extends AttendanceRecordEntity {
 
     return {
       "id": id,
+      "location_id": locationID,
       "status": status,
       "date": dateStr,
       "time": timeStr,

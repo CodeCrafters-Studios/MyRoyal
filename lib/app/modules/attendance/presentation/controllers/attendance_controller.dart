@@ -569,25 +569,31 @@ class AttendanceController extends GetxController {
       return;
     }
 
-    final result = await Get.toNamed(
-      Routes.VALIDATION_SELFIE,
-      arguments: [
-        status,
-        attendanceTodayRes.value,
-        currentPosition.value,
-        nearestOffice.value,
-      ],
-    );
+    AppDialogImpl().showChoiceDialog(
+        title: 'Konfirmasi',
+        description: 'Mohon persiapkan diri untuk mengambil foto',
+        onPressedYes: () async {
+          Get.back();
+          final result = await Get.toNamed(
+            Routes.VALIDATION_SELFIE,
+            arguments: [
+              status,
+              attendanceTodayRes.value,
+              currentPosition.value,
+              nearestOffice.value,
+            ],
+          );
 
-    if (result == true && status == 'checked_in') {
-      await _getAttendanceToday();
-    } else {
-      _totalHours();
-      await _getAttendanceToday();
-      isGpsSpoofing.value = false;
-      _positionStream?.cancel();
-      _positionStream = null;
-    }
+          if (result == true && status == 'checked_in') {
+            await _getAttendanceToday();
+          } else {
+            _totalHours();
+            await _getAttendanceToday();
+            isGpsSpoofing.value = false;
+            _positionStream?.cancel();
+            _positionStream = null;
+          }
+        });
   }
 
   void _totalHours() {
@@ -609,36 +615,42 @@ class AttendanceController extends GetxController {
   }
 
   void startBreakTime() async {
-    if (hasTakenBreak.value) return;
+    AppDialogImpl().showChoiceDialog(
+        title: 'Konfirmasi',
+        description: 'Anda yakin akan memulai sesi istirahat',
+        onPressedYes: () async {
+          Get.back();
+          if (hasTakenBreak.value) return;
 
-    breakTime.value = DateTime.now();
-    breakDuration.value = '';
-    isLoadingAttendance.value = true;
+          breakTime.value = DateTime.now();
+          breakDuration.value = '';
+          isLoadingAttendance.value = true;
 
-    final entity = AttendanceRecordEntity(
-      id: attendanceTodayRes.value.attendanceId!,
-      locationID: _getNearestLocationId(),
-      status: "break_start",
-      date: breakTime.value!,
-      time: breakTime.value!,
-      latitude: currentPosition.value!.latitude,
-      longitude: currentPosition.value!.longitude,
-      workDurationMinutes: 0,
-      file: '',
-    );
+          final entity = AttendanceRecordEntity(
+            id: attendanceTodayRes.value.attendanceId!,
+            locationID: _getNearestLocationId(),
+            status: "break_start",
+            date: breakTime.value!,
+            time: breakTime.value!,
+            latitude: currentPosition.value!.latitude,
+            longitude: currentPosition.value!.longitude,
+            workDurationMinutes: 0,
+            file: '',
+          );
 
-    final result = await recordAttendanceUsecase(entity);
+          final result = await recordAttendanceUsecase(entity);
 
-    result.fold(
-      (l) {
-        Get.snackbar("Error", "Gagal record Break Start");
-        isLoadingAttendance.value = false;
-      },
-      (r) async {
-        await _getAttendanceToday();
-        isLoadingAttendance.value = false;
-      },
-    );
+          result.fold(
+            (l) {
+              Get.snackbar("Error", "Gagal record Break Start");
+              isLoadingAttendance.value = false;
+            },
+            (r) async {
+              await _getAttendanceToday();
+              isLoadingAttendance.value = false;
+            },
+          );
+        });
   }
 
   void startBreakTimerFromServer(String serverTime, String breakStart) {
@@ -687,46 +699,53 @@ class AttendanceController extends GetxController {
   }
 
   void endBreakTime() async {
-    breakTimer?.cancel();
+    AppDialogImpl().showChoiceDialog(
+        title: 'Konfirmasi',
+        description: 'Anda yakin akan mengakhiri sesi istirahat',
+        onPressedYes: () async {
+          Get.back();
 
-    isLoadingAttendance.value = true;
+          breakTimer?.cancel();
 
-    final entity = AttendanceRecordEntity(
-      id: attendanceTodayRes.value.attendanceId!,
-      locationID: _getNearestLocationId(),
-      status: "break_end",
-      date: DateTime.now(),
-      time: DateTime.now(),
-      latitude: currentPosition.value!.latitude,
-      longitude: currentPosition.value!.longitude,
-      workDurationMinutes: 0,
-      file: '',
-    );
+          isLoadingAttendance.value = true;
 
-    final result = await recordAttendanceUsecase(entity);
+          final entity = AttendanceRecordEntity(
+            id: attendanceTodayRes.value.attendanceId!,
+            locationID: _getNearestLocationId(),
+            status: "break_end",
+            date: DateTime.now(),
+            time: DateTime.now(),
+            latitude: currentPosition.value!.latitude,
+            longitude: currentPosition.value!.longitude,
+            workDurationMinutes: 0,
+            file: '',
+          );
 
-    result.fold(
-      (l) {
-        Get.snackbar("Error", "Gagal record Break End");
-        isLoadingAttendance.value = false;
-      },
-      (r) async {
-        await _getAttendanceToday();
+          final result = await recordAttendanceUsecase(entity);
 
-        if (breakEndTime.value != null && breakTime.value != null) {
-          Duration dif = breakEndTime.value!.difference(breakTime.value!);
+          result.fold(
+            (l) {
+              Get.snackbar("Error", "Gagal record Break End");
+            },
+            (r) async {
+              await _getAttendanceToday();
 
-          String twoDigits(int n) => n.toString().padLeft(2, "0");
+              if (breakEndTime.value != null && breakTime.value != null) {
+                Duration dif = breakEndTime.value!.difference(breakTime.value!);
 
-          breakDuration.value =
-              "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
-        }
+                String twoDigits(int n) => n.toString().padLeft(2, "0");
 
-        breakTimer?.cancel();
-        countTimes.value = '--:--:--';
-        isLoadingAttendance.value = false;
-      },
-    );
+                breakDuration.value =
+                    "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+              }
+
+              breakTimer?.cancel();
+              countTimes.value = '--:--:--';
+            },
+          );
+
+          isLoadingAttendance.value = false;
+        });
   }
 
   void _updateOfficeColors() {
@@ -892,14 +911,6 @@ class AttendanceController extends GetxController {
   int _getNearestLocationId() {
     final nearest = nearestOffice.value;
 
-    if (nearest == null) {
-      throw Exception("Lokasi kantor tidak ditemukan");
-    }
-
-    if (!nearest.inside) {
-      throw Exception("Anda berada di luar area kantor");
-    }
-
-    return nearest.locationId;
+    return nearest!.locationId;
   }
 }
