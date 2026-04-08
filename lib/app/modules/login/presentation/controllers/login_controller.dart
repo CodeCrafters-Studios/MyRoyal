@@ -116,11 +116,10 @@ class LoginController extends GetxController {
 
     if (Platform.isAndroid) {
       deviceId = androidId.toString();
-      deviceUser = '${info.model}-${info.brand}-${info.osVersion}';
+      deviceUser = '${info.model}-${info.brand}-${info.id}';
     } else if (Platform.isIOS) {
       deviceId = info.id;
-      deviceUser =
-          '${info.model}-${info.brand}-${info.hardware}-${info.osVersion}';
+      deviceUser = '${info.model}-${info.brand}-${info.hardware}-${info.id}';
     }
 
     await appStorage.write('device-id', deviceId);
@@ -219,9 +218,9 @@ class LoginController extends GetxController {
       return;
     }
     final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
-    final deviceId = await appStorage.read('device-id');
+    // final deviceId = await appStorage.read('device-id');
     final deviceUser = await appStorage.read('device-user');
-    final deviceUserParams = '$deviceUser-${username()}';
+    final deviceUserParams = '${username()}-$deviceUser';
 
     AppUtils.logApp('$cacheFcmToken');
     AppUtils.logApp('DEVICE USER :::: $deviceUserParams');
@@ -240,9 +239,10 @@ class LoginController extends GetxController {
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
-        deviceId: deviceId.toString().isEmpty || deviceId.toString() == ''
-            ? deviceUserParams
-            : deviceId.toString(),
+        deviceId: deviceUserParams,
+        // deviceId.toString().isEmpty || deviceId.toString() == ''
+        //     ? deviceUserParams
+        //     : deviceId.toString(),
       ),
     );
     r.fold((l) {
@@ -260,7 +260,8 @@ class LoginController extends GetxController {
         fcmToken: r.fcmToken,
         deviceId: r.deviceId,
       ));
-      login();
+      // login();
+      AppUtils.logApp('LOGIN PARAMS ${loginParams().toJson()}');
     });
   }
 
