@@ -260,7 +260,7 @@ class LoginController extends GetxController {
         fcmToken: r.fcmToken,
         deviceId: r.deviceId,
       ));
-      // login();
+      login();
       AppUtils.logApp('LOGIN PARAMS ${loginParams().toJson()}');
     });
   }

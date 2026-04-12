@@ -45,7 +45,7 @@ extension AttendanceStatusX on AttendanceStatus {
   }
 }
 
-class AttendanceController extends GetxController {
+class AttendanceController extends GetxController with WidgetsBindingObserver {
   AttendanceController({
     required this.getAttendanceTodayUsecase,
     required this.recordAttendanceUsecase,
@@ -120,6 +120,13 @@ class AttendanceController extends GetxController {
     });
 
     _runInitialOnce();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _initLocation();
+    }
   }
 
   @override
@@ -386,18 +393,65 @@ class AttendanceController extends GetxController {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     isGpsActive.value = serviceEnabled;
 
-    AppUtils.logApp("GPS ENABLED: $serviceEnabled");
-
-    if (!serviceEnabled) return;
+    if (!serviceEnabled) {
+      _showEnableGpsDialog();
+      return;
+    }
 
     LocationPermission permission = await Geolocator.checkPermission();
+
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.deniedForever) return;
+    if (permission == LocationPermission.denied) {
+      _showPermissionDialog();
+      return;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      _showPermissionSettingsDialog();
+      return;
+    }
 
     _startLocationStream();
+  }
+
+  void _showEnableGpsDialog() {
+    AppDialogImpl().showInfoDialog(
+        title: "GPS Tidak Aktif",
+        description: "Mohon aktifkan GPS untuk melanjutkan absensi.",
+        textButton: "Buka Pengaturan",
+        onPress: () async {
+          Get.back();
+          await Geolocator.openLocationSettings();
+          await _initLocation();
+        });
+  }
+
+  void _showPermissionDialog() {
+    Get.defaultDialog(
+      title: "Izin Lokasi Dibutuhkan",
+      middleText: "Aplikasi membutuhkan akses lokasi.",
+      textConfirm: "Izinkan",
+      onConfirm: () async {
+        Get.back();
+        await Geolocator.requestPermission();
+      },
+    );
+  }
+
+  void _showPermissionSettingsDialog() {
+    Get.defaultDialog(
+      title: "Izin Ditolak Permanen",
+      middleText: "Silakan aktifkan izin lokasi melalui pengaturan aplikasi.",
+      textConfirm: "Buka Pengaturan",
+      textCancel: "Batal",
+      onConfirm: () async {
+        Get.back();
+        await Geolocator.openAppSettings();
+      },
+    );
   }
 
   void _startLocationStream() {
