@@ -780,6 +780,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
           result.fold(
             (l) {
               Get.snackbar("Error", "Gagal record Break End");
+              isLoadingAttendance.value = false;
             },
             (r) async {
               await _getAttendanceToday();
@@ -795,10 +796,9 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
               breakTimer?.cancel();
               countTimes.value = '--:--:--';
+              isLoadingAttendance.value = false;
             },
           );
-
-          isLoadingAttendance.value = false;
         });
   }
 
@@ -920,15 +920,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         "${twoDigits(duration.inMinutes.remainder(60))}:"
         "${twoDigits(duration.inSeconds.remainder(60))}";
   }
-
-  bool get isCheckIn =>
-      attendanceStatus.value == AttendanceStatus.checkedIn ||
-      attendanceStatus.value == AttendanceStatus.breakStart ||
-      attendanceStatus.value == AttendanceStatus.breakEnd;
-
-  bool get isBreakTime => attendanceStatus.value == AttendanceStatus.breakStart;
-
-  bool get isCheckOut => attendanceStatus.value == AttendanceStatus.checkedOut;
 
   double _distanceToPolygonBoundary(LatLng point, List<LatLng> polygon) {
     double minDistance = double.infinity;

@@ -254,7 +254,8 @@ class AttendanceView extends GetView<AttendanceController> {
       final breakStart = controller.breakTime.value;
       final breakEnd = controller.breakEndTime.value;
 
-      if (breakStart == null || breakEnd == null) {
+      if (status == AttendanceStatus.notStarted ||
+          status == AttendanceStatus.checkedIn) {
         return const SizedBox();
       }
 
@@ -264,7 +265,7 @@ class AttendanceView extends GetView<AttendanceController> {
           _buildAttendanceDetail(
             icon: Icons.restaurant_rounded,
             color: primaryAccent,
-            time: hasBreak
+            time: breakStart != null
                 ? DateFormat('hh:mm a').format(breakStart)
                 : '--:-- AM',
             label: 'Break Start',
@@ -274,7 +275,7 @@ class AttendanceView extends GetView<AttendanceController> {
             icon: Icons.timer_off_outlined,
             color: urgentColor,
             time:
-                hasBreak ? DateFormat('hh:mm a').format(breakEnd) : '--:-- PM',
+                hasBreak ? DateFormat('hh:mm a').format(breakEnd!) : '--:-- PM',
             label: 'Break End',
           ),
           50.horizontalSpace,
