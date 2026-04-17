@@ -116,7 +116,7 @@ class LoginController extends GetxController {
 
     if (Platform.isAndroid) {
       deviceId = androidId.toString();
-      deviceUser = '${info.model}-${info.brand}-${info.id}';
+      deviceUser = '${info.model}-${info.brand}';
     } else if (Platform.isIOS) {
       deviceId = info.id;
       deviceUser = '${info.model}-${info.brand}-${info.hardware}-${info.id}';

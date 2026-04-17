@@ -82,6 +82,41 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   final nearestOffice = Rxn<NearestOfficeInfo>();
 
   Position? _previousPosition;
+
+  // ── Indoor GPS accuracy improvements ──────────────────────────────────────
+  // Upper floors reflect GPS signals, causing 40–70 m reported accuracy.
+  // We compensate with: a position buffer, relaxed thresholds, and debouncing.
+
+  /// Buffer of recent valid fixes used for weighted-average smoothing.
+  final List<Position> _positionBuffer = [];
+
+  /// How many consecutive "valid" readings before we enable check-in.
+  int _validStreak = 0;
+
+  /// How many consecutive "invalid" readings before we disable check-in.
+  int _invalidStreak = 0;
+
+  /// Reject only fixes with accuracy worse than this (metres).
+  /// Raised from 40 m → 65 m because indoor/upper-floor GPS is routinely 40–60 m.
+  static const double _kAccuracyRejectThreshold = 65.0;
+
+  /// Maximum geofence tolerance added on top of the office radius/boundary (metres).
+  /// Accounts for floor-elevation GPS drift in multi-storey buildings.
+  static const double _kMaxTolerance = 25.0;
+
+  /// Building-specific indoor buffer (metres) added regardless of reported accuracy.
+  /// Tuned for GEDUNG B (r=34 m) and GEDUNG A (~80×60 m polygon).
+  static const double _kBuildingBuffer = 15.0;
+
+  /// Rolling window size for weighted-average position smoothing.
+  static const int _kPositionBufferSize = 5;
+
+  /// Consecutive valid reads required before isLocationValid → true.
+  static const int _kValidStreakRequired = 2;
+
+  /// Consecutive invalid reads required before isLocationValid → false.
+  static const int _kInvalidStreakRequired = 3;
+
   StreamSubscription<Position>? _positionStream;
 
   final buttonEnabled = false.obs;
@@ -455,9 +490,12 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _startLocationStream() {
+    // LocationAccuracy.best uses raw GNSS averaging — better for indoors than
+    // bestForNavigation (which is tuned for outdoor pedestrian/vehicle use).
+    // distanceFilter: 0 ensures every fix reaches the buffer for smoothing.
     const locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 2,
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 0,
     );
 
     _positionStream =
@@ -479,13 +517,16 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       isGpsSpoofing.value = true;
     }
 
-    if (newPosition.accuracy > 40) {
-      isLocationValid.value = false;
-      buttonEnabled.value = false;
-      _updateOfficeColors();
+    // ── 1. Hard-reject only extremely noisy fixes ──────────────────────────
+    // Raised from 40 m → 65 m: indoor/upper-floor GPS routinely reports 40–60 m.
+    // Fixes worse than 65 m are too unstable to use for any calculation.
+    if (newPosition.accuracy > _kAccuracyRejectThreshold) {
+      AppUtils.logApp(
+          'GPS fix rejected (accuracy ${newPosition.accuracy.toStringAsFixed(1)} m > ${_kAccuracyRejectThreshold} m threshold)');
       return;
     }
 
+    // ── 2. Spoofing detection via speed ───────────────────────────────────
     if (_previousPosition != null) {
       final distance = Geolocator.distanceBetween(
         _previousPosition!.latitude,
@@ -512,62 +553,174 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       }
     }
 
-    currentPosition.value = LatLng(newPosition.latitude, newPosition.longitude);
-
-    try {
-      if (_previousPosition != null) {
-        Geolocator.distanceBetween(
-          _previousPosition!.latitude,
-          _previousPosition!.longitude,
-          newPosition.latitude,
-          newPosition.longitude,
-        );
-
-        // if (moved > 10) {
-        //   mapController.move(currentPosition.value!, 17);
-        // }
-      }
-    } catch (_) {}
-
     _previousPosition = newPosition;
+
+    // ── 3. Rolling position buffer for weighted-average smoothing ─────────
+    // Reduces outlier spikes caused by a single bad GPS fix.
+    _positionBuffer.add(newPosition);
+    if (_positionBuffer.length > _kPositionBufferSize) {
+      _positionBuffer.removeAt(0);
+    }
+
+    // Use the smoothed position for all geofence checks.
+    final smoothedPos = _computeWeightedPosition();
+    currentPosition.value = smoothedPos;
+
+    // ── 4. Indoor-aware tolerance ─────────────────────────────────────────
+    // Old formula: min(accuracy, 10) — way too tight for upper-floor drift.
+    // New formula: scales with accuracy up to _kMaxTolerance, plus a fixed
+    // building buffer (_kBuildingBuffer) for multi-storey GPS drift.
+    // GEDUNG B radius=34 m → max effective zone ≈ 34+25+15 = 74 m.
+    // GEDUNG A ~80×60 m polygon → boundary buffer up to 40 m.
+    final tolerance =
+        min(newPosition.accuracy * 0.6, _kMaxTolerance) + _kBuildingBuffer;
+
+    AppUtils.logApp(
+        'GPS smoothed | acc=${newPosition.accuracy.toStringAsFixed(1)} m | tolerance=${tolerance.toStringAsFixed(1)} m');
+
     bool valid = false;
     double nearestDistance = double.infinity;
 
+    // ── Circle geofence check ──────────────────────────────────────────────
+    // Handles: GEDUNG B (radius=34 m) and any future radius-type locations.
     for (final circle in officeCircles) {
-      final meter = Geolocator.distanceBetween(
-        currentPosition.value!.latitude,
-        currentPosition.value!.longitude,
+      final centerDist = Geolocator.distanceBetween(
+        smoothedPos.latitude,
+        smoothedPos.longitude,
         circle.point.latitude,
         circle.point.longitude,
       );
 
-      if (meter < nearestDistance) {
-        nearestDistance = meter;
-      }
+      // Use boundary distance (0 if inside, positive if outside) so the
+      // distanceFromOffice display is meaningful rather than showing center dist.
+      final boundaryDist =
+          (centerDist - circle.radius).clamp(0.0, double.infinity);
+      if (boundaryDist < nearestDistance) nearestDistance = boundaryDist;
 
-      final tolerance = min(gpsAccuracy.value, 10);
-
-      if (meter <= circle.radius + tolerance) {
+      if (centerDist <= circle.radius + tolerance) {
         valid = true;
+        AppUtils.logApp(
+            'Inside circle (center=${centerDist.toStringAsFixed(1)} m, boundary=${boundaryDist.toStringAsFixed(1)} m)');
       }
     }
 
-    distanceFromOffice.value = nearestDistance;
+    // ── Polygon geofence check ─────────────────────────────────────────────
+    // Handles: production GEDUNG A+B (single combined polygon), dev GEDUNG A,
+    // and any future polygon-type locations.
+    //
+    // NOTE: runs for ALL polygons regardless of whether a circle already
+    // matched, so that nearestDistance (→ distanceFromOffice) is always
+    // accurate in polygon-only environments (current production response).
+    for (final poly in officePolygons) {
+      if (isPointInsidePolygon(smoothedPos, poly.points)) {
+        // Clearly inside — distance to office is 0.
+        nearestDistance = min(nearestDistance, 0.0);
+        valid = true;
+        AppUtils.logApp('Inside polygon (exact hit)');
+        continue; // continue to capture nearestDistance for remaining polygons
+      }
 
-    if (!valid) {
-      for (final poly in officePolygons) {
-        if (isPointInsidePolygon(currentPosition.value!, poly.points)) {
-          valid = true;
-          break;
-        }
+      // Distance to nearest polygon edge (approximation via edge midpoints).
+      final boundaryDist =
+          _distanceToPolygonBoundary(smoothedPos, poly.points);
+      if (boundaryDist < nearestDistance) nearestDistance = boundaryDist;
+
+      // Within indoor tolerance of the boundary → consider inside.
+      if (boundaryDist <= tolerance) {
+        valid = true;
+        AppUtils.logApp(
+            'Inside polygon (boundary tol=${tolerance.toStringAsFixed(1)} m, dist=${boundaryDist.toStringAsFixed(1)} m)');
       }
     }
 
-    isLocationValid.value = valid;
+    // Set AFTER all geofences evaluated so it reflects the minimum boundary
+    // distance across all circles + polygons.
+    distanceFromOffice.value =
+        nearestDistance == double.infinity ? 0.0 : nearestDistance;
+
+    // ── 5. Streak debouncing ──────────────────────────────────────────────
+    // Prevents a single bad fix from instantly locking the user out or
+    // a single good fix from prematurely enabling check-in.
+    if (valid) {
+      _validStreak++;
+      _invalidStreak = 0;
+      if (_validStreak >= _kValidStreakRequired) {
+        isLocationValid.value = true;
+      }
+    } else {
+      _invalidStreak++;
+      _validStreak = 0;
+      if (_invalidStreak >= _kInvalidStreakRequired) {
+        isLocationValid.value = false;
+      }
+    }
+
     buttonEnabled.value = isLocationValid.value && !isGpsSpoofing.value;
 
     _updateOfficeColors();
-    _calculateNearestOffice(currentPosition.value!);
+    _calculateNearestOffice(smoothedPos);
+  }
+
+  /// Computes a weighted centroid from [_positionBuffer].
+  /// More recent fixes and higher-accuracy fixes receive greater weight.
+  LatLng _computeWeightedPosition() {
+    if (_positionBuffer.isEmpty) {
+      return currentPosition.value ?? const LatLng(0, 0);
+    }
+
+    double totalWeight = 0;
+    double weightedLat = 0;
+    double weightedLng = 0;
+
+    for (int i = 0; i < _positionBuffer.length; i++) {
+      final pos = _positionBuffer[i];
+
+      // Recency weight: index 0 (oldest) = 1×, last = bufferSize×
+      final recencyWeight = (i + 1).toDouble();
+
+      // Accuracy weight: better accuracy (lower value) gets higher weight.
+      // Guard against zero-accuracy edge case.
+      final accuracyWeight = pos.accuracy > 0 ? (1.0 / pos.accuracy) : 1.0;
+
+      final weight = recencyWeight * accuracyWeight;
+      weightedLat += pos.latitude * weight;
+      weightedLng += pos.longitude * weight;
+      totalWeight += weight;
+    }
+
+    return LatLng(weightedLat / totalWeight, weightedLng / totalWeight);
+  }
+
+  /// Returns true if [point] is within [toleranceMeters] of any vertex or
+  /// edge midpoint of [polygon]. Used to handle GPS drift at building edges
+  /// (e.g. users standing near the boundary on an upper floor).
+  bool _isWithinPolygonTolerance(
+      LatLng point, List<LatLng> polygon, double toleranceMeters) {
+    for (int i = 0; i < polygon.length; i++) {
+      final vertex = polygon[i];
+      final next = polygon[(i + 1) % polygon.length];
+
+      // Distance to vertex
+      final distVertex = Geolocator.distanceBetween(
+        point.latitude,
+        point.longitude,
+        vertex.latitude,
+        vertex.longitude,
+      );
+      if (distVertex <= toleranceMeters) return true;
+
+      // Distance to edge midpoint (covers the middle of each side)
+      final midLat = (vertex.latitude + next.latitude) / 2;
+      final midLng = (vertex.longitude + next.longitude) / 2;
+      final distMid = Geolocator.distanceBetween(
+        point.latitude,
+        point.longitude,
+        midLat,
+        midLng,
+      );
+      if (distMid <= toleranceMeters) return true;
+    }
+    return false;
   }
 
   void _startTimer() {
