@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:MyRoyal/app/modules/attendance/data/models/attendance_shift_schedule_model.dart';
+import 'package:MyRoyal/app/modules/attendance/presentation/views/components/attendance_reminder_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -105,12 +107,15 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   final RecordAttendanceUsecase recordAttendanceUsecase;
   final GetAttendanceLocationUsecase getAttendanceLocationUsecase;
 
+  late AttendanceReminderService reminderService;
+
   @override
   void onInit() {
     super.onInit();
+    reminderService = Get.find<AttendanceReminderService>();
+    reminderService.init();
 
     final httpService = Get.find<HttpService>();
-
     ever(httpService.connectionStatus, (String status) {
       if (status == "No connection") {
         isLoadingAttendance.value = true;
@@ -640,7 +645,11 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
           if (result == true && status == 'checked_in') {
             await _getAttendanceToday();
+
+            await scheduleCheckInReminders();
           } else {
+            await cancelAfterCheckout();
+
             _totalHours();
             await _getAttendanceToday();
             isGpsSpoofing.value = false;
@@ -701,6 +710,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             },
             (r) async {
               await _getAttendanceToday();
+              await scheduleBreakEndReminder();
               isLoadingAttendance.value = false;
             },
           );
@@ -784,6 +794,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             },
             (r) async {
               await _getAttendanceToday();
+              await reminderService.cancelBreakReminder();
 
               if (breakEndTime.value != null && breakTime.value != null) {
                 Duration dif = breakEndTime.value!.difference(breakTime.value!);
@@ -911,6 +922,31 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       LatLng(pos.latitude, pos.longitude),
       18,
     );
+  }
+
+  Future<void> scheduleCheckInReminders(
+      AttendanceShiftScheduleModel shift) async {
+    await reminderService.scheduleByShift(shift);
+  }
+
+  Future<void> scheduleBreakEndReminder() async {
+    await reminderService.cancelBreakReminder();
+    // Schedule break-end reminder AT the break end time (not minus 5 min)
+    if (attendanceTodayRes.value.breakEndTime != null) {
+      final now = DateTime.now();
+      final parsed =
+          DateFormat("HH:mm:ss").parse(attendanceTodayRes.value.breakEndTime!);
+      final breakEnd = DateTime(now.year, now.month, now.day, parsed.hour,
+          parsed.minute, parsed.second);
+      await reminderService.scheduleBreakReminder(
+        breakEnd
+            .add(const Duration(minutes: 5)), // 5 min after break ends as nudge
+      );
+    }
+  }
+
+  Future<void> cancelAfterCheckout() async {
+    await reminderService.cancelAll();
   }
 
   String _formatDuration(Duration duration) {

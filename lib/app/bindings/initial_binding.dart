@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/attendance/presentation/views/components/attendance_reminder_service.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/controllers/user_info_controller.dart';
 import 'package:MyRoyal/app/controllers/utility_controller.dart';
@@ -27,6 +28,7 @@ class InitialBinding extends Bindings {
           remoteData: Get.find<GlobalRemoteDataImpl>(),
         ),
       )
-      ..put(GetCacheLogin(Get.find<GlobalRepositoryImpl>()));
+      ..put(GetCacheLogin(Get.find<GlobalRepositoryImpl>()))
+      ..put(() => AttendanceReminderService.instance);
   }
 }
