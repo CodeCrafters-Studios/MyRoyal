@@ -140,8 +140,8 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
           );
 
           result.fold(
-            (l) {},
-            (r) {},
+            (l) => appDialog.showErrorSnackBar(description: 'Failed Download Document'),
+            (r) => appDialog.showSuccessSnackBar(description: 'Success Download Document'),
           );
         } catch (e) {
           AppUtils.logApp("Controller error: $e");

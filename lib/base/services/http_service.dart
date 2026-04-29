@@ -20,6 +20,7 @@ import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:permission_handler/permission_handler.dart';
 
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
@@ -274,6 +275,26 @@ class HttpService extends getx.GetxService {
     int sdkInt = androidInfo.version.sdkInt;
 
     AppUtils.logApp("Saving file: $finalName | SDK: $sdkInt");
+
+    // Request permission for SDK 32 and below (Android 12 and older)
+    if (sdkInt <= 32) {
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        status = await Permission.storage.request();
+        if (status.isPermanentlyDenied) {
+          final openSettings = await AppDialogImpl().showChoiceDialog(
+            title: 'Izin Penyimpanan Dibutuhkan',
+            description:
+                'Mohon aktifkan izin penyimpanan di pengaturan aplikasi untuk dapat mengunduh dan menyimpan file.',
+            textYes: 'Buka Pengaturan',
+            textNo: 'Batal',
+          );
+          if (openSettings) {
+            await openAppSettings();
+          }
+        }
+      }
+    }
 
     if (sdkInt == 29) {
       Directory? dir = await getExternalStorageDirectory();
