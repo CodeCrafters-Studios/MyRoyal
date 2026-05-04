@@ -10,7 +10,6 @@ import 'package:MyRoyal/app/modules/profile/presentation/views/components/tabs/t
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
-import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,35 +31,39 @@ class ProfileView extends GetView<ProfileController> {
 
   Widget _editProfile() {
     return EPadding(
-      padding: const EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.only(right: 12),
       child: Obx(
         () => controller.isLoading.value
-            ? ShimmerText(
-                height: 20.h,
-                width: 100.w,
-              )
-            : TextButton(
-                child: Text(
-                  'Edit Profile',
-                  style: TS.bodyMedium.copyWith(
-                    color: secondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                onPressed: () async {
+            ? ShimmerText(height: 20.h, width: 80.w)
+            : GestureDetector(
+                onTap: () async {
                   await Get.toNamed(
                     Routes.EDIT_PROFILE,
                     arguments: [
                       controller.profileData(),
                       controller.id.value,
-                      controller.userData()
+                      controller.userData(),
                     ],
                   )?.then((value) {
-                    if (value == true) {
-                      controller.refreshProfile();
-                    }
+                    if (value == true) controller.refreshProfile();
                   });
                 },
+                child: Container(
+                  padding: REdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.20),
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                        color: Colors.white.withOpacity(0.4), width: 1),
+                  ),
+                  child: Text(
+                    'Edit Profile',
+                    style: TS.labelSmall.copyWith(
+                      color: white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
               ),
       ),
     );
@@ -68,143 +71,179 @@ class ProfileView extends GetView<ProfileController> {
 }
 
 class ProfileViewImpl extends StatelessWidget {
-  const ProfileViewImpl({
-    super.key,
-    required this.controller,
-  });
-
+  const ProfileViewImpl({super.key, required this.controller});
   final ProfileController controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const AppbarSpacer(),
-        _buildProfilePicture(),
+        _buildHeroHeader(context),
         _buildTabBar(),
         _buildTabBarView(),
       ],
     );
   }
 
-  Widget _buildProfilePicture() {
-    return Obx(
-      () => controller.isLoading.value
-          ? _loadingShimmerProfilePicture()
-          : _loadedProfilePicture(),
-    );
-  }
-
-  Widget _loadedProfilePicture() {
-    return ListTile(
-      horizontalTitleGap: 5,
-      leading: CircleAvatar(
-        radius: 30,
-        backgroundColor:
-            controller.profileData().data.personal.profilePicture.isNotEmpty
-                ? white
-                : secondary,
-        child: controller.profileData().data.personal.profilePicture.isNotEmpty
-            ? ClipOval(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.profileData().data.personal.profilePicture,
-                  fit: BoxFit.cover,
-                  errorWidget: (context, url, error) {
-                    return Image.network(
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
-                      'https://avatar.iran.liara.run/public',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return CachedNetworkImage(
-                          imageUrl:
-                              "https://api.dicebear.com/7.x/initials/png?seed=${controller.userData.value.initialName}",
-                        );
-                      },
-                    );
-                  },
-                ),
-              )
-            : Text(
-                controller.userData().initialName,
-                style: TS.titleLarge,
-              ),
-      ),
-      title: Text(
-        controller.profileData().data.personal.fullName.isNotEmpty
-            ? controller.profileData().data.personal.fullName
-            : '',
-        style: TS.titleSmall,
-      ),
-      subtitle: Text(
-        controller.profileData().data.professional.workEmail.isNotEmpty
-            ? controller.profileData().data.professional.workEmail
-            : '',
-        style: TS.bodyMedium,
-      ),
-    );
-  }
-
-  Widget _loadingShimmerProfilePicture() {
-    return ListTile(
-        horizontalTitleGap: 5,
-        leading: Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: const CircleAvatar(
-            radius: 30,
+  Widget _buildHeroHeader(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: Gradients.primary(),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withOpacity(0.20),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
           ),
-        ),
-        title: ShimmerText(width: 100.w),
-        subtitle: ShimmerText(width: 100.w));
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(20, topPadding + 64, 20, 24),
+      child: Obx(
+        () => controller.isLoading.value
+            ? _buildLoadingHeader()
+            : _buildLoadedHeader(),
+      ),
+    );
   }
 
-  Widget _buildTabBar() {
-    return Stack(
-      fit: StackFit.passthrough,
-      alignment: Alignment.bottomCenter,
+  Widget _buildLoadedHeader() {
+    final data = controller.profileData().data;
+    final hasPicture = data.personal.profilePicture.isNotEmpty;
+    final initial = controller.userData().initialName;
+
+    return Column(
       children: [
+        // Avatar with gold ring
         Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: grey, width: 2.0),
-            ),
+          padding: const EdgeInsets.all(3),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: Gradients.gold(),
+          ),
+          child: CircleAvatar(
+            radius: 40.r,
+            backgroundColor: hasPicture ? white : secondary.withOpacity(0.3),
+            child: hasPicture
+                ? ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: data.personal.profilePicture,
+                      width: 80.r,
+                      height: 80.r,
+                      fit: BoxFit.cover,
+                      errorWidget: (ctx, url, err) => Text(
+                        initial,
+                        style: TS.titleLarge.copyWith(color: white),
+                      ),
+                    ),
+                  )
+                : Text(
+                    initial,
+                    style: TS.titleLarge.copyWith(color: white),
+                  ),
           ),
         ),
-        TabBar(
-          tabAlignment: TabAlignment.center,
-          padding: EdgeInsets.zero,
-          isScrollable: true,
-          controller: controller.tabController,
-          indicator: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(width: 2),
-            ),
+        16.verticalSpace,
+        // Name
+        Text(
+          data.personal.fullName.isNotEmpty ? data.personal.fullName : '-',
+          style: TS.titleMedium.copyWith(
+            color: white,
+            fontWeight: FontWeight.w800,
           ),
-          indicatorSize: TabBarIndicatorSize.tab,
-          labelStyle: TS.bodyMedium.copyWith(color: primary),
-          unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-          unselectedLabelColor: primary,
-          tabs: const [
-            Tab(text: 'Personal'),
-            Tab(text: 'Professional'),
-            Tab(text: 'Documents'),
+          textAlign: TextAlign.center,
+        ),
+        6.verticalSpace,
+        // Email
+        if (data.professional.workEmail.isNotEmpty)
+          Text(
+            data.professional.workEmail,
+            style: TS.bodySmall.copyWith(color: Colors.white70),
+            textAlign: TextAlign.center,
+          ),
+        10.verticalSpace,
+        // Position + Department badges
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          alignment: WrapAlignment.center,
+          children: [
+            if (data.professional.position.isNotEmpty)
+              _buildBadge(data.professional.position, secondary),
+            if (data.professional.department.isNotEmpty)
+              _buildBadge(
+                  data.professional.department, Colors.white.withOpacity(0.25)),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildBadge(String text, Color color) {
+    return Container(
+      padding: REdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Text(
+        text,
+        style: TS.labelSmall.copyWith(
+          color: white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingHeader() {
+    return Shimmer.fromColors(
+      baseColor: Colors.white24,
+      highlightColor: Colors.white38,
+      child: Column(
+        children: [
+          CircleAvatar(radius: 40.r, backgroundColor: Colors.white30),
+          16.verticalSpace,
+          Container(
+            width: 140.w,
+            height: 16.h,
+            color: Colors.white30,
+          ),
+          8.verticalSpace,
+          Container(
+            width: 180.w,
+            height: 12.h,
+            color: Colors.white30,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Container(
+      color: white,
+      child: TabBar(
+        tabAlignment: TabAlignment.fill,
+        padding: EdgeInsets.zero,
+        controller: controller.tabController,
+        indicator: UnderlineTabIndicator(
+          borderSide: const BorderSide(width: 2.5, color: secondary),
+          insets: REdgeInsets.symmetric(horizontal: 20),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        labelStyle: TS.labelMedium
+            .copyWith(color: primary, fontWeight: FontWeight.w700),
+        unselectedLabelStyle: TS.labelMedium.copyWith(color: greyText),
+        labelColor: primary,
+        unselectedLabelColor: greyText,
+        tabs: const [
+          Tab(text: 'Personal'),
+          Tab(text: 'Professional'),
+          Tab(text: 'Documents'),
+        ],
+      ),
     );
   }
 

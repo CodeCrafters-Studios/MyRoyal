@@ -7,7 +7,6 @@ import 'package:MyRoyal/app/modules/home/presentation/views/components/home_slid
 import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_info.dart';
 import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_menu.dart';
 import 'package:MyRoyal/app/modules/home/presentation/views/components/home_user_status.dart';
-import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
@@ -18,47 +17,66 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       child: Scaffold(
-        backgroundColor: white,
-        appBar: AppBar(
-          centerTitle: false,
-          scrolledUnderElevation: 0.0,
-          backgroundColor: primary,
-          automaticallyImplyLeading: false,
-          toolbarHeight: 70.h,
-          title: _buildTitle(),
-          actions: [
+        backgroundColor: bgColor,
+        body: Column(
+          children: [
+            _buildGradientHeader(context),
+            Expanded(
+              child: RefreshIndicator(
+                backgroundColor: white,
+                color: secondary,
+                onRefresh: controller.onRefresh,
+                child: CustomScrollView(
+                  scrollDirection: Axis.vertical,
+                  slivers: [
+                    const HomeUserInfo(),
+                    const HomeUserStatus(),
+                    const HomeUserMenu(),
+                    HomeSlide(controller: controller),
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 120.h),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Premium gradient header with user greeting + notification + logo
+  Widget _buildGradientHeader(BuildContext context) {
+    final topPadding = MediaQuery.of(context).viewPadding.top;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: Gradients.primary(),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withOpacity(0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(20, topPadding + 14, 16, 16),
+        child: Row(
+          children: [
+            Expanded(child: _buildTitle()),
             _buildNotifications(),
-            15.horizontalSpace,
+            12.horizontalSpace,
             _buildLogo(),
           ],
         ),
-        body: Stack(children: [
-          Image.asset(
-            'assets/images/img_bg_page.png',
-            fit: BoxFit.cover,
-          ),
-          RefreshIndicator(
-            backgroundColor: white,
-            color: primary,
-            onRefresh: controller.onRefresh,
-            child: CustomScrollView(
-              scrollDirection: Axis.vertical,
-              slivers: [
-                const HomeUserInfo(),
-                const HomeUserStatus(),
-                const HomeUserMenu(),
-                HomeSlide(
-                  controller: controller,
-                ),
-              ],
-            ),
-          ),
-        ]),
       ),
     );
   }
@@ -67,111 +85,130 @@ class HomeView extends GetView<HomeController> {
     return Obx(
       () => controller.isLoading.value
           ? Shimmer.fromColors(
-              baseColor: Colors.grey.shade300,
-              highlightColor: Colors.grey.shade100,
+              baseColor: Colors.white24,
+              highlightColor: Colors.white38,
               child: Container(
+                width: 25.w,
+                height: 25.h,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Corners.xsRadius,
-                  ),
-                  border: Border.all(color: grey),
-                  color: greyText,
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                height: 27.h,
-                width: 27.w,
               ),
             )
-          : controller.userData.value.data.countNotification != 0
-              ? Badge(
-                  label: Text(
-                    controller.userData.value.data.countNotification.toString(),
-                    style: TS.caption,
-                  ),
-                  child: GestureDetector(
-                    onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
+          : GestureDetector(
+              onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 24.w,
+                    height: 24.h,
                     child: SvgPicture.asset(
-                      height: 27.h,
                       'assets/icons/ic_notifications.svg',
+                      width: 20.w,
+                      height: 20.w,
+                      fit: BoxFit.scaleDown,
                     ),
                   ),
-                )
-              : GestureDetector(
-                  onTap: () => Get.toNamed(Routes.NOTIFICATIONS),
-                  child: SvgPicture.asset(
-                    height: 27.h,
-                    'assets/icons/ic_notifications.svg',
-                  ),
-                ),
+                  if (controller.userData.value.data.countNotification != 0)
+                    Positioned(
+                      top: -4,
+                      right: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: secondary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          controller.userData.value.data.countNotification
+                              .toString(),
+                          style: TS.caption.copyWith(
+                            color: white,
+                            fontSize: 9.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
     );
   }
 
   Widget _buildTitle() {
     return Obx(
-      () => EPadding(
-        padding: const EdgeInsets.only(left: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            controller.isLoading.value
-                ? ShimmerText(
-                    padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-                    margin: REdgeInsets.only(bottom: 5),
-                    width: 150.w,
-                  )
-                : Text(
-                    "Hi.. Welcome Back!👋",
-                    style: TS.bodyMedium.copyWith(color: white),
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          controller.isLoading.value
+              ? Shimmer.fromColors(
+                  baseColor: Colors.white24,
+                  highlightColor: Colors.white38,
+                  child: Container(
+                    width: 130.w,
+                    height: 12.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
                   ),
-            controller.isLoading.value
-                ? _buildLoadingText()
-                : _buildLoadedText(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingLogo() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade300,
-      highlightColor: Colors.grey.shade100,
-      child: EPadding(
-        padding: const EdgeInsets.only(right: 20),
-        child: EImages(
-          name: "assets/images/img_logo.png",
-          height: 55.h,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadedLogo() {
-    return EPadding(
-      padding: const EdgeInsets.only(right: 20),
-      child: EImages(
-        name: "assets/images/img_logo.png",
-        height: 55.h,
+                )
+              : Text(
+                  "Hi, Welcome Back! 👋",
+                  style: TS.bodyMedium.copyWith(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+          4.verticalSpace,
+          controller.isLoading.value
+              ? Shimmer.fromColors(
+                  baseColor: Colors.white24,
+                  highlightColor: Colors.white38,
+                  child: Container(
+                    width: 100.w,
+                    height: 16.h,
+                    margin: const EdgeInsets.only(top: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                  ),
+                )
+              : Text(
+                  controller.userData().data.fullName,
+                  style: TS.titleSmall.copyWith(
+                    color: white,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+        ],
       ),
     );
   }
 
   Widget _buildLogo() {
-    return Obx(() =>
-        controller.isLoading.value ? _buildLoadingLogo() : _buildLoadedLogo());
-  }
-
-  Widget _buildLoadingText() {
-    return ShimmerText(
-      padding: REdgeInsets.only(left: 8, top: 5, bottom: 8),
-      margin: REdgeInsets.only(top: 5),
-      width: 80,
-    );
-  }
-
-  Widget _buildLoadedText() {
-    return Text(
-      controller.userData().data.fullName,
-      style: TS.labelLarge.copyWith(color: white, fontWeight: FontWeight.bold),
+    return Obx(
+      () => controller.isLoading.value
+          ? Shimmer.fromColors(
+              baseColor: Colors.white24,
+              highlightColor: Colors.white38,
+              child: Container(
+                width: 50.w,
+                height: 50.h,
+                color: Colors.white24,
+              ),
+            )
+          : EPadding(
+              padding: const EdgeInsets.only(right: 4),
+              child: EImages(
+                name: "assets/images/img_logo.png",
+                height: 50.h,
+              ),
+            ),
     );
   }
 }

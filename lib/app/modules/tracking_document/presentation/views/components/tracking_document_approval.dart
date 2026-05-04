@@ -192,7 +192,7 @@ class TrackingDocumentApprovalView extends StatelessWidget {
   Widget _buildStatus(dynamic doc) {
     final isOnTime = doc.stateTargetCompletionDate == 'On Time';
     final isUrgent = doc.stateTargetCompletionDate == 'Urgent';
-    final color = isOnTime ? primary50 : (isUrgent ? urgentColor : red);
+    final color = isOnTime ? primary20 : (isUrgent ? urgentColor : red);
 
     return StatusApproval(
       borderColor: color,

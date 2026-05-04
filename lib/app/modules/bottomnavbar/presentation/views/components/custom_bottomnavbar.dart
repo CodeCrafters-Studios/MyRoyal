@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:MyRoyal/base/design/colors.dart';
@@ -17,16 +15,18 @@ class CustomButtomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardApp(
-      radius: 30,
-      isShadow: true,
-      shadows: Shadows.universal,
-      margin: REdgeInsets.all(20),
-      padding: REdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: listBottomNav,
+    return Padding(
+      padding: REdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: CardApp(
+        radius: 28,
+        isShadow: true,
+        shadows: Shadows.floating,
+        padding: REdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: listBottomNav,
+        ),
       ),
     );
   }
@@ -49,31 +49,38 @@ class IconTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedOpacity(
-        duration: const Duration(milliseconds: 300),
-        opacity: isSelected ? 1 : .25,
-        child: isSelected
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    icon,
-                    width: 25.w,
-                    height: 25.h,
-                  ),
-                  Text(
-                    name ?? '',
-                    style: TS.bodyMini
-                        .copyWith(color: primary, fontWeight: FontWeight.bold),
-                  )
-                ],
-              )
-            : SvgPicture.asset(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AnimatedScale(
+              scale: isSelected ? 1.0 : 0.85,
+              duration: const Duration(milliseconds: 200),
+              child: SvgPicture.asset(
                 icon,
-                width: 25.w,
-                height: 25.h,
+                width: 22.w,
+                height: 22.h,
+                colorFilter: isSelected
+                    ? ColorFilter.mode(primary, BlendMode.srcIn)
+                    : const ColorFilter.mode(
+                        Color(0xFFBDBDBD), BlendMode.srcIn),
               ),
+            ),
+            if (isSelected && name != null) ...[
+              4.verticalSpace,
+              Text(
+                name!,
+                style: TS.caption.copyWith(
+                  color: primary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

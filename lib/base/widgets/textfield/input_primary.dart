@@ -37,7 +37,7 @@ class InputPrimary extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.obsecureText = false,
     this.inputShape = TextFieldShape.box,
-    this.cursorColor = primary,
+    this.cursorColor = secondary,
     this.textAlign = TextAlign.start,
     this.isRequired = false,
     this.requiredText = 'Required',
@@ -48,7 +48,7 @@ class InputPrimary extends StatefulWidget {
     this.optionalTextStyle,
     this.labelTextStyle,
     this.outlineColor,
-    this.borderRadius = 10,
+    this.borderRadius = 12,
     this.hintColor = appHintColor,
     this.maxLines = 1,
     this.action = TextInputAction.done,
@@ -124,6 +124,9 @@ class _InputPrimary extends State<InputPrimary> {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveFocusColor = widget.outlineColor ?? secondary;
+    final effectiveRadius = widget.borderRadius;
+
     return Container(
       margin: widget.margin,
       child: Column(
@@ -138,12 +141,13 @@ class _InputPrimary extends State<InputPrimary> {
                 if (widget.label.isNotEmpty)
                   Text(
                     widget.label,
-                    style: widget.labelTextStyle ?? TS.labelLarge,
+                    style: widget.labelTextStyle ??
+                        TS.labelMedium.copyWith(color: appTextColor),
                   ),
                 if (widget.isRequired)
                   Text(
-                    '*',
-                    style: TS.bodyLarge.copyWith(color: Colors.red),
+                    ' *',
+                    style: TS.bodyLarge.copyWith(color: errorColor),
                   ),
                 const Spacer(),
                 if (widget.showRequiredText)
@@ -154,57 +158,69 @@ class _InputPrimary extends State<InputPrimary> {
                 if (widget.isOptional)
                   Text(
                     widget.optitonalText,
-                    style: widget.optionalTextStyle,
+                    style: widget.optionalTextStyle ??
+                        TS.labelSmall.copyWith(color: greyText),
                   ),
               ],
             ),
-            4.verticalSpace,
+            6.verticalSpace,
           ],
           TextFormField(
             initialValue: widget.initialValue,
             focusNode: _internalFocusNode,
             scrollPadding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom + 16 * 4,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 64,
             ),
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
-              border: widget.inputShape == TextFieldShape.box
-                  ? OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(widget.borderRadius)),
-                      borderSide: BorderSide(
-                          color: widget.outlineColor ?? Colors.transparent),
-                    )
-                  : null,
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
+                borderSide:
+                    BorderSide(color: widget.outlineColor ?? borderSubtle),
+              ),
               contentPadding: widget.contentPadding ??
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               enabled: widget.enable,
               fillColor: widget.color ?? inputColor,
               filled: true,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.suffixIcon,
-              hoverColor: widget.outlineColor,
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: widget.outlineColor ?? primary),
+                borderSide: BorderSide(color: effectiveFocusColor, width: 1.5),
                 borderRadius:
-                    BorderRadius.all(Radius.circular(widget.borderRadius)),
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
               ),
-              enabledBorder: widget.inputShape == TextFieldShape.box
-                  ? OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: widget.outlineColor ?? Colors.transparent),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(widget.borderRadius)),
-                    )
-                  : null,
+              enabledBorder: OutlineInputBorder(
+                borderSide:
+                    BorderSide(color: widget.outlineColor ?? borderSubtle),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: borderSubtle.withOpacity(0.5)),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: errorColor),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: errorColor, width: 1.5),
+                borderRadius:
+                    BorderRadius.all(Radius.circular(effectiveRadius)),
+              ),
               hintText: widget.hint,
               hintStyle: widget.hintStyle ??
-                  TS.bodyLarge.copyWith(color: widget.hintColor),
+                  TS.bodyMedium.copyWith(color: widget.hintColor),
               errorMaxLines: 2,
-              errorStyle: widget.errorTextStyle,
+              errorStyle: widget.errorTextStyle ??
+                  TS.labelSmall.copyWith(color: errorColor),
               errorText: widget.errorMessage,
               prefixIconConstraints:
-                  BoxConstraints(maxHeight: 42.h, maxWidth: 56.w),
+                  BoxConstraints(maxHeight: 44.h, maxWidth: 56.w),
             ),
             onChanged: widget.onChanged,
             controller: widget.controller,
@@ -219,7 +235,8 @@ class _InputPrimary extends State<InputPrimary> {
             obscureText: widget.obsecureText,
             onTapOutside: (event) => AppUtils.dismissKeyboard(),
             readOnly: widget.readOnly,
-            style: widget.textStyle ?? TS.labelMedium,
+            style: widget.textStyle ??
+                TS.bodyMedium.copyWith(color: widget.textColor),
             textAlign: widget.textAlign,
             textInputAction: widget.action,
             validator: widget.validation,

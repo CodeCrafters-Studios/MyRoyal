@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Branch {
-  Branch({
+class BranchEntity {
+  BranchEntity({
     required this.branchName,
     required this.code,
     required this.logo,

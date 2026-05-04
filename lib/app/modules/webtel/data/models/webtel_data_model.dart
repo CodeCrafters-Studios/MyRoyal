@@ -1,6 +1,6 @@
-import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel_data.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel_data_entity.dart';
 
-class WebtelDataModel extends WebtelData {
+class WebtelDataModel extends WebtelDataEntity {
   const WebtelDataModel({
     required super.fullName,
     required super.departmentName,

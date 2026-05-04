@@ -1,7 +1,7 @@
 import 'package:MyRoyal/app/modules/webtel/data/models/webtel_data_model.dart';
-import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel_entity.dart';
 
-class WebtelModel extends Webtel {
+class WebtelModel extends WebtelEntity {
   const WebtelModel(
       {required super.code, required super.message, required super.data});
 

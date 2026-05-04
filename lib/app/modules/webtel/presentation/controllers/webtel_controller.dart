@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/webtel/data/models/webtel_data_model.dart';
-import 'package:MyRoyal/app/modules/webtel/domain/entities/branch.dart';
-import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/branch_entity.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel_entity.dart';
 import 'package:MyRoyal/app/modules/webtel/domain/usecases/get_webtel.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
@@ -25,32 +25,32 @@ class WebtelController extends GetxController {
   RxBool isLoading = false.obs;
   RxString valueListener = ''.obs;
 
-  List<Branch> branchData = [
-    Branch(
+  List<BranchEntity> branchData = [
+    BranchEntity(
       branchName: 'PT Royal Abadi Sejahtera',
       code: 'RAS',
       color: white,
       logo: 'assets/images/img_logo.png',
     ),
-    Branch(
+    BranchEntity(
       branchName: 'PT BM',
       code: 'BM',
       color: white,
       logo: 'assets/images/img_logo_bm.JPG',
     ),
-    Branch(
+    BranchEntity(
       branchName: 'PT ACA',
       code: 'ACA',
       color: white,
       logo: 'assets/images/img_logo_aca.png',
     ),
-    Branch(
+    BranchEntity(
       branchName: 'PT CAM',
       code: 'CAM',
       color: white,
       logo: 'assets/images/img_logo_cam.png',
     ),
-    Branch(
+    BranchEntity(
       branchName: 'PT BCP',
       code: 'BCP',
       color: white,
@@ -58,7 +58,8 @@ class WebtelController extends GetxController {
     ),
   ];
 
-  Rx<Webtel> webtelData = const Webtel(code: 0, message: '', data: {}).obs;
+  Rx<WebtelEntity> webtelData =
+      const WebtelEntity(code: 0, message: '', data: {}).obs;
   RxList<WebtelDataModel> rasData = <WebtelDataModel>[].obs;
   RxList<WebtelDataModel> bmData = <WebtelDataModel>[].obs;
   RxList<WebtelDataModel> acaData = <WebtelDataModel>[].obs;

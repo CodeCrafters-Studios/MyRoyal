@@ -10,14 +10,94 @@ ThemeData appTheme(BuildContext context) {
     primaryColor: MaterialColor(primary.value, materialColor),
     primarySwatch: MaterialColor(primaryColor.value, materialColor),
     fontFamily: AppConfig.fontFamily,
-    splashColor: Colors.white54,
+    splashColor: Colors.white24,
+    splashFactory: InkRipple.splashFactory,
     scaffoldBackgroundColor: bgColor,
     textTheme: context.textTheme.apply(bodyColor: appTextColor),
-    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: primaryColor),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      secondary: secondary,
+      primary: primary,
+      surface: cardColor,
+    ),
+    cardTheme: CardThemeData(
+      elevation: 0,
+      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(14.r)),
+      ),
+      margin: EdgeInsets.zero,
+    ),
+    dividerTheme: const DividerThemeData(
+      color: borderSubtle,
+      thickness: 1,
+      space: 1,
+    ),
     dialogTheme: DialogThemeData(
       backgroundColor: white,
-      titleTextStyle: TS.titleLarge.copyWith(color: black),
-      contentTextStyle: TS.bodySmall.copyWith(color: black),
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16.r)),
+      ),
+      titleTextStyle: TS.titleMedium.copyWith(color: primary),
+      contentTextStyle: TS.bodySmall.copyWith(color: appTextColor),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: inputColor,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        borderSide: const BorderSide(color: borderSubtle),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        borderSide: const BorderSide(color: borderSubtle),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        borderSide: const BorderSide(color: secondary, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        borderSide: const BorderSide(color: errorColor),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        borderSide: const BorderSide(color: errorColor, width: 1.5),
+      ),
+      hintStyle: TS.bodyMedium.copyWith(color: appHintColor),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: primary,
+        foregroundColor: white,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.r)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        textStyle: TS.labelLarge.copyWith(color: white),
+      ),
+    ),
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      backgroundColor: primary,
+      foregroundColor: white,
+      titleTextStyle: TS.titleSmall.copyWith(color: white),
+      iconTheme: const IconThemeData(color: white),
+      scrolledUnderElevation: 0,
+    ),
+    tabBarTheme: TabBarThemeData(
+      labelColor: primary,
+      unselectedLabelColor: greyText,
+      indicator: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(8.r)),
+        color: primary.withOpacity(0.08),
+      ),
+      indicatorSize: TabBarIndicatorSize.tab,
+      labelStyle: TS.labelMedium.copyWith(fontWeight: FontWeight.w700),
+      unselectedLabelStyle: TS.labelMedium,
     ),
   );
 }
@@ -28,16 +108,12 @@ ThemeData darkTheme(BuildContext context) {
     primaryColor: MaterialColor(primaryDark.value, materialColor),
     primarySwatch: MaterialColor(primaryDark.value, materialColor),
     fontFamily: AppConfig.fontFamily,
-    splashColor: Colors.white54,
+    splashColor: Colors.white24,
     scaffoldBackgroundColor: bgColorDark,
     textTheme: context.textTheme.apply(bodyColor: Colors.white),
     colorScheme: ColorScheme.fromSwatch(
       brightness: Brightness.dark,
-    ).copyWith(secondary: primaryColor),
-    // textTheme: Theme.of(context).textTheme.apply(
-    //       bodyColor: Colors.white,
-    //       displayColor: Colors.white,
-    //     ),
+    ).copyWith(secondary: secondary),
   );
 }
 
@@ -104,6 +180,7 @@ class TS {
     fontFamily: AppConfig.fontFamily,
     letterSpacing: 0,
     fontWeight: FontWeight.w400,
+    color: appTextColor,
   );
 
   static TextStyle get displayLarge => ts.copyWith(fontSize: 57.sp);
@@ -113,124 +190,127 @@ class TS {
   static TextStyle get headlineLarge => ts.copyWith(
         fontSize: 32.sp,
         fontWeight: FontWeight.w700,
+        letterSpacing: -0.5,
       );
   static TextStyle get headlineMedium => ts.copyWith(
         fontSize: 28.sp,
         fontWeight: FontWeight.w700,
+        letterSpacing: -0.3,
       );
   static TextStyle get headlineSmall => ts.copyWith(
         fontSize: 24.sp,
         fontWeight: FontWeight.w700,
+        letterSpacing: -0.2,
       );
 
   static TextStyle get titleLarge =>
-      ts.copyWith(fontSize: 20.sp, fontWeight: FontWeight.w700);
+      ts.copyWith(fontSize: 20.sp, fontWeight: FontWeight.w700, letterSpacing: -0.2);
   static TextStyle get titleMedium => ts.copyWith(
         fontSize: 16.sp,
         fontWeight: FontWeight.w700,
-        letterSpacing: .15,
+        letterSpacing: 0,
       );
   static TextStyle get titleSmall => ts.copyWith(
         fontSize: 14.sp,
         fontWeight: FontWeight.w700,
-        letterSpacing: .1,
+        letterSpacing: 0,
       );
 
   static TextStyle get labelLarge => ts.copyWith(
         fontSize: 14.sp,
         fontWeight: FontWeight.w600,
-        letterSpacing: .1,
+        letterSpacing: 0,
       );
   static TextStyle get labelMedium => ts.copyWith(
         fontSize: 12.sp,
         fontWeight: FontWeight.w600,
-        letterSpacing: .1,
+        letterSpacing: 0,
       );
   static TextStyle get labelSmall => ts.copyWith(
         fontSize: 11.sp,
         fontWeight: FontWeight.w600,
-        letterSpacing: .5,
+        letterSpacing: 0.2,
       );
 
   static TextStyle get bodyLarge => ts.copyWith(
         fontSize: 16.sp,
-        letterSpacing: .15,
+        letterSpacing: 0,
         fontWeight: FontWeight.w500,
       );
   static TextStyle get bodyMedium => ts.copyWith(
         fontSize: 14.sp,
-        letterSpacing: .25,
+        letterSpacing: 0,
         fontWeight: FontWeight.w500,
       );
   static TextStyle get bodyMediumBold => ts.copyWith(
         fontSize: 14.sp,
-        letterSpacing: .25,
+        letterSpacing: 0,
         fontWeight: FontWeight.bold,
       );
   static TextStyle get bodySmall => ts.copyWith(
         fontSize: 12.sp,
-        letterSpacing: .1,
+        letterSpacing: 0,
         fontWeight: FontWeight.w500,
       );
   static TextStyle get bodyMini => ts.copyWith(
         fontSize: 10.sp,
-        letterSpacing: .4,
+        letterSpacing: 0,
       );
 
   static TextStyle get caption => ts.copyWith(
         fontSize: 10.sp,
-        letterSpacing: .25,
+        letterSpacing: 0,
         fontWeight: FontWeight.w600,
       );
 }
 
 class Shadows {
   static List<BoxShadow> get universal => [
-        const BoxShadow(
-          color: Color(0x19202020),
-          blurRadius: 13.54,
-          offset: Offset(0, 3.85),
+        BoxShadow(
+          color: primary.withOpacity(0.06),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
         ),
-        const BoxShadow(
-          color: Color(0x10202020),
-          blurRadius: 37.44,
-          offset: Offset(0, 10.64),
-        ),
-        const BoxShadow(
-          color: Color(0x0C202020),
-          blurRadius: 90.14,
-          offset: Offset(0, 25.63),
-        ),
-        const BoxShadow(
-          color: Color(0x08202020),
-          blurRadius: 299,
-          offset: Offset(0, 85),
+        BoxShadow(
+          color: primary.withOpacity(0.04),
+          blurRadius: 32,
+          offset: const Offset(0, 10),
         ),
       ];
 
   static List<BoxShadow> get up => [
-        const BoxShadow(
-          offset: Offset(0, -5),
-          blurRadius: 10,
-          spreadRadius: 2,
-          color: Color.fromARGB(31, 108, 108, 108),
+        BoxShadow(
+          offset: const Offset(0, -4),
+          blurRadius: 16,
+          spreadRadius: 0,
+          color: primary.withOpacity(0.08),
         ),
       ];
 
   static List<BoxShadow> get small => [
-        const BoxShadow(
-          color: Color.fromARGB(24, 126, 126, 126),
-          blurRadius: 5,
-          offset: Offset(0, 3),
+        BoxShadow(
+          color: primary.withOpacity(0.07),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
-        const BoxShadow(
-          color: Color.fromARGB(16, 141, 141, 141),
-          blurRadius: 10,
-          offset: Offset(0, 5),
+        BoxShadow(
+          color: primary.withOpacity(0.04),
+          blurRadius: 20,
+          offset: const Offset(0, 6),
         ),
-        const BoxShadow(
-          color: Color.fromARGB(16, 141, 141, 141),
-          blurRadius: 50,
+      ];
+
+  /// Stronger shadow for floating elements (bottom nav, modals)
+  static List<BoxShadow> get floating => [
+        BoxShadow(
+          color: primary.withOpacity(0.10),
+          blurRadius: 24,
+          offset: const Offset(0, 8),
+        ),
+        BoxShadow(
+          color: primary.withOpacity(0.06),
+          blurRadius: 48,
+          offset: const Offset(0, 16),
         ),
       ];
 }

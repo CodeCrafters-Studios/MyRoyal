@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,7 +10,6 @@ import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/app_images/logo.dart';
 import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
-import 'package:MyRoyal/base/widgets/card/card_app.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:MyRoyal/base/widgets/page_base.dart';
 import 'package:MyRoyal/base/widgets/textfield/input_password.dart';
@@ -29,118 +30,192 @@ class LoginView extends GetView<LoginController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            85.verticalSpace,
-            const Logo(),
-            35.verticalSpace,
-            CardApp(
-              isShadow: true,
-              shadows: Shadows.small,
-              padding: REdgeInsets.all(8),
-              margin: REdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Obx(
-                    () => InputPrimary(
-                      focusNode: controller.focusNodeUsername,
-                      controller: controller.usernameController,
-                      key: const Key('inputUsername'),
-                      label: 'Username',
-                      hint: 'Username',
-                      onChanged: (value) => controller.setLoginValue(
-                        FormLoginValue.username,
-                        value.toLowerCase(),
-                      ),
-                      validation: (value) =>
-                          value?.isEmpty ?? false ? 'Cannot be empty' : null,
-                      prefixIcon: EPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: ImageIcon(
-                          const AssetImage('assets/icons/ic_user.png'),
-                          size: 20.r,
-                          color: greyIcon,
-                        ),
-                      ),
-                      suffixIcon: controller.isFocus.value
-                          ? IconButton(
-                              onPressed: controller.clear,
-                              icon: const Icon(Icons.clear),
-                            )
-                          : null,
-                    ),
-                  ),
-                  10.verticalSpace,
-                  InputPassword(
-                    key: const Key('inputPassword'),
-                    hint: 'Password',
-                    onChanged: (value) => controller.setLoginValue(
-                      FormLoginValue.password,
-                      value,
-                    ),
-                    validation: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password cannot be empty';
-                      } else if (value.length < 6) {
-                        return 'Password must be at least 6 characters long';
-                      }
-                      return null;
-                    },
-                    prefixIcon: EPadding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: ImageIcon(
-                        const AssetImage('assets/icons/ic_lock.png'),
-                        size: 20.r,
-                        color: greyIcon,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        key: const Key('loginForgotPassword'),
-                        onPressed: controller.gotoForgotPassword,
-                        child: Text('Forgot Password?',
-                            style: TS.bodyMedium.copyWith(color: primary)),
-                      ),
-                    ],
-                  ),
-                ],
+            100.verticalSpace,
+            // Logo with shadow glow
+            _buildLogo(),
+            12.verticalSpace,
+            Text(
+              'MyRoyal',
+              style: TS.titleMedium.copyWith(
+                color: primary,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.5,
               ),
             ),
-            30.verticalSpace,
+            4.verticalSpace,
+            Text(
+              'Sign in to your account',
+              style: TS.bodySmall.copyWith(color: greyText),
+            ),
+            32.verticalSpace,
+            // Glassmorphism form card
+            _buildFormCard(context),
+            24.verticalSpace,
             Obx(
               () => ButtonPrimary(
-                margin: REdgeInsets.symmetric(horizontal: 16),
+                margin: REdgeInsets.symmetric(horizontal: 24),
                 key: const Key('loginBtn'),
                 onPressed: controller.getParams,
                 isLoading: controller.isLoading.value,
-                text: 'Login',
+                text: 'Sign In',
                 fullWidth: true,
+                borderRadius: 14,
               ),
             ),
-            30.verticalSpace,
-            const EPadding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: OrLoginWith(),
+            24.verticalSpace,
+            EPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: const OrLoginWith(),
             ),
-            30.verticalSpace,
+            20.verticalSpace,
             BiometricsLogin(
               key: const Key('loginBiometrics'),
               onTap: controller.biometricAuthentication,
             ),
-            20.verticalSpace,
+            16.verticalSpace,
             HaveNoAccount(
               key: const Key('loginNoAccount'),
               onTap: controller.dontHaveAnAccount,
             ),
-            10.verticalSpace,
+            16.verticalSpace,
             Text(
               'Version ${controller.deviceInfo.packageInfo.version}',
-              style: TS.bodySmall.copyWith(fontWeight: FontWeight.w500),
+              style: TS.caption.copyWith(color: greyText),
               textAlign: TextAlign.center,
             ),
+            32.verticalSpace,
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: primary.withOpacity(0.12),
+            blurRadius: 30,
+            spreadRadius: 4,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: const Logo(),
+    );
+  }
+
+  Widget _buildFormCard(BuildContext context) {
+    return Padding(
+      padding: REdgeInsets.symmetric(horizontal: 24),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20.r),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            padding: REdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: white.withOpacity(0.88),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: white.withOpacity(0.6),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: primary.withOpacity(0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Username',
+                  style: TS.labelMedium.copyWith(color: appTextColor),
+                ),
+                6.verticalSpace,
+                Obx(
+                  () => InputPrimary(
+                    focusNode: controller.focusNodeUsername,
+                    controller: controller.usernameController,
+                    key: const Key('inputUsername'),
+                    label: '',
+                    hint: 'Enter your username',
+                    onChanged: (value) => controller.setLoginValue(
+                      FormLoginValue.username,
+                      value.toLowerCase(),
+                    ),
+                    validation: (value) =>
+                        value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                    prefixIcon: EPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: ImageIcon(
+                        const AssetImage('assets/icons/ic_user.png'),
+                        size: 18.r,
+                        color: greyText,
+                      ),
+                    ),
+                    suffixIcon: controller.isFocus.value
+                        ? IconButton(
+                            onPressed: controller.clear,
+                            icon:
+                                Icon(Icons.clear, size: 18.r, color: greyText),
+                          )
+                        : null,
+                    color: inputColor,
+                    borderRadius: 12,
+                  ),
+                ),
+                14.verticalSpace,
+                InputPassword(
+                  key: const Key('inputPassword'),
+                  hint: 'Enter your password',
+                  onChanged: (value) => controller.setLoginValue(
+                    FormLoginValue.password,
+                    value,
+                  ),
+                  validation: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Password cannot be empty';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
+                  prefixIcon: EPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: ImageIcon(
+                      const AssetImage('assets/icons/ic_lock.png'),
+                      size: 18.r,
+                      color: greyText,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      key: const Key('loginForgotPassword'),
+                      onPressed: controller.gotoForgotPassword,
+                      child: Text(
+                        'Forgot Password?',
+                        style: TS.bodySmall.copyWith(
+                          color: secondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

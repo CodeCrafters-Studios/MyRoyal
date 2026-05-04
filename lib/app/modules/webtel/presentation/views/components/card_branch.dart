@@ -34,7 +34,6 @@ class BranchCard extends StatelessWidget {
         color: color.withOpacity(0.3),
         onTap: onTap,
         child: Card(
-          elevation: 2,
           child: Stack(
             children: [
               Positioned(

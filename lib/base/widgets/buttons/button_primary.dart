@@ -6,7 +6,7 @@ import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/loading_indicator.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 
-class ButtonPrimary extends StatelessWidget {
+class ButtonPrimary extends StatefulWidget {
   const ButtonPrimary({
     super.key,
     required this.onPressed,
@@ -27,134 +27,205 @@ class ButtonPrimary extends StatelessWidget {
     this.borderSide,
     this.text = 'Button',
     this.enable = true,
-    this.borderRadius = 10,
+    this.borderRadius = 12,
     this.isOutline = false,
     this.outlineColor,
     this.textStyle,
+    this.gradient,
   });
 
-  ///receive a ValueNotifier to indicate a loading widget
   final bool isLoading;
   final bool enable;
-
-  ///
   final Widget? child;
   final String text;
   final TextStyle? textStyle;
-
-  ///An icon to show at before [child]
   final Widget? icon;
   final Widget? suffixIcon;
-
-  ///
   final VoidCallback? onPressed;
-
-  ///
   final Function? onLongPressed;
-
-  //
   final double? elevation;
-
-  ///Button's background Color
   final Color color;
-
-  ///Text's color for a child that usually a Text
   final Color? textColor;
-
-  ///Loading indicator's color, default is white
   final Color loadingColor;
-
-  ///A widget to show when loading, if the value is null,
-  ///it will use a loading widget from SuraProvider or CircularProgressIndicator
   final Widget? loadingWidget;
-
-  ///Button's margin
   final EdgeInsets margin;
-
-  ///Button's padding
   final EdgeInsets padding;
-
-  ///child's alignment
   final MainAxisAlignment? alignment;
-
-  ///if [fullWidth] is `true`, Button will take all remaining horizontal space
   final bool fullWidth;
-
-  ///
   final BorderSide? borderSide;
   final double borderRadius;
   final bool isOutline;
   final Color? outlineColor;
 
+  /// If provided, overrides [color] with a gradient background
+  final LinearGradient? gradient;
+
+  @override
+  State<ButtonPrimary> createState() => _ButtonPrimaryState();
+}
+
+class _ButtonPrimaryState extends State<ButtonPrimary> {
+  bool _isPressed = false;
+
+  LinearGradient? get _effectiveGradient {
+    if (widget.isOutline) return null;
+    if (widget.gradient != null) return widget.gradient;
+    // Use brand gradient by default when primary color is used
+    if (widget.color == primary || widget.color == primaryColor) {
+      return Gradients.primary();
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 100),
-      width: fullWidth ? double.infinity : null,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-      ),
-      margin: margin,
-      child: ElevatedButton(
-        onPressed: isLoading
-            ? () {}
-            : enable
-                ? onPressed
-                : null,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: textColor,
-          backgroundColor: isOutline
-              ? Colors.transparent
-              : isLoading
-                  ? color.withOpacity(.4)
-                  : color,
-          shape: isOutline
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                  side: BorderSide(color: outlineColor ?? color),
-                )
-              : RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                ),
-          padding: padding,
-          elevation: isLoading || isOutline ? 0 : elevation,
-          side: borderSide,
+    final gradient = _effectiveGradient;
+    final borderRadius =
+        BorderRadius.all(Radius.circular(widget.borderRadius));
+
+    return GestureDetector(
+      onTapDown: widget.isLoading || !widget.enable
+          ? null
+          : (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: AnimatedScale(
+        scale: _isPressed ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 100),
+          width: widget.fullWidth ? double.infinity : null,
+          margin: widget.margin,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: borderRadius,
+          ),
+          child: widget.isOutline
+              ? _buildOutlineButton(borderRadius)
+              : gradient != null
+                  ? _buildGradientButton(gradient, borderRadius)
+                  : _buildSolidButton(borderRadius),
         ),
-        child: Visibility(
-          visible: isLoading,
-          replacement: Row(
-            mainAxisAlignment: alignment ?? MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              if (icon != null) ...[
-                icon ?? emptyBox,
-                8.horizontalSpace,
+      ),
+    );
+  }
+
+  Widget _buildGradientButton(
+      LinearGradient gradient, BorderRadius borderRadius) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient:
+            widget.isLoading ? null : gradient,
+        color: widget.isLoading
+            ? widget.color.withOpacity(0.5)
+            : null,
+        borderRadius: borderRadius,
+        boxShadow: widget.isLoading
+            ? []
+            : [
+                BoxShadow(
+                  color: primary.withOpacity(0.25),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
               ],
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: child ??
-                    Text(
-                      text,
-                      style: textStyle ??
-                          TS.titleSmall.copyWith(
-                            color: textColor ?? Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                    ),
-              ),
-              if (suffixIcon != null) ...[
-                8.horizontalSpace,
-                suffixIcon ?? emptyBox,
-              ],
-            ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.isLoading
+              ? null
+              : widget.enable
+                  ? widget.onPressed
+                  : null,
+          borderRadius: borderRadius,
+          splashColor: Colors.white24,
+          highlightColor: Colors.white10,
+          child: _buildButtonContent(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSolidButton(BorderRadius borderRadius) {
+    return ElevatedButton(
+      onPressed: widget.isLoading
+          ? () {}
+          : widget.enable
+              ? widget.onPressed
+              : null,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: widget.textColor,
+        backgroundColor:
+            widget.isLoading ? widget.color.withOpacity(0.4) : widget.color,
+        shape: RoundedRectangleBorder(borderRadius: borderRadius),
+        padding: widget.padding,
+        elevation: widget.isLoading ? 0 : widget.elevation,
+        side: widget.borderSide,
+      ),
+      child: _buildButtonContent(),
+    );
+  }
+
+  Widget _buildOutlineButton(BorderRadius borderRadius) {
+    return ElevatedButton(
+      onPressed: widget.isLoading
+          ? () {}
+          : widget.enable
+              ? widget.onPressed
+              : null,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: widget.textColor,
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: borderRadius,
+          side: BorderSide(color: widget.outlineColor ?? widget.color),
+        ),
+        padding: widget.padding,
+        elevation: 0,
+        side: widget.borderSide,
+        shadowColor: Colors.transparent,
+      ),
+      child: _buildButtonContent(),
+    );
+  }
+
+  Widget _buildButtonContent() {
+    return Visibility(
+      visible: widget.isLoading,
+      replacement: Row(
+        mainAxisAlignment:
+            widget.alignment ?? MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (widget.icon != null) ...[
+            widget.icon ?? emptyBox,
+            8.horizontalSpace,
+          ],
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: widget.child ??
+                Text(
+                  widget.text,
+                  style: widget.textStyle ??
+                      TS.titleSmall.copyWith(
+                        color: widget.textColor ?? Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
           ),
-          child: const EPadding(
-            padding: EdgeInsets.all(12),
-            child: LoadingIndicator(
-              key: Key('loadingButton'),
-            ),
-          ),
+          if (widget.suffixIcon != null) ...[
+            8.horizontalSpace,
+            widget.suffixIcon ?? emptyBox,
+          ],
+        ],
+      ),
+      child: EPadding(
+        padding: const EdgeInsets.all(12),
+        child: LoadingIndicator(
+          key: const Key('loadingButton'),
+          fgColor: widget.loadingColor,
         ),
       ),
     );

@@ -103,7 +103,7 @@ class DetailTrackingDocumentView
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
-                                    ? primary50
+                                    ? primary20
                                     : controller.trackingDocumentListData
                                                 .stateTargetCompletionDate ==
                                             'Urgent'
@@ -145,7 +145,7 @@ class DetailTrackingDocumentView
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
-                                    ? primary50
+                                    ? primary20
                                     : controller.trackingDocumentListData
                                                 .stateTargetCompletionDate ==
                                             'Urgent'
@@ -230,7 +230,7 @@ class DetailTrackingDocumentView
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
-                                    ? primary50
+                                    ? primary20
                                     : controller.trackingDocumentListData
                                                 .stateTargetCompletionDate ==
                                             'Urgent'
@@ -314,7 +314,7 @@ class DetailTrackingDocumentView
                                 : controller.trackingDocumentListData
                                             .stateTargetCompletionDate ==
                                         'On Time'
-                                    ? primary50
+                                    ? primary20
                                     : controller.trackingDocumentListData
                                                 .stateTargetCompletionDate ==
                                             'Urgent'

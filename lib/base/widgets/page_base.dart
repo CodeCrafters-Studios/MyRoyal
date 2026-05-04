@@ -68,19 +68,24 @@ class PageBase extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             if (showBackground)
-              showBackgroundLogin == false
-                  ? Image.asset(
-                      'assets/images/img_motif.png',
-                      width: Get.width,
-                      height: Get.height,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset(
-                      'assets/images/img_bg_login.png',
-                      width: Get.width,
-                      height: Get.height,
-                      fit: BoxFit.cover,
-                    ),
+              Positioned.fill(
+                child: showBackgroundLogin == false
+                    ? Opacity(
+                        opacity: 0.18,
+                        child: Image.asset(
+                          'assets/images/img_motif.png',
+                          width: Get.width,
+                          height: Get.height,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/img_bg_login.png',
+                        width: Get.width,
+                        height: Get.height,
+                        fit: BoxFit.cover,
+                      ),
+              ),
             SizedBox(height: Get.height, width: Get.width),
             if (useTopPadding)
               Padding(

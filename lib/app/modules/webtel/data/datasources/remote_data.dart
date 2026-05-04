@@ -1,12 +1,12 @@
 import 'package:MyRoyal/app/modules/webtel/data/models/webtel_model.dart';
-import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel.dart';
+import 'package:MyRoyal/app/modules/webtel/domain/entities/webtel_entity.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/errors/failures.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
 
 abstract class WebtelRemoteDataSources {
-  Future<Webtel> getWebtel();
+  Future<WebtelEntity> getWebtel();
 }
 
 class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
@@ -14,7 +14,7 @@ class WebtelRemoteDataSourcesImpl extends WebtelRemoteDataSources {
 
   final HttpService httpService;
   @override
-  Future<Webtel> getWebtel() async {
+  Future<WebtelEntity> getWebtel() async {
     try {
       final r = await httpService.request(
         withToken: true,

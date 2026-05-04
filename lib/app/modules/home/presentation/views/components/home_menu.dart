@@ -126,7 +126,7 @@ class HomeMenu extends GetView<HomeController> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            height: 54.h,
+            height: 46.h,
             padding: REdgeInsets.all(4),
             child: Center(
               child: SvgPicture.asset('assets/icons/${menu.code}.svg'),

@@ -114,12 +114,12 @@ class TrackingDocumentImplView extends StatelessWidget {
                           _statusContainer(
                             icon: Icons.info,
                             label: 'ON TIME',
-                            color: primary50,
+                            color: primary20,
                           ),
                           5.horizontalSpace,
                           Text(
                             controller.listDataStatusOnTime.length.toString(),
-                            style: TS.bodyMedium.copyWith(color: primary50),
+                            style: TS.bodyMedium.copyWith(color: primary20),
                           ),
                         ],
                       ),

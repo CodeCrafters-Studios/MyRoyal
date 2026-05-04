@@ -1,3 +1,4 @@
+import 'package:MyRoyal/base/design/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_t
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeSlide extends StatelessWidget {
   const HomeSlide({super.key, required this.controller});
@@ -24,26 +26,33 @@ class HomeSlide extends StatelessWidget {
   }
 
   Widget _loadingArticles() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: EPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: ShimmerText(
-              width: 150.w,
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade200,
+      highlightColor: Colors.grey.shade50,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 20, 16, 0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: EPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: ShimmerText(
+                  width: 150.w,
+                ),
+              ),
             ),
-          ),
+            ShimmerText(
+              width: Get.width * .9,
+              height: 132.h,
+            ),
+            Container(
+              height: 100.h,
+            ),
+          ],
         ),
-        ShimmerText(
-          width: Get.width * .9,
-          height: 132.h,
-        ),
-        Container(
-          height: 100.h,
-        ),
-      ],
+      ),
     );
   }
 
@@ -52,12 +61,25 @@ class HomeSlide extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 21),
-          child: Text(
-            'Royal Wiki',
-            style: TS.titleMedium,
-            textAlign: TextAlign.start,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+          child: Row(
+            children: [
+              Container(
+                width: 3.w,
+                height: 16.h,
+                decoration: BoxDecoration(
+                  gradient: Gradients.primary(),
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              ),
+              8.horizontalSpace,
+              Text(
+                'Royal Wiki',
+                style: TS.titleSmall.copyWith(color: primary),
+                textAlign: TextAlign.start,
+              ),
+            ],
           ),
         ),
         10.verticalSpace,
