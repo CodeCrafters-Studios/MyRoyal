@@ -5,6 +5,7 @@ import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/loading_indicator.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
+import 'package:flutter/services.dart';
 
 class ButtonPrimary extends StatefulWidget {
   const ButtonPrimary({
@@ -86,7 +87,10 @@ class _ButtonPrimaryState extends State<ButtonPrimary> {
     return GestureDetector(
       onTapDown: widget.isLoading || !widget.enable
           ? null
-          : (_) => setState(() => _isPressed = true),
+          : (_) {
+              HapticFeedback.lightImpact();
+              setState(() => _isPressed = true);
+            },
       onTapUp: (_) => setState(() => _isPressed = false),
       onTapCancel: () => setState(() => _isPressed = false),
       child: AnimatedScale(

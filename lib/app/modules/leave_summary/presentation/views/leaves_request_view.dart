@@ -30,7 +30,7 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
         ),
         centerTitle: false,
         title: Text(
-          'Leave Request',
+          'Pengajuan Cuti',
           style: TS.titleSmall.copyWith(
             color: white,
           ),
@@ -44,7 +44,7 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Remaining leaves',
+                  'Sisa Cuti',
                   style: TS.bodySmall.copyWith(
                     color: white,
                     fontWeight: FontWeight.bold,
@@ -81,11 +81,12 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: TS.bodyMedium.copyWith(color: white),
+                  labelColor: white,
                   unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
                   unselectedLabelColor: primary,
                   tabs: const [
-                    Tab(text: 'All'),
-                    Tab(text: 'Create Form'),
+                    Tab(text: 'Semua'),
+                    Tab(text: 'Buat Pengajuan'),
                   ],
                 ),
               ),

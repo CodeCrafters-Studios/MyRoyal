@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/card/card_app.dart';
+import 'package:flutter/services.dart';
 
 class CustomButtomBar extends StatelessWidget {
   const CustomButtomBar({
@@ -48,7 +49,12 @@ class IconTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        if (!isSelected) {
+          HapticFeedback.selectionClick();
+        }
+        if (onTap != null) onTap!();
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
@@ -61,8 +67,8 @@ class IconTab extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               child: SvgPicture.asset(
                 icon,
-                width: 22.w,
-                height: 22.h,
+                width: 29.w,
+                height: 29.h,
                 colorFilter: isSelected
                     ? ColorFilter.mode(primary, BlendMode.srcIn)
                     : const ColorFilter.mode(

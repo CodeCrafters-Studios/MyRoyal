@@ -16,7 +16,7 @@ class TabProfessionalView extends StatelessWidget {
         child: Column(
           children: [
             ProfileInformation(
-              label: 'ID Card',
+              label: 'Nomor KTP',
               value:
                   controller.profileData().data.professional.idCard.isNotEmpty
                       ? controller.profileData().data.professional.idCard
@@ -24,7 +24,7 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Employee ID',
+              label: 'Nomor Pegawai',
               value: controller
                       .profileData()
                       .data
@@ -36,7 +36,7 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Remaining Leave',
+              label: 'Sisa Cuti',
               value: controller
                   .profileData()
                   .data
@@ -66,7 +66,7 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Position',
+              label: 'Posisi Jabatan',
               value:
                   controller.profileData().data.professional.position.isNotEmpty
                       ? controller.profileData().data.professional.position
@@ -74,7 +74,7 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Departement',
+              label: 'Departemen',
               value: controller
                       .profileData()
                       .data
@@ -93,7 +93,7 @@ class TabProfessionalView extends StatelessWidget {
             //   controller: controller,
             // ),
             ProfileInformation(
-              label: 'Join Date',
+              label: 'Tanggal Gabung',
               value:
                   controller.profileData().data.professional.joinDate.isNotEmpty
                       ? controller.profileData().data.professional.joinDate
@@ -101,7 +101,7 @@ class TabProfessionalView extends StatelessWidget {
               controller: controller,
             ),
             ProfileInformation(
-              label: 'Report to',
+              label: 'Laporan Kepada',
               value:
                   controller.profileData().data.professional.reportTo.isNotEmpty
                       ? controller.profileData().data.professional.reportTo

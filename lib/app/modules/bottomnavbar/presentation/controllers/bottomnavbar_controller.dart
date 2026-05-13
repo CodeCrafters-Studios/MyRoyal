@@ -1,25 +1,24 @@
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/bottomnavbar/domain/entities/bottomnavbar_menu.dart';
 
 class BottomnavbarController extends GetxController {
-  final tabController = PageController();
-
   RxInt currentIndex = 0.obs;
+
+  final RxSet<int> loadedPages = <int>{0}.obs;
 
   List<BottomnavbarMenu> bottomnavbarMenu = <BottomnavbarMenu>[
     BottomnavbarMenu(
-      name: 'Home',
+      name: 'Beranda',
       icon: 'assets/icons/ic_tab_home.svg',
       selectedIcon: 'assets/icons/ic_tab_home_selected.svg',
     ),
     BottomnavbarMenu(
-      name: 'Attendance',
+      name: 'Kehadiran',
       icon: 'assets/icons/ic_tab_attendance.svg',
       selectedIcon: 'assets/icons/ic_tab_attendance_selected.svg',
     ),
     BottomnavbarMenu(
-      name: 'Settings',
+      name: 'Pengaturan',
       icon: 'assets/icons/ic_settings.svg',
       selectedIcon: 'assets/icons/ic_settings_selected.svg',
     ),
@@ -29,5 +28,6 @@ class BottomnavbarController extends GetxController {
 
   void selectMenu(int index) {
     currentIndex.value = index;
+    loadedPages.add(index);
   }
 }

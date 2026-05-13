@@ -18,19 +18,19 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
     return PageBase(
       showBackground: false,
       useTopPadding: true,
-      title: 'Check Password',
+      title: 'Verifikasi Kata Sandi',
       child: EPadding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             InputPassword(
-              hint: 'Enter your password AD',
+              hint: 'Masukkan Kata Sandi AD',
               onChanged: (value) => controller.setLoginValue(value),
               validation: (value) {
                 if (value == null || value.isEmpty) {
                   controller.isValidForm(false);
-                  return 'Password cannot be empty';
+                  return 'Kata sandi tidak boleh kosong';
                 }
                 return null;
               },
@@ -47,7 +47,7 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
             TextButton(
               onPressed: () => controller.gotoForgotPassword(),
               child: Text(
-                'Forgot Password?',
+                'Lupa Kata Sandi?',
                 style: TS.bodySmall
                     .copyWith(fontWeight: FontWeight.bold, color: secondary),
               ),
@@ -60,7 +60,7 @@ class CheckPasswordView extends GetView<CheckPasswordController> {
                 enable: controller.isValidForm.value,
                 isLoading: controller.isLoading.value,
                 onPressed: () => controller.checkPassword(),
-                text: 'Submit',
+                text: 'Kirim',
               ),
             )
           ],

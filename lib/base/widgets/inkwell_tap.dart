@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InkWellTap extends StatelessWidget {
   const InkWellTap({
@@ -21,7 +22,15 @@ class InkWellTap extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius ?? 0),
       ),
-      child: InkWell(onTap: onTap, child: child),
+      child: InkWell(
+        onTap: onTap != null
+            ? () {
+                HapticFeedback.lightImpact();
+                onTap!();
+              }
+            : null,
+        child: child,
+      ),
     );
   }
 }

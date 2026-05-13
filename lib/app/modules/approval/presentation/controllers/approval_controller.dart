@@ -121,9 +121,9 @@ class ApprovalController extends GetxController {
         actionFormRes.value = r;
         appDialog.showCustomInfoDialog(
           title: type == 'approved'
-              ? 'Your Approval has been updated!'
-              : 'Request Successfully rejected!',
-          textButton: 'Done',
+              ? 'Persetujuan Anda telah diperbarui!'
+              : 'Permintaan Berhasil Ditolak!',
+          textButton: 'Selesai',
           imagePath: type == 'approved'
               ? 'assets/json/lottie_success_approve.json'
               : 'assets/json/lottie_success_reject.json',

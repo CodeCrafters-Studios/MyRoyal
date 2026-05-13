@@ -10,7 +10,7 @@ class HaveNoAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final stringArray = 'Dont have an Account? ^Click^ here'.split('^');
+    final stringArray = 'Belum punya akun? Ketuk ^disini'.split('^');
     return RichText(
       text: TextSpan(
         children: stringArray.mapIndexed(
@@ -23,7 +23,8 @@ class HaveNoAccount extends StatelessWidget {
             } else {
               return TextSpan(
                 text: element,
-                style: TS.bodySmall.copyWith(color: primaryColor),
+                style: TS.bodySmall
+                    .copyWith(color: primaryColor, fontWeight: FontWeight.bold),
                 recognizer: TapGestureRecognizer()..onTap = onTap,
               );
             }

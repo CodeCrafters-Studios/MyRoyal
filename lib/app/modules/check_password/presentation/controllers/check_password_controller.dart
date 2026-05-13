@@ -38,7 +38,7 @@ class CheckPasswordController extends GetxController {
   Future<void> checkPassword() async {
     if (!isValidForm()) {
       unawaited(AppDialogImpl()
-          .showErrorSnackBar(description: 'Please input Password'));
+          .showErrorSnackBar(description: 'Silakan masukkan kata sandi'));
       return;
     }
 
@@ -58,7 +58,7 @@ class CheckPasswordController extends GetxController {
         checkPasswordRes.value = r;
         if (checkPasswordRes.value.data == true) {
           appDialog.showSuccessSnackBar(
-            description: 'Password is correct',
+            description: 'Kata sandi benar',
           );
           Future.delayed(Duration(seconds: 1), () {
             isLoading.value = false;
@@ -72,10 +72,10 @@ class CheckPasswordController extends GetxController {
   void gotoForgotPassword() {
     appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description: 'Please contact the IT Department\nfor further assistance.',
+      description: 'Silahkan hubungi departemen IT untuk bantuan lebih lanjut.',
       phoneNumber: '0811-2465-515',
       phoneNumber2: '0811-2000-5071',
-      textButton: 'Continue',
+      textButton: 'Lanjut',
     );
   }
 }

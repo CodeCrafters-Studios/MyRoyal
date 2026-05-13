@@ -25,13 +25,12 @@ class LoginView extends GetView<LoginController> {
     return PageBase(
       showBackgroundLogin: true,
       appBar: const SizedBox.shrink(),
-      resizeInsetsBottom: false,
+      resizeInsetsBottom: true,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            100.verticalSpace,
-            // Logo with shadow glow
+            80.verticalSpace,
             _buildLogo(),
             12.verticalSpace,
             Text(
@@ -44,7 +43,7 @@ class LoginView extends GetView<LoginController> {
             ),
             4.verticalSpace,
             Text(
-              'Sign in to your account',
+              'Masuk ke akun Anda',
               style: TS.bodySmall.copyWith(color: greyText),
             ),
             32.verticalSpace,
@@ -57,7 +56,7 @@ class LoginView extends GetView<LoginController> {
                 key: const Key('loginBtn'),
                 onPressed: controller.getParams,
                 isLoading: controller.isLoading.value,
-                text: 'Sign In',
+                text: 'Masuk',
                 fullWidth: true,
                 borderRadius: 14,
               ),
@@ -117,7 +116,7 @@ class LoginView extends GetView<LoginController> {
           child: Container(
             padding: REdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: white.withOpacity(0.88),
+              color: inputColor.withOpacity(0.88),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
                 color: white.withOpacity(0.6),
@@ -136,23 +135,23 @@ class LoginView extends GetView<LoginController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Username',
+                  'Nama Pengguna',
                   style: TS.labelMedium.copyWith(color: appTextColor),
                 ),
                 6.verticalSpace,
                 Obx(
                   () => InputPrimary(
-                    focusNode: controller.focusNodeUsername,
                     controller: controller.usernameController,
                     key: const Key('inputUsername'),
                     label: '',
-                    hint: 'Enter your username',
+                    hint: 'Masukkan nama pengguna',
                     onChanged: (value) => controller.setLoginValue(
                       FormLoginValue.username,
                       value.toLowerCase(),
                     ),
-                    validation: (value) =>
-                        value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                    validation: (value) => value?.isEmpty ?? false
+                        ? 'Nama pengguna tidak boleh kosong'
+                        : null,
                     prefixIcon: EPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: ImageIcon(
@@ -161,30 +160,33 @@ class LoginView extends GetView<LoginController> {
                         color: greyText,
                       ),
                     ),
-                    suffixIcon: controller.isFocus.value
+                    suffixIcon: controller.username.value.isNotEmpty
                         ? IconButton(
                             onPressed: controller.clear,
-                            icon:
-                                Icon(Icons.clear, size: 18.r, color: greyText),
+                            icon: Icon(
+                              Icons.clear,
+                              color: greyText,
+                              size: 16.r,
+                            ),
                           )
                         : null,
-                    color: inputColor,
+                    color: white,
                     borderRadius: 12,
                   ),
                 ),
                 14.verticalSpace,
                 InputPassword(
                   key: const Key('inputPassword'),
-                  hint: 'Enter your password',
+                  hint: 'Masukkan kata sandi',
                   onChanged: (value) => controller.setLoginValue(
                     FormLoginValue.password,
                     value,
                   ),
                   validation: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Password cannot be empty';
+                      return 'Kata sandi tidak boleh kosong';
                     } else if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
+                      return 'Kata sandi harus setidaknya 6 karakter';
                     }
                     return null;
                   },
@@ -196,6 +198,7 @@ class LoginView extends GetView<LoginController> {
                       color: greyText,
                     ),
                   ),
+                  color: white,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -204,7 +207,7 @@ class LoginView extends GetView<LoginController> {
                       key: const Key('loginForgotPassword'),
                       onPressed: controller.gotoForgotPassword,
                       child: Text(
-                        'Forgot Password?',
+                        'Lupa kata sandi?',
                         style: TS.bodySmall.copyWith(
                           color: secondary,
                           fontWeight: FontWeight.w600,

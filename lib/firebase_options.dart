@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDOfroxveXhJ1UIV_g7QutTrKXFZLNxXSo',
+    apiKey: 'AIzaSyCTXlGpvnUgLFDv3FJDFnaDFHSWzBNeTvA',
     appId: '1:830784728566:android:47c298d97d4b5504bfebd7',
     messagingSenderId: '830784728566',
     projectId: 'iroyal-14dea',
@@ -51,11 +51,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCd_69P7bWeHbFH33VB-YVAOvSBKpzBSLc',
-    appId: '1:830784728566:ios:a87e8d1ce731b4adbfebd7',
+    appId: '1:830784728566:ios:6be2f8f02c0a8204bfebd7',
     messagingSenderId: '830784728566',
     projectId: 'iroyal-14dea',
-    storageBucket: 'iroyal-14dea.appspot.com',
-    iosBundleId: 'com.iroyal',
+    storageBucket: 'iroyal-14dea.firebasestorage.app',
+    iosBundleId: 'com.myroyal',
   );
 
 }

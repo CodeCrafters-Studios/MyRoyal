@@ -29,10 +29,10 @@ class OnboardingView extends GetView<OnboardingController> {
                   50.verticalSpace,
                   Text(
                     controller.currentPageIndex.value == 0
-                        ? 'Welcome !'
+                        ? 'Selamat Datang !'
                         : controller.currentPageIndex.value == 1
-                            ? 'Quick & Easy to Use'
-                            : 'Ready to Start?',
+                            ? 'Mudah & Cepat Digunakan'
+                            : 'Siap Untuk Memulai?',
                     style: TS.titleLarge.copyWith(color: primary),
                   ),
                   30.verticalSpace,
@@ -59,19 +59,19 @@ class OnboardingView extends GetView<OnboardingController> {
               children: const [
                 OnboardingPage(
                   lottieImage: 'assets/json/lottie_onboarding2.json',
-                  subtitle: 'YOUR DAILY TASKS',
-                  subtitle2: 'ALL IN ONE APP',
+                  subtitle: 'TUGAS HARIAN ANDA',
+                  subtitle2: 'SEMUA DALAM SATU APLIKASI',
                 ),
                 OnboardingPage(
                   lottieImage: 'assets/json/lottie_onboarding1_layer_1.json',
-                  subtitle: 'IMPROVE YOUR ALL',
-                  subtitle2: 'REQUESTS EASILY',
+                  subtitle: 'TINGKATKAN SEMUA',
+                  subtitle2: 'PERMINTAAN ANDA DENGAN MUDAH',
                   isDoubleLayer: true,
                 ),
                 OnboardingPage(
                   lottieImage: 'assets/json/lottie_onboarding3.json',
-                  subtitle: 'ACCESS ALL THE TOOLS YOU',
-                  subtitle2: 'NEED USING MYROYAL',
+                  subtitle: 'DAPATKAN SEMUA TOOLS YANG',
+                  subtitle2: 'ANDA BUTUHKAN MENGGUNAKAN MYROYAL',
                 ),
               ],
             ),
@@ -79,34 +79,40 @@ class OnboardingView extends GetView<OnboardingController> {
                     controller.currentPageIndex.value == 2
                 ? Align(
                     alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ButtonPrimary(
-                          color: white,
-                          borderSide: const BorderSide(color: primary),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          margin: const EdgeInsets.only(
-                            bottom: 50,
+                    child: EPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ButtonPrimary(
+                            color: white,
+                            borderSide: const BorderSide(color: primary),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            margin: const EdgeInsets.only(
+                              bottom: 50,
+                            ),
+                            text: 'Kembali',
+                            textColor: black,
+                            onPressed: controller.previousPage,
                           ),
-                          text: 'Back',
-                          textColor: black,
-                          onPressed: controller.previousPage,
-                        ),
-                        10.horizontalSpace,
-                        ButtonPrimary(
-                          padding: const EdgeInsets.symmetric(horizontal: 60),
-                          margin: const EdgeInsets.only(
-                            bottom: 50,
+                          10.horizontalSpace,
+                          Expanded(
+                            child: ButtonPrimary(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 60),
+                              margin: const EdgeInsets.only(
+                                bottom: 50,
+                              ),
+                              text: controller.currentPageIndex.value == 2
+                                  ? 'Mulai'
+                                  : 'Lanjut',
+                              onPressed: controller.currentPageIndex.value == 2
+                                  ? controller.goToLogin
+                                  : controller.nextPage,
+                            ),
                           ),
-                          text: controller.currentPageIndex.value == 2
-                              ? 'Let\'s Start'
-                              : 'Continue',
-                          onPressed: controller.currentPageIndex.value == 2
-                              ? controller.goToLogin
-                              : controller.nextPage,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   )
                 : Align(
@@ -118,7 +124,7 @@ class OnboardingView extends GetView<OnboardingController> {
                         right: 40,
                         bottom: 50,
                       ),
-                      text: 'Continue',
+                      text: 'Lanjut',
                       onPressed: controller.nextPage,
                     ),
                   ),

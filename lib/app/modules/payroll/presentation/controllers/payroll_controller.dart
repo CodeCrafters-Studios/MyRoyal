@@ -63,7 +63,6 @@ class PayrollController extends GetxController {
   void onInit() async {
     super.onInit();
     await _getPayrollPeriod();
-    // payrollDataOverview(payrollPeriodRes.value.data[0].id);
   }
 
   Future<void> _getPayrollPeriod() async {
@@ -88,21 +87,6 @@ class PayrollController extends GetxController {
     payrollPeriod.value = value;
     selectedFilename.value = filename;
   }
-  // Future<void> payrollDataOverview(int payrollId) async {
-  //   final response = await payrollDataOverviewUsecase(
-  //     PayrollIdParamsModel(payrollId: payrollId),
-  //   );
-
-  //   response.fold(
-  //     (l) {
-  //       isLoading.value = false;
-  //     },
-  //     (r) {
-  //       isLoading.value = false;
-  //       payrollDataOverviewRes.value = r;
-  //     },
-  //   );
-  // }
 
   Future<void> downloadSlipUrl(String payrollPeriod, String fileName) async {
     appDialog.showInfoDialog(
@@ -122,7 +106,7 @@ Setiap pelanggaran terhadap kebijakan kerahasiaan ini akan dikenakan sanksi sesu
 
 Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
 ''',
-      textButton: 'Download',
+      textButton: 'Unduh',
       isLoading: isLoading.value,
       onPress: () async {
         Get.back();
@@ -140,8 +124,10 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
           );
 
           result.fold(
-            (l) => appDialog.showErrorSnackBar(description: 'Failed Download Document'),
-            (r) => appDialog.showSuccessSnackBar(description: 'Success Download Document'),
+            (l) => appDialog.showErrorSnackBar(
+                description: 'Gagal Mengunduh Dokumen'),
+            (r) => appDialog.showSuccessSnackBar(
+                description: 'Berhasil Mengunduh Dokumen'),
           );
         } catch (e) {
           AppUtils.logApp("Controller error: $e");
@@ -151,22 +137,6 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
       },
     );
   }
-
-  // Future<void> downloadFiles(String url, String fileName) async {
-  //   final result = await downloadFile(
-  //     ParamsDownload(url: url, fileName: fileName),
-  //   );
-
-  //   await result.fold(
-  //     (failure) =>
-  //         appDialog.showErrorSnackBar(description: 'Failed Download Document'),
-  //     (success) async {
-  //       await appDialog.showSuccessSnackBar(
-  //         description: 'Success Download Document',
-  //       );
-  //     },
-  //   );
-  // }
 
   void toggleShow() {
     isObsecureText.value = !isObsecureText.value;

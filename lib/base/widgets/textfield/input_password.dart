@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/widgets/textfield/input_primary.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InputPassword extends StatefulWidget {
   const InputPassword({
     super.key,
-    this.label = 'Password',
+    this.label = 'Kata Sandi',
     this.prefixIcon,
     this.suffixIcon,
     this.color,
@@ -164,8 +165,9 @@ class IconPassword extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Icon(
-        isShow ? Icons.visibility_off : Icons.visibility,
-        color: Colors.grey,
+        isShow ? Icons.visibility : Icons.visibility_off,
+        color: greyText,
+        size: 16.r,
       ),
     );
   }

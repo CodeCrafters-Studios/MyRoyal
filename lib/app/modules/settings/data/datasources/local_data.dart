@@ -18,7 +18,7 @@ class SettingsLocalDataImpl implements SettingsLocalData {
   Future<bool> logout() async {
     final confirm = await appDialog.showChoiceDialog(
       buttonColor: red,
-      description: 'Are you sure to exit app?',
+      description: 'Apakah anda yakin akan keluar dari aplikasi?',
     );
     if (confirm) {
       await appStorage.delete(CACHE_ACCESS_TOKEN);
@@ -37,8 +37,8 @@ class SettingsLocalDataImpl implements SettingsLocalData {
     AppUtils.logApp(fingerPrintValue.toString());
     final confirm = await appDialog.showChoiceDialog(
         description: fingerPrintValue == 'true'
-            ? 'Are you sure to disable app using biometrics?'
-            : 'Are you sure to enable app using biometrics?');
+            ? 'Apakah Anda yakin ingin menonaktifkan biometrik?'
+            : 'Apakah Anda yakin ingin mengaktifkan biometrik?');
     if (confirm) {
       fingerPrintValue;
       return true;

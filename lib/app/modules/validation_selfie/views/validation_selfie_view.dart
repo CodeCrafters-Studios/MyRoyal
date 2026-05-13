@@ -1,3 +1,4 @@
+import 'package:MyRoyal/base/design/colors.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,10 @@ class ValidationSelfieView extends GetView<ValidationSelfieController> {
       backgroundColor: Colors.black,
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: white,
+          ));
         }
 
         final cam = controller.cameraController.value;
@@ -54,8 +58,8 @@ class ValidationSelfieView extends GetView<ValidationSelfieController> {
                 final isDetected = controller.isFaceDetected.value;
                 return Text(
                   isDetected
-                      ? "Liveness verified ✓"
-                      : "Move your face inside the frame",
+                      ? "Identitas terverifikasi ✓"
+                      : "Arahkan wajah ke dalam bingkai",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: isDetected ? Colors.green : Colors.white,

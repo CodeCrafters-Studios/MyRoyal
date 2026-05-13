@@ -18,7 +18,7 @@ class OrLoginWith extends StatelessWidget {
         ),
         20.horizontalSpace,
         Text(
-          'Or login with',
+          'atau masuk dengan',
           style: TS.bodySmall,
         ),
         20.horizontalSpace,

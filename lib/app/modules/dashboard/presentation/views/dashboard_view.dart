@@ -19,7 +19,7 @@ class DashboardView extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Dashboard',
+      title: 'Dasbor',
       child: SingleChildScrollView(
         child: Obx(
           () => Column(
@@ -42,31 +42,6 @@ class DashboardView extends GetView<DashboardController> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildDashboardCard(),
-          25.verticalSpace,
-          // PieChart(
-          //   chartRadius: 150.r,
-          //   centerWidget: Text(
-          //     controller.remainingLeave.toString(),
-          //     style: TS.headlineLarge,
-          //   ),
-          //   legendOptions: LegendOptions(
-          //     legendTextStyle: TS.bodyLarge,
-          //     legendPosition: LegendPosition.bottom,
-          //     showLegendsInRow: true,
-          //   ),
-          //   dataMap: const {"balance": 0.0, "used": 0.0},
-          //   chartType: ChartType.ring,
-          //   baseChartColor: black.withOpacity(0.15),
-          //   colorList: controller.colorList,
-          //   chartValuesOptions: ChartValuesOptions(
-          //     showChartValuesInPercentage: false,
-          //     decimalPlaces: 0,
-          //     showChartValuesOutside: true,
-          //     showChartValueBackground: false,
-          //     chartValueStyle: TS.titleMedium.copyWith(color: black),
-          //   ),
-          //   totalValue: controller.remainingLeave.value.toDouble(),
-          // ),
         ],
       ),
     );
@@ -76,71 +51,8 @@ class DashboardView extends GetView<DashboardController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDashboardSection(),
-        controller.hasTeams.value ? 20.verticalSpace : emptyBox,
-        // controller.hasTeams.value ? _buildMyTeamsSection() : emptyBox,
-      ],
-    );
-  }
-
-  Widget _buildDashboardSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
         _buildDashboardCard(),
-        10.verticalSpace,
-        // EPadding(
-        //   padding: const EdgeInsets.only(left: 14),
-        //   child: Text('Leaves Summary', style: TS.titleMedium),
-        // ),
-        // 25.verticalSpace,
-        // Obx(
-        //   () => PieChart(
-        //     chartRadius: 150.r,
-        //     centerWidget: Text(
-        //       controller.dashboardData().data!.leaveBalance!.used.toString(),
-        //       style: TS.headlineLarge,
-        //     ),
-        //     legendOptions: LegendOptions(
-        //       legendTextStyle: TS.bodyLarge,
-        //       legendPosition: LegendPosition.bottom,
-        //       showLegendsInRow: true,
-        //     ),
-        //     dataMap: controller.dashboardData().data!.leaveBalance != null
-        //         ? {
-        //             "balance": controller
-        //                 .dashboardData()
-        //                 .data!
-        //                 .leaveBalance!
-        //                 .balance!
-        //                 .toDouble(),
-        //             "used": controller
-        //                 .dashboardData()
-        //                 .data!
-        //                 .leaveBalance!
-        //                 .used!
-        //                 .toDouble(),
-        //           }
-        //         : {"balance": 8.0, "used": 0.0},
-        //     chartType: ChartType.ring,
-        //     baseChartColor: black.withOpacity(0.15),
-        //     colorList: controller.colorList,
-        //     chartValuesOptions: ChartValuesOptions(
-        //       showChartValuesInPercentage: false,
-        //       decimalPlaces: 0,
-        //       showChartValuesOutside: true,
-        //       showChartValueBackground: false,
-        //       chartValueStyle: TS.titleMedium.copyWith(color: black),
-        //     ),
-        //     totalValue: controller
-        //             .dashboardData()
-        //             .data!
-        //             .leaveBalance!
-        //             .balance!
-        //             .toDouble() +
-        //         controller.dashboardData().data!.leaveBalance!.used!.toDouble(),
-        //   ),
-        // ),
+        controller.hasTeams.value ? 20.verticalSpace : emptyBox,
       ],
     );
   }
@@ -152,7 +64,7 @@ class DashboardView extends GetView<DashboardController> {
     return Column(
       children: [
         DashboardCard(
-          title: 'Special Leave\nRequests',
+          title: 'Permintaan\nIzin Khusus',
           value: leaveSummaryData.specialLeaves.toString(),
           totalValue: '',
           progressLinearValue: 0,
@@ -166,7 +78,7 @@ class DashboardView extends GetView<DashboardController> {
         ),
         5.verticalSpace,
         DashboardCard(
-          title: 'Permit\nRequest',
+          title: 'Permintaan\nIzin',
           value: permitData.count.toString(),
           totalValue: '',
           progressLinearValue: 0,
@@ -180,7 +92,7 @@ class DashboardView extends GetView<DashboardController> {
         ),
         5.verticalSpace,
         DashboardCard(
-          title: 'Late\nCheck-In',
+          title: 'Terlambat\nCheck-in',
           value: leaveSummaryData.late.toString(),
           totalValue: '',
           progressLinearValue: 0,

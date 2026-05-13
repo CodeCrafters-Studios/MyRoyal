@@ -15,18 +15,18 @@ class NoLeavesAvailable extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "You don't have any leave request available",
+            "Tidak ada cuti yang tersedia",
             style: TS.labelLarge,
             textAlign: TextAlign.center,
           ),
           8.verticalSpace,
           Text(
-            "Please go back,",
+            "Silahkan kembali,",
             style: TS.labelLarge,
             textAlign: TextAlign.center,
           ),
           Text(
-            "but don't go back into your ex-crush",
+            "tapi jangan kembali ke mantan",
             style: TS.labelLarge,
             textAlign: TextAlign.center,
           ),

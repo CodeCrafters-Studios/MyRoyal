@@ -21,7 +21,7 @@ class EditProfileView extends GetView<EditProfileController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Edit Profile',
+      title: 'Ubah Profil',
       child: SingleChildScrollView(
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -30,29 +30,13 @@ class EditProfileView extends GetView<EditProfileController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const AppbarSpacer(),
-                Text(
-                  'Edit your profile data',
-                  style: TS.bodyLarge.copyWith(fontWeight: FontWeight.w600),
-                ),
                 10.verticalSpace,
-                Text(
-                  'Customize your profile data. Ensure it match with your data right now.',
-                  style: TS.bodyMedium.copyWith(fontWeight: FontWeight.w400),
-                ),
-                30.verticalSpace,
                 Center(
                   child: Stack(
                     children: [
                       Obx(() => CircleAvatar(
                             backgroundColor: primary,
                             radius: 40,
-                            backgroundImage: controller.argumentData.data
-                                    .personal.profilePicture.isNotEmpty
-                                ? CachedNetworkImageProvider(
-                                    controller.argumentData.data.personal
-                                        .profilePicture,
-                                  )
-                                : null,
                             child: controller.selectedImage.value != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(40),
@@ -64,12 +48,31 @@ class EditProfileView extends GetView<EditProfileController> {
                                     ),
                                   )
                                 : controller.argumentData.data.personal
-                                        .profilePicture.isEmpty
-                                    ? Text(
-                                        controller.userData.initialName,
-                                        style: TS.titleLarge,
+                                        .profilePicture.isNotEmpty
+                                    ? ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: controller.argumentData.data
+                                              .personal.profilePicture,
+                                          width: 80.r,
+                                          height: 80.r,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              Center(
+                                            child: Text(
+                                              controller.userData.initialName,
+                                              style: TS.titleLarge
+                                                  .copyWith(color: white),
+                                            ),
+                                          ),
+                                        ),
                                       )
-                                    : null,
+                                    : Center(
+                                        child: Text(
+                                          controller.userData.initialName,
+                                          style: TS.titleLarge
+                                              .copyWith(color: white),
+                                        ),
+                                      ),
                           )),
                       Positioned(
                         left: 48.w,
@@ -88,8 +91,7 @@ class EditProfileView extends GetView<EditProfileController> {
                                       child: ListTile(
                                         leading:
                                             const Icon(Icons.photo_library),
-                                        title:
-                                            const Text('Choose from gallery'),
+                                        title: const Text('Pilih dari galeri'),
                                         onTap: () {
                                           controller
                                               .pickImage(ImageSource.gallery);
@@ -111,13 +113,13 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  label: 'First Name',
+                  label: 'Nama Depan',
                   color: white,
                   outlineColor: grey,
                   initialValue: controller.argumentData.data.personal.firstName,
                   textStyle: TS.bodyMedium,
                   hint: controller.firstName.value.isEmpty
-                      ? 'Enter your First Name'
+                      ? 'Masukkan Nama Depan'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -129,13 +131,13 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  label: 'Last Name',
+                  label: 'Nama Belakang',
                   color: white,
                   outlineColor: grey,
                   initialValue: controller.argumentData.data.personal.lastName,
                   textStyle: TS.bodyMedium,
                   hint: controller.lastName.value.isEmpty
-                      ? 'Enter your Last Name'
+                      ? 'Masukkan Nama Belakang'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -147,13 +149,13 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  label: 'Nickname',
+                  label: 'Nama Panggilan',
                   color: white,
                   outlineColor: grey,
                   initialValue: controller.argumentData.data.personal.nickname,
                   textStyle: TS.bodyMedium,
                   hint: controller.nickname.value.isEmpty
-                      ? 'Enter your Nickname'
+                      ? 'Masukkan Nama Panggilan'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -165,14 +167,14 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 InputPrimary(
-                  label: 'Personal Email',
+                  label: 'Email Pribadi',
                   color: white,
                   outlineColor: grey,
                   initialValue:
                       controller.argumentData.data.personal.personalEmail,
                   textStyle: TS.bodyMedium,
                   hint: controller.email.value.isEmpty
-                      ? 'Enter your Personal Email Address'
+                      ? 'Masukkan Email Pribadi'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -190,7 +192,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   initialValue: controller.argumentData.data.personal.instagram,
                   textStyle: TS.bodyMedium,
                   hint: controller.instagram.value.isEmpty
-                      ? 'Enter your Instagram'
+                      ? 'Masukkan Instagram'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -208,7 +210,7 @@ class EditProfileView extends GetView<EditProfileController> {
                   initialValue: controller.argumentData.data.personal.linkedin,
                   textStyle: TS.bodyMedium,
                   hint: controller.linkedIn.value.isEmpty
-                      ? 'Enter your LinkedIn'
+                      ? 'Masukkan LinkedIn'
                       : '',
                   hintStyle: TS.bodyMedium.copyWith(
                     color: grey,
@@ -220,8 +222,8 @@ class EditProfileView extends GetView<EditProfileController> {
                 ),
                 20.verticalSpace,
                 DropDownPrimary(
-                  label: 'Marital Status',
-                  hintText: 'Please choose a marital status',
+                  label: 'Status Pernikahan',
+                  hintText: 'Silahkan pilih status pernikahan',
                   items: controller.listMaritalStatus
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -253,8 +255,8 @@ class EditProfileView extends GetView<EditProfileController> {
                   enable: controller.enableButton.value,
                   fullWidth: true,
                   margin: REdgeInsets.only(bottom: 25),
-                  text: 'Continue',
-                  onPressed: () => controller.editProfile(),
+                  text: 'Simpan',
+                  onPressed: () => controller.saveProfile(),
                 )
               ],
             ),

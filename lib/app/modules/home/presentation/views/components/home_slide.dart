@@ -62,7 +62,7 @@ class HomeSlide extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
           child: Row(
             children: [
               Container(
@@ -82,18 +82,18 @@ class HomeSlide extends StatelessWidget {
             ],
           ),
         ),
-        10.verticalSpace,
-        CarouselSlider(
-          items: controller.homeSlider
-              .map(
-                (e) => ArticlesCard(
-                  title: e.title,
-                  subtitle: e.subtitle,
-                  imgUrl: e.imgUrl,
-                  onTap: () => Get.toNamed(Routes.ARTICLES, arguments: e),
-                ),
-              )
-              .toList(),
+        6.verticalSpace,
+        CarouselSlider.builder(
+          itemCount: controller.homeSlider.length,
+          itemBuilder: (context, index, realIndex) {
+            final e = controller.homeSlider[index];
+            return ArticlesCard(
+              title: e.title,
+              subtitle: e.subtitle,
+              imgUrl: e.imgUrl,
+              onTap: () => Get.toNamed(Routes.ARTICLES, arguments: e),
+            );
+          },
           options: CarouselOptions(
             autoPlay: true,
             viewportFraction: 0.9,

@@ -19,7 +19,7 @@ class TabPersonalView extends StatelessWidget {
           () => Column(
             children: [
               ProfileInformation(
-                label: 'First Name',
+                label: 'Nama Depan',
                 value:
                     controller.profileData().data.personal.firstName.isNotEmpty
                         ? controller.profileData().data.personal.firstName
@@ -27,7 +27,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Last Name',
+                label: 'Nama Belakang',
                 value:
                     controller.profileData().data.personal.lastName.isNotEmpty
                         ? controller.profileData().data.personal.lastName
@@ -35,7 +35,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Nickname',
+                label: 'Nama Panggilan',
                 value:
                     controller.profileData().data.personal.nickname.isNotEmpty
                         ? controller.profileData().data.personal.nickname
@@ -43,7 +43,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Birthdate',
+                label: 'Tanggal Lahir',
                 value: controller
                         .profileData()
                         .data
@@ -57,7 +57,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Birthplace',
+                label: 'Tempat Lahir',
                 value:
                     controller.profileData().data.personal.birthplace.isNotEmpty
                         ? controller.profileData().data.personal.birthplace
@@ -65,14 +65,14 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Gender',
+                label: 'Jenis Kelamin',
                 value: controller.profileData().data.personal.gender.isNotEmpty
                     ? controller.profileData().data.personal.gender
                     : '-',
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Status',
+                label: 'Status Pernikahan',
                 value: controller
                         .profileData()
                         .data
@@ -91,7 +91,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'NPWP Status',
+                label: 'StatusNPWP',
                 value:
                     controller.profileData().data.personal.npwpStatus.isNotEmpty
                         ? controller.profileData().data.personal.npwpStatus
@@ -99,7 +99,7 @@ class TabPersonalView extends StatelessWidget {
                 controller: controller,
               ),
               ProfileInformation(
-                label: 'Email Address',
+                label: 'Alamat Email',
                 value: controller
                         .profileData()
                         .data

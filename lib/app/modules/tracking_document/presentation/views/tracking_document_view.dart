@@ -31,13 +31,13 @@ class TrackingDocumentImplView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Tracking Document',
+      title: 'Lacak Dokumen',
       child: Obx(
         () => Column(
           children: [
             const AppbarSpacer(),
             _buildCardApproval(
-              title: 'Approval',
+              title: 'Menunggu Persetujuan',
               itemCount: controller.trackingDocOnProgressData().data.length,
               color: white.withOpacity(0.8),
               onTap: () => Get.to(
@@ -45,7 +45,7 @@ class TrackingDocumentImplView extends StatelessWidget {
             ),
             15.verticalSpace,
             _buildCardHistory(
-                title: 'History',
+                title: 'Riwayat Pengajuan',
                 itemCount: controller.trackingDocHistoryData().data.length,
                 color: white.withOpacity(0.8),
                 onTap: () => Get.to(() => HistoryView(controller: controller))),
@@ -83,7 +83,7 @@ class TrackingDocumentImplView extends StatelessWidget {
                     style: TS.labelLarge.copyWith(color: black),
                   ),
                   Text(
-                    'Number of ${title.toLowerCase()}',
+                    'Jumlah ${title.toLowerCase()}',
                     style: TS.labelMedium.copyWith(
                       color: greyText,
                       fontWeight: FontWeight.w400,

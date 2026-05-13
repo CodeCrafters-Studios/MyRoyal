@@ -39,9 +39,6 @@ class HomeView extends GetView<HomeController> {
                     const HomeUserStatus(),
                     const HomeUserMenu(),
                     HomeSlide(controller: controller),
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: 120.h),
-                    ),
                   ],
                 ),
               ),
@@ -157,7 +154,7 @@ class HomeView extends GetView<HomeController> {
                   ),
                 )
               : Text(
-                  "Hi, Welcome Back! 👋",
+                  "Hi, Selamat Datang! 👋",
                   style: TS.bodyMedium.copyWith(
                     color: Colors.white70,
                     fontWeight: FontWeight.w500,

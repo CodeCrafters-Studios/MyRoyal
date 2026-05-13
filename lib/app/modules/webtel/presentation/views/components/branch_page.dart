@@ -68,7 +68,7 @@ class BranchPage extends StatelessWidget {
         controller: _getSearchController(),
         key: _getSearchKey(),
         label: '',
-        hint: 'Search',
+        hint: 'Cari',
         onChanged: _getOnChangedCallback(),
         color: white,
         outlineColor: primary,

@@ -75,7 +75,7 @@ class CreateTaskView extends StatelessWidget {
             height: 60.r,
             imagePath: 'assets/icons/ic_success.svg',
             title: 'Task Created Successfully!',
-            textButton: 'Continue',
+            textButton: 'Lanjut',
             onPress: () {
               Get.back();
               Get.back();

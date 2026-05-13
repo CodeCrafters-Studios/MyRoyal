@@ -84,7 +84,7 @@ class HomeUserStatus extends GetView<HomeController> {
             ),
             8.horizontalSpace,
             Text(
-              'Attendance Information',
+              'Informasi Kehadiran',
               style: TS.titleSmall.copyWith(color: primary),
             ),
           ],
@@ -94,7 +94,7 @@ class HomeUserStatus extends GetView<HomeController> {
           children: [
             Expanded(
               child: _StatusCard(
-                label: 'Last Check In',
+                label: 'Check-in Terakhir',
                 day: controller.userData.value.data.absentStartDay.isNotEmpty
                     ? controller.userData.value.data.absentStartDay
                     : '-',
@@ -108,14 +108,14 @@ class HomeUserStatus extends GetView<HomeController> {
             12.horizontalSpace,
             Expanded(
               child: _StatusCard(
-                label: 'Last Check Out',
+                label: 'Check-out Terakhir',
                 day: controller.userData.value.data.absentEndDay.isNotEmpty
                     ? controller.userData.value.data.absentEndDay
                     : '-',
                 time: controller.userData.value.data.absentEndTime.isNotEmpty
                     ? controller.userData.value.data.absentEndTime
                     : '00:00:00',
-                accentColor: secondary,
+                accentColor: red,
                 icon: Icons.logout_rounded,
               ),
             ),
@@ -170,7 +170,7 @@ class _StatusCard extends StatelessWidget {
                 child: Text(
                   label,
                   style: TS.labelSmall.copyWith(color: greyText),
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

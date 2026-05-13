@@ -30,6 +30,7 @@ class DeviceInfo extends GetxService {
         buildNumber: packageInfo.buildNumber,
         os: 'Android',
         display: dInfo.data['display'],
+        isPhysicalDevice: dInfo.isPhysicalDevice,
       );
     } else {
       final dInfo = await deviceInfoPlugin.iosInfo;
@@ -47,6 +48,7 @@ class DeviceInfo extends GetxService {
         buildNumber: packageInfo.buildNumber,
         os: 'iOS',
         display: dInfo.data['display'],
+        isPhysicalDevice: dInfo.isPhysicalDevice,
       );
     }
   }
@@ -66,6 +68,7 @@ class DeviceInfoModel {
   String buildNumber;
   String os;
   String display;
+  bool isPhysicalDevice;
 
   DeviceInfoModel({
     required this.board,
@@ -81,6 +84,7 @@ class DeviceInfoModel {
     required this.buildNumber,
     required this.os,
     required this.display,
+    required this.isPhysicalDevice,
   });
 
   Map<String, dynamic> toJson() {
@@ -98,6 +102,7 @@ class DeviceInfoModel {
       'buildNumber': buildNumber,
       'os': os,
       'display': display,
+      'isPhysicalDevice': isPhysicalDevice,
     };
   }
 }

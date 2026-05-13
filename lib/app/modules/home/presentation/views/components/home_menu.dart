@@ -25,11 +25,11 @@ class HomeMenu extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return InkWellTap(
       onTap: () async {
-        switch (menu.name) {
-          case 'Dashboard':
+        switch (menu.id) {
+          case 1:
             Get.toNamed(Routes.DASHBOARD);
             break;
-          case 'Leaves':
+          case 2:
             if (controller.userData.value.data.canAccessLeave) {
               Get.toNamed(Routes.LEAVE_SUMMARY);
             } else {
@@ -45,23 +45,23 @@ class HomeMenu extends GetView<HomeController> {
           //   Get.to(() => const ComingSoonScreen());
           //   // Get.toNamed(Routes.TASKS);
           //   break;
-          case 'Payroll':
+          case 3:
             Get.toNamed(Routes.CHECK_PASSWORD);
             break;
           // case 'Visit':
           //   Get.to(() => const ComingSoonScreen());
           //   // Get.toNamed(Routes.VISIT);
           //   break;
-          case 'Webtel':
+          case 4:
             Get.toNamed(Routes.WEBTEL);
             break;
-          case 'Tracking Documents':
+          case 5:
             Get.toNamed(Routes.TRACKING_DOCUMENT);
             break;
-          case 'My Teams':
-            Get.toNamed(Routes.MY_TEAMS);
-            break;
-          case 'Online App':
+          // case 'My Teams':
+          //   Get.toNamed(Routes.MY_TEAMS);
+          //   break;
+          case 6:
             AppDialogImpl().showLiquidGlassDialog(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +114,7 @@ class HomeMenu extends GetView<HomeController> {
               ),
             );
             break;
-          case 'Approval':
+          case 7:
             Get.toNamed(Routes.APPROVAL);
             break;
           default:

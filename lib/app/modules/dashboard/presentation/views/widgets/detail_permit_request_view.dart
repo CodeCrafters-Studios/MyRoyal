@@ -17,7 +17,7 @@ class DetailPermitRequestView extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Permit Request',
+      title: 'Permintaan Izin',
       child: Obx(
         () => controller.detailPermitRequestData().data.isEmpty
             ? Column(

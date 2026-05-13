@@ -20,7 +20,7 @@ class HomeUserMenu extends GetView<HomeController> {
         () => controller.isLoading.value
             ? _buildLoading()
             : EPadding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -37,7 +37,7 @@ class HomeUserMenu extends GetView<HomeController> {
                         ),
                         8.horizontalSpace,
                         Text(
-                          'All Features',
+                          'Semua Fitur',
                           style: TS.titleSmall.copyWith(color: primary),
                         ),
                       ],

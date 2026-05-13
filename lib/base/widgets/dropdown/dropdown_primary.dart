@@ -46,6 +46,7 @@ class DropDownPrimary extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: borderColor ?? grey),
+            color: white,
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(

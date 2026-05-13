@@ -16,7 +16,7 @@ class DetailSpecialLeaveView extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Special Leave Requests',
+      title: 'Permintaan Izin Khusus',
       child: Obx(
         () => controller.detailSpeacialLeaveRequestData().data.isEmpty
             ? Column(

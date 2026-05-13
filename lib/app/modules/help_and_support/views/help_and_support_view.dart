@@ -30,7 +30,7 @@ class HelpAndSupportViewImpl extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Help & Support',
+      title: 'Bantuan & Dukungan',
       child: SingleChildScrollView(
         child: EPadding(
           padding: const EdgeInsets.symmetric(horizontal: 21),
@@ -54,25 +54,25 @@ class HelpAndSupportViewImpl extends StatelessWidget {
 
   Widget _buildHeaderText() {
     return Text(
-      'Hello! How can we help you today?',
-      style: TS.titleLarge,
+      'Halo! Ada yang bisa kami bantu hari ini?',
+      style: TS.titleMedium,
       textAlign: TextAlign.start,
     );
   }
 
   Widget _buildDescriptionText() {
     return Text(
-      "Do you have any questions? Need an answer? We're here for you.",
+      "Punya pertanyaan? Butuh jawaban? Kami siap membantu Anda.",
       style:
-          TS.labelLarge.copyWith(color: greyText, fontWeight: FontWeight.w400),
+          TS.titleSmall.copyWith(color: greyText, fontWeight: FontWeight.w400),
       textAlign: TextAlign.start,
     );
   }
 
   Widget _buildPopularQuestionsTitle() {
     return Text(
-      'Popular Questions:',
-      style: TS.titleLarge,
+      'Pertanyaan Populer:',
+      style: TS.titleMedium,
       textAlign: TextAlign.start,
     );
   }
@@ -101,7 +101,13 @@ class HelpAndSupportViewImpl extends StatelessWidget {
         dividerColor: Colors.transparent,
       ),
       child: ExpansionTile(
-        tilePadding: EdgeInsets.zero,
+        tilePadding: EdgeInsets.symmetric(horizontal: 10.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        collapsedShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.r),
+        ),
         childrenPadding: EdgeInsets.zero,
         title: Text(
           question.title,
@@ -113,7 +119,7 @@ class HelpAndSupportViewImpl extends StatelessWidget {
         collapsedIconColor: black,
         children: [
           ListTile(
-            contentPadding: EdgeInsets.zero,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
             title: Text(question.description, style: TS.bodySmall),
           ),
         ],

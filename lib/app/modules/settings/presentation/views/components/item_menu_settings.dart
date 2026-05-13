@@ -13,23 +13,26 @@ class ItemMenuSettings extends StatelessWidget {
     required this.text,
     this.appVersion = '',
     this.textStyle,
+    this.textStyleTrailing,
     this.withTrailing = false,
     this.trailingIcon = true,
     this.icon,
     this.onTap,
     this.onTapIcon,
     this.withDivider = true,
+    this.iconColor,
   });
   final String assetSvg;
   final String text;
   final String appVersion;
-  final TextStyle? textStyle;
+  final TextStyle? textStyle, textStyleTrailing;
   final IconData? icon;
   final bool withTrailing;
   final bool trailingIcon;
   final Function()? onTap;
   final Function()? onTapIcon;
   final bool withDivider;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class ItemMenuSettings extends StatelessWidget {
             padding: REdgeInsets.symmetric(vertical: 12),
             child: Row(
               children: [
-                SvgPicture.asset(assetSvg),
+                SvgPicture.asset(assetSvg, color: iconColor),
                 12.horizontalSpace,
                 Expanded(
                   child: Text(text, style: textStyle ?? TS.labelLarge),
@@ -57,8 +60,9 @@ class ItemMenuSettings extends StatelessWidget {
                           )
                         : Text(
                             'Version $appVersion',
-                            style: TS.bodySmall
-                                .copyWith(fontWeight: FontWeight.w500),
+                            style: textStyleTrailing ??
+                                TS.bodySmall
+                                    .copyWith(fontWeight: FontWeight.w500),
                           )
                     : emptyBox,
               ],

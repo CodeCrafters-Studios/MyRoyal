@@ -32,7 +32,7 @@ class NotificationsViewImpl extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Notifications',
+      title: 'Notifikasi',
       child: Obx(
         () => controller.isLoading.value &&
                 controller.notificationsDataList.isEmpty

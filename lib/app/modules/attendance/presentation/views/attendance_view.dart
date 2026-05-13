@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/attendance/presentation/views/components/user_marker_layer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,8 +25,8 @@ class AttendanceView extends GetView<AttendanceController> {
       child: Scaffold(
         backgroundColor: white,
         appBar: AppBar(
-          title: Text('Attendance',
-              style: TS.headlineSmall.copyWith(color: white)),
+          title:
+              Text('Kehadiran', style: TS.headlineSmall.copyWith(color: white)),
           backgroundColor: primary,
           scrolledUnderElevation: 0,
           automaticallyImplyLeading: false,
@@ -82,8 +83,8 @@ class AttendanceView extends GetView<AttendanceController> {
             ? _buildCheckoutImage()
             : _buildMap(),
         if (status != AttendanceStatus.checkedOut) 10.verticalSpace,
-        _buildTimeDisplay(),
-        _buildTimesInfo(),
+        if (status != AttendanceStatus.checkedOut) _buildTimeDisplay(),
+        if (status != AttendanceStatus.checkedOut) _buildTimesInfo(),
         if (status != AttendanceStatus.checkedOut) 10.verticalSpace,
         _buildActionSection(),
       ],
@@ -100,10 +101,22 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildCheckoutImage() {
-    return Container(
-      padding: REdgeInsets.only(bottom: 5),
-      height: 258.h,
-      child: Image.asset('assets/images/img_bg_checkout.jpg'),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 5, 14, 0),
+          child: Text(
+            '"${controller.endDayMessage.value}"',
+            style: TS.bodyMedium.copyWith(fontStyle: FontStyle.italic),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Container(
+          padding: REdgeInsets.only(bottom: 5),
+          height: 258.h,
+          child: Image.asset('assets/images/img_bg_checkout.jpg'),
+        ),
+      ],
     );
   }
 
@@ -151,7 +164,7 @@ class AttendanceView extends GetView<AttendanceController> {
       }
 
       return Text(
-        DateFormat('MMMM dd, yyyy - EEEE').format(DateTime.now()),
+        DateFormat('EEEE - MMMM dd, yyyy', "id_ID").format(DateTime.now()),
         style: TS.bodyMedium,
       );
     });
@@ -167,9 +180,13 @@ class AttendanceView extends GetView<AttendanceController> {
     return Column(
       children: [
         _buildActionButtons(status),
-        10.verticalSpace,
+        status != AttendanceStatus.checkedOut
+            ? 20.verticalSpace
+            : const SizedBox.shrink(),
         const AppDivider(thickness: 2),
-        10.verticalSpace,
+        status != AttendanceStatus.checkedOut
+            ? 20.verticalSpace
+            : 30.verticalSpace,
         _buildAttendanceInfo(),
       ],
     );
@@ -177,13 +194,8 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildAttendanceInfo() {
     return Obx(() {
-      final status = controller.attendanceStatus.value;
-
-      final hasCheckIn = status != AttendanceStatus.notStarted;
-      final hasCheckOut = status == AttendanceStatus.checkedOut;
-
       return EPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.fromLTRB(14, 0, 14, 150),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -193,33 +205,31 @@ class AttendanceView extends GetView<AttendanceController> {
                 _buildAttendanceDetail(
                   icon: Icons.login_outlined,
                   color: green,
-                  time: hasCheckIn
-                      ? DateFormat('hh:mm a')
-                          .format(controller.checkInTime.value)
-                      : '--:-- AM',
-                  label: 'Check In',
+                  time: controller.formatApiTime(
+                    controller.attendanceTodayRes.value.checkedInTime,
+                  ),
+                  label: 'Check-in',
                 ),
                 50.horizontalSpace,
                 _buildAttendanceDetail(
                   icon: Icons.logout_outlined,
                   color: red,
-                  time: hasCheckOut
-                      ? DateFormat('hh:mm a')
-                          .format(controller.checkOutTime.value)
-                      : '--:-- PM',
-                  label: 'Check Out',
+                  time: controller.formatApiTime(
+                    controller.attendanceTodayRes.value.checkedOutTime,
+                  ),
+                  label: 'Check-out',
                 ),
                 50.horizontalSpace,
                 _buildAttendanceDetail(
                   icon: Icons.access_time_rounded,
                   color: primary30,
-                  time: hasCheckOut ? controller.totalHours.value : '--h --m',
-                  label: 'Total Hours',
+                  time: controller.liveWorkDuration.value,
+                  label: 'Durasi Kerja',
                 ),
               ],
             ),
-            15.verticalSpace,
-            _buildBreakInfo(controller)
+            35.verticalSpace,
+            _buildBreakInfo(controller),
           ],
         ),
       );
@@ -233,14 +243,24 @@ class AttendanceView extends GetView<AttendanceController> {
     Color? color,
   }) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           icon,
           color: color,
         ),
         5.verticalSpace,
-        Text(time, style: TS.titleSmall),
-        Text(label, style: TS.bodyMedium),
+        Text(
+          time,
+          style: TS.titleSmall,
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          label,
+          style: TS.bodyMedium,
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }
@@ -249,10 +269,9 @@ class AttendanceView extends GetView<AttendanceController> {
     return Obx(() {
       final status = controller.attendanceStatus.value;
 
-      final hasBreak = status != AttendanceStatus.breakStart;
-
-      final breakStart = controller.breakTime.value;
-      final breakEnd = controller.breakEndTime.value;
+      final hasBreak =
+          controller.attendanceTodayRes.value.breakStartTime != null &&
+              controller.attendanceTodayRes.value.breakEndTime != null;
 
       if (status == AttendanceStatus.notStarted ||
           status == AttendanceStatus.checkedIn) {
@@ -265,25 +284,26 @@ class AttendanceView extends GetView<AttendanceController> {
           _buildAttendanceDetail(
             icon: Icons.restaurant_rounded,
             color: primaryAccent,
-            time: breakStart != null
-                ? DateFormat('hh:mm a').format(breakStart)
-                : '--:-- AM',
-            label: 'Break Start',
+            time: controller.formatApiTime(
+              controller.attendanceTodayRes.value.breakStartTime,
+            ),
+            label: 'Mulai\nIstirahat',
           ),
           50.horizontalSpace,
           _buildAttendanceDetail(
             icon: Icons.timer_off_outlined,
             color: urgentColor,
-            time:
-                hasBreak ? DateFormat('hh:mm a').format(breakEnd!) : '--:-- PM',
-            label: 'Break End',
+            time: controller.formatApiTime(
+              controller.attendanceTodayRes.value.breakEndTime,
+            ),
+            label: 'Selesai\nIstirahat',
           ),
           50.horizontalSpace,
           _buildAttendanceDetail(
             icon: Icons.access_time_rounded,
             color: primary30,
             time: hasBreak ? controller.breakDuration.value : '--h --m',
-            label: 'Duration',
+            label: 'Durasi\nIstirahat',
           ),
         ],
       );
@@ -334,7 +354,7 @@ class AttendanceView extends GetView<AttendanceController> {
                 backgroundColor: enabled ? primary : Colors.grey,
                 radius: 72.r,
                 child: Text(
-                  'Check in',
+                  'Check-in',
                   style: TS.bodyLarge.copyWith(color: white),
                 ),
               ),
@@ -343,7 +363,7 @@ class AttendanceView extends GetView<AttendanceController> {
           10.verticalSpace,
           Text(
             enabled
-                ? "Check in and get started on your successful day."
+                ? "Lakukan check-in dan mulailah hari Anda yang produktif."
                 : "Anda berada di luar radius kantor.",
             style: TS.bodyMedium.copyWith(
               color: enabled ? Colors.black : Colors.red,
@@ -498,9 +518,42 @@ class AttendanceMap extends StatefulWidget {
 }
 
 class _AttendanceMapState extends State<AttendanceMap>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    final latTween = Tween<double>(
+        begin: widget.controller.mapController.camera.center.latitude,
+        end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: widget.controller.mapController.camera.center.longitude,
+        end: destLocation.longitude);
+    final zoomTween = Tween<double>(
+        begin: widget.controller.mapController.camera.zoom, end: destZoom);
+
+    final animController = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+
+    final Animation<double> animation =
+        CurvedAnimation(parent: animController, curve: Curves.fastOutSlowIn);
+
+    animController.addListener(() {
+      widget.controller.mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+      );
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        animController.dispose();
+      }
+    });
+
+    animController.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -515,6 +568,10 @@ class _AttendanceMapState extends State<AttendanceMap>
             initialZoom: 17,
             onMapReady: () => widget.controller.isMapReady.value = true,
             maxZoom: 18,
+            initialRotation: 0,
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.all,
+            ),
           ),
           children: [
             TileLayer(
@@ -537,21 +594,7 @@ class _AttendanceMapState extends State<AttendanceMap>
             MarkerLayer(markers: widget.controller.officeMarkers),
 
             // ONLY the user marker rebuilds (super cheap)
-            Obx(() => MarkerLayer(
-                  markers: [
-                    if (widget.controller.currentPosition.value != null)
-                      Marker(
-                        point: widget.controller.currentPosition.value!,
-                        width: 40,
-                        height: 40,
-                        child: const Icon(
-                          Icons.person_pin_circle,
-                          color: Colors.blue,
-                          size: 40,
-                        ),
-                      ),
-                  ],
-                )),
+            const UserMarkerLayer(),
           ],
         ),
 
@@ -581,8 +624,8 @@ class _AttendanceMapState extends State<AttendanceMap>
                           ),
                           child: Text(
                             office.inside
-                                ? "INSIDE ${office.locationName}"
-                                : "NEAREST ${office.locationName} (${office.distanceToBoundary.toStringAsFixed(1)} m)",
+                                ? "DI DALAM AREA ${office.locationName}"
+                                : "DI LUAR AREA ${office.locationName} (${office.distanceToBoundary.toStringAsFixed(1)} m)",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -601,8 +644,8 @@ class _AttendanceMapState extends State<AttendanceMap>
                         ),
                         child: Text(
                           widget.controller.isGpsActive.value
-                              ? "GPS ACTIVE"
-                              : "GPS OFF",
+                              ? "GPS AKTIF"
+                              : "GPS MATI",
                           style: const TextStyle(
                               color: Colors.white, fontSize: 10),
                         ),
@@ -613,13 +656,13 @@ class _AttendanceMapState extends State<AttendanceMap>
 
                   /// ACCURACY
                   Text(
-                    "Accuracy: ± ${accuracy.toStringAsFixed(1)} m",
+                    "Akurasi: ± ${accuracy.toStringAsFixed(1)} m",
                     style: const TextStyle(fontSize: 10),
                   ),
 
                   /// DISTANCE
                   Text(
-                    "Distance to center: ${office.distanceToCenter.toStringAsFixed(1)} m",
+                    "Jarak ke titik pusat: ${office.distanceToCenter.toStringAsFixed(1)} m",
                     style: const TextStyle(fontSize: 10),
                   ),
 
@@ -656,7 +699,10 @@ class _AttendanceMapState extends State<AttendanceMap>
             mini: true,
             backgroundColor: Colors.white,
             onPressed: () {
-              widget.controller.centerToUserLocation();
+              final pos = widget.controller.currentPosition.value;
+              if (pos != null) {
+                _animatedMapMove(pos, 18);
+              }
             },
             child: const Icon(
               Icons.my_location,

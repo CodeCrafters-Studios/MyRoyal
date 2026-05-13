@@ -18,7 +18,7 @@ class HomeUserInfo extends GetView<HomeController> {
     return SliverToBoxAdapter(
       child: Obx(
         () => EPadding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
           child: controller.isLoading.value ? _buildLoading() : _buildCard(),
         ),
       ),
@@ -146,9 +146,12 @@ class HomeUserInfo extends GetView<HomeController> {
   }
 
   Widget _initialAvatar(String initial) {
-    return Text(
-      initial.isNotEmpty ? initial : '?',
-      style: TS.titleSmall.copyWith(color: white, fontWeight: FontWeight.w800),
+    return Center(
+      child: Text(
+        initial.isNotEmpty ? initial : '?',
+        style:
+            TS.titleSmall.copyWith(color: primary, fontWeight: FontWeight.w800),
+      ),
     );
   }
 }

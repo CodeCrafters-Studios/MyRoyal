@@ -314,7 +314,7 @@ class LeaveSummaryController extends GetxController {
       _getLeaveSummary();
       Get.back();
       AppDialogImpl()
-          .showSuccessSnackBar(description: 'Success Create Form Leave');
+          .showSuccessSnackBar(description: 'Pengajuan Cuti Berhasil Dibuat');
       _getLeaveSummary();
     });
   }
@@ -340,7 +340,8 @@ class LeaveSummaryController extends GetxController {
       isLoading(false);
       typeSubmission == 'leave' ? _getLeaveSummary() : _getPermitSummary();
       actionFormRes.value = r;
-      AppDialogImpl().showSuccessSnackBar(description: 'Form Leave Canceled');
+      AppDialogImpl()
+          .showSuccessSnackBar(description: 'Pengajuan Berhasil Dibatalkan');
     });
   }
 
@@ -445,7 +446,7 @@ class LeaveSummaryController extends GetxController {
         clearPermitRequest();
         _getPermitSummary();
         AppDialogImpl()
-            .showSuccessSnackBar(description: 'Success Create Permit Leave');
+            .showSuccessSnackBar(description: 'Pengajuan Izin Berhasil Dibuat');
       },
     );
   }

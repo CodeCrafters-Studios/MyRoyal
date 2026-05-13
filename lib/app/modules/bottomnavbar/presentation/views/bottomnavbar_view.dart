@@ -15,15 +15,15 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => PageBase(
-        appBar: emptyBox,
-        showBackground: false,
-        centeredTitle: true,
-        showIconBack: false,
-        resizeInsetsBottom: false,
-        bottomBarDecoration: const BoxDecoration(color: Colors.transparent),
-        bottomBar: CustomButtomBar(
+    return PageBase(
+      appBar: emptyBox,
+      showBackground: false,
+      centeredTitle: true,
+      showIconBack: false,
+      resizeInsetsBottom: false,
+      bottomBarDecoration: const BoxDecoration(color: Colors.transparent),
+      bottomBar: Obx(
+        () => CustomButtomBar(
           listBottomNav: List.generate(
             controller.bottomnavbarMenu.length,
             (index) => Expanded(
@@ -35,29 +35,39 @@ class BottomnavbarView extends GetView<BottomnavbarController> {
                     ? controller.bottomnavbarMenu[index].name
                     : null,
                 isSelected: controller.isSelected(index),
-                onTap: () {
-                  controller.selectMenu(index);
-                  controller.tabController.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 10),
-                    curve: Curves.ease,
-                  );
-                },
+                onTap: () => controller.selectMenu(index),
               ),
             ),
           ),
         ),
-        child: PageView(
-          controller: controller.tabController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            HomeView(),
-            AttendanceView(),
-            // ComingSoonScreen(),
-            SettingsView(),
-          ],
+      ),
+      child: Obx(
+        () => IndexedStack(
+          index: controller.currentIndex.value,
+          children: List.generate(
+            controller.bottomnavbarMenu.length,
+            (index) => controller.loadedPages.contains(index)
+                ? _buildPage(index)
+                : const SizedBox(),
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildPage(int index) {
+    switch (index) {
+      case 0:
+        return const HomeView();
+
+      case 1:
+        return const AttendanceView();
+
+      case 2:
+        return const SettingsView();
+
+      default:
+        return const SizedBox();
+    }
   }
 }

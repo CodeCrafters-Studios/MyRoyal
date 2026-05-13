@@ -17,7 +17,7 @@ class ApprovalView extends GetView<ApprovalController> {
   @override
   Widget build(BuildContext context) {
     return PageBase(
-      title: 'Approval',
+      title: 'Persetujuan',
       showBackground: false,
       child: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -39,7 +39,7 @@ class ApprovalView extends GetView<ApprovalController> {
         child: InputPrimary(
           controller: controller.search,
           label: '',
-          hint: 'Search',
+          hint: 'Cari',
           onChanged: controller.onChanged,
           color: white,
           outlineColor: primary,

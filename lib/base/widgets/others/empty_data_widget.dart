@@ -13,11 +13,15 @@ class EmptyDataWidget extends StatelessWidget {
     return Column(
       children: [
         80.verticalSpace,
-        Text("We'are sorry, we didn't found the page you need.",
-            style: TS.bodyMini.copyWith(fontSize: 12)),
+        Text(
+          "Kami mohon maaf, kami tidak menemukan halaman yang Anda butuhkan.",
+          style: TS.bodyMini.copyWith(fontSize: 12),
+          maxLines: 2,
+          textAlign: TextAlign.center,
+        ),
         8.verticalSpace,
         Text(
-          "Please go back,\nbut please don't go back to your ex-crush",
+          "Silakan kembali,\ntetapi jangan kembali kepada mantan gebetanmu.",
           style: TS.labelSmall,
           maxLines: 2,
           textAlign: TextAlign.center,

@@ -32,6 +32,7 @@ import 'package:MyRoyal/base/utils/share/app_share.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:MyRoyal/base/utils/token/app_token.dart';
 import 'package:MyRoyal/firebase_options.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:media_store_plus/media_store_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -70,13 +71,15 @@ Future<void> setupAndRunApp(
     ignoreSsl: true,
   );
 
-  runApp(
-    environment.environment == EnvironmentType.production
-        ? appWidget
-        : DioRequestInspectorMain(
-            inspector: DioRequestInspector(isInspectorEnabled: true),
-            child: appWidget,
-          ),
+  await initializeDateFormatting('id_ID', null).then(
+    (_) => runApp(
+      environment.environment == EnvironmentType.production
+          ? appWidget
+          : DioRequestInspectorMain(
+              inspector: DioRequestInspector(isInspectorEnabled: true),
+              child: appWidget,
+            ),
+    ),
   );
 }
 

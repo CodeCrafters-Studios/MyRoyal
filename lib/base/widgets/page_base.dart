@@ -70,14 +70,13 @@ class PageBase extends StatelessWidget {
             if (showBackground)
               Positioned.fill(
                 child: showBackgroundLogin == false
-                    ? Opacity(
-                        opacity: 0.18,
-                        child: Image.asset(
-                          'assets/images/img_motif.png',
-                          width: Get.width,
-                          height: Get.height,
-                          fit: BoxFit.cover,
-                        ),
+                    ? Image.asset(
+                        'assets/images/img_motif.png',
+                        width: Get.width,
+                        height: Get.height,
+                        fit: BoxFit.cover,
+                        color: Colors.white.withOpacity(0.18),
+                        colorBlendMode: BlendMode.dstIn,
                       )
                     : Image.asset(
                         'assets/images/img_bg_login.png',

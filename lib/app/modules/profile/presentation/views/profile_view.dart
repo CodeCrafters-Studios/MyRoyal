@@ -23,7 +23,7 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Profile',
+      title: 'Profil',
       actions: [_editProfile()],
       child: ProfileViewImpl(controller: controller),
     );
@@ -57,7 +57,7 @@ class ProfileView extends GetView<ProfileController> {
                         color: Colors.white.withOpacity(0.4), width: 1),
                   ),
                   child: Text(
-                    'Edit Profile',
+                    'Ubah Profil',
                     style: TS.labelSmall.copyWith(
                       color: white,
                       fontWeight: FontWeight.w600,
@@ -124,7 +124,7 @@ class ProfileViewImpl extends StatelessWidget {
           ),
           child: CircleAvatar(
             radius: 40.r,
-            backgroundColor: hasPicture ? white : secondary.withOpacity(0.3),
+            backgroundColor: white,
             child: hasPicture
                 ? ClipOval(
                     child: CachedNetworkImage(
@@ -132,15 +132,17 @@ class ProfileViewImpl extends StatelessWidget {
                       width: 80.r,
                       height: 80.r,
                       fit: BoxFit.cover,
-                      errorWidget: (ctx, url, err) => Text(
-                        initial,
-                        style: TS.titleLarge.copyWith(color: white),
+                      errorWidget: (ctx, url, err) => Center(
+                        child: Text(
+                          initial,
+                          style: TS.titleLarge.copyWith(color: primary),
+                        ),
                       ),
                     ),
                   )
                 : Text(
                     initial,
-                    style: TS.titleLarge.copyWith(color: white),
+                    style: TS.titleLarge.copyWith(color: primary),
                   ),
           ),
         ),
@@ -241,7 +243,7 @@ class ProfileViewImpl extends StatelessWidget {
         tabs: const [
           Tab(text: 'Personal'),
           Tab(text: 'Professional'),
-          Tab(text: 'Documents'),
+          Tab(text: 'Dokumen'),
         ],
       ),
     );

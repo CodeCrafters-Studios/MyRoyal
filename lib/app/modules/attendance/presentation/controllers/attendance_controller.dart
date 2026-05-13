@@ -53,8 +53,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   });
 
   final currentTime = DateTime.now().obs;
-  final checkInTime = DateTime.now().obs;
-  final checkOutTime = DateTime.now().obs;
+  final checkInTime = Rxn<DateTime>();
+  final checkOutTime = Rxn<DateTime>();
   final breakTime = Rxn<DateTime>();
   final breakEndTime = Rxn<DateTime>();
   final breakDuration = ''.obs;
@@ -62,9 +62,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   final isLoadingAttendance = true.obs;
   final isMapReady = false.obs;
   final displayTime = DateTime.now().obs;
-
-  final currentPosition = Rxn<LatLng>();
-  final MapController mapController = MapController();
+  final endDayMessage = ''.obs;
 
   RxList<AttendanceLocationModel> officeLocations =
       <AttendanceLocationModel>[].obs;
@@ -73,6 +71,9 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   RxList<Marker> officeMarkers = <Marker>[].obs;
   RxList<Polygon> officePolygons = <Polygon>[].obs;
 
+  final currentPosition = Rxn<LatLng>();
+  final MapController mapController = MapController();
+
   final isGpsActive = false.obs;
   final isMockLocation = false.obs;
   final isGpsSpoofing = false.obs;
@@ -80,9 +81,10 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   final gpsAccuracy = 0.0.obs;
   final distanceFromOffice = 0.0.obs;
   final nearestOffice = Rxn<NearestOfficeInfo>();
+  LatLng? _smoothedPosition;
 
-  Position? _previousPosition;
   StreamSubscription<Position>? _positionStream;
+  Timer? _mapMoveDebounce;
 
   final buttonEnabled = false.obs;
   final attendanceStatus = AttendanceStatus.notStarted.obs;
@@ -94,7 +96,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   Timer? _timer;
   Timer? breakTimer;
 
-  RxString totalHours = ''.obs;
+  RxString totalHours = '--:--'.obs;
+  final liveWorkDuration = '--:--'.obs;
   DateTime? _serverTime;
   DateTime? _breakStartTime;
   DateTime? _deviceTimeAtSync;
@@ -131,10 +134,10 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onClose() {
+    _mapMoveDebounce?.cancel();
     _timer?.cancel();
     breakTimer?.cancel();
     _positionStream?.cancel();
-
     super.onClose();
   }
 
@@ -320,6 +323,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
         if (r.checkedInTime != null) {
           final parsed = DateFormat("HH:mm:ss").parse(r.checkedInTime!);
+
           checkInTime.value = DateTime(
             now.year,
             now.month,
@@ -328,6 +332,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             parsed.minute,
             parsed.second,
           );
+          // Restart timer to reflect new check‑in time
+          _resetTimer();
         }
 
         if (r.checkedOutTime != null) {
@@ -374,6 +380,9 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
         if (r.checkedOutTime != null && r.checkedInTime != null) {
           _totalHours();
+          liveWorkDuration.value = totalHours.value;
+          // Refresh timer to ensure UI reflects final total hours
+          _resetTimer();
         }
 
         if (r.breakEndTime != null && r.breakStartTime != null) {
@@ -381,6 +390,11 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
           String twoDigits(int n) => n.toString().padLeft(2, "0");
           breakDuration.value =
               "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
+        }
+
+        if (attendanceStatus.value == AttendanceStatus.checkedOut &&
+            endDayMessage.value.isEmpty) {
+          endDayMessage.value = (endDayMessages..shuffle()).first;
         }
       },
     );
@@ -455,9 +469,10 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _startLocationStream() {
-    const locationSettings = LocationSettings(
+    AndroidSettings locationSettings = AndroidSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 2,
+      distanceFilter: 1,
+      intervalDuration: Duration(seconds: 1),
     );
 
     _positionStream =
@@ -472,6 +487,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   void _handleLocationUpdate(Position newPosition) {
     isGpsActive.value = true;
+
     isMockLocation.value = newPosition.isMocked;
     gpsAccuracy.value = newPosition.accuracy;
 
@@ -479,64 +495,42 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       isGpsSpoofing.value = true;
     }
 
-    if (newPosition.accuracy > 40) {
-      isLocationValid.value = false;
-      buttonEnabled.value = false;
-      _updateOfficeColors();
+    if (newPosition.accuracy > 25) {
       return;
     }
 
-    if (_previousPosition != null) {
-      final distance = Geolocator.distanceBetween(
-        _previousPosition!.latitude,
-        _previousPosition!.longitude,
-        newPosition.latitude,
-        newPosition.longitude,
+    final rawPosition = LatLng(
+      newPosition.latitude,
+      newPosition.longitude,
+    );
+
+    final smoothed = _smoothPosition(rawPosition);
+
+    if (currentPosition.value != null) {
+      final movement = Geolocator.distanceBetween(
+        currentPosition.value!.latitude,
+        currentPosition.value!.longitude,
+        smoothed.latitude,
+        smoothed.longitude,
       );
 
-      final timeDiff = newPosition.timestamp
-          .difference(_previousPosition!.timestamp)
-          .inSeconds;
-
-      if (timeDiff > 0) {
-        final speed = distance / timeDiff;
-        if (speed > 30) {
-          isGpsSpoofing.value = true;
-          Get.snackbar(
-            "Suspicious Movement",
-            "Pergerakan tidak wajar terdeteksi",
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
-          );
-        }
+      if (movement < 0.8) {
+        return;
       }
     }
 
-    currentPosition.value = LatLng(newPosition.latitude, newPosition.longitude);
+    currentPosition.value = smoothed;
 
-    try {
-      if (_previousPosition != null) {
-        Geolocator.distanceBetween(
-          _previousPosition!.latitude,
-          _previousPosition!.longitude,
-          newPosition.latitude,
-          newPosition.longitude,
-        );
+    _moveMapRealtime(smoothed);
 
-        // if (moved > 10) {
-        //   mapController.move(currentPosition.value!, 17);
-        // }
-      }
-    } catch (_) {}
-
-    _previousPosition = newPosition;
     bool valid = false;
     double nearestDistance = double.infinity;
 
+    /// CHECK RADIUS
     for (final circle in officeCircles) {
       final meter = Geolocator.distanceBetween(
-        currentPosition.value!.latitude,
-        currentPosition.value!.longitude,
+        smoothed.latitude,
+        smoothed.longitude,
         circle.point.latitude,
         circle.point.longitude,
       );
@@ -545,29 +539,40 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         nearestDistance = meter;
       }
 
-      final tolerance = min(gpsAccuracy.value, 10);
+      final tolerance = max(
+        min(gpsAccuracy.value, 8),
+        3,
+      );
 
       if (meter <= circle.radius + tolerance) {
         valid = true;
       }
     }
 
-    distanceFromOffice.value = nearestDistance;
-
+    /// CHECK POLYGON
     if (!valid) {
       for (final poly in officePolygons) {
-        if (isPointInsidePolygon(currentPosition.value!, poly.points)) {
+        if (isPointInsidePolygon(smoothed, poly.points)) {
           valid = true;
           break;
         }
       }
     }
 
+    final oldValue = isLocationValid.value;
+
     isLocationValid.value = valid;
+
+    /// ONLY redraw if changed
+    if (oldValue != valid) {
+      _updateOfficeColors();
+    }
+
     buttonEnabled.value = isLocationValid.value && !isGpsSpoofing.value;
 
-    _updateOfficeColors();
-    _calculateNearestOffice(currentPosition.value!);
+    distanceFromOffice.value = nearestDistance;
+
+    _calculateNearestOffice(smoothed);
   }
 
   void _startTimer() {
@@ -575,51 +580,80 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
     final serverTimeStr = attendanceTodayRes.value.serverTime;
 
+    // If server time is unavailable, fall back to device time to keep the timer running
     if (serverTimeStr == null || serverTimeStr.isEmpty) {
-      return;
+      // Use device time as baseline
+      final now = DateTime.now();
+      _serverTime = DateTime(
+          now.year, now.month, now.day, now.hour, now.minute, now.second);
+      _deviceTimeAtSync = now;
+    } else {
+      DateTime parsed;
+      try {
+        parsed = DateFormat("HH:mm:ss").parse(serverTimeStr);
+      } catch (e) {
+        AppUtils.logApp("INVALID SERVER TIME: $serverTimeStr");
+        // Fallback to device time
+        final now = DateTime.now();
+        _serverTime = DateTime(
+            now.year, now.month, now.day, now.hour, now.minute, now.second);
+        _deviceTimeAtSync = now;
+        return;
+      }
+      final now = DateTime.now();
+      _serverTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        parsed.hour,
+        parsed.minute,
+        parsed.second,
+      );
+      _deviceTimeAtSync = now;
     }
-
-    DateTime parsed;
-
-    try {
-      parsed = DateFormat("HH:mm:ss").parse(serverTimeStr);
-    } catch (e) {
-      AppUtils.logApp("INVALID SERVER TIME: $serverTimeStr");
-      return;
-    }
-
-    final now = DateTime.now();
-
-    _serverTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      parsed.hour,
-      parsed.minute,
-      parsed.second,
-    );
-
-    _deviceTimeAtSync = now;
-
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final nowDevice = DateTime.now();
       final elapsed = nowDevice.difference(_deviceTimeAtSync!);
-
       final currentServerTime = _serverTime!.add(elapsed);
-
       displayTime.value = currentServerTime;
+      _updateLiveDuration(currentServerTime);
     });
+  }
+
+  void _updateLiveDuration(DateTime currentServerTime) {
+    if (attendanceStatus.value == AttendanceStatus.notStarted) {
+      liveWorkDuration.value = '--:--';
+      return;
+    }
+    if (attendanceStatus.value == AttendanceStatus.checkedOut) {
+      liveWorkDuration.value = totalHours.value;
+      return;
+    }
+
+    final checkIn = checkInTime.value;
+    if (checkIn == null) {
+      liveWorkDuration.value = '--:--';
+      return;
+    }
+
+    Duration dif = currentServerTime.difference(checkIn);
+
+    if (breakEndTime.value != null && breakTime.value != null) {
+      dif -= breakEndTime.value!.difference(breakTime.value!);
+    } else if (attendanceStatus.value == AttendanceStatus.breakStart &&
+        breakTime.value != null) {
+      dif -= currentServerTime.difference(breakTime.value!);
+    }
+
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    liveWorkDuration.value =
+        "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
   }
 
   Future<void> validationSelfie(String status) async {
     if (!isLocationValid.value) {
       AppDialogImpl().showErrorSnackBar(
           description: "Anda harus berada di dalam radius kantor.");
-      return;
-    }
-
-    if (isGpsSpoofing.value) {
-      AppDialogImpl().showErrorSnackBar(description: "Fake GPS terdeteksi!");
       return;
     }
 
@@ -635,13 +669,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
               attendanceTodayRes.value,
               currentPosition.value,
               nearestOffice.value,
+              isGpsSpoofing.value,
             ],
           );
 
           if (result == true && status == 'checked_in') {
             await _getAttendanceToday();
           } else {
-            _totalHours();
             await _getAttendanceToday();
             isGpsSpoofing.value = false;
             _positionStream?.cancel();
@@ -652,20 +686,36 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   void _totalHours() {
     breakTimer?.cancel();
-    checkOutTime.value = DateTime.now();
 
-    Duration dif = checkOutTime.value.difference(checkInTime.value);
+    final checkIn = checkInTime.value;
+    final checkOut = checkOutTime.value;
+
+    if (checkIn == null || checkOut == null) {
+      totalHours.value = '--h --m';
+      workDurationMinutes.value = 0;
+      return;
+    }
+
+    AppUtils.logApp("CheckIn: $checkIn");
+    AppUtils.logApp("CheckOut: $checkOut");
+
+    Duration dif = checkOut.difference(checkIn);
+    AppUtils.logApp("Difference: ${dif.inMinutes} minutes");
 
     if (breakEndTime.value != null && breakTime.value != null) {
       dif -= breakEndTime.value!.difference(breakTime.value!);
     }
 
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-
     totalHours.value =
         "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
-
     workDurationMinutes.value = dif.inMinutes;
+  }
+
+  void _resetTimer() {
+    _timer?.cancel();
+    _timer = null;
+    _startTimer();
   }
 
   void startBreakTime() async {
@@ -689,6 +739,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             latitude: currentPosition.value!.latitude,
             longitude: currentPosition.value!.longitude,
             workDurationMinutes: 0,
+            banned: isGpsSpoofing.value,
             file: '',
           );
 
@@ -696,7 +747,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
           result.fold(
             (l) {
-              Get.snackbar("Error", "Gagal record Break Start");
+              Get.snackbar("Terjadi Kesalahan", "Gagal record Break Start");
               isLoadingAttendance.value = false;
             },
             (r) async {
@@ -772,6 +823,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             latitude: currentPosition.value!.latitude,
             longitude: currentPosition.value!.longitude,
             workDurationMinutes: 0,
+            banned: isGpsSpoofing.value,
             file: '',
           );
 
@@ -779,7 +831,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
           result.fold(
             (l) {
-              Get.snackbar("Error", "Gagal record Break End");
+              Get.snackbar("Terjadi Kesalahan", "Gagal record Break End");
               isLoadingAttendance.value = false;
             },
             (r) async {
@@ -883,6 +935,14 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         final boundaryDistance =
             _distanceToPolygonBoundary(userPos, polygonPoints);
 
+        final center = _getPolygonCenter(polygonPoints);
+        final centerDistance = Geolocator.distanceBetween(
+          userPos.latitude,
+          userPos.longitude,
+          center.latitude,
+          center.longitude,
+        );
+
         if (boundaryDistance < nearestDistance) {
           nearestDistance = boundaryDistance;
 
@@ -890,7 +950,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             locationName: loc.location,
             locationId: loc.locationID,
             type: "polygon",
-            distanceToCenter: boundaryDistance,
+            distanceToCenter: centerDistance,
             distanceToBoundary: inside ? 0.0 : boundaryDistance,
             radius: 0,
             inside: inside,
@@ -943,11 +1003,24 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     return minDistance;
   }
 
+  LatLng _getPolygonCenter(List<LatLng> polygon) {
+    double latSum = 0;
+    double lngSum = 0;
+
+    for (var point in polygon) {
+      latSum += point.latitude;
+      lngSum += point.longitude;
+    }
+
+    return LatLng(latSum / polygon.length, lngSum / polygon.length);
+  }
+
   String get formattedDisplayTime {
     if (attendanceStatus.value == AttendanceStatus.breakStart) {
       return countTimes.value;
     } else if (attendanceStatus.value == AttendanceStatus.checkedOut) {
-      return DateFormat('hh:mm:ss a').format(checkOutTime.value);
+      return DateFormat('hh:mm:ss a')
+          .format(checkOutTime.value ?? DateTime.now());
     }
 
     return DateFormat('hh:mm:ss a').format(displayTime.value);
@@ -957,5 +1030,68 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     final nearest = nearestOffice.value;
 
     return nearest!.locationId;
+  }
+
+  String formatApiTime(String? time) {
+    if (time == null || time.isEmpty) {
+      return '--:--';
+    }
+
+    try {
+      final parsed = DateFormat("HH:mm:ss").parse(time);
+      return DateFormat('hh:mm a').format(parsed);
+    } catch (_) {
+      return '--:--';
+    }
+  }
+
+  LatLng _smoothPosition(LatLng newPos) {
+    if (_smoothedPosition == null) {
+      _smoothedPosition = newPos;
+      return newPos;
+    }
+
+    const alpha = 0.2;
+
+    final lat =
+        (_smoothedPosition!.latitude * (1 - alpha)) + (newPos.latitude * alpha);
+
+    final lng = (_smoothedPosition!.longitude * (1 - alpha)) +
+        (newPos.longitude * alpha);
+
+    _smoothedPosition = LatLng(lat, lng);
+
+    return _smoothedPosition!;
+  }
+
+  void _moveMapRealtime(LatLng pos) {
+    if (!isMapReady.value) return;
+
+    _mapMoveDebounce?.cancel();
+
+    _mapMoveDebounce = Timer(
+      const Duration(milliseconds: 300),
+      () {
+        mapController.move(pos, mapController.camera.zoom);
+      },
+    );
+  }
+
+  final List<String> endDayMessages = [
+    "Hari ini telah kamu lewati dengan baik. Terima kasih sudah memberikan usaha terbaikmu.",
+    "Kerja kerasmu hari ini adalah langkah kecil menuju masa depan yang lebih besar.",
+    "Satu hari produktif telah selesai. Saatnya beristirahat dan memulihkan energi.",
+    "Terima kasih sudah bertahan dan memberikan yang terbaik hari ini.",
+    "Hari ini mungkin melelahkan, tapi kamu berhasil melewatinya dengan hebat.",
+    "Setiap usaha yang kamu lakukan hari ini sangat berarti.",
+    "Selamat, kamu berhasil menyelesaikan hari ini dengan baik.",
+    "Istirahat yang cukup, besok adalah kesempatan baru untuk berkembang.",
+    "Perjalanan hari ini selesai. Nikmati waktumu untuk recharge energi.",
+    "Kamu sudah melakukan yang terbaik hari ini. Good job!",
+  ];
+
+  String get randomEndDayMessage {
+    endDayMessages.shuffle();
+    return endDayMessages.first;
   }
 }

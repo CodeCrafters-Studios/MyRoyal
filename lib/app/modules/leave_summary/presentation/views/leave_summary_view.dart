@@ -19,7 +19,7 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Leaves',
+      title: 'Izin / Cuti',
       child: Obx(
         () => controller.isLoading.value ? _buildLoadingUI() : _buildLoadedUI(),
       ),
@@ -33,7 +33,7 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
           children: [
             AppbarSpacer(),
             DashboardCard(
-              title: 'Leave\nRequests',
+              title: 'Pengajuan\nCuti',
               value: controller
                   .leaveModelRes()
                   .data!
@@ -63,7 +63,7 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
             ),
             5.verticalSpace,
             DashboardCard(
-              title: 'Permit\nRequest',
+              title: 'Pengajuan\nIzin',
               value: controller.permitData.length.toString(),
               totalValue: '12',
               progressLinearValue: 12 / 12,
@@ -118,8 +118,6 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
               iconAsset: 'assets/icons/ic_request_leave.svg',
               isLateCard: true,
             ),
-            // 20.verticalSpace,
-            // LeavesViewImpl(controller: controller),
           ],
         ),
       ),
@@ -142,64 +140,5 @@ class LeavesViewImpl extends StatelessWidget {
 
   Widget _buildLeaveRequestSection(BuildContext context) {
     return emptyBox;
-    // Obx(
-    //   () => Column(
-    //     mainAxisSize: MainAxisSize.min,
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       // _buildSearch(),
-    //       // 20.verticalSpace,
-    //       // _buildAllLeaveRequestView(),
-    //       // 20.verticalSpace,
-    //       // controller.userData.value.position != 'Staff'
-    //       //     ? _buildLeaveRequestTabViews()
-    //       //     : emptyBox
-    //     ],
-    //   ),
-    // );
   }
-
-  // Widget _buildLeaveRequestTabViews() {
-  //   return SizedBox(
-  //     width: Get.width,
-  //     height: Get.height,
-  //     child: TabBarView(
-  //       controller: controller.tabLeaveController,
-  //       children: [
-  //         AllLeaveRequestView(controller: controller),
-  //         AllApprovalRequestView(controller: controller),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildAllLeaveRequestView() {
-  //   return controller.userData.value.position != 'Staff'
-  //       ? EPadding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 20),
-  //           child: Container(
-  //             decoration: BoxDecoration(
-  //               border: Border.all(color: grey),
-  //               borderRadius: BorderRadius.circular(Corners.xxl),
-  //               color: white,
-  //             ),
-  //             child: TabBar(
-  //               controller: controller.tabLeaveController,
-  //               indicator: BoxDecoration(
-  //                 borderRadius: BorderRadius.circular(Corners.xxl),
-  //                 color: primary,
-  //               ),
-  //               indicatorSize: TabBarIndicatorSize.tab,
-  //               labelStyle: TS.bodyMedium.copyWith(color: white),
-  //               unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
-  //               unselectedLabelColor: primary,
-  //               tabs: const [
-  //                 Tab(text: 'All'),
-  //                 Tab(text: 'Need Approval'),
-  //               ],
-  //             ),
-  //           ),
-  //         )
-  //       : AllLeaveRequestView(controller: controller);
-  // }
 }

@@ -58,7 +58,7 @@ class AuthBiometricsImpl implements AuthBiometrics {
         imagePath: 'assets/icons/ic_information.svg',
         description:
             'Biometrics is not set, please configure biometrics security on your phone.',
-        textButton: 'Continue',
+        textButton: 'Lanjut',
       );
       return AuthReason(
         isAuthenticated: false,

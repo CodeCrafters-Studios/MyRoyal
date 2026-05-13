@@ -16,7 +16,7 @@ class TermsAndPoliciesView extends GetView<TermsAndPoliciesController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Terms & Policies',
+      title: 'Syarat & Ketentuan',
       child: WebViewWidget(
         controller: controllerWebView
           ..setJavaScriptMode(JavaScriptMode.unrestricted)

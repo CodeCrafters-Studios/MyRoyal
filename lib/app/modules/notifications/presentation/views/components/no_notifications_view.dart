@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 
@@ -19,7 +18,6 @@ class NoNotificationsView extends StatelessWidget {
         Container(
           height: 100.h,
           width: 100.w,
-          color: white,
           child: Image.asset('assets/icons/ic_no_notifications.png'),
         ),
         30.verticalSpace,
@@ -28,12 +26,11 @@ class NoNotificationsView extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'No Notifications',
+                'Belum ada notifikasi',
                 style: TS.titleMedium,
               ),
-              15.verticalSpace,
               Text(
-                'You do not have any\nnotifications at this time',
+                'Saat ini kamu belum memiliki notifikasi apapun.',
                 style: TS.bodyMedium,
                 textAlign: TextAlign.center,
               ),

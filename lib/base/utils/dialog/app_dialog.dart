@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,20 +14,19 @@ import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
 import 'package:MyRoyal/base/widgets/buttons/button_primary_outlined.dart';
 import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
 import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 abstract class AppDialog {
   Future<bool> showPermissionDialog({
     String? imagePath,
-    String title = 'Permission',
+    String title = 'Izin',
     String? description,
-    String textYes = 'Yes',
-    String textNo = 'No',
+    String textYes = 'Ya',
+    String textNo = 'Tidak',
   });
 
   Future<void> showErrorDialog({
     String? imagePath,
-    String title = 'Error',
+    String title = 'Terjadi Kesalahan!',
     String? description,
     String textButton = 'Ok',
     Function()? onPress,
@@ -108,6 +108,8 @@ abstract class AppDialog {
     double? height,
     double? width,
     Function()? onPress,
+    Function()? onPressPhone1,
+    Function()? onPressPhone2,
   });
 
   Future<void> showEventDialog({
@@ -171,7 +173,7 @@ class AppDialogImpl implements AppDialog {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                title ?? 'Confirmation',
+                title ?? 'Konfirmasi',
                 style: TS.titleMedium,
                 textAlign: TextAlign.center,
               ),
@@ -195,7 +197,7 @@ class AppDialogImpl implements AppDialog {
                     child: ButtonPrimary(
                       color: buttonColor ?? primary,
                       onPressed: onPressedYes ?? () => Get.back(result: true),
-                      text: textYes ?? 'Yes',
+                      text: textYes ?? 'Ya',
                       fullWidth: true,
                     ),
                   ),
@@ -203,7 +205,7 @@ class AppDialogImpl implements AppDialog {
                   Expanded(
                     child: ButtonPrimaryOutlined(
                       onPressed: onPressedNo ?? () => Get.back(result: false),
-                      text: textNo ?? 'No',
+                      text: textNo ?? 'Tidak',
                       textColor: primary,
                       isOutline: true,
                       fullWidth: true,
@@ -225,9 +227,9 @@ class AppDialogImpl implements AppDialog {
   @override
   Future<void> showSuccessDialog({
     String? imagePath,
-    String title = 'Success',
+    String title = 'Berhasil',
     String? description,
-    String textButton = 'Continue',
+    String textButton = 'Lanjut',
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -285,9 +287,9 @@ class AppDialogImpl implements AppDialog {
   @override
   Future<void> showErrorDialog({
     String? imagePath,
-    String title = 'Error!',
-    String? description = 'Please try again to complete the request',
-    String textButton = 'Try Again',
+    String title = 'Terjadi Kesalahan!',
+    String? description = 'Silakan coba lagi untuk menyelesaikan permintaan.',
+    String textButton = 'Coba Lagi',
     Function()? onPress,
   }) async {
     await Get.dialog(
@@ -345,10 +347,10 @@ class AppDialogImpl implements AppDialog {
   @override
   Future<bool> showPermissionDialog({
     String? imagePath,
-    String title = 'Permission',
+    String title = 'Izin',
     String? description,
-    String textYes = 'Yes',
-    String textNo = 'No',
+    String textYes = 'Ya',
+    String textNo = 'Tidak',
   }) async {
     final r = await Get.dialog(
       Dialog(
@@ -446,7 +448,7 @@ class AppDialogImpl implements AppDialog {
                   ),
                 description == null ? 28.verticalSpace : 5.verticalSpace,
                 Text(
-                  title ?? 'Information',
+                  title ?? 'Informasi',
                   style: TS.titleMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -643,7 +645,7 @@ class AppDialogImpl implements AppDialog {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  title ?? 'Information',
+                  title ?? 'Informasi',
                   style: TS.titleMedium,
                 ),
                 15.verticalSpace,
@@ -660,7 +662,7 @@ class AppDialogImpl implements AppDialog {
                         : TextButton(
                             onPressed: onPressLater,
                             child: Text(
-                              'Later',
+                              'Nanti',
                               style: TS.titleSmall.copyWith(color: red),
                             ),
                           ),
@@ -673,7 +675,7 @@ class AppDialogImpl implements AppDialog {
                             color: primary,
                             borderRadius: BorderRadius.circular(8.0)),
                         child: Text(
-                          'Update',
+                          textButton ?? 'Perbarui',
                           style: TS.titleSmall.copyWith(color: white),
                         ),
                       ),
@@ -736,7 +738,7 @@ class AppDialogImpl implements AppDialog {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                title ?? 'Information',
+                title ?? 'Informasi',
                 style: TS.titleSmall,
                 textAlign: TextAlign.center,
               ),
@@ -778,6 +780,8 @@ class AppDialogImpl implements AppDialog {
     double? height,
     double? width,
     Function()? onPress,
+    Function()? onPressPhone1,
+    Function()? onPressPhone2,
   }) async {
     await Get.dialog(
       Dialog(
@@ -805,7 +809,7 @@ class AppDialogImpl implements AppDialog {
                 ),
               description == null ? 28.verticalSpace : 5.verticalSpace,
               Text(
-                title ?? 'Information',
+                title ?? 'Informasi',
                 style: TS.titleMedium,
                 textAlign: TextAlign.center,
               ),
@@ -817,43 +821,24 @@ class AppDialogImpl implements AppDialog {
                     style: TS.bodyMedium,
                     children: [
                       TextSpan(
-                          text: '\n\nCall',
+                          text: '\n\nHubungi',
                           style: TS.bodyMedium.copyWith(color: primary),
                           children: [
                             TextSpan(
-                              text: ' $phoneNumber',
+                              text: '\n$phoneNumber',
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  String url = "https://wa.me/628112465515";
-                                  if (await canLaunchUrl(Uri.parse(url))) {
-                                    await launchUrl(Uri.parse(url),
-                                        mode: LaunchMode.externalApplication);
-                                  } else {
-                                    throw 'Could not launch $url';
-                                  }
-                                },
+                                ..onTap = onPressPhone1,
                               style: TS.bodyMedium.copyWith(color: Colors.blue),
                               children: [
                                 TextSpan(
-                                    text: ' or ',
+                                    text: ' atau ',
                                     style:
                                         TS.bodyMedium.copyWith(color: primary),
                                     children: [
                                       TextSpan(
                                         text: '$phoneNumber2',
                                         recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            String url =
-                                                "https://wa.me/6281120005071";
-                                            if (await canLaunchUrl(
-                                                Uri.parse(url))) {
-                                              await launchUrl(Uri.parse(url),
-                                                  mode: LaunchMode
-                                                      .externalApplication);
-                                            } else {
-                                              throw 'Could not launch $url';
-                                            }
-                                          },
+                                          ..onTap = onPressPhone2,
                                         style: TS.bodyMedium
                                             .copyWith(color: Colors.blue),
                                       ),
@@ -895,7 +880,16 @@ class AppDialogImpl implements AppDialog {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             isImg == true
-                ? Image.network(imageUrl.toString())
+                ? CachedNetworkImage(
+                    imageUrl: imageUrl.toString(),
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.broken_image,
+                      color: grey,
+                      size: 100,
+                    ),
+                  )
                 : Lottie.asset(
                     imageUrl.toString(),
                     height: 500.h,
@@ -995,7 +989,7 @@ class AppDialogImpl implements AppDialog {
   }
 
   @override
-  Future<void> showLoading({String title = 'Please Wait'}) async {
+  Future<void> showLoading({String title = 'Harap Tunggu'}) async {
     await Get.dialog(
       PopScope(
         canPop: false,
@@ -1071,7 +1065,7 @@ class AppDialogImpl implements AppDialog {
               Column(
                 children: [
                   Text(
-                    title ?? 'Information',
+                    title ?? 'Informasi',
                     style: TS.titleLarge,
                     textAlign: TextAlign.center,
                   ),

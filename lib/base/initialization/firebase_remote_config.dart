@@ -8,7 +8,6 @@ class MellotippetFirebaseRemoteConfig extends GetxService {
   static Future<void> initialize() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
 
-    // Set configuration
     await remoteConfig.setConfigSettings(
       RemoteConfigSettings(
         fetchTimeout: const Duration(minutes: 1),
@@ -16,18 +15,14 @@ class MellotippetFirebaseRemoteConfig extends GetxService {
       ),
     );
 
-    // These will be used before the values are fetched from Firebase Remote Config.
-    // await remoteConfig.setDefaults(const {
-    //   'requiredMinimumVersion': '1.0.0',
-    //   'recommendedMinimumVersion': '1.0.0',
-    // });
+    try {
+      final bool activated = await remoteConfig.fetchAndActivate();
+      AppUtils.logApp('REMOTE CONFIG ACTIVATED: $activated');
+    } catch (e) {
+      // Silently fail on simulator — remote config is non-critical
+      AppUtils.logApp('REMOTE CONFIG ERROR (safe to ignore on simulator): $e');
+    }
 
-    // Fetch the values from Firebase Remote Config
-    await remoteConfig.fetchAndActivate();
-
-    AppUtils.logApp('REMOTE CONFIG ${remoteConfig.fetchAndActivate()}');
-
-    // Optional: listen for and activate changes to the Firebase Remote Config values
     remoteConfig.onConfigUpdated.listen((event) async {
       await remoteConfig.activate();
     });

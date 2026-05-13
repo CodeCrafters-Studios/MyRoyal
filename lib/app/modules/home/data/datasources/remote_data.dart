@@ -2,10 +2,14 @@ import 'package:MyRoyal/app/modules/home/data/models/banner_event_model.dart';
 import 'package:MyRoyal/app/modules/home/data/models/user_jde_model.dart';
 import 'package:MyRoyal/app/modules/home/data/models/articles_model.dart';
 import 'package:MyRoyal/app/modules/home/data/models/user_model.dart';
+import 'dart:io';
+import 'package:flutter/services.dart';
+
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/errors/failures.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
+import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 
 abstract class HomeRemoteDataSource {
   Future<UserModel> getUser();
@@ -27,6 +31,25 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         method: Method.GET,
       );
       if (r['code'] != 200) throw ApiException(r['message']);
+
+      if (r['data'] != null && r['data']['banned'] == true) {
+        AppDialogImpl().showErrorDialog(
+          title: "User telah dibanned",
+          description:
+              "Akun Anda telah dinonaktifkan. Silakan hubungi administrator.",
+          textButton: "Tutup Aplikasi",
+          onPress: () async {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else {
+              exit(0);
+            }
+          },
+        );
+        // Delay forever so the app doesn't proceed to parse or load
+        await Future.delayed(const Duration(days: 999));
+      }
+
       final userResponse = UserModel.fromJson(r);
       return userResponse;
     } on ServerFailure {

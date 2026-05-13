@@ -38,9 +38,9 @@ class HeaderDocumentView extends StatelessWidget {
             : trackingDocument.needApproval
                 ? BottomSheetButton(
                     onTapRejcet: () => AppDialogImpl().showChoiceDialog(
-                          title: 'Confirmation',
+                          title: 'Konfirmasi',
                           description:
-                              'Are you sure want to reject this document?',
+                              'Apakah Anda yakin ingin menolak dokumen ini?',
                           onPressedYes: () {
                             AppUtils.logApp('HERE');
                             Get.dialog(
@@ -62,7 +62,7 @@ class HeaderDocumentView extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        'Reason',
+                                        'Alasan',
                                         style: TS.titleMedium,
                                         textAlign: TextAlign.center,
                                       ),
@@ -73,10 +73,10 @@ class HeaderDocumentView extends StatelessWidget {
                                         maxLines: 5,
                                         color: white,
                                         outlineColor: primary,
-                                        hint: 'Type here..',
+                                        hint: 'Ketik disini..',
                                         validation: (value) =>
                                             value?.isEmpty ?? false
-                                                ? 'Cannot be empty'
+                                                ? 'Tidak boleh kosong'
                                                 : null,
                                         onChanged: (value) {
                                           controller.reasonText.value = value;
@@ -90,7 +90,7 @@ class HeaderDocumentView extends StatelessWidget {
                                           Expanded(
                                             child: ButtonPrimary(
                                               onPressed: () => Get.back(),
-                                              text: 'Cancel',
+                                              text: 'Batal',
                                               color: red,
                                               fullWidth: true,
                                             ),
@@ -112,7 +112,7 @@ class HeaderDocumentView extends StatelessWidget {
                                                     controller.reasonText.value,
                                                   );
                                                 },
-                                                text: 'Submit',
+                                                text: 'Kirim',
                                                 color: green,
                                                 fullWidth: true,
                                               ),
@@ -130,9 +130,9 @@ class HeaderDocumentView extends StatelessWidget {
                           },
                         ),
                     onTapApprove: () => AppDialogImpl().showChoiceDialog(
-                        title: 'Confirmation',
+                        title: 'Konfirmasi',
                         description:
-                            'Are you sure want to approve this document?',
+                            'Apakah Anda yakin ingin menyetujui dokumen ini?',
                         onPressedYes: () {
                           Get.back();
                           controller.postActionDocument(
@@ -174,17 +174,17 @@ class HeaderDocumentView extends StatelessWidget {
       height: Get.height,
       child: Column(
         children: [
-          _buildDetailRow('Posting Date:', trackingDocument.createdAt),
-          _buildDetailRow('PTK No:', trackingDocument.serialNumber),
-          _buildDetailRow('Labor Quantity:', detailPtk.laborQuantity),
-          _buildDetailRow('Position:', trackingDocument.positionName),
-          _buildDetailRow('Location:', trackingDocument.locationName),
-          _buildDetailRow('Section:', trackingDocument.sectionName),
-          _buildDetailRow('Department:', trackingDocument.departmentName),
-          _buildDetailRow('Company:', trackingDocument.companyName),
-          _buildDetailRow('Status Contract:', detailPtk.employmentStatusesName),
-          _buildDetailRow(
-              'Status Approval:', detailPtk.state.capitalizeFirst.toString()),
+          _buildDetailRow('Tanggal Posting:', trackingDocument.createdAt),
+          _buildDetailRow('Nomor PTK:', trackingDocument.serialNumber),
+          _buildDetailRow('Jumlah Tenaga Kerja:', detailPtk.laborQuantity),
+          _buildDetailRow('Jabatan:', trackingDocument.positionName),
+          _buildDetailRow('Lokasi:', trackingDocument.locationName),
+          _buildDetailRow('Bagian:', trackingDocument.sectionName),
+          _buildDetailRow('Departemen:', trackingDocument.departmentName),
+          _buildDetailRow('Perusahaan:', trackingDocument.companyName),
+          _buildDetailRow('Status Kontrak:', detailPtk.employmentStatusesName),
+          _buildDetailRow('Status Persetujuan:',
+              detailPtk.state.capitalizeFirst.toString()),
         ],
       ),
     );

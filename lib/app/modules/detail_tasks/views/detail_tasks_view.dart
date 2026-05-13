@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -119,8 +120,16 @@ class DetailTasksViewImpl extends StatelessWidget {
             backgroundColor: Colors.white,
             child: CircleAvatar(
               radius: 22,
-              backgroundImage: NetworkImage(
-                controller.randomImages[i],
+              backgroundColor: primary,
+              child: ClipOval(
+                child: CachedNetworkImage(
+                  imageUrl: controller.randomImages[i],
+                  fit: BoxFit.cover,
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.person,
+                    color: white,
+                  ),
+                ),
               ),
             ),
           ),

@@ -322,10 +322,12 @@ class BottomnavbarBinding extends Bindings {
       )
       ..lazyPut<AttendanceController>(
         () => AttendanceController(
-            getAttendanceTodayUsecase: Get.find<GetAttendanceTodayUsecase>(),
-            recordAttendanceUsecase: Get.find<RecordAttendanceUsecase>(),
-            getAttendanceLocationUsecase:
-                Get.find<GetAttendanceLocationUsecase>()),
+          getAttendanceTodayUsecase: Get.find<GetAttendanceTodayUsecase>(),
+          recordAttendanceUsecase: Get.find<RecordAttendanceUsecase>(),
+          getAttendanceLocationUsecase:
+              Get.find<GetAttendanceLocationUsecase>(),
+        ),
+        fenix: true,
       )
 
       // Dashboard

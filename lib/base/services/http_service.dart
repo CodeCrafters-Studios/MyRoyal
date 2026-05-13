@@ -7,6 +7,7 @@ import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/Get.dart' as getx;
 import 'package:MyRoyal/base/config/app_config.dart';
@@ -98,10 +99,10 @@ class HttpService extends getx.GetxService {
 
   void _updateConnectionStatus(List<ConnectivityResult> result) {
     if (result.contains(ConnectivityResult.none)) {
-      connectionStatus.value = "No connection";
+      connectionStatus.value = "Tidak ada koneksi";
       AppUtils.logApp(connectionStatus.value);
     } else {
-      connectionStatus.value = "Connected";
+      connectionStatus.value = "Terhubung";
     }
   }
 
@@ -114,11 +115,20 @@ class HttpService extends getx.GetxService {
     RequestType type = RequestType.json,
     String? fileName,
   }) async {
+    final url = AppConfig.environment.baseUrl + endpoint;
+    final cacheKey =
+        "CACHE_$url${(params != null && params is! FormData) ? jsonEncode(params) : ''}";
+
     if (!await networkInfo.isConnected) {
+      if (method == Method.GET) {
+        final cachedData = await appStorage.read(cacheKey);
+        if (cachedData != null) {
+          AppUtils.logApp("📦 RETURNING CACHED DATA FOR: $url");
+          return jsonDecode(cachedData);
+        }
+      }
       throw ApiException('No Internet Connection');
     }
-
-    final url = AppConfig.environment.baseUrl + endpoint;
 
     final headers = {
       'Content-Type': 'application/json',
@@ -170,19 +180,22 @@ class HttpService extends getx.GetxService {
       final message = _extractMessage(response.data);
 
       if (code == 200) {
+        if (method == Method.GET) {
+          await appStorage.write(cacheKey, jsonEncode(response.data));
+        }
         return response.data;
       }
 
-      _handleError(message, showPopUp);
+      _handleError(message, showPopUp, code);
       throw ApiException(message);
     } on DioException catch (e) {
       final message = _extractMessage(e.response?.data);
-      _handleError(message, showPopUp);
+      _handleError(message, showPopUp, e.response?.statusCode);
       throw ApiException(message);
     } catch (e) {
       final message = e.toString();
 
-      _handleError(message, showPopUp);
+      _handleError(message, showPopUp, null);
 
       throw ApiException(e.toString());
     }
@@ -348,7 +361,7 @@ class HttpService extends getx.GetxService {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Download selesai',
+      'Unduhan Selesai',
       '$fileName telah disimpan.',
       platformChannelSpecifics,
       payload: filePath,
@@ -362,24 +375,38 @@ class HttpService extends getx.GetxService {
     return 'Unknown error';
   }
 
-  void _handleError(String message, bool showPopUp) {
+  void _handleError(String message, bool showPopUp, int? code) {
     if (!showPopUp) return;
 
     if (message.isNotEmpty) {
       if (message == "Unauthenticated.") {
         AppDialogImpl().showErrorDialog(
           description: message,
-          textButton: 'Back to Login',
+          textButton: 'Kembali ke Halaman Login',
           onPress: () async {
             await appStorage.delete(CACHE_ACCESS_TOKEN);
             await appStorage.delete(CACHE_REFRESH_TOKEN);
             getx.Get.offAllNamed(Routes.LOGIN);
           },
         );
+      } else if (code == 451) {
+        AppDialogImpl().showErrorDialog(
+          title: "User telah dibanned",
+          description:
+              "Akun Anda telah dinonaktifkan. Silakan hubungi administrator.",
+          textButton: "Tutup Aplikasi",
+          onPress: () async {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else {
+              exit(0);
+            }
+          },
+        );
       } else {
         AppDialogImpl().showErrorDialog(
           description: message,
-          textButton: 'Close',
+          textButton: 'Tutup',
         );
       }
     } else {

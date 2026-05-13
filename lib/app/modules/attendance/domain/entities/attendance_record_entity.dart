@@ -9,6 +9,7 @@ class AttendanceRecordEntity extends Equatable {
   final double latitude;
   final double longitude;
   final int workDurationMinutes;
+  final bool banned;
   final String file;
 
   const AttendanceRecordEntity({
@@ -20,6 +21,7 @@ class AttendanceRecordEntity extends Equatable {
     required this.latitude,
     required this.longitude,
     required this.workDurationMinutes,
+    required this.banned,
     required this.file,
   });
 
@@ -33,6 +35,7 @@ class AttendanceRecordEntity extends Equatable {
         latitude,
         longitude,
         workDurationMinutes,
+        banned,
         file,
       ];
 }

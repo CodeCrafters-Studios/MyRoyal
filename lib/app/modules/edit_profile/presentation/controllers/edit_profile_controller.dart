@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:MyRoyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -128,7 +129,7 @@ class EditProfileController extends GetxController {
     validatorButton();
   }
 
-  Future<void> editProfile() async {
+  Future<void> saveProfile() async {
     AppUtils.logApp(fullName.value);
     AppUtils.logApp(firstName.value);
     AppUtils.logApp(lastName.value);
@@ -184,6 +185,7 @@ class EditProfileController extends GetxController {
       isLoading(false);
       AppUtils.logApp('Success');
       Get.find<ProfileController>().setTabIndex(0);
+      Get.find<HomeController>().onRefresh();
       Get.back(result: true);
       appDialog.showSuccessSnackBar(
           description: 'Profile changes saved successfully');
@@ -201,21 +203,6 @@ class EditProfileController extends GetxController {
     validatorButton();
     AppUtils.logApp(maritalStatus.value);
   }
-
-  // Future<void> selectBirthDate(BuildContext context) async {
-  //   DateTime? d = await showDatePicker(
-  //     context: context,
-  //     initialDate:
-  //         selectedDate.value == 'Select date' ? DateTime.now() : selectDate,
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime(2025),
-  //   );
-  //   if (d != null) {
-  //     selectedDate.value = DateFormat.yMMMd("en_US").format(d);
-  //     selectDate = d;
-  //     AppUtils.logApp('Selected Date: $selectDate');
-  //   }
-  // }
 
   Future<void> pickImage(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);

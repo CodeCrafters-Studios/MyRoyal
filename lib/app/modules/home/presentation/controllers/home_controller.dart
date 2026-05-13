@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/home/data/models/banner_event_model.dart';
 import 'package:MyRoyal/app/modules/home/data/models/user_model.dart';
@@ -17,7 +14,6 @@ import 'package:MyRoyal/app/modules/home/domain/usecases/get_user_usecase.dart';
 import 'package:MyRoyal/app/modules/home/presentation/views/components/home_menu.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
-import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/initialization/firebase_remote_config.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
@@ -53,37 +49,44 @@ class HomeController extends GetxController {
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
+      id: 1,
       code: 'ic_dashboard',
-      name: 'Dashboard',
+      name: 'Dasbor',
     ),
     const Menu(
+      id: 2,
       code: 'ic_leaves',
-      name: 'Leaves',
+      name: 'Izin/Cuti',
     ),
     const Menu(
+      id: 3,
       code: 'ic_payroll',
-      name: 'Payroll',
+      name: 'Slip Gaji',
     ),
     // const Menu(
     //   code: 'ic_visit',
     //   name: 'Visit',
     // ),
     const Menu(
+      id: 4,
       code: 'ic_webtel',
       name: 'Webtel',
     ),
     const Menu(
+      id: 5,
       code: 'ic_tracking_documents',
-      name: 'Tracking Documents',
+      name: 'Lacak Dokumen',
     ),
 
     const Menu(
+      id: 6,
       code: 'ic_online_app',
-      name: 'Online App',
+      name: 'Aplikasi Online',
     ),
     const Menu(
+      id: 7,
       code: 'ic_approval',
-      name: 'Approval',
+      name: 'Persetujuan',
     ),
     // const Menu(
     //   code: 'ic_task',
@@ -179,12 +182,10 @@ class HomeController extends GetxController {
   }
 
   Future<void> onRefresh() async {
-    checkVersion();
     await _getUserData();
   }
 
   void _initial() async {
-    checkVersion();
     await _getUserData();
 
     // _getArticles();
@@ -239,7 +240,8 @@ class HomeController extends GetxController {
       onPressLater: Get.back,
       onPressUpdate: () async {
         Get.back();
-        String url = "https://play.google.com/store/apps/details?id=com.iroyal";
+        String url =
+            "https://play.google.com/store/apps/details?id=com.myroyal";
         if (await canLaunchUrl(Uri.parse(url))) {
           await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
         } else {
@@ -264,79 +266,6 @@ class HomeController extends GetxController {
             imageUrl: url,
           )
         : null;
-  }
-
-  void _showWhatsNewDialog() {
-    appDialog.showWhatsNewDialog(
-        title: "✨ What's new? 🎉",
-        description: 'MyRoyal ${deviceInfo.packageInfo.version}',
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_checklist.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'New Feature Attendance',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              SvgPicture.asset('assets/icons/ic_update_fix.svg'),
-              SizedBox(width: 10),
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  'Fixed several issues bottom navigation',
-                  style: TS.bodyMedium,
-                  textAlign: TextAlign.start,
-                ),
-              ),
-            ],
-          ),
-          // SizedBox(height: 8),
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Remove border royal wiki article',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // SizedBox(height: 8),
-          // Row(
-          //   children: [
-          //     SvgPicture.asset('assets/icons/ic_update_improve.svg'),
-          //     SizedBox(width: 10),
-          //     Flexible(
-          //       fit: FlexFit.loose,
-          //       child: Text(
-          //         'Add Banner Happy New Years & Merry Christmas',
-          //         style: TS.bodyMedium,
-          //         textAlign: TextAlign.start,
-          //       ),
-          //     ),
-          //   ],
-          // ),
-        ],
-        onPress: () async {
-          await appStorage.write(
-            'new-update',
-            'false',
-          );
-          Get.back();
-        });
   }
 
   List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {
@@ -372,7 +301,6 @@ class HomeController extends GetxController {
             ? isImageAvailable.value = true
             : isImageAvailable.value;
         _getBannerEvent();
-        newUpdate == 'true' ? _showWhatsNewDialog() : null;
       },
     );
   }
@@ -432,18 +360,4 @@ class HomeController extends GetxController {
       },
     );
   }
-
-  // Future<void> _getArticles() async {
-  //   isLoading.value = true;
-  //   final result = await getArticles();
-  //   result.fold(
-  //     (l) {
-  //       isLoading.value = false;
-  //     },
-  //     (r) {
-  //       isLoading.value = false;
-  //       articlesData.value = r;
-  //     },
-  //   );
-  // }
 }

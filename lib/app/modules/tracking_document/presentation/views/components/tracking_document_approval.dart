@@ -207,7 +207,7 @@ class TrackingDocumentApprovalView extends StatelessWidget {
   Widget _buildLastApprovalInfo(dynamic doc) {
     return Row(
       children: [
-        Text('Last Approval By:', style: TS.bodySmall.copyWith(color: black)),
+        Text('Disetujui Oleh: ', style: TS.bodySmall.copyWith(color: black)),
         5.horizontalSpace,
         Flexible(
           fit: FlexFit.loose,

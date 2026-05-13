@@ -59,34 +59,11 @@ class HomeUserCard extends StatelessWidget {
                             height: 60,
                             errorWidget: (context, url, error) {
                               AppUtils.logApp(error.toString());
-                              return Image.network(
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  );
-                                },
-                                'https://avatar.iran.liara.run/public',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return CachedNetworkImage(
-                                    imageUrl:
-                                        "https://api.dicebear.com/7.x/initials/png?seed=${initial}",
-                                  );
-                                },
+                              return Center(
+                                child: Text(
+                                  initial ?? '',
+                                  style: TS.titleLarge.copyWith(color: white),
+                                ),
                               );
                             },
                           ),

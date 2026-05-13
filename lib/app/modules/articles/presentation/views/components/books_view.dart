@@ -34,9 +34,14 @@ class BooksView extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl: data.cover.url,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Image.network(
-                  'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'),
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Container(
+                height: 200.h,
+                color: grey.withOpacity(0.2),
+                child: const Center(
+                  child: Icon(Icons.book_rounded, color: grey, size: 50),
+                ),
+              ),
             ),
             10.verticalSpace,
             EPadding(

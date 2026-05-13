@@ -7,9 +7,7 @@ import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
-import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
 import 'package:MyRoyal/base/widgets/others/coming_soon.dart';
-import 'package:MyRoyal/base/widgets/page_base.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -18,14 +16,20 @@ class SettingsView extends GetView<SettingsController> {
 
   @override
   Widget build(BuildContext context) {
-    return PageBase(
-      showBackground: false,
-      showIconBack: false,
-      centeredTitle: true,
-      title: 'Settings',
-      textStyle: TS.headlineSmall.copyWith(color: white),
-      child: SettingsViewImpl(controller: controller),
-    );
+    return PopScope(
+        canPop: false,
+        child: Scaffold(
+          backgroundColor: white,
+          appBar: AppBar(
+            title: Text('Pengaturan',
+                style: TS.headlineSmall.copyWith(color: white)),
+            backgroundColor: primary,
+            scrolledUnderElevation: 0,
+            automaticallyImplyLeading: false,
+            toolbarHeight: 70.h,
+          ),
+          body: SettingsViewImpl(controller: controller),
+        ));
   }
 }
 
@@ -41,8 +45,7 @@ class SettingsViewImpl extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const AppbarSpacer(),
-        15.verticalSpace,
+        10.verticalSpace,
         Expanded(
           child: ListView(
             padding: REdgeInsets.symmetric(horizontal: 21),
@@ -64,13 +67,13 @@ class SettingsViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Personal Information',
+          'Informasi Pribadi',
           style: TS.titleMedium,
         ),
         16.verticalSpace,
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_tab_profile.svg',
-          text: 'Profile',
+          text: 'Profil',
           withTrailing: true,
           onTap: () {
             Get.toNamed(Routes.PROFILE);
@@ -86,14 +89,14 @@ class SettingsViewImpl extends StatelessWidget {
         // ),
         ItemMenuSettings(
             assetSvg: 'assets/icons/ic_change_password.svg',
-            text: 'Change Password',
+            text: 'Ubah kata sandi',
             withTrailing: true,
             onTap: () => Get.to(() => const ComingSoonScreen())
             // Get.toNamed(Routes.CHANGE_PASSWORD),
             ),
         ItemMenuSettings(
             assetSvg: 'assets/icons/ic_change_pin.svg',
-            text: 'Change PIN',
+            text: 'Ubah PIN',
             withTrailing: true,
             onTap: () => Get.to(() => const ComingSoonScreen())
             // Get.toNamed(Routes.CHANGE_PIN),
@@ -107,19 +110,19 @@ class SettingsViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Support & About',
+          'Bantuan & Informasi',
           style: TS.titleMedium,
         ),
         16.verticalSpace,
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_help&support.svg',
-          text: 'Help & Support',
+          text: 'Bantuan & Dukungan',
           withTrailing: true,
           onTap: () => Get.toNamed(Routes.HELP_AND_SUPPORT),
         ),
         ItemMenuSettings(
           assetSvg: 'assets/icons/ic_terms&polcies.svg',
-          text: 'Terms & Policies',
+          text: 'Syarat & Ketentuan',
           withTrailing: true,
           onTap: () => Get.toNamed(Routes.TERMS_AND_POLICIES),
         ),
@@ -132,7 +135,7 @@ class SettingsViewImpl extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Actions',
+          'Aksi',
           style: TS.titleMedium,
         ),
         16.verticalSpace,
@@ -140,19 +143,36 @@ class SettingsViewImpl extends StatelessWidget {
           () => controller.getAvailableBiometrics.value
               ? SwitchMenuSettings(
                   assetSvg: 'assets/icons/ic_fingerprint.svg',
-                  text: 'Fingerprint Login',
+                  text: 'Masuk dengan sidik jari',
                   value: controller.switchbiometricsValue.value,
                   onChanged: (value) => controller.iBiometrics(value),
                 )
               : emptyBox,
         ),
-        ItemMenuSettings(
-          assetSvg: 'assets/icons/ic_log_out.svg',
-          text: 'Logout',
-          onTap: controller.iLogout,
-          withTrailing: true,
-          trailingIcon: false,
-          appVersion: controller.deviceInfo.packageInfo.version,
+        80.verticalSpace,
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: red,
+          ),
+          child: ItemMenuSettings(
+            assetSvg: 'assets/icons/ic_log_out.svg',
+            iconColor: white,
+            text: 'Keluar',
+            textStyle: TS.labelLarge.copyWith(
+              color: white,
+            ),
+            textStyleTrailing: TS.bodySmall.copyWith(
+              fontWeight: FontWeight.w500,
+              color: white,
+            ),
+            onTap: controller.logout,
+            withTrailing: true,
+            withDivider: false,
+            trailingIcon: false,
+            appVersion: controller.deviceInfo.packageInfo.version,
+          ),
         ),
       ],
     );

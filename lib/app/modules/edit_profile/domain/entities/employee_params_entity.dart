@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class EmployeeParams extends Equatable {
-  const EmployeeParams({
+class EmployeeParamsEntity extends Equatable {
+  const EmployeeParamsEntity({
     required this.employeeId,
     required this.firstName,
     required this.lastName,

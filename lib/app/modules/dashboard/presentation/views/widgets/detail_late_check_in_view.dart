@@ -17,7 +17,7 @@ class DetailLateCheckInView extends GetView<DashboardController> {
   Widget build(BuildContext context) {
     return PageBase(
       showBackground: false,
-      title: 'Late Check-In',
+      title: 'Terlambat Check-in',
       child: Obx(
         () => controller.detailLateData().data.isEmpty
             ? Column(

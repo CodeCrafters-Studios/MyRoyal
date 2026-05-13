@@ -1,7 +1,10 @@
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:dio_request_inspector/dio_request_inspector.dart';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -80,23 +83,50 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   Future<void> _configureFCM() async {
-    String topicName = widget.config == const EnvironmentConfig.production()
-        ? 'All'
-        : 'All_Dev';
+    if (!kIsWeb && Platform.isIOS && (await _isIosSimulator())) {
+      AppUtils.logApp(
+          '[FIREBASE] Skipping FCM configuration on iOS Simulator.');
+      return;
+    }
 
-    await FirebaseMessaging.instance.getInitialMessage();
+    try {
+      final topicName = widget.config == const EnvironmentConfig.production()
+          ? 'All'
+          : 'All_Dev';
 
-    await FirebaseMessaging.instance.subscribeToTopic(topicName);
+      await FirebaseMessaging.instance.getInitialMessage();
 
-    String oppositeTopic = topicName == 'All' ? 'All_Dev' : 'All';
-    await FirebaseMessaging.instance.unsubscribeFromTopic(oppositeTopic);
+      await FirebaseMessaging.instance.subscribeToTopic(topicName);
 
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((token) => onFCMTokenRefresh(context, token));
-    FirebaseMessaging.onMessage
-        .listen((message) => onForegroundMessage(context, message));
-    FirebaseMessaging.onMessageOpenedApp
-        .listen((message) => onMessageOpenedFromBackground(context, message));
+      final oppositeTopic = topicName == 'All' ? 'All_Dev' : 'All';
+      await FirebaseMessaging.instance.unsubscribeFromTopic(oppositeTopic);
+
+      FirebaseMessaging.instance.onTokenRefresh.listen(
+        (token) => onFCMTokenRefresh(context, token),
+      );
+
+      FirebaseMessaging.onMessage.listen(
+        (message) => onForegroundMessage(context, message),
+      );
+
+      FirebaseMessaging.onMessageOpenedApp.listen(
+        (message) => onMessageOpenedFromBackground(context, message),
+      );
+    } catch (e) {
+      AppUtils.logApp('[FIREBASE] Error configuring FCM: $e');
+    }
+  }
+
+  /// Returns true when the app is running inside an iOS simulator.
+  Future<bool> _isIosSimulator() async {
+    if (kIsWeb || !Platform.isIOS) return false;
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      final iosInfo = await deviceInfo.iosInfo;
+      return !iosInfo.isPhysicalDevice;
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<void> _openFile(String filePath) async {
@@ -108,40 +138,54 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   Future<void> _requestNotificationPermissions() async {
-    // Initialize flutter_local_notifications
-    const androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initializationSettings =
-        InitializationSettings(android: androidSettings);
+    try {
+      const initializationSettings = InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(),
+      );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) async {
-        final payload = notificationResponse.payload;
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse notificationResponse) async {
+          final payload = notificationResponse.payload;
 
-        if (payload == null || payload.isEmpty) return;
+          if (payload == null || payload.isEmpty) return;
 
-        if (payload.startsWith("content://")) {
-          final intent = AndroidIntent(
-            action: 'action_view',
-            data: payload,
-            flags: <int>[Flag.FLAG_GRANT_READ_URI_PERMISSION],
-            type: 'application/pdf',
-          );
-          await intent.launch();
-          return;
-        }
+          if (payload.startsWith("content://")) {
+            final intent = AndroidIntent(
+              action: 'action_view',
+              data: payload,
+              flags: <int>[Flag.FLAG_GRANT_READ_URI_PERMISSION],
+              type: 'application/pdf',
+            );
+            await intent.launch();
+            return;
+          }
 
-        await _openFile(payload);
-      },
-      onDidReceiveBackgroundNotificationResponse:
-          onDidReceiveBackgroundNotificationResponse,
-    );
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()!
-        .requestNotificationsPermission();
+          await _openFile(payload);
+        },
+        onDidReceiveBackgroundNotificationResponse:
+            onDidReceiveBackgroundNotificationResponse,
+      );
+
+      if (Platform.isAndroid) {
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin>()
+            ?.requestNotificationsPermission();
+      }
+
+      if (Platform.isIOS) {
+        await FirebaseMessaging.instance.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+      }
+    } catch (e) {
+      AppUtils.logApp('[NOTIFICATIONS] Error requesting permissions: $e');
+    }
   }
 
   @override

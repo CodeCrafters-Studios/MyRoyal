@@ -169,11 +169,11 @@ class AllApprovalRequestView extends StatelessWidget {
                                                 5.verticalSpace,
                                                 Center(
                                                   child: Text(
-                                                    'Detail Form',
+                                                    'Detail Pengajuan',
                                                     style: TS.titleMedium,
                                                   ),
                                                 ),
-                                                5.verticalSpace,
+                                                25.verticalSpace,
                                                 EPadding(
                                                   padding: EdgeInsets.symmetric(
                                                     horizontal: 14,
@@ -199,7 +199,7 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                       .start,
                                                               children: [
                                                                 Text(
-                                                                  'Date',
+                                                                  'Tanggal',
                                                                   style: TS
                                                                       .titleSmall,
                                                                 ),
@@ -245,20 +245,6 @@ class AllApprovalRequestView extends StatelessWidget {
                                                             )
                                                           ],
                                                         ),
-                                                        // ListTile(
-                                                        //   horizontalTitleGap: 5.w,
-                                                        //   leading:
-
-                                                        //   title:
-                                                        //   subtitle: Text(
-                                                        //     '${r.periode.start.substring(0, 2)}-${r.periode.end}',
-                                                        //     style: TS.bodyMedium
-                                                        //         .copyWith(
-                                                        //       fontWeight:
-                                                        //           FontWeight.w300,
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
                                                       ),
                                                       Row(
                                                         children: [
@@ -312,9 +298,12 @@ class AllApprovalRequestView extends StatelessWidget {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Center(
+                                                      EPadding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 14),
                                                         child: Text(
-                                                          'Reason',
+                                                          'Alasan:',
                                                           style: TS.titleSmall,
                                                         ),
                                                       ),
@@ -325,14 +314,32 @@ class AllApprovalRequestView extends StatelessWidget {
                                                                 .symmetric(
                                                           horizontal: 14,
                                                         ),
-                                                        child: Text(
-                                                          r.reason,
-                                                          style: TS.bodyMedium
-                                                              .copyWith(
-                                                            color: greyText,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(10),
+                                                          width: Get.width,
+                                                          height: 180.h,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: white,
+                                                            border: Border.all(
+                                                                color:
+                                                                    borderColor),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
                                                           ),
-                                                          textAlign:
-                                                              TextAlign.start,
+                                                          child: Text(
+                                                            r.reason,
+                                                            style: TS.bodyMedium
+                                                                .copyWith(
+                                                              color: greyText,
+                                                            ),
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -340,244 +347,244 @@ class AllApprovalRequestView extends StatelessWidget {
                                                 ),
                                                 const Spacer(),
                                                 Obx(
-                                                  () => controller
-                                                          .isLoading.value
-                                                      ? Shimmer.fromColors(
-                                                          baseColor:
-                                                              Colors.grey,
-                                                          highlightColor: Colors
-                                                              .grey.shade400,
-                                                          child: Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child:
-                                                                    ButtonPrimary(
-                                                                  fullWidth:
-                                                                      true,
-                                                                  margin: REdgeInsets
-                                                                      .fromLTRB(
-                                                                    15,
-                                                                    0,
-                                                                    10,
-                                                                    20,
+                                                  () =>
+                                                      controller.isLoading.value
+                                                          ? Shimmer.fromColors(
+                                                              baseColor:
+                                                                  Colors.grey,
+                                                              highlightColor:
+                                                                  Colors.grey
+                                                                      .shade400,
+                                                              child: Row(
+                                                                children: [
+                                                                  Expanded(
+                                                                    child:
+                                                                        ButtonPrimary(
+                                                                      fullWidth:
+                                                                          true,
+                                                                      margin: REdgeInsets
+                                                                          .fromLTRB(
+                                                                        15,
+                                                                        0,
+                                                                        10,
+                                                                        20,
+                                                                      ),
+                                                                      text: '',
+                                                                      textColor:
+                                                                          grey,
+                                                                      onPressed:
+                                                                          null,
+                                                                    ),
                                                                   ),
-                                                                  text: '',
-                                                                  textColor:
-                                                                      grey,
-                                                                  onPressed:
-                                                                      null,
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child:
-                                                                    ButtonPrimary(
-                                                                  fullWidth:
-                                                                      true,
-                                                                  margin: REdgeInsets
-                                                                      .fromLTRB(
-                                                                    10,
-                                                                    0,
-                                                                    15,
-                                                                    20,
+                                                                  Expanded(
+                                                                    child:
+                                                                        ButtonPrimary(
+                                                                      fullWidth:
+                                                                          true,
+                                                                      margin: REdgeInsets
+                                                                          .fromLTRB(
+                                                                        10,
+                                                                        0,
+                                                                        15,
+                                                                        20,
+                                                                      ),
+                                                                      text: '',
+                                                                      textColor:
+                                                                          grey,
+                                                                      onPressed:
+                                                                          null,
+                                                                    ),
                                                                   ),
-                                                                  text: '',
-                                                                  textColor:
-                                                                      grey,
-                                                                  onPressed:
-                                                                      null,
-                                                                ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Row(
-                                                          children: [
-                                                            Expanded(
-                                                              child:
-                                                                  ButtonPrimary(
-                                                                isLoading:
-                                                                    controller
+                                                            )
+                                                          : Row(
+                                                              children: [
+                                                                Expanded(
+                                                                  child:
+                                                                      ButtonPrimary(
+                                                                    isLoading: controller
                                                                         .isLoading
                                                                         .value,
-                                                                fullWidth: true,
-                                                                margin:
-                                                                    REdgeInsets
+                                                                    fullWidth:
+                                                                        true,
+                                                                    margin: REdgeInsets
                                                                         .fromLTRB(
-                                                                  10,
-                                                                  0,
-                                                                  15,
-                                                                  20,
+                                                                      10,
+                                                                      0,
+                                                                      15,
+                                                                      20,
+                                                                    ),
+                                                                    text:
+                                                                        'Menyetujui',
+                                                                    textColor:
+                                                                        white,
+                                                                    onPressed: () =>
+                                                                        AppDialogImpl()
+                                                                            .showChoiceDialog(
+                                                                      title:
+                                                                          'Apakah Anda yakin ingin menyetujui pengajuan ini?',
+                                                                      textYes:
+                                                                          'Ya, menyetujui',
+                                                                      textNo:
+                                                                          'Kembali',
+                                                                      onPressedNo:
+                                                                          Get.back,
+                                                                      onPressedYes:
+                                                                          () {
+                                                                        Get.back();
+                                                                        Get.back();
+                                                                        controller
+                                                                            .actionFormLeave(
+                                                                          r.codeNo,
+                                                                          'approved',
+                                                                          r.level,
+                                                                          '',
+                                                                          'leave',
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                    color:
+                                                                        green,
+                                                                    borderSide:
+                                                                        const BorderSide(
+                                                                      color:
+                                                                          green,
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                                text: 'Approve',
-                                                                textColor:
-                                                                    white,
-                                                                onPressed: () =>
-                                                                    AppDialogImpl()
-                                                                        .showChoiceDialog(
-                                                                  title:
-                                                                      'Approve this request?',
-                                                                  textYes:
-                                                                      'Yes, approve',
-                                                                  textNo:
-                                                                      'Back',
-                                                                  onPressedNo:
-                                                                      Get.back,
-                                                                  onPressedYes:
-                                                                      () {
-                                                                    Get.back();
-                                                                    Get.back();
-                                                                    controller
-                                                                        .actionFormLeave(
-                                                                      r.codeNo,
-                                                                      'approved',
-                                                                      r.level,
-                                                                      '',
-                                                                      'leave',
-                                                                    );
-                                                                  },
-                                                                ),
-                                                                color: green,
-                                                                borderSide:
-                                                                    const BorderSide(
-                                                                  color: green,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child:
-                                                                  ButtonPrimary(
-                                                                isLoading:
-                                                                    controller
+                                                                Expanded(
+                                                                  child:
+                                                                      ButtonPrimary(
+                                                                    isLoading: controller
                                                                         .isLoading
                                                                         .value,
-                                                                fullWidth: true,
-                                                                margin:
-                                                                    REdgeInsets
+                                                                    fullWidth:
+                                                                        true,
+                                                                    margin: REdgeInsets
                                                                         .fromLTRB(
-                                                                  15,
-                                                                  0,
-                                                                  10,
-                                                                  20,
-                                                                ),
-                                                                text: 'Reject',
-                                                                textColor: red,
-                                                                onPressed: () =>
-                                                                    AppDialogImpl()
-                                                                        .showChoiceDialog(
-                                                                  title:
-                                                                      'Reject this request?',
-                                                                  textYes:
-                                                                      'Yes, reject',
-                                                                  textNo:
-                                                                      'Back',
-                                                                  buttonColor:
-                                                                      errorColor,
-                                                                  onPressedNo:
-                                                                      Get.back,
-                                                                  onPressedYes:
-                                                                      () {
-                                                                    Get.dialog(
-                                                                      Dialog(
-                                                                        insetPadding:
-                                                                            REdgeInsets.symmetric(horizontal: 40),
-                                                                        child:
-                                                                            Container(
-                                                                          padding:
-                                                                              EdgeInsets.fromLTRB(
-                                                                            Insets.xl,
-                                                                            Insets.xl,
-                                                                            Insets.xl,
-                                                                            Insets.xs,
-                                                                          ),
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            borderRadius:
-                                                                                Corners.smBorder,
-                                                                            color:
-                                                                                Colors.white,
-                                                                          ),
-                                                                          child:
-                                                                              Column(
-                                                                            mainAxisSize:
-                                                                                MainAxisSize.min,
-                                                                            children: [
-                                                                              Text(
-                                                                                'Reason',
-                                                                                style: TS.titleMedium,
-                                                                                textAlign: TextAlign.center,
+                                                                      15,
+                                                                      0,
+                                                                      10,
+                                                                      20,
+                                                                    ),
+                                                                    text:
+                                                                        'Menolak',
+                                                                    textColor:
+                                                                        red,
+                                                                    onPressed: () =>
+                                                                        AppDialogImpl()
+                                                                            .showChoiceDialog(
+                                                                      title:
+                                                                          'Apakah Anda yakin ingin menolak pengajuan ini?',
+                                                                      textYes:
+                                                                          'Ya, menolak',
+                                                                      textNo:
+                                                                          'Kembali',
+                                                                      buttonColor:
+                                                                          errorColor,
+                                                                      onPressedNo:
+                                                                          Get.back,
+                                                                      onPressedYes:
+                                                                          () {
+                                                                        Get.dialog(
+                                                                          Dialog(
+                                                                            insetPadding:
+                                                                                REdgeInsets.symmetric(horizontal: 40),
+                                                                            child:
+                                                                                Container(
+                                                                              padding: EdgeInsets.fromLTRB(
+                                                                                Insets.xl,
+                                                                                Insets.xl,
+                                                                                Insets.xl,
+                                                                                Insets.xs,
                                                                               ),
-                                                                              20.verticalSpace,
-                                                                              InputPrimary(
-                                                                                maxLength: 1000,
-                                                                                maxLines: 5,
-                                                                                color: white,
-                                                                                outlineColor: primary,
-                                                                                hint: 'Type here..',
-                                                                                validation: (value) => value?.isEmpty ?? false ? 'Cannot be empty' : null,
-                                                                                onChanged: (value) {
-                                                                                  controller.reasonText.value = value;
-                                                                                  AppUtils.logApp(controller.reasonText.value);
-                                                                                },
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: Corners.smBorder,
+                                                                                color: Colors.white,
                                                                               ),
-                                                                              28.verticalSpace,
-                                                                              Row(
+                                                                              child: Column(
+                                                                                mainAxisSize: MainAxisSize.min,
                                                                                 children: [
-                                                                                  Expanded(
-                                                                                    child: ButtonPrimary(
-                                                                                      onPressed: () {
-                                                                                        controller.reasonText.value = '';
-                                                                                        Get.back();
-                                                                                      },
-                                                                                      text: 'Cancel',
-                                                                                      color: red,
-                                                                                      fullWidth: true,
-                                                                                    ),
+                                                                                  Text(
+                                                                                    'Alasan',
+                                                                                    style: TS.titleMedium,
+                                                                                    textAlign: TextAlign.center,
                                                                                   ),
-                                                                                  12.horizontalSpace,
-                                                                                  Obx(
-                                                                                    () => Expanded(
-                                                                                      child: ButtonPrimary(
-                                                                                        enable: controller.reasonText.value.isNotEmpty,
-                                                                                        onPressed: () {
-                                                                                          AppUtils.logApp(controller.reasonText.value);
-                                                                                          Get.back();
-                                                                                          Get.back();
-                                                                                          Get.back();
-                                                                                          controller.actionFormLeave(
-                                                                                            r.codeNo,
-                                                                                            'rejected',
-                                                                                            r.level,
-                                                                                            controller.reasonText.value,
-                                                                                            'leave',
-                                                                                          );
-                                                                                        },
-                                                                                        text: 'Submit',
-                                                                                        color: green,
-                                                                                        fullWidth: true,
+                                                                                  20.verticalSpace,
+                                                                                  InputPrimary(
+                                                                                    maxLength: 1000,
+                                                                                    maxLines: 5,
+                                                                                    color: white,
+                                                                                    outlineColor: primary,
+                                                                                    hint: 'Ketik disini..',
+                                                                                    validation: (value) => value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                                                                                    onChanged: (value) {
+                                                                                      controller.reasonText.value = value;
+                                                                                      AppUtils.logApp(controller.reasonText.value);
+                                                                                    },
+                                                                                  ),
+                                                                                  28.verticalSpace,
+                                                                                  Row(
+                                                                                    children: [
+                                                                                      Expanded(
+                                                                                        child: ButtonPrimary(
+                                                                                          onPressed: () {
+                                                                                            controller.reasonText.value = '';
+                                                                                            Get.back();
+                                                                                          },
+                                                                                          text: 'Batal',
+                                                                                          color: red,
+                                                                                          fullWidth: true,
+                                                                                        ),
                                                                                       ),
-                                                                                    ),
+                                                                                      12.horizontalSpace,
+                                                                                      Obx(
+                                                                                        () => Expanded(
+                                                                                          child: ButtonPrimary(
+                                                                                            enable: controller.reasonText.value.isNotEmpty,
+                                                                                            onPressed: () {
+                                                                                              AppUtils.logApp(controller.reasonText.value);
+                                                                                              Get.back();
+                                                                                              Get.back();
+                                                                                              Get.back();
+                                                                                              controller.actionFormLeave(
+                                                                                                r.codeNo,
+                                                                                                'rejected',
+                                                                                                r.level,
+                                                                                                controller.reasonText.value,
+                                                                                                'leave',
+                                                                                              );
+                                                                                            },
+                                                                                            text: 'Kirim',
+                                                                                            color: green,
+                                                                                            fullWidth: true,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
                                                                                   ),
+                                                                                  16.verticalSpace,
                                                                                 ],
                                                                               ),
-                                                                              16.verticalSpace,
-                                                                            ],
+                                                                            ),
                                                                           ),
-                                                                        ),
-                                                                      ),
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                    );
-                                                                  },
+                                                                          barrierDismissible:
+                                                                              false,
+                                                                        );
+                                                                      },
+                                                                    ),
+                                                                    color:
+                                                                        white,
+                                                                    borderSide:
+                                                                        const BorderSide(
+                                                                      color:
+                                                                          red,
+                                                                    ),
+                                                                  ),
                                                                 ),
-                                                                color: white,
-                                                                borderSide:
-                                                                    const BorderSide(
-                                                                  color: red,
-                                                                ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                          ],
-                                                        ),
                                                 )
                                               ],
                                             ),

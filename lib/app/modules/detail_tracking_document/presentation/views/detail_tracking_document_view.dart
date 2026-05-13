@@ -355,8 +355,8 @@ class DetailTrackingDocumentView
                     unselectedLabelColor: greyText,
                     isScrollable: false,
                     tabs: const [
-                      Tab(text: 'Headers'),
-                      Tab(text: 'Details'),
+                      Tab(text: 'Judul'),
+                      Tab(text: 'Detail'),
                       // Tab(text: 'Attachment'),
                       Tab(text: 'Status'),
                     ],

@@ -1,6 +1,6 @@
-import 'package:MyRoyal/app/modules/edit_profile/domain/entities/employee_params.dart';
+import 'package:MyRoyal/app/modules/edit_profile/domain/entities/employee_params_entity.dart';
 
-class EmployeeParamsModel extends EmployeeParams {
+class EmployeeParamsModel extends EmployeeParamsEntity {
   const EmployeeParamsModel({
     required super.employeeId,
     required super.firstName,

@@ -52,7 +52,7 @@ class SettingsController extends GetxController {
   //   }
   // }
 
-  Future<void> iLogout() async {
+  Future<void> logout() async {
     final result = await logoutApp();
     result.fold(
       (l) => null,

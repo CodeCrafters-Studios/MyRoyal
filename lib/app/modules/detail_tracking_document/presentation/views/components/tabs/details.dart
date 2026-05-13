@@ -61,7 +61,7 @@ class DetailsDocumentView extends StatelessWidget {
       children: [
         20.verticalSpace,
         Text(
-          'Requirement:',
+          'Persyaratan:',
           style: TS.bodyLarge,
         ),
         20.verticalSpace,
@@ -71,7 +71,7 @@ class DetailsDocumentView extends StatelessWidget {
         ),
         20.verticalSpace,
         Text(
-          'Descriptions:',
+          'Deskripsi:',
           style: TS.bodyLarge,
         ),
         20.verticalSpace,
@@ -85,7 +85,7 @@ class DetailsDocumentView extends StatelessWidget {
         ),
         20.verticalSpace,
         Text(
-          'Job Descriptions:',
+          'Deskripsi Pekerjaan:',
           style: TS.bodyLarge,
         ),
         20.verticalSpace,

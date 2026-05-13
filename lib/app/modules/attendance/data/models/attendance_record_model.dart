@@ -10,6 +10,7 @@ class AttendanceRecordModel extends AttendanceRecordEntity {
     required super.latitude,
     required super.longitude,
     required super.workDurationMinutes,
+    required super.banned,
     required super.file,
   });
 
@@ -31,6 +32,7 @@ class AttendanceRecordModel extends AttendanceRecordEntity {
       "latitude": latitude.toString(),
       "longtitude": longitude.toString(),
       "work_duration_minutes": workDurationMinutes,
+      "banned": banned,
       "file": file,
     };
   }

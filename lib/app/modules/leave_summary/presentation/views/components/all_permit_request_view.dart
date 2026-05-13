@@ -137,12 +137,12 @@ class AllPermitRequestView extends StatelessWidget {
                                                         25.verticalSpace,
                                                         Center(
                                                           child: Text(
-                                                            'Detail Form',
+                                                            'Detail Pengajuan Izin',
                                                             style:
                                                                 TS.titleMedium,
                                                           ),
                                                         ),
-                                                        5.verticalSpace,
+                                                        25.verticalSpace,
                                                         EPadding(
                                                           padding:
                                                               EdgeInsets.only(
@@ -172,7 +172,7 @@ class AllPermitRequestView extends StatelessWidget {
                                                                               .start,
                                                                       children: [
                                                                         Text(
-                                                                          'Date',
+                                                                          'Tanggal',
                                                                           style:
                                                                               TS.titleSmall,
                                                                         ),
@@ -277,9 +277,14 @@ class AllPermitRequestView extends StatelessWidget {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Center(
+                                                              EPadding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            14),
                                                                 child: Text(
-                                                                  'Reason',
+                                                                  'Alasan:',
                                                                   style: TS
                                                                       .titleSmall,
                                                                 ),
@@ -292,62 +297,40 @@ class AllPermitRequestView extends StatelessWidget {
                                                                   horizontal:
                                                                       14,
                                                                 ),
-                                                                child: Text(
-                                                                  r.reason,
-                                                                  style: TS
-                                                                      .bodyMedium
-                                                                      .copyWith(
+                                                                child:
+                                                                    Container(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          10),
+                                                                  width:
+                                                                      Get.width,
+                                                                  height: 210.h,
+                                                                  decoration:
+                                                                      BoxDecoration(
                                                                     color:
-                                                                        greyText,
+                                                                        white,
+                                                                    border: Border.all(
+                                                                        color:
+                                                                            borderColor),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
                                                                   ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .start,
+                                                                  child: Text(
+                                                                    r.reason,
+                                                                    style: TS
+                                                                        .bodyMedium
+                                                                        .copyWith(
+                                                                      color:
+                                                                          greyText,
+                                                                    ),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .start,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                              // r.revisionReject!
-                                                              //         .isEmpty
-                                                              //     ? emptyBox
-                                                              //     : 25.verticalSpace,
-                                                              // r.revisionReject!
-                                                              //         .isEmpty
-                                                              //     ? emptyBox
-                                                              //     : Center(
-                                                              //         child:
-                                                              //             Text(
-                                                              //           'Reason of Rejection',
-                                                              //           style: TS
-                                                              //               .titleSmall,
-                                                              //         ),
-                                                              //       ),
-                                                              // r.revisionReject!
-                                                              //         .isEmpty
-                                                              //     ? emptyBox
-                                                              //     : 10.verticalSpace,
-                                                              // r.revisionReject!
-                                                              //         .isEmpty
-                                                              //     ? emptyBox
-                                                              //     : EPadding(
-                                                              //         padding:
-                                                              //             const EdgeInsets
-                                                              //                 .symmetric(
-                                                              //           horizontal:
-                                                              //               14,
-                                                              //         ),
-                                                              //         child:
-                                                              //             Text(
-                                                              //           r.revisionReject
-                                                              //               .toString(),
-                                                              //           style: TS
-                                                              //               .bodyMedium
-                                                              //               .copyWith(
-                                                              //             color:
-                                                              //                 greyText,
-                                                              //           ),
-                                                              //           textAlign:
-                                                              //               TextAlign.start,
-                                                              //         ),
-                                                              //       ),
                                                             ],
                                                           ),
                                                         ),
@@ -427,7 +410,7 @@ class AllPermitRequestView extends StatelessWidget {
                                                                                 14,
                                                                                 20,
                                                                               ),
-                                                                              text: 'Close',
+                                                                              text: 'Tutup',
                                                                               textColor: white,
                                                                               onPressed: Get.back,
                                                                               color: primary,
@@ -446,10 +429,10 @@ class AllPermitRequestView extends StatelessWidget {
                                                                                 14,
                                                                                 20,
                                                                               ),
-                                                                              text: 'Cancel',
+                                                                              text: 'Batal',
                                                                               textColor: white,
                                                                               onPressed: () => AppDialogImpl().showChoiceDialog(
-                                                                                description: 'Are you sure want to cancel this form?',
+                                                                                description: 'Apakah anda yakin ingin membatalkan pengajuan izin ini?',
                                                                                 onPressedNo: Get.back,
                                                                                 onPressedYes: () {
                                                                                   Get.back();
@@ -478,7 +461,7 @@ class AllPermitRequestView extends StatelessWidget {
                                                                         20,
                                                                       ),
                                                                       text:
-                                                                          'Close',
+                                                                          'Tutup',
                                                                       textColor:
                                                                           white,
                                                                       onPressed:
@@ -521,7 +504,7 @@ class AllPermitRequestView extends StatelessWidget {
         child: InputPrimary(
           controller: controller.search,
           label: '',
-          hint: 'Search',
+          hint: 'Cari',
           onChanged: controller.onChanged,
           color: white,
           outlineColor: primary,

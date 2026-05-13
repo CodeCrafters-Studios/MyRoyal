@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:android_id/android_id.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,8 +36,6 @@ class LoginController extends GetxController {
     required this.envConfig,
   });
 
-  final FocusNode focusNodeUsername = FocusNode();
-
   TextEditingController usernameController = TextEditingController();
 
   String loginState = '';
@@ -73,8 +70,9 @@ class LoginController extends GetxController {
 
   @override
   void onInit() async {
-    focusNodeUsername.addListener(_onFocusChange);
-    checkVersion();
+    super.onInit();
+
+    _checkVersion();
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
@@ -82,25 +80,9 @@ class LoginController extends GetxController {
     } else {
       null;
     }
-    super.onInit();
   }
 
-  @override
-  void dispose() {
-    focusNodeUsername.removeListener(_onFocusChange);
-    focusNodeUsername.dispose();
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    if (focusNodeUsername.hasFocus == false) {
-      isFocus(false);
-    } else {
-      isFocus(true);
-    }
-  }
-
-  void checkVersion() async {
+  void _checkVersion() async {
     String deviceUser = '';
     String deviceId = '';
 
@@ -192,6 +174,7 @@ class LoginController extends GetxController {
 
   void clear() {
     usernameController.clear();
+    username.value = '';
   }
 
   void setLoginValue(FormLoginValue key, String value) {
@@ -213,7 +196,7 @@ class LoginController extends GetxController {
 
     if (!isValidForm()) {
       unawaited(appDialog.showErrorSnackBar(
-          description: 'Please input Username and Password'));
+          description: 'Silahkan isi Nama Pengguna dan Kata Sandi'));
       loginState = 'getParamsRejected';
       return;
     }
@@ -240,9 +223,6 @@ class LoginController extends GetxController {
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
         deviceId: deviceUserParams,
-        // deviceId.toString().isEmpty || deviceId.toString() == ''
-        //     ? deviceUserParams
-        //     : deviceId.toString(),
       ),
     );
     r.fold((l) {
@@ -294,8 +274,8 @@ class LoginController extends GetxController {
       loginState = 'biometricsRejected';
       appDialog.showInfoDialog(
         imagePath: 'assets/icons/ic_information.svg',
-        description: 'Please login first',
-        textButton: 'Continue',
+        description: 'Silahkan login terlebih dahulu',
+        textButton: 'Lanjut',
       );
       AppUtils.logApp('ERROR');
       return;
@@ -308,9 +288,9 @@ class LoginController extends GetxController {
       appDialog.showInfoDialog(
         imagePath: 'assets/icons/ic_information.svg',
         description: getAvailableBiometrics.value == true
-            ? 'Biometrics has disabled, please set to enable to using biometrics'
-            : 'Biometrics is not set, please configure biometrics security on your phone.',
-        textButton: 'Continue',
+            ? 'Biometrik telah dinonaktifkan, harap aktifkan kembali agar dapat menggunakan biometrik.'
+            : 'Biometrik belum diaktifkan, aktifkan biometrik di pengaturan handphone Anda.',
+        textButton: 'Lanjut',
       );
 
       return;
@@ -327,8 +307,8 @@ class LoginController extends GetxController {
           appDialog.showInfoDialog(
             imagePath: 'assets/icons/ic_information.svg',
             description:
-                'Biometrics is not set, please configure biometrics security on your phone.',
-            textButton: 'Continue',
+                'Biometrik belum diaktifkan, aktifkan biometrik di pengaturan handphone Anda.',
+            textButton: 'Lanjut',
           );
           AppUtils.logApp('FAILURE::::::: ${l.properties.length}');
         }
@@ -386,14 +366,43 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> openWhatsApp(String phone) async {
+    final Uri whatsappUri = Uri.parse("whatsapp://send?phone=$phone");
+    final Uri waMeUri = Uri.parse("https://wa.me/$phone");
+    final Uri telUri = Uri.parse("tel:$phone");
+
+    try {
+      if (await canLaunchUrl(whatsappUri)) {
+        await launchUrl(whatsappUri);
+        return;
+      }
+
+      if (await canLaunchUrl(waMeUri)) {
+        await launchUrl(waMeUri, mode: LaunchMode.externalApplication);
+        return;
+      }
+
+      if (await canLaunchUrl(telUri)) {
+        await launchUrl(telUri);
+        return;
+      }
+
+      throw "No available action";
+    } catch (e) {
+      debugPrint("Error launching: $e");
+    }
+  }
+
   // Navigation
   void gotoForgotPassword() {
     appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description: 'Please contact the IT Department\nfor further assistance.',
+      description: 'Silahkan hubungi departemen IT untuk bantuan lebih lanjut.',
       phoneNumber: '0811-2465-515',
       phoneNumber2: '0811-2000-5071',
-      textButton: 'Continue',
+      textButton: 'Lanjut',
+      onPressPhone1: () => openWhatsApp('0811-2465-515'),
+      onPressPhone2: () => openWhatsApp('0811-2000-5071'),
     );
   }
 
@@ -401,10 +410,12 @@ class LoginController extends GetxController {
   void dontHaveAnAccount() {
     appDialog.showForgotPasswordDialog(
       imagePath: 'assets/icons/ic_information.svg',
-      description: 'Please contact the IT Department\nfor further assistance.',
+      description: 'Silahkan hubungi departemen IT untuk bantuan lebih lanjut.',
       phoneNumber: '0811-2465-515',
       phoneNumber2: '0811-2000-5071',
-      textButton: 'Continue',
+      textButton: 'Lanjut',
+      onPressPhone1: () => openWhatsApp('0811-2465-515'),
+      onPressPhone2: () => openWhatsApp('0811-2000-5071'),
     );
   }
 }

@@ -25,14 +25,14 @@ class CreatePermitRequestView extends StatelessWidget {
         () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildLabel('Type of Permit Request'),
+            _buildLabel('Tipe pengajuan izin'),
             _buildPermitTypeDropdown(),
             20.verticalSpace,
             _buildDateSelection(context),
             20.verticalSpace,
             _buildTimeSelection(context),
             20.verticalSpace,
-            _buildLabel('Reason'),
+            _buildLabel('Alasan pengajuan izin'),
             5.verticalSpace,
             InputPrimary(
               controller: controller.reasonPermitText,
@@ -41,13 +41,13 @@ class CreatePermitRequestView extends StatelessWidget {
               color: white,
               outlineColor: primary,
               key: const Key('inputTaskDesc'),
-              hint: 'Type here..',
+              hint: 'Ketik disini..',
               hintStyle: TS.bodySmall.copyWith(color: greyHint),
               onChanged: (value) {
                 controller.reasonPermit.value = value;
               },
               validation: (value) =>
-                  value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                  value?.isEmpty ?? false ? 'Tidak boleh kosong' : null,
             ),
             const Spacer(flex: 2),
             _buildApplyButton(),
@@ -66,9 +66,9 @@ class CreatePermitRequestView extends StatelessWidget {
         children: [
           Expanded(
             child: _buildButton(
-              'Time Start',
+              'Waktu mulai',
               controller.selectedStartTimePermitFormatted.value.isEmpty
-                  ? 'Select time'
+                  ? 'Pilih waktu'
                   : controller.selectedStartTimePermitFormatted.value,
               controller.selectedStartTimePermitFormatted.value.isEmpty,
               () async {
@@ -124,9 +124,9 @@ class CreatePermitRequestView extends StatelessWidget {
           10.horizontalSpace,
           Expanded(
             child: _buildButton(
-              'Time End',
+              'Waktu Selesai',
               controller.selectedEndTimePermitFormatted.value.isEmpty
-                  ? 'Select time'
+                  ? 'Pilih waktu'
                   : controller.selectedEndTimePermitFormatted.value,
               controller.selectedEndTimePermitFormatted.value.isEmpty,
               () async {
@@ -207,7 +207,7 @@ class CreatePermitRequestView extends StatelessWidget {
   Widget _buildPermitTypeDropdown() {
     return DropDownPrimary(
       label: '',
-      hintText: 'Please choose permit type',
+      hintText: 'Pilih tipe pengajuan izin',
       hintTextStyle: TS.bodySmall.copyWith(color: greyHint),
       borderColor: primary,
       items: controller.permitTypeList
@@ -265,9 +265,9 @@ class CreatePermitRequestView extends StatelessWidget {
         children: [
           Expanded(
             child: _buildButton(
-              'Date Start',
+              'Tanggal Mulai',
               controller.selectedStartDatePermit.value == DateTime(0)
-                  ? 'Select date'
+                  ? 'Pilih tanggal'
                   : DateFormat('dd MMMM yyy')
                       .format(controller.selectedStartDatePermit.value),
               controller.selectedStartDatePermit.value == DateTime(0),
@@ -291,25 +291,6 @@ class CreatePermitRequestView extends StatelessWidget {
                     ),
                     child: child!,
                   );
-                  // Theme(
-                  //   data: Theme.of(context).copyWith(
-                  //     datePickerTheme: DatePickerThemeData(
-                  //       dividerColor: Colors.transparent,
-                  //       backgroundColor: primary,
-                  //     ),
-                  //     colorScheme: ColorScheme.light(
-                  //       primary: secondary2, // header background color
-                  //       onPrimary: Colors.black, // header text color
-                  //       onSurface: Colors.white, // body text color
-                  //     ),
-                  //     textButtonTheme: TextButtonThemeData(
-                  //       style: TextButton.styleFrom(
-                  //         foregroundColor: urgentColor, // button text color
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   child: child!,
-                  // );
                 },
               ).then(
                 (DateTime? selected) {
@@ -322,26 +303,14 @@ class CreatePermitRequestView extends StatelessWidget {
                   }
                 },
               ),
-              // showModalBottomSheet(
-              //       isDismissible: false,
-              //       isScrollControlled: true,
-              //       context: context,
-              //       builder: (_) {
-              //         return FractionallySizedBox(
-              //           heightFactor: 0.65,
-              //           child: _buildMultiDatePickerWithValue(),
-              //         );
-              //       },
-              //     )
-              // controller.selectStartDate(context),
             ),
           ),
           10.horizontalSpace,
           Expanded(
             child: _buildButton(
-              'Date End',
+              'Tanggal Selesai',
               controller.selectedEndDatePermit.value == DateTime(0)
-                  ? 'Select date'
+                  ? 'Pilih tanggal'
                   : DateFormat('dd MMMM yyy')
                       .format(controller.selectedEndDatePermit.value),
               controller.selectedEndDatePermit.value == DateTime(0),
@@ -402,8 +371,10 @@ class CreatePermitRequestView extends StatelessWidget {
             width: Get.width,
             padding: REdgeInsets.all(10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: primary)),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: primary),
+              color: white,
+            ),
             child: Text(
               selectedValue,
               style: TS.bodySmall.copyWith(
@@ -426,7 +397,7 @@ class CreatePermitRequestView extends StatelessWidget {
         isLoading: controller.isLoading.value,
         fullWidth: true,
         margin: REdgeInsets.symmetric(vertical: 20),
-        text: 'Apply',
+        text: 'Kirim',
         onPressed: controller.createFormPermit,
       ),
     );

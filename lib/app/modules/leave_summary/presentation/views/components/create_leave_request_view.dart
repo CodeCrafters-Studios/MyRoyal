@@ -24,12 +24,12 @@ class CreateLeaveRequestView extends StatelessWidget {
         () => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildLabel('Select Employee`s backup while leave'),
+            _buildLabel('Pilih karyawan pengganti saat cuti'),
             _buildSubtituteEmployeeDropdown(),
             20.verticalSpace,
             _buildMultiDateSelection(context),
             20.verticalSpace,
-            _buildLabel('Reason'),
+            _buildLabel('Alasan cuti'),
             5.verticalSpace,
             InputPrimary(
               controller: controller.reasonLeaveText,
@@ -38,13 +38,13 @@ class CreateLeaveRequestView extends StatelessWidget {
               color: white,
               outlineColor: primary,
               key: const Key('inputTaskDesc'),
-              hint: 'Type here..',
+              hint: 'Ketik disini..',
               hintStyle: TS.bodySmall.copyWith(color: greyHint),
               onChanged: (value) {
                 controller.reason.value = value;
               },
               validation: (value) =>
-                  value?.isEmpty ?? false ? 'Cannot be empty' : null,
+                  value?.isEmpty ?? false ? 'Tidak boleh kosong' : null,
             ),
             const Spacer(),
             20.verticalSpace,
@@ -81,7 +81,7 @@ class CreateLeaveRequestView extends StatelessWidget {
   Widget _buildSubtituteEmployeeDropdown() {
     return DropDownPrimary(
       label: '',
-      hintText: 'Please choose subtitute employee',
+      hintText: 'Pilih karyawan pengganti',
       hintTextStyle: TS.bodySmall.copyWith(color: greyHint),
       borderColor: primary,
       items: controller
@@ -130,25 +130,24 @@ class CreateLeaveRequestView extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: _buildDateButton(
-          'Date Request',
-          controller.multiDatePickerValueleaveRequestWithDefaultValue.isEmpty
-              ? 'Select Date'
-              : _getValueText(
-                  controller.config.calendarType,
-                  controller.multiDatePickerValueleaveRequestWithDefaultValue,
-                ),
-          () => showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (_) {
-                  return FractionallySizedBox(
-                    heightFactor: 0.65,
-                    child: _buildMultiDatePickerWithValue(),
-                  );
-                },
-              )
-          // controller.selectStartDate(context),
-          ),
+        'Tanggal pengajuan',
+        controller.multiDatePickerValueleaveRequestWithDefaultValue.isEmpty
+            ? 'Pilih Tanggal'
+            : _getValueText(
+                controller.config.calendarType,
+                controller.multiDatePickerValueleaveRequestWithDefaultValue,
+              ),
+        () => showModalBottomSheet(
+          isScrollControlled: true,
+          context: context,
+          builder: (_) {
+            return FractionallySizedBox(
+              heightFactor: 0.65,
+              child: _buildMultiDatePickerWithValue(),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -168,8 +167,10 @@ class CreateLeaveRequestView extends StatelessWidget {
             width: Get.width,
             padding: REdgeInsets.all(10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: primary)),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: primary),
+              color: white,
+            ),
             child: Text(
               selectedDate,
               style: TS.bodySmall.copyWith(
@@ -196,7 +197,7 @@ class CreateLeaveRequestView extends StatelessWidget {
         isLoading: controller.isLoading.value,
         fullWidth: true,
         margin: REdgeInsets.symmetric(vertical: 20),
-        text: 'Apply',
+        text: 'Kirim',
         onPressed: controller.createFormLeave,
       ),
     );
@@ -239,7 +240,7 @@ class CreateLeaveRequestView extends StatelessWidget {
           ButtonPrimary(
             fullWidth: true,
             margin: REdgeInsets.fromLTRB(14, 0, 14, 20),
-            text: 'Apply',
+            text: 'Pilih Tanggal',
             textColor: white,
             onPressed: () => Get.back(),
             color: primary,

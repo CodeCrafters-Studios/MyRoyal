@@ -25,7 +25,7 @@ class PermitView extends GetView<LeaveSummaryController> {
         ),
         centerTitle: false,
         title: Text(
-          'Permit Request',
+          'Pengajuan Izin',
           style: TS.titleSmall.copyWith(
             color: white,
           ),
@@ -51,12 +51,13 @@ class PermitView extends GetView<LeaveSummaryController> {
                     color: primary,
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
+                  labelColor: white,
                   labelStyle: TS.bodyMedium.copyWith(color: white),
                   unselectedLabelStyle: TS.bodyMedium.copyWith(color: primary),
                   unselectedLabelColor: primary,
                   tabs: const [
-                    Tab(text: 'All'),
-                    Tab(text: 'Create Form'),
+                    Tab(text: 'Semua'),
+                    Tab(text: 'Buat Pengajuan'),
                   ],
                 ),
               ),

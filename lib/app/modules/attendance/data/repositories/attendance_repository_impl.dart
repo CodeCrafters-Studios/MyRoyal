@@ -35,6 +35,7 @@ class AttendanceRepositoryImpl implements AttendanceRepository {
         latitude: entity.latitude,
         longitude: entity.longitude,
         workDurationMinutes: entity.workDurationMinutes,
+        banned: entity.banned,
         file: entity.file,
       );
 

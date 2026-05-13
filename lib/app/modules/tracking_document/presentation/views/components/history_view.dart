@@ -220,7 +220,7 @@ class HistoryView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Last Approval By: ', style: TS.bodySmall.copyWith(color: black)),
+        Text('Disetujui Oleh: ', style: TS.bodySmall.copyWith(color: black)),
         Flexible(
           fit: FlexFit.loose,
           child: SearchHighlightText(
