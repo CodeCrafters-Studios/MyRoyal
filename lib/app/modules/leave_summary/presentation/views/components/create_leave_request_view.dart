@@ -46,10 +46,8 @@ class CreateLeaveRequestView extends StatelessWidget {
               validation: (value) =>
                   value?.isEmpty ?? false ? 'Tidak boleh kosong' : null,
             ),
-            const Spacer(),
-            20.verticalSpace,
+            Spacer(),
             _buildApplyButton(),
-            const Spacer(),
           ],
         ),
       ),
@@ -98,11 +96,12 @@ class CreateLeaveRequestView extends StatelessWidget {
         );
       }).toList(),
       icon: controller.selectedSubtituteEmployee.value.isNotEmpty
-          ? IconButton(
-              onPressed: controller.clearSubtituteEmployee,
-              icon: Icon(
+          ? GestureDetector(
+              onTap: controller.clearSubtituteEmployee,
+              child: Icon(
                 Icons.close,
                 size: 20.r,
+                color: black,
               ),
             )
           : const Icon(

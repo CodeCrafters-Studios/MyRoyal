@@ -49,10 +49,8 @@ class CreatePermitRequestView extends StatelessWidget {
               validation: (value) =>
                   value?.isEmpty ?? false ? 'Tidak boleh kosong' : null,
             ),
-            const Spacer(flex: 2),
+            Spacer(),
             _buildApplyButton(),
-            const Spacer(flex: 3),
-            20.verticalSpace,
           ],
         ),
       ),
@@ -233,11 +231,12 @@ class CreatePermitRequestView extends StatelessWidget {
         );
       }).toList(),
       icon: controller.selectedPermitType.value.isNotEmpty
-          ? IconButton(
-              onPressed: controller.clearPermitType,
-              icon: Icon(
+          ? GestureDetector(
+              onTap: controller.clearPermitType,
+              child: Icon(
                 Icons.close,
                 size: 20.r,
+                color: black,
               ),
             )
           : const Icon(

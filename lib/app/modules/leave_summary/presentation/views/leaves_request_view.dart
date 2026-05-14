@@ -15,6 +15,7 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -62,7 +63,6 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
         ],
       ),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             EPadding(
@@ -79,6 +79,7 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
                     borderRadius: BorderRadius.circular(Corners.xxl),
                     color: primary,
                   ),
+                  splashBorderRadius: BorderRadius.circular(Corners.xxl),
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelStyle: TS.bodyMedium.copyWith(color: white),
                   labelColor: white,
@@ -92,7 +93,7 @@ class LeavesRequestView extends GetView<LeaveSummaryController> {
               ),
             ),
             SizedBox(
-              height: Get.height,
+              height: Get.height * .8,
               width: Get.width,
               child: TabBarView(
                 controller: controller.tabLeaveController,

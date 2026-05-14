@@ -8,12 +8,13 @@ import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 
-class PermitView extends GetView<LeaveSummaryController> {
-  const PermitView({super.key});
+class PermitRequestView extends GetView<LeaveSummaryController> {
+  const PermitRequestView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -33,7 +34,6 @@ class PermitView extends GetView<LeaveSummaryController> {
         backgroundColor: primary,
       ),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             EPadding(
@@ -50,6 +50,7 @@ class PermitView extends GetView<LeaveSummaryController> {
                     borderRadius: BorderRadius.circular(Corners.xxl),
                     color: primary,
                   ),
+                  splashBorderRadius: BorderRadius.circular(Corners.xxl),
                   indicatorSize: TabBarIndicatorSize.tab,
                   labelColor: white,
                   labelStyle: TS.bodyMedium.copyWith(color: white),
@@ -63,7 +64,7 @@ class PermitView extends GetView<LeaveSummaryController> {
               ),
             ),
             SizedBox(
-              height: Get.height,
+              height: Get.height * .8,
               width: Get.width,
               child: TabBarView(
                 controller: controller.tabPermitController,

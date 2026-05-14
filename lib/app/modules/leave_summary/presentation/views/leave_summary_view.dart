@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/dashboard/presentation/views/widgets/dashboard_card.dart';
-import 'package:MyRoyal/app/modules/leave_summary/presentation/views/permit_view.dart';
+import 'package:MyRoyal/app/modules/leave_summary/presentation/views/permit_request_view.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/design/colors.dart';
@@ -74,7 +74,7 @@ class LeaveSummaryView extends GetView<LeaveSummaryController> {
               iconAsset: 'assets/icons/ic_request_leave.svg',
               isLateCard: true,
               onTap: () => Get.to(
-                () => PermitView(),
+                () => PermitRequestView(),
               ),
             ),
             20.verticalSpace,
