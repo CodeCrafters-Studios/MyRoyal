@@ -10,7 +10,7 @@ class GetBannerEventUsecase implements UseCaseNoParams {
   final HomeRepository repository;
 
   @override
-  Future<Either<Failure, BannerEventModel>> call() {
+  Future<Either<Failure, List<BannerEventModel>>> call() {
     return repository.getBannerEvent();
   }
 }

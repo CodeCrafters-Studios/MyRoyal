@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:MyRoyal/base/config/app_config.dart';
+import 'package:MyRoyal/base/config/environment_config.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
@@ -23,21 +25,24 @@ class SplashController extends GetxController {
   }
 
   Future<void> _initData() async {
-    final info = await deviceInfo.info();
-    if (!info.isPhysicalDevice) {
-      AppDialogImpl().showErrorDialog(
-        title: "Emulator Terdeteksi",
-        description: "Aplikasi ini tidak dapat dijalankan di emulator atau perangkat virtual demi alasan keamanan.",
-        textButton: "Tutup Aplikasi",
-        onPress: () {
-          if (Platform.isAndroid) {
-            SystemNavigator.pop();
-          } else {
-            exit(0);
-          }
-        },
-      );
-      return;
+    if (AppConfig.environment.environment == EnvironmentType.production) {
+      final info = await deviceInfo.info();
+      if (!info.isPhysicalDevice) {
+        AppDialogImpl().showErrorDialog(
+          title: "Emulator Terdeteksi",
+          description:
+              "Aplikasi ini tidak dapat dijalankan di emulator atau perangkat virtual demi alasan keamanan.",
+          textButton: "Tutup Aplikasi",
+          onPress: () {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else {
+              exit(0);
+            }
+          },
+        );
+        return;
+      }
     }
 
     final everLogin = await appStorage.read('ever-login');

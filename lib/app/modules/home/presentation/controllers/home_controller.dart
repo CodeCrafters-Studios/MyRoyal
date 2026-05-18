@@ -7,7 +7,6 @@ import 'package:MyRoyal/app/modules/home/domain/usecases/get_banner_event_usecas
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_user_jde_usecase.dart';
 import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
 import 'package:MyRoyal/app/modules/home/domain/entities/articles_entity.dart';
-import 'package:MyRoyal/app/modules/home/domain/entities/home_slider.dart';
 import 'package:MyRoyal/app/modules/home/domain/entities/menu.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_articles_usecase.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_user_usecase.dart';
@@ -46,6 +45,7 @@ class HomeController extends GetxController {
   RxInt indexSlider = 0.obs;
 
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
+  RxList<BannerEventModel> homeSlider = <BannerEventModel>[].obs;
 
   List<Menu> getAllMenu = <Menu>[
     const Menu(
@@ -104,42 +104,10 @@ class HomeController extends GetxController {
     // ),
   ];
 
-  List<HomeSlider> homeSlider = <HomeSlider>[
-    const HomeSlider(
-      id: '8',
-      title: 'IT Governance (Tata Kelola Teknologi Informasi)',
-      subtitle:
-          "IT Governance (Tata Kelola Teknologi Informasi) adalah proses yang mengatur penggunaan teknologi informasi (TI) di dalam suatu organisasi atau perusahaan. IT Governance bertujuan untuk memastikan bahwa TI digunakan secara efektif, efisien, dan aman, serta sesuai dengan tujuan bisnis perusahaan.",
-      imgUrl:
-          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/qXKdfeGxJx1mCo4J-image-2024-12-11-211422472.png',
-      url:
-          'https://wiki.royalcorp.co.id/shelves/it-governance-tata-kelola-teknologi-informasi',
-    ),
-    const HomeSlider(
-      id: '7',
-      title: 'HRMS',
-      subtitle:
-          "a comprehensive guide for hrms project writen by HRMS Member and Developer",
-      imgUrl:
-          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/pNVIzyfjBXOStUgw-ras-logo.png',
-      url: 'https://wiki.royalcorp.co.id/shelves/hrms',
-    ),
-    const HomeSlider(
-      id: '2',
-      title: 'IT Infrastructure & Support',
-      subtitle:
-          "Comprehensive knowledge sharing on IT Infrastructure & Support.",
-      imgUrl:
-          'https://wiki.royalcorp.co.id/uploads/images/cover_bookshelf/2024-12/thumbs-440-250/6nnfCLWOnOSFNETe-infra-support.jpeg',
-      url: 'https://wiki.royalcorp.co.id/shelves/it-infrastructure-support',
-    ),
-  ];
-
   Rx<UserModel> userData =
       UserModel(code: 0, message: '', data: UserDataModel.empty()).obs;
   Rx<ArticlesEntites> articlesData = ArticlesEntites(data: [], total: 0).obs;
   Rx<UserJdeModel> userJdeData = UserJdeModel.empty().obs;
-  Rx<BannerEventModel> bannerEventData = BannerEventModel.empty().obs;
 
   final GetUserUsecase getUserUsecase;
   final GetArticlesUsecase getArticlesUsecase;
@@ -353,10 +321,8 @@ class HomeController extends GetxController {
         isLoading.value = false;
       },
       (r) async {
-        bannerEventData.value = r;
+        homeSlider.value = r;
         isLoading.value = false;
-        await Future.delayed(Duration(milliseconds: 500));
-        _showEventDialog(bannerEventData.value.data);
       },
     );
   }

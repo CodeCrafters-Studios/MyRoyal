@@ -11,5 +11,5 @@ abstract class HomeRepository {
   Future<Either<Failure, UserDataModel>> getCacheUser();
   Future<Either<Failure, ArticlesModel>> getArticles();
   Future<Either<Failure, UserJdeModel>> getUserJDE(params);
-  Future<Either<Failure, BannerEventModel>> getBannerEvent();
+  Future<Either<Failure, List<BannerEventModel>>> getBannerEvent();
 }

@@ -58,7 +58,7 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<Either<Failure, BannerEventModel>> getBannerEvent() async {
+  Future<Either<Failure, List<BannerEventModel>>> getBannerEvent() async {
     try {
       final r = await remoteData.getBannerEvent();
       return Right(r);

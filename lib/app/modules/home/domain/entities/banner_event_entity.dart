@@ -1,11 +1,9 @@
 class BannerEventEntity {
-  final int code;
-  final String message;
-  final String data;
+  final String img;
+  final String url;
 
   BannerEventEntity({
-    required this.code,
-    required this.message,
-    required this.data,
+    required this.img,
+    required this.url,
   });
 }

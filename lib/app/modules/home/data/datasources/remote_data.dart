@@ -15,7 +15,7 @@ abstract class HomeRemoteDataSource {
   Future<UserModel> getUser();
   Future<ArticlesModel> getArticles();
   Future<UserJdeModel> getUserJde(params);
-  Future<BannerEventModel> getBannerEvent();
+  Future<List<BannerEventModel>> getBannerEvent();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -123,7 +123,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<BannerEventModel> getBannerEvent() async {
+  Future<List<BannerEventModel>> getBannerEvent() async {
     try {
       final r = await httpService.request(
         withToken: true,
@@ -135,14 +135,14 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         throw ApiException('No response from server');
       }
 
-      final code = r['code'];
-      final message = r['message'] ?? 'Unknown error occurred';
-
-      if (code != 200) {
-        throw ApiException(message);
+      if (r['code'] != 200) {
+        throw ApiException(r['message'] ?? 'Unknown error');
       }
 
-      return BannerEventModel.fromJson(r);
+      final List<BannerEventModel> response =
+          (r['data'] as List).map((x) => BannerEventModel.fromJson(x)).toList();
+
+      return response;
     } on ServerFailure {
       throw ApiException('Server error occurred');
     } on ApiException catch (e) {

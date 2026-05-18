@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/articles/presentation/views/components/articles_card.dart';
 import 'package:MyRoyal/app/modules/home/presentation/controllers/home_controller.dart';
 import 'package:MyRoyal/app/modules/home/presentation/views/components/shimmer_text.dart';
-import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,9 +18,9 @@ class HomeSlide extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => SliverToBoxAdapter(
-          child: controller.isLoading.value
-              ? _loadingArticles()
-              : _buildArticles()),
+        child:
+            controller.isLoading.value ? _loadingArticles() : _buildArticles(),
+      ),
     );
   }
 
@@ -75,36 +74,32 @@ class HomeSlide extends StatelessWidget {
               ),
               8.horizontalSpace,
               Text(
-                'Royal Wiki',
+                'Promosi',
                 style: TS.titleSmall.copyWith(color: primary),
                 textAlign: TextAlign.start,
               ),
             ],
           ),
         ),
-        6.verticalSpace,
+        10.verticalSpace,
         CarouselSlider.builder(
           itemCount: controller.homeSlider.length,
           itemBuilder: (context, index, realIndex) {
             final e = controller.homeSlider[index];
-            return ArticlesCard(
-              title: e.title,
-              subtitle: e.subtitle,
-              imgUrl: e.imgUrl,
-              onTap: () => Get.toNamed(Routes.ARTICLES, arguments: e),
+            return BannerCard(
+              imgUrl: e.img,
+              onTap: () {},
             );
           },
           options: CarouselOptions(
             autoPlay: true,
-            viewportFraction: 0.9,
+            viewportFraction: 0.95,
             height: 132.h,
             // onPageChanged: (index, reason) =>
             //     controller.indexSlider(index),
           ),
         ),
-        Container(
-          height: 100.h,
-        ),
+        120.verticalSpace,
       ],
     );
   }
