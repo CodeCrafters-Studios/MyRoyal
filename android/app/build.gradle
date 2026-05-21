@@ -15,6 +15,14 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def envProperties = new Properties()
+def envFile = rootProject.file('../.env')
+if (envFile.exists()) {
+    envFile.withReader('UTF-8') { reader ->
+        envProperties.load(reader)
+    }
+}
+
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     throw new GradleException("versionCode not found. Define flutter.versionCode in the local.properties file.")
@@ -89,6 +97,9 @@ android {
     
 
     defaultConfig {
+        manifestPlaceholders = [
+            GEO_API_KEY: envProperties.getProperty('GEO_API_KEY', '')
+        ]
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'

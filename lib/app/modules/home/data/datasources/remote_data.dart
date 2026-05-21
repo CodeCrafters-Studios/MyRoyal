@@ -139,8 +139,15 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         throw ApiException(r['message'] ?? 'Unknown error');
       }
 
+      final data = r['data'];
+      if (data == null || data is! List) {
+        AppUtils.logApp(
+            'Banner event response data invalid: ${data.runtimeType}');
+        return <BannerEventModel>[];
+      }
+
       final List<BannerEventModel> response =
-          (r['data'] as List).map((x) => BannerEventModel.fromJson(x)).toList();
+          data.map((x) => BannerEventModel.fromJson(x)).toList();
 
       return response;
     } on ServerFailure {

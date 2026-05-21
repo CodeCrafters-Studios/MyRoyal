@@ -82,25 +82,50 @@ class HomeSlide extends StatelessWidget {
           ),
         ),
         10.verticalSpace,
-        CarouselSlider.builder(
-          itemCount: controller.homeSlider.length,
-          itemBuilder: (context, index, realIndex) {
-            final e = controller.homeSlider[index];
-            return BannerCard(
-              imgUrl: e.img,
-              onTap: () {},
-            );
-          },
-          options: CarouselOptions(
-            autoPlay: true,
-            viewportFraction: 0.95,
-            height: 132.h,
-            // onPageChanged: (index, reason) =>
-            //     controller.indexSlider(index),
-          ),
-        ),
+        controller.homeSlider.isEmpty
+            ? _buildEmptyBanner()
+            : CarouselSlider.builder(
+                itemCount: controller.homeSlider.length,
+                itemBuilder: (context, index, realIndex) {
+                  final e = controller.homeSlider[index];
+                  return BannerCard(
+                    imgUrl: e.img,
+                    onTap: () {},
+                  );
+                },
+                options: CarouselOptions(
+                  autoPlay: true,
+                  viewportFraction: 0.95,
+                  height: 132.h,
+                  // onPageChanged: (index, reason) =>
+                  //     controller.indexSlider(index),
+                ),
+              ),
         120.verticalSpace,
       ],
+    );
+  }
+
+  Widget _buildEmptyBanner() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        height: 132.h,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Center(
+          child: Text(
+            'Belum ada Promo',
+            style: TS.bodyMedium.copyWith(
+              color: Colors.grey.shade700,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

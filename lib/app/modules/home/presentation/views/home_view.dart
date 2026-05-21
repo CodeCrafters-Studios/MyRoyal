@@ -110,8 +110,8 @@ class HomeView extends GetView<HomeController> {
                   ),
                   if (controller.userData.value.data.countNotification != 0)
                     Positioned(
-                      top: -4,
-                      right: -2,
+                      top: -6,
+                      right: 0,
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(

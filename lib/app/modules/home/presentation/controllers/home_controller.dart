@@ -318,6 +318,7 @@ class HomeController extends GetxController {
     result.fold(
       (l) {
         userState = 'getUserFailed';
+        homeSlider.value = <BannerEventModel>[];
         isLoading.value = false;
       },
       (r) async {
