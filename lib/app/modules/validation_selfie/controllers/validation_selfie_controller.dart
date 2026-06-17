@@ -15,7 +15,7 @@ import 'package:MyRoyal/app/modules/attendance/data/models/attendance_today_mode
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ValidationSelfieController extends GetxController {

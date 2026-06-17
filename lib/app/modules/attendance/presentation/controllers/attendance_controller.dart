@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_api_availability/google_api_availability.dart';
 import 'package:intl/intl.dart';
 import 'package:MyRoyal/app/modules/attendance/data/models/attendance_location_model.dart';
 import 'package:MyRoyal/app/modules/attendance/data/models/attendance_today_model.dart';
@@ -18,7 +19,6 @@ import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
-import 'package:latlong2/latlong.dart';
 
 enum AttendanceStatus {
   notStarted,
@@ -66,22 +66,25 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   RxList<AttendanceLocationModel> officeLocations =
       <AttendanceLocationModel>[].obs;
-  RxList<LatLng> officePolygon = <LatLng>[].obs;
-  RxList<CircleMarker> officeCircles = <CircleMarker>[].obs;
+  RxList<Circle> officeCircles = <Circle>[].obs;
   RxList<Marker> officeMarkers = <Marker>[].obs;
   RxList<Polygon> officePolygons = <Polygon>[].obs;
 
   final currentPosition = Rxn<LatLng>();
-  final MapController mapController = MapController();
+  GoogleMapController? googleMapController;
+  final isGmsAvailable = true.obs;
+  void Function(double latitude, double longitude, double zoom)? onMoveMap;
 
   final isGpsActive = false.obs;
   final isMockLocation = false.obs;
   final isGpsSpoofing = false.obs;
+  final isMapInteracting = false.obs;
   final isLocationValid = false.obs;
   final gpsAccuracy = 0.0.obs;
   final distanceFromOffice = 0.0.obs;
   final nearestOffice = Rxn<NearestOfficeInfo>();
   LatLng? _smoothedPosition;
+  final isPerformingAction = false.obs;
 
   StreamSubscription<Position>? _positionStream;
   Timer? _mapMoveDebounce;
@@ -111,6 +114,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   @override
   void onInit() {
     super.onInit();
+    _checkGmsAvailability();
 
     final httpService = Get.find<HttpService>();
 
@@ -123,6 +127,22 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     });
 
     _runInitialOnce();
+  }
+
+  Future<void> _checkGmsAvailability() async {
+    if (GetPlatform.isAndroid) {
+      try {
+        final availability = await GoogleApiAvailability.instance
+            .checkGooglePlayServicesAvailability();
+        isGmsAvailable.value =
+            availability == GooglePlayServicesAvailability.success;
+      } catch (e) {
+        isGmsAvailable.value = false;
+        AppUtils.logApp("Failed to check GMS availability: $e");
+      }
+    } else {
+      isGmsAvailable.value = true;
+    }
   }
 
   @override
@@ -171,7 +191,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   Future<void> onRefresh() async {
     _loadInitialData();
     if (isMapReady.value) {
-      _fitMapBounds(officeCircles.map((c) => c.point).toList() +
+      _fitMapBounds(officeCircles.map((c) => c.center).toList() +
           officePolygons.expand((p) => p.points).toList());
     }
   }
@@ -195,7 +215,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
       officeCircles.clear();
       officeMarkers.clear();
-      officePolygon.clear();
 
       final List<LatLng> boundPoints = [];
 
@@ -212,15 +231,15 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
           markerPoint = LatLng(lat, lng);
 
           officeCircles.add(
-            CircleMarker(
-              point: markerPoint,
+            Circle(
+              circleId: CircleId(loc.locationID.toString()),
+              center: markerPoint,
               radius: loc.stkamurd.radius * 1.0,
-              useRadiusInMeter: true,
-              color: isLocationValid.value
+              fillColor: isLocationValid.value
                   ? Colors.green.withOpacity(0.2)
                   : Colors.red.withOpacity(0.2),
-              borderColor: isLocationValid.value ? Colors.green : Colors.red,
-              borderStrokeWidth: 2,
+              strokeColor: isLocationValid.value ? Colors.green : Colors.red,
+              strokeWidth: 2,
             ),
           );
 
@@ -233,12 +252,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
           officePolygons.add(
             Polygon(
+              polygonId: PolygonId(loc.locationID.toString()),
               points: polygonPoints,
-              color: isLocationValid.value
+              fillColor: isLocationValid.value
                   ? Colors.green.withOpacity(0.2)
                   : Colors.red.withOpacity(0.2),
-              borderColor: isLocationValid.value ? Colors.green : Colors.red,
-              borderStrokeWidth: 2,
+              strokeColor: isLocationValid.value ? Colors.green : Colors.red,
+              strokeWidth: 2,
             ),
           );
 
@@ -249,14 +269,10 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         if (markerPoint != null) {
           officeMarkers.add(
             Marker(
-              point: markerPoint,
-              width: 40,
-              height: 40,
-              child: const Icon(
-                Icons.location_city,
-                color: Colors.blue,
-                size: 35,
-              ),
+              markerId: MarkerId(loc.locationID.toString()),
+              position: markerPoint,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
             ),
           );
         }
@@ -270,21 +286,42 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _fitMapBounds(List<LatLng> points) {
-    if (!isMapReady.value) {
+    if (!isGmsAvailable.value) {
+      if (points.isEmpty) return;
+      final centerLat = points.map((p) => p.latitude).reduce((a, b) => a + b) / points.length;
+      final centerLng = points.map((p) => p.longitude).reduce((a, b) => a + b) / points.length;
+      onMoveMap?.call(centerLat, centerLng, 18.0);
+      return;
+    }
+
+    if (!isMapReady.value || googleMapController == null) {
       Future.delayed(const Duration(milliseconds: 200), () {
         _fitMapBounds(points);
       });
       return;
     }
 
-    final bounds = LatLngBounds.fromPoints(points);
+    if (points.isEmpty) return;
 
-    mapController.fitCamera(
-      CameraFit.bounds(
-        bounds: bounds,
-        padding: const EdgeInsets.all(40),
-        maxZoom: 18,
-      ),
+    double x0 = points[0].latitude;
+    double x1 = points[0].latitude;
+    double y0 = points[0].longitude;
+    double y1 = points[0].longitude;
+
+    for (LatLng latLng in points) {
+      if (latLng.latitude > x1) x1 = latLng.latitude;
+      if (latLng.latitude < x0) x0 = latLng.latitude;
+      if (latLng.longitude > y1) y1 = latLng.longitude;
+      if (latLng.longitude < y0) y0 = latLng.longitude;
+    }
+
+    LatLngBounds bounds = LatLngBounds(
+      southwest: LatLng(x0, y0),
+      northeast: LatLng(x1, y1),
+    );
+
+    googleMapController!.animateCamera(
+      CameraUpdate.newLatLngBounds(bounds, 18),
     );
   }
 
@@ -531,8 +568,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       final meter = Geolocator.distanceBetween(
         smoothed.latitude,
         smoothed.longitude,
-        circle.point.latitude,
-        circle.point.longitude,
+        circle.center.latitude,
+        circle.center.longitude,
       );
 
       if (meter < nearestDistance) {
@@ -661,6 +698,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Mohon persiapkan diri untuk mengambil foto',
         onPressedYes: () async {
+          isPerformingAction.value = true;
           Get.back();
           final result = await Get.toNamed(
             Routes.VALIDATION_SELFIE,
@@ -681,6 +719,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             _positionStream?.cancel();
             _positionStream = null;
           }
+          isPerformingAction.value = false;
         });
   }
 
@@ -723,8 +762,12 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Anda yakin akan memulai sesi istirahat',
         onPressedYes: () async {
+          isPerformingAction.value = true;
           Get.back();
-          if (hasTakenBreak.value) return;
+          if (hasTakenBreak.value) {
+            isPerformingAction.value = false;
+            return;
+          }
 
           breakTime.value = DateTime.now();
           breakDuration.value = '';
@@ -749,10 +792,12 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             (l) {
               Get.snackbar("Terjadi Kesalahan", "Gagal record Break Start");
               isLoadingAttendance.value = false;
+              isPerformingAction.value = false;
             },
             (r) async {
               await _getAttendanceToday();
               isLoadingAttendance.value = false;
+              isPerformingAction.value = false;
             },
           );
         });
@@ -808,6 +853,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Anda yakin akan mengakhiri sesi istirahat',
         onPressedYes: () async {
+          isPerformingAction.value = true;
           Get.back();
 
           breakTimer?.cancel();
@@ -833,6 +879,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
             (l) {
               Get.snackbar("Terjadi Kesalahan", "Gagal record Break End");
               isLoadingAttendance.value = false;
+              isPerformingAction.value = false;
             },
             (r) async {
               await _getAttendanceToday();
@@ -849,6 +896,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
               breakTimer?.cancel();
               countTimes.value = '--:--:--';
               isLoadingAttendance.value = false;
+              isPerformingAction.value = false;
             },
           );
         });
@@ -864,13 +912,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
     // Update semua circle
     final newCircles = officeCircles
-        .map((c) => CircleMarker(
-              point: c.point,
+        .map((c) => Circle(
+              circleId: c.circleId,
+              center: c.center,
               radius: c.radius,
-              useRadiusInMeter: true,
-              color: fillColor,
-              borderColor: borderColor,
-              borderStrokeWidth: 2,
+              fillColor: fillColor,
+              strokeColor: borderColor,
+              strokeWidth: 2,
             ))
         .toList();
     officeCircles.assignAll(newCircles);
@@ -878,10 +926,11 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     // Update semua polygon
     final newPolygons = officePolygons
         .map((p) => Polygon(
+              polygonId: p.polygonId,
               points: p.points,
-              color: fillColor,
-              borderColor: borderColor,
-              borderStrokeWidth: 2,
+              fillColor: fillColor,
+              strokeColor: borderColor,
+              strokeWidth: 2,
             ))
         .toList();
     officePolygons.assignAll(newPolygons);
@@ -967,10 +1016,15 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
     if (pos == null) return;
 
-    mapController.move(
-      LatLng(pos.latitude, pos.longitude),
-      18,
-    );
+    if (isGmsAvailable.value) {
+      if (googleMapController != null) {
+        googleMapController!.animateCamera(
+          CameraUpdate.newLatLngZoom(pos, 18),
+        );
+      }
+    } else {
+      onMoveMap?.call(pos.latitude, pos.longitude, 18.0);
+    }
   }
 
   String _formatDuration(Duration duration) {
@@ -1065,14 +1119,20 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _moveMapRealtime(LatLng pos) {
-    if (!isMapReady.value) return;
+    if (isPerformingAction.value) return;
 
     _mapMoveDebounce?.cancel();
 
     _mapMoveDebounce = Timer(
       const Duration(milliseconds: 300),
-      () {
-        mapController.move(pos, mapController.camera.zoom);
+      () async {
+        if (isGmsAvailable.value) {
+          if (isMapReady.value && googleMapController != null) {
+            googleMapController!.animateCamera(CameraUpdate.newLatLngZoom(pos, 18));
+          }
+        } else {
+          onMoveMap?.call(pos.latitude, pos.longitude, 18.0);
+        }
       },
     );
   }

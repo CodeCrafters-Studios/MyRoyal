@@ -1,7 +1,12 @@
-import 'package:MyRoyal/app/modules/attendance/presentation/views/components/user_marker_layer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter/gestures.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_map/flutter_map.dart' as fm;
+import 'package:latlong2/latlong.dart' as ll;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:MyRoyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
@@ -12,7 +17,6 @@ import 'package:MyRoyal/base/widgets/app_divider.dart';
 import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
 import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AttendanceView extends GetView<AttendanceController> {
@@ -44,20 +48,22 @@ class AttendanceView extends GetView<AttendanceController> {
             backgroundColor: white,
             color: primary,
             onRefresh: controller.onRefresh,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  if (controller.attendanceStatus.value ==
-                      AttendanceStatus.checkedOut) ...[
-                    10.verticalSpace,
-                    _buildGreeting(),
-                    10.verticalSpace,
-                  ],
-                  _buildAttendanceContent(),
-                ],
-              ),
-            ),
+            child: Obx(() => SingleChildScrollView(
+                  physics: controller.isMapInteracting.value
+                      ? const NeverScrollableScrollPhysics()
+                      : const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      if (controller.attendanceStatus.value ==
+                          AttendanceStatus.checkedOut) ...[
+                        10.verticalSpace,
+                        _buildGreeting(),
+                        10.verticalSpace,
+                      ],
+                      _buildAttendanceContent(),
+                    ],
+                  ),
+                )),
           );
         }),
       ),
@@ -96,7 +102,12 @@ class AttendanceView extends GetView<AttendanceController> {
       height: 330.h,
       child: controller.currentPosition.value == null
           ? _buildMapShimmer()
-          : AttendanceMap(controller),
+          : GestureDetector(
+              onPanDown: (_) => controller.isMapInteracting.value = true,
+              onPanEnd: (_) => controller.isMapInteracting.value = false,
+              onPanCancel: () => controller.isMapInteracting.value = false,
+              child: AttendanceMap(controller),
+            ),
     );
   }
 
@@ -164,7 +175,7 @@ class AttendanceView extends GetView<AttendanceController> {
       }
 
       return Text(
-        DateFormat('EEEE - MMMM dd, yyyy', "id_ID").format(DateTime.now()),
+        DateFormat('EEEE, dd MMMM yyyy', "id_ID").format(DateTime.now()),
         style: TS.bodyMedium,
       );
     });
@@ -522,37 +533,27 @@ class _AttendanceMapState extends State<AttendanceMap>
   @override
   bool get wantKeepAlive => true;
 
-  void _animatedMapMove(LatLng destLocation, double destZoom) {
-    final latTween = Tween<double>(
-        begin: widget.controller.mapController.camera.center.latitude,
-        end: destLocation.latitude);
-    final lngTween = Tween<double>(
-        begin: widget.controller.mapController.camera.center.longitude,
-        end: destLocation.longitude);
-    final zoomTween = Tween<double>(
-        begin: widget.controller.mapController.camera.zoom, end: destZoom);
-
-    final animController = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this);
-
-    final Animation<double> animation =
-        CurvedAnimation(parent: animController, curve: Curves.fastOutSlowIn);
-
-    animController.addListener(() {
-      widget.controller.mapController.move(
-        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
-        zoomTween.evaluate(animation),
-      );
-    });
-
-    animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed ||
-          status == AnimationStatus.dismissed) {
-        animController.dispose();
+  @override
+  void initState() {
+    super.initState();
+    if (GetPlatform.isAndroid && widget.controller.isGmsAvailable.value) {
+      final mapsImplementation = GoogleMapsFlutterPlatform.instance;
+      if (mapsImplementation is GoogleMapsFlutterAndroid) {
+        mapsImplementation.useAndroidViewSurface = true;
       }
-    });
+    }
+  }
 
-    animController.forward();
+  @override
+  void dispose() {
+    // Clear controller reference in AttendanceController to avoid using
+    // GoogleMapController after the map widget has been disposed.
+    try {
+      widget.controller.googleMapController = null;
+      widget.controller.isMapReady.value = false;
+    } catch (_) {}
+
+    super.dispose();
   }
 
   @override
@@ -560,43 +561,34 @@ class _AttendanceMapState extends State<AttendanceMap>
     super.build(context);
     return Stack(
       children: [
-        FlutterMap(
-          mapController: widget.controller.mapController,
-          options: MapOptions(
-            initialCenter: widget.controller.currentPosition.value ??
-                const LatLng(-6.8621, 107.5006),
-            initialZoom: 17,
-            onMapReady: () => widget.controller.isMapReady.value = true,
-            maxZoom: 18,
-            initialRotation: 0,
-            interactionOptions: const InteractionOptions(
-              flags: InteractiveFlag.all,
-            ),
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              userAgentPackageName: 'com.myroyal',
-              maxNativeZoom: 19,
-            ),
-
-            // Static office layers (never rebuild)
-            CircleLayer(circles: widget.controller.officeCircles),
-
-            PolygonLayer(
-              polygons: widget.controller.officePolygons,
-              polygonCulling: true,
-              useAltRendering: true,
-              simplificationTolerance: 1.2,
-            ),
-
-            // Static office markers
-            MarkerLayer(markers: widget.controller.officeMarkers),
-
-            // ONLY the user marker rebuilds (super cheap)
-            const UserMarkerLayer(),
-          ],
-        ),
+        Obx(() {
+          if (widget.controller.isGmsAvailable.value) {
+            return GoogleMap(
+              onMapCreated: (controller) {
+                widget.controller.googleMapController = controller;
+                widget.controller.isMapReady.value = true;
+              },
+              initialCameraPosition: CameraPosition(
+                target: widget.controller.currentPosition.value ??
+                    const LatLng(-6.8621, 107.5006),
+                zoom: 21,
+              ),
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              zoomControlsEnabled: false,
+              circles: widget.controller.officeCircles.toSet(),
+              polygons: widget.controller.officePolygons.toSet(),
+              // markers: widget.controller.officeMarkers.toSet(),
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                  () => EagerGestureRecognizer(),
+                ),
+              },
+            );
+          } else {
+            return AttendanceFlutterMap(widget.controller);
+          }
+        }),
 
         // GPS status (unchanged)
         Positioned(
@@ -699,10 +691,7 @@ class _AttendanceMapState extends State<AttendanceMap>
             mini: true,
             backgroundColor: Colors.white,
             onPressed: () {
-              final pos = widget.controller.currentPosition.value;
-              if (pos != null) {
-                _animatedMapMove(pos, 18);
-              }
+              widget.controller.centerToUserLocation();
             },
             child: const Icon(
               Icons.my_location,
@@ -712,5 +701,150 @@ class _AttendanceMapState extends State<AttendanceMap>
         ),
       ],
     );
+  }
+}
+
+class AttendanceFlutterMap extends StatefulWidget {
+  final AttendanceController controller;
+  const AttendanceFlutterMap(this.controller, {super.key});
+
+  @override
+  State<AttendanceFlutterMap> createState() => _AttendanceFlutterMapState();
+}
+
+class _AttendanceFlutterMapState extends State<AttendanceFlutterMap> {
+  late final fm.MapController _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = fm.MapController();
+
+    widget.controller.onMoveMap = (double latitude, double longitude, double zoom) {
+      if (mounted) {
+        _mapController.move(ll.LatLng(latitude, longitude), zoom);
+      }
+    };
+  }
+
+  @override
+  void dispose() {
+    widget.controller.onMoveMap = null;
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final userPos = widget.controller.currentPosition.value;
+      final circles = widget.controller.officeCircles;
+      final polygons = widget.controller.officePolygons;
+      final accuracy = widget.controller.gpsAccuracy.value;
+
+      final fmCircles = circles.map((circle) {
+        return fm.CircleMarker(
+          point: ll.LatLng(circle.center.latitude, circle.center.longitude),
+          radius: circle.radius,
+          useRadiusInMeter: true,
+          color: circle.fillColor,
+          borderColor: circle.strokeColor,
+          borderStrokeWidth: circle.strokeWidth.toDouble(),
+        );
+      }).toList();
+
+      if (userPos != null && accuracy > 0) {
+        fmCircles.add(
+          fm.CircleMarker(
+            point: ll.LatLng(userPos.latitude, userPos.longitude),
+            radius: accuracy,
+            useRadiusInMeter: true,
+            color: Colors.blue.withOpacity(0.1),
+            borderColor: Colors.blue.withOpacity(0.3),
+            borderStrokeWidth: 1,
+          ),
+        );
+      }
+
+      final fmPolygons = polygons.map((poly) {
+        return fm.Polygon(
+          points: poly.points.map((p) => ll.LatLng(p.latitude, p.longitude)).toList(),
+          color: poly.fillColor,
+          borderColor: poly.strokeColor,
+          borderStrokeWidth: poly.strokeWidth.toDouble(),
+        );
+      }).toList();
+
+      final fmMarkers = <fm.Marker>[];
+      if (userPos != null) {
+        fmMarkers.add(
+          fm.Marker(
+            point: ll.LatLng(userPos.latitude, userPos.longitude),
+            width: 40,
+            height: 40,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      for (final marker in widget.controller.officeMarkers) {
+        fmMarkers.add(
+          fm.Marker(
+            point: ll.LatLng(marker.position.latitude, marker.position.longitude),
+            width: 40,
+            height: 40,
+            child: const Icon(
+              Icons.location_on,
+              color: Colors.red,
+              size: 40,
+            ),
+          ),
+        );
+      }
+
+      final initialCenter = userPos != null
+          ? ll.LatLng(userPos.latitude, userPos.longitude)
+          : const ll.LatLng(-6.8621, 107.5006);
+
+      return fm.FlutterMap(
+        mapController: _mapController,
+        options: fm.MapOptions(
+          initialCenter: initialCenter,
+          initialZoom: 18.0,
+          maxZoom: 22.0,
+          minZoom: 4.0,
+        ),
+        children: [
+          fm.TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.myroyal.app',
+          ),
+          fm.PolygonLayer(polygons: fmPolygons),
+          fm.CircleLayer(circles: fmCircles),
+          fm.MarkerLayer(markers: fmMarkers),
+        ],
+      );
+    });
   }
 }

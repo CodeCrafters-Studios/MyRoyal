@@ -10,7 +10,7 @@ class AppDeviceId {
   static Future<String> getDeviceId() async {
     String? deviceId = await appStorage.read(_deviceIdKey);
 
-    if (deviceId!.isEmpty) {
+    if (deviceId == null || deviceId.isEmpty) {
       deviceId = _uuid.v4();
       await appStorage.write(_deviceIdKey, deviceId);
     }

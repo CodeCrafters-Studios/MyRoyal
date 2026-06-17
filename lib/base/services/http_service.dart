@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:MyRoyal/app/shared/services/in_app_review_service.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -82,6 +83,10 @@ class HttpService extends getx.GetxService {
           AppUtils.logApp(
             "✅ ${response.statusCode} ${response.requestOptions.uri}",
           );
+
+          // Track successful API hit for in-app review
+          InAppReviewService().trackApiHitAndCheckReview(appStorage);
+
           handler.next(response);
         },
         onError: (e, handler) {

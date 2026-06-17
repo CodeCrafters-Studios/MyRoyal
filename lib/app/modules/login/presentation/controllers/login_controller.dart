@@ -18,6 +18,7 @@ import 'package:MyRoyal/base/utils/biometrics.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:MyRoyal/base/utils/get_device_info.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
+import 'package:MyRoyal/base/utils/storage/app_device_id.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum FormLoginValue { username, password }
@@ -94,10 +95,13 @@ class LoginController extends GetxController {
     final info = await deviceInfo.info();
 
     // Get Android Id
-    final String? androidId = await AndroidId().getId();
+    String? androidId = await AndroidId().getId();
+    if (androidId == null || androidId.isEmpty || androidId == 'null') {
+      androidId = await AppDeviceId.getDeviceId();
+    }
 
     if (Platform.isAndroid) {
-      deviceId = androidId.toString();
+      deviceId = androidId;
       deviceUser = '${info.model}-${info.brand}-${info.id}';
     } else if (Platform.isIOS) {
       deviceId = info.id;
@@ -203,7 +207,9 @@ class LoginController extends GetxController {
     final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
     // final deviceId = await appStorage.read('device-id');
     final deviceUser = await appStorage.read('device-user');
+    final deviceId = await appStorage.read('device-id');
     final deviceUserParams = '${username()}-$deviceUser';
+    final deviceIdParams = '${username()}-$deviceId';
 
     AppUtils.logApp('$cacheFcmToken');
     AppUtils.logApp('DEVICE USER :::: $deviceUserParams');
@@ -222,7 +228,9 @@ class LoginController extends GetxController {
         password: password(),
         scope: '*',
         fcmToken: cacheFcmToken.toString(),
-        deviceId: deviceUserParams,
+        deviceId: deviceUser == '' || deviceUser == null
+            ? deviceIdParams
+            : deviceUserParams,
       ),
     );
     r.fold((l) {

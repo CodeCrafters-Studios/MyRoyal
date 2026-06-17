@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:MyRoyal/app/shared/services/in_app_review_service.dart';
 import 'package:MyRoyal/base/config/app_config.dart';
 import 'package:MyRoyal/base/config/environment_config.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:MyRoyal/base/utils/get_device_info.dart';
 import 'package:MyRoyal/base/utils/initial_route.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+
 
 class SplashController extends GetxController {
   SplashController({required this.appStorage, required this.deviceInfo});
@@ -47,8 +49,13 @@ class SplashController extends GetxController {
 
     final everLogin = await appStorage.read('ever-login');
 
+    // Track usage count on startup
+    final reviewService = InAppReviewService();
+    await reviewService.incrementUsageCount(appStorage);
+
     isLoading.value = true;
     await Future.delayed(const Duration(milliseconds: 800));
+
     await checkRoutes();
 
     if (everLogin == null) {

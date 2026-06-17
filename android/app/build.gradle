@@ -99,6 +99,8 @@ android {
     defaultConfig {
         manifestPlaceholders = [
             GEO_API_KEY: envProperties.getProperty('GEO_API_KEY', '')
+                .replaceAll('"', '')
+                .trim()
         ]
         externalNativeBuild {
             cmake {
@@ -139,4 +141,12 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    constraints {
+        implementation("androidx.core:core-ktx:1.13.1") {
+            because("core-ktx 1.15.0+ requires AGP 8.9+")
+        }
+        implementation("androidx.core:core:1.13.1") {
+            because("core 1.15.0+ requires AGP 8.9+")
+        }
+    }
 }

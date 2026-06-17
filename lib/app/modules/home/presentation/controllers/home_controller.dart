@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/shared/services/in_app_review_service.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/home/data/models/banner_event_model.dart';
 import 'package:MyRoyal/app/modules/home/data/models/user_model.dart';
@@ -117,6 +118,7 @@ class HomeController extends GetxController {
   final MellotippetFirebaseRemoteConfig firebaseRemoteConfig;
   final AppDialog appDialog;
   final AppStorage appStorage;
+  final inAppReviewService = InAppReviewService();
   late var newUpdate;
 
   @override
@@ -155,6 +157,10 @@ class HomeController extends GetxController {
 
   void _initial() async {
     await _getUserData();
+
+    // Check and trigger custom in-app review dialog on launch count threshold
+    inAppReviewService.checkAndTriggerUsageReview(appStorage,
+        minAppUsageCount: 5);
 
     // _getArticles();
   }

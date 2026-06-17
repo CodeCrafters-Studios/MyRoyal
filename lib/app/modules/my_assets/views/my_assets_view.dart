@@ -2,13 +2,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+// import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:MyRoyal/app/modules/my_assets/views/components/my_assets_card.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
-import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:MyRoyal/base/widgets/appbar_spacer.dart';
 import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
 import 'package:MyRoyal/base/widgets/padding.dart';
@@ -286,27 +285,27 @@ class MyAssetsView extends GetView<MyAssetsController> {
                                     Expanded(
                                       child: ButtonPrimary(
                                         onPressed: () async {
-                                          controller.signature =
-                                              await controller
-                                                  .signatureController
-                                                  .toPngBytes();
-                                          final time = DateTime.now()
-                                              .toIso8601String()
-                                              .replaceAll('.', ':');
-                                          final result =
-                                              await ImageGallerySaverPlus
-                                                  .saveImage(
-                                                      controller.signature!,
-                                                      name: 'signature_$time');
-                                          AppUtils.logApp(result.toString());
-                                          if (result['isSuccess']) {
-                                            AppDialogImpl().showSuccessSnackBar(
-                                                description:
-                                                    'Ttd digital berhasil disimpan');
-                                            controller.signatureController
-                                                .clear();
-                                            Get.back();
-                                          }
+                                          // controller.signature =
+                                          //     await controller
+                                          //         .signatureController
+                                          //         .toPngBytes();
+                                          // final time = DateTime.now()
+                                          //     .toIso8601String()
+                                          //     .replaceAll('.', ':');
+                                          // final result =
+                                          //     await ImageGallerySaverPlus
+                                          //         .saveImage(
+                                          //             controller.signature!,
+                                          //             name: 'signature_$time');
+                                          // AppUtils.logApp(result.toString());
+                                          // if (result['isSuccess']) {
+                                          //   AppDialogImpl().showSuccessSnackBar(
+                                          //       description:
+                                          //           'Ttd digital berhasil disimpan');
+                                          //   controller.signatureController
+                                          //       .clear();
+                                          //   Get.back();
+                                          // }
                                         },
                                         text: 'Konfirmasi',
                                         textColor: white,

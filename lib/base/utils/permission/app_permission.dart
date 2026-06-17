@@ -38,12 +38,13 @@ class AppPermissionImpl implements AppPermission {
   }
 
   @override
-  Future<bool> get photoStatus async => await Permission.photos.isGranted;
+  Future<bool> get photoStatus async {
+    return true;
+  }
 
   @override
   Future<bool> requestPhoto() async {
-    final status = await Permission.photos.request();
-    return _handlePermissionStatus(status);
+    return true;
   }
 
   @override

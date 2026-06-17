@@ -163,20 +163,25 @@ Future<void> _setupNotifications() async {
   final box = await Hive.openBox(IROYAL_STORAGE);
   AppStorage appStorage = AppStorage(box: box);
 
-  await FirebaseMessaging.instance.requestPermission();
-  await FirebaseMessaging.instance.getToken().then((token) async {
-    String fcmToken = token.toString();
-    await appStorage.write(CACHE_FCM_TOKEN, fcmToken);
+  try {
+    await FirebaseMessaging.instance.requestPermission();
+    await FirebaseMessaging.instance.getToken().then((token) async {
+      if (token != null) {
+        String fcmToken = token.toString();
+        await appStorage.write(CACHE_FCM_TOKEN, fcmToken);
+        AppUtils.logApp('[FIREBASE] FCM TOKEN :::: $fcmToken');
+      }
+    });
 
-    AppUtils.logApp('[FIREBASE] FCM TOKEN :::: $fcmToken');
-  });
-
-  if (!kIsWeb) {
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    if (!kIsWeb) {
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+  } catch (e) {
+    AppUtils.logApp('[FIREBASE] Error setting up notifications: $e');
   }
 }
