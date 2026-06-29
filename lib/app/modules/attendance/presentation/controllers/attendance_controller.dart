@@ -98,6 +98,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   Timer? _timer;
   Timer? breakTimer;
+  int _breakDurationSeconds = 0;
 
   RxString totalHours = '--:--'.obs;
   final liveWorkDuration = '--:--'.obs;
@@ -106,6 +107,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   DateTime? _deviceTimeAtSync;
   RxString countTimes = '--:--:--'.obs;
   final workDurationMinutes = 0.obs;
+  final isBreakTimerDone = false.obs;
 
   final GetAttendanceTodayUsecase getAttendanceTodayUsecase;
   final RecordAttendanceUsecase recordAttendanceUsecase;
@@ -180,6 +182,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       breakEndTime.value = null;
       breakDuration.value = '';
       countTimes.value = '--:--:--';
+      isBreakTimerDone.value = false;
 
       _getAttendanceLocation();
     }
@@ -288,8 +291,10 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   void _fitMapBounds(List<LatLng> points) {
     if (!isGmsAvailable.value) {
       if (points.isEmpty) return;
-      final centerLat = points.map((p) => p.latitude).reduce((a, b) => a + b) / points.length;
-      final centerLng = points.map((p) => p.longitude).reduce((a, b) => a + b) / points.length;
+      final centerLat =
+          points.map((p) => p.latitude).reduce((a, b) => a + b) / points.length;
+      final centerLng = points.map((p) => p.longitude).reduce((a, b) => a + b) /
+          points.length;
       onMoveMap?.call(centerLat, centerLng, 18.0);
       return;
     }
@@ -385,7 +390,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
           );
         }
 
-        if (r.breakStartTime != null && r.serverTime != null) {
+        if (r.breakStartTime != null) {
           final parsed = DateFormat("HH:mm:ss").parse(r.breakStartTime!);
 
           breakTime.value = DateTime(
@@ -398,8 +403,9 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
           );
 
           startBreakTimerFromServer(
-            r.serverTime!,
+            r.serverTime ?? '',
             r.breakStartTime!,
+            r.durationBreak ?? 0,
           );
         }
 
@@ -688,11 +694,11 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> validationSelfie(String status) async {
-    if (!isLocationValid.value) {
-      AppDialogImpl().showErrorSnackBar(
-          description: "Anda harus berada di dalam radius kantor.");
-      return;
-    }
+    // if (!isLocationValid.value) {
+    //   AppDialogImpl().showErrorSnackBar(
+    //       description: "Anda harus berada di dalam radius kantor.");
+    //   return;
+    // }
 
     AppDialogImpl().showChoiceDialog(
         title: 'Konfirmasi',
@@ -803,47 +809,85 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         });
   }
 
-  void startBreakTimerFromServer(String serverTime, String breakStart) {
-    if (serverTime.isEmpty || breakStart.isEmpty) return;
+  void startBreakTimerFromServer(
+    String serverTime,
+    String breakStart,
+    int durationBreakMinutes,
+  ) {
+    if (breakStart.isEmpty) return;
 
     try {
       final now = DateTime.now();
-
-      final server = DateFormat("HH:mm:ss").parse(serverTime);
       final start = DateFormat("HH:mm:ss").parse(breakStart);
 
-      _serverTime = DateTime(now.year, now.month, now.day, server.hour,
-          server.minute, server.second);
+      if (serverTime.isNotEmpty) {
+        final server = DateFormat("HH:mm:ss").parse(serverTime);
+        _serverTime = DateTime(now.year, now.month, now.day, server.hour,
+            server.minute, server.second);
+        _deviceTimeAtSync = now;
+      }
 
       _breakStartTime = DateTime(
           now.year, now.month, now.day, start.hour, start.minute, start.second);
+      _breakDurationSeconds = durationBreakMinutes * 60;
 
-      _deviceTimeAtSync = now;
-
-      _runBreakTimer();
+      _scheduleBreakCountdownStart();
     } catch (e) {
       AppUtils.logApp("ERROR PARSE BREAK TIME: $e");
     }
   }
 
+  void _scheduleBreakCountdownStart() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (attendanceStatus.value != AttendanceStatus.breakStart) {
+        return;
+      }
+
+      _runBreakTimer();
+    });
+  }
+
   void _runBreakTimer() {
     breakTimer?.cancel();
 
-    if (_serverTime == null ||
-        _breakStartTime == null ||
-        _deviceTimeAtSync == null) {
+    if (_breakStartTime == null) {
+      return;
+    }
+
+    void updateCountdown() {
+      final nowDevice = DateTime.now();
+      final currentServerTime =
+          (_serverTime != null && _deviceTimeAtSync != null)
+              ? _serverTime!.add(nowDevice.difference(_deviceTimeAtSync!))
+              : nowDevice;
+
+      final elapsed = currentServerTime.difference(_breakStartTime!).inSeconds;
+      final remaining = _breakDurationSeconds - elapsed;
+
+      if (remaining <= 0) {
+        countTimes.value = '00:00:00';
+        isBreakTimerDone.value = true;
+        return;
+      }
+
+      countTimes.value = _formatDuration(Duration(seconds: remaining));
+      isBreakTimerDone.value = false;
+    }
+
+    updateCountdown();
+
+    if (isBreakTimerDone.value) {
       return;
     }
 
     breakTimer = Timer.periodic(
       const Duration(seconds: 1),
       (_) {
-        final nowDevice = DateTime.now();
-        final deviceElapsed = nowDevice.difference(_deviceTimeAtSync!);
-        final serverNow = _serverTime!.add(deviceElapsed);
-        final breakDuration = serverNow.difference(_breakStartTime!);
+        updateCountdown();
 
-        countTimes.value = _formatDuration(breakDuration);
+        if (isBreakTimerDone.value) {
+          breakTimer?.cancel();
+        }
       },
     );
   }
@@ -1128,7 +1172,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       () async {
         if (isGmsAvailable.value) {
           if (isMapReady.value && googleMapController != null) {
-            googleMapController!.animateCamera(CameraUpdate.newLatLngZoom(pos, 18));
+            googleMapController!
+                .animateCamera(CameraUpdate.newLatLngZoom(pos, 18));
           }
         } else {
           onMoveMap?.call(pos.latitude, pos.longitude, 18.0);

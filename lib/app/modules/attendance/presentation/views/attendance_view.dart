@@ -162,7 +162,7 @@ class AttendanceView extends GetView<AttendanceController> {
           TextSpan(
             children: [
               TextSpan(
-                text: 'Your break time start from ',
+                text: 'Waktu istirahat anda dimulai pukul ',
                 style: TS.bodyMedium,
               ),
               TextSpan(
@@ -323,7 +323,12 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildActionButtons(AttendanceStatus status) {
     if (status == AttendanceStatus.breakStart) {
-      return _buildEndBreakButton();
+      return Obx(() {
+        if (!controller.isBreakTimerDone.value) {
+          return const SizedBox.shrink();
+        }
+        return _buildEndBreakButton();
+      });
     }
 
     if (status == AttendanceStatus.checkedIn) {
@@ -346,7 +351,8 @@ class AttendanceView extends GetView<AttendanceController> {
         );
       }
 
-      final enabled = controller.isLocationValid.value;
+      final enabled = true;
+      // final enabled = controller.isLocationValid.value;
 
       return Column(
         children: [
@@ -412,19 +418,21 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildEndBreakButton() {
-    final enabled = controller.isLocationValid.value;
+    return Obx(() {
+      final enabled = controller.isLocationValid.value;
 
-    return ButtonPrimary(
-      fullWidth: true,
-      margin: EdgeInsets.symmetric(horizontal: 14),
-      text: 'End Break',
-      color: enabled ? white : Colors.grey,
-      textColor: enabled ? primary : Colors.grey,
-      borderSide: BorderSide(
-        color: enabled ? primary : Colors.grey,
-      ),
-      onPressed: enabled ? controller.endBreakTime : null,
-    );
+      return ButtonPrimary(
+        fullWidth: true,
+        margin: EdgeInsets.symmetric(horizontal: 14),
+        text: 'End Break',
+        color: enabled ? white : Colors.grey,
+        textColor: enabled ? primary : Colors.grey,
+        borderSide: BorderSide(
+          color: enabled ? primary : Colors.grey,
+        ),
+        onPressed: enabled ? controller.endBreakTime : null,
+      );
+    });
   }
 
   Widget _buildCheckOutButton() {
@@ -720,7 +728,8 @@ class _AttendanceFlutterMapState extends State<AttendanceFlutterMap> {
     super.initState();
     _mapController = fm.MapController();
 
-    widget.controller.onMoveMap = (double latitude, double longitude, double zoom) {
+    widget.controller.onMoveMap =
+        (double latitude, double longitude, double zoom) {
       if (mounted) {
         _mapController.move(ll.LatLng(latitude, longitude), zoom);
       }
@@ -768,7 +777,9 @@ class _AttendanceFlutterMapState extends State<AttendanceFlutterMap> {
 
       final fmPolygons = polygons.map((poly) {
         return fm.Polygon(
-          points: poly.points.map((p) => ll.LatLng(p.latitude, p.longitude)).toList(),
+          points: poly.points
+              .map((p) => ll.LatLng(p.latitude, p.longitude))
+              .toList(),
           color: poly.fillColor,
           borderColor: poly.strokeColor,
           borderStrokeWidth: poly.strokeWidth.toDouble(),
@@ -811,7 +822,8 @@ class _AttendanceFlutterMapState extends State<AttendanceFlutterMap> {
       for (final marker in widget.controller.officeMarkers) {
         fmMarkers.add(
           fm.Marker(
-            point: ll.LatLng(marker.position.latitude, marker.position.longitude),
+            point:
+                ll.LatLng(marker.position.latitude, marker.position.longitude),
             width: 40,
             height: 40,
             child: const Icon(

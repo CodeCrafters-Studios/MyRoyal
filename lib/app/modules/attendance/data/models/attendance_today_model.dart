@@ -7,6 +7,7 @@ class AttendanceTodayModel {
   final String? breakStartTime;
   final String? breakEndTime;
   final String? serverTime;
+  final int? durationBreak;
 
   AttendanceTodayModel({
     this.attendanceId,
@@ -17,6 +18,7 @@ class AttendanceTodayModel {
     this.breakStartTime,
     this.breakEndTime,
     this.serverTime,
+    this.durationBreak,
   });
 
   factory AttendanceTodayModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class AttendanceTodayModel {
       breakStartTime: json["break_start_time"],
       breakEndTime: json["break_end_time"],
       serverTime: json["server_time"],
+      durationBreak: json["duration_break"] ?? 0,
     );
   }
 
@@ -42,6 +45,7 @@ class AttendanceTodayModel {
       breakStartTime: '',
       breakEndTime: '',
       serverTime: '',
+      durationBreak: 0,
     );
   }
 }

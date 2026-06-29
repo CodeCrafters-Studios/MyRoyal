@@ -51,7 +51,7 @@ class TabPersonalView extends StatelessWidget {
                         .birthdate
                         .toString()
                         .isNotEmpty
-                    ? DateFormat('dd, MMMM y').format(
+                    ? DateFormat('dd MMMM y').format(
                         controller.profileData().data.personal.birthdate)
                     : '-',
                 controller: controller,
