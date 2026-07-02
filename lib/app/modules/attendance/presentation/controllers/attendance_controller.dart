@@ -694,11 +694,11 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> validationSelfie(String status) async {
-    // if (!isLocationValid.value) {
-    //   AppDialogImpl().showErrorSnackBar(
-    //       description: "Anda harus berada di dalam radius kantor.");
-    //   return;
-    // }
+    if (!isLocationValid.value) {
+      AppDialogImpl().showErrorSnackBar(
+          description: "Anda harus berada di dalam radius kantor.");
+      return;
+    }
 
     AppDialogImpl().showChoiceDialog(
         title: 'Konfirmasi',

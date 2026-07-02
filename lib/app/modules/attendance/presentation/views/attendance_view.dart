@@ -351,8 +351,8 @@ class AttendanceView extends GetView<AttendanceController> {
         );
       }
 
-      final enabled = true;
-      // final enabled = controller.isLocationValid.value;
+      // final enabled = true;
+      final enabled = controller.isLocationValid.value;
 
       return Column(
         children: [
