@@ -102,7 +102,7 @@ class LoginController extends GetxController {
 
     if (Platform.isAndroid) {
       deviceId = androidId;
-      deviceUser = '${info.model}-${info.brand}-${info.id}';
+      deviceUser = '${info.model}-${info.brand}-${androidId}';
     } else if (Platform.isIOS) {
       deviceId = info.id;
       deviceUser = '${info.model}-${info.brand}-${info.hardware}-${info.id}';
@@ -157,7 +157,7 @@ class LoginController extends GetxController {
       isForceUpdateVersion: isForceUpdateVersion,
       title: 'New version available',
       description:
-          'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
+          'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
       onPressLater: Get.back,
       onPressUpdate: () async {
         Get.back();
@@ -205,7 +205,6 @@ class LoginController extends GetxController {
       return;
     }
     final cacheFcmToken = await appStorage.read(CACHE_FCM_TOKEN);
-    // final deviceId = await appStorage.read('device-id');
     final deviceUser = await appStorage.read('device-user');
     final deviceId = await appStorage.read('device-id');
     final deviceUserParams = '${username()}-$deviceUser';

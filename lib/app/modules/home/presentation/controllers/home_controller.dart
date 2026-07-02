@@ -161,6 +161,7 @@ class HomeController extends GetxController {
     // Check and trigger custom in-app review dialog on launch count threshold
     inAppReviewService.checkAndTriggerUsageReview(appStorage,
         minAppUsageCount: 5);
+    checkVersion();
 
     // _getArticles();
   }
@@ -210,7 +211,7 @@ class HomeController extends GetxController {
       isForceUpdateVersion: isForceUpdateVersion,
       title: 'New version available',
       description:
-          'There is a new version $recommendedMinVersion available in the Google Play Store. Would you like to update?',
+          'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
       onPressLater: Get.back,
       onPressUpdate: () async {
         Get.back();
