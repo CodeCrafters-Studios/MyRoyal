@@ -150,6 +150,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      _getAttendanceToday();
       _initLocation();
     }
   }
