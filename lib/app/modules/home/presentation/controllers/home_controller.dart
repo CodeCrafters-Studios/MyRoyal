@@ -214,7 +214,6 @@ class HomeController extends GetxController {
           'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
       onPressLater: Get.back,
       onPressUpdate: () async {
-        Get.back();
         String url =
             "https://play.google.com/store/apps/details?id=com.myroyal";
         if (await canLaunchUrl(Uri.parse(url))) {
@@ -229,18 +228,6 @@ class HomeController extends GetxController {
   void _getAllMenu() {
     mainMenu(generateHomeMenu(getAllMenu));
     mainMenu.refresh();
-  }
-
-  void _showEventDialog(String url) {
-    final showEvent = firebaseRemoteConfig.showEvent();
-    AppUtils.logApp('[FIREBASE] SHOW EVENT :::: $showEvent');
-
-    (showEvent)
-        ? appDialog.showEventDialog(
-            isImg: true,
-            imageUrl: url,
-          )
-        : null;
   }
 
   List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {

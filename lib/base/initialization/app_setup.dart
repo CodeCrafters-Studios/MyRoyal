@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:MyRoyal/base/services/version_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -154,7 +155,18 @@ Future configureApp(EnvironmentConfig envConfig) async {
       ),
     )
     ..put(connectivity)
-    ..put(firebaseRemoteConfig);
+    ..put(firebaseRemoteConfig)
+    ..put<VersionService>(
+      VersionService(
+        firebaseRemoteConfig: Get.find<MellotippetFirebaseRemoteConfig>(),
+        deviceInfo: DeviceInfo(
+          deviceInfoPlugin: deviceInfoPlugin,
+          packageInfo: packageInfo,
+        ),
+        appDialog: appDialogImpl,
+      ),
+      permanent: true,
+    );
   // ..put(CommonParamsImpl(appToken: Get.find<AppTokenImpl>()));
 }
 

@@ -73,103 +73,45 @@ class LoginController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    _checkVersion();
+    await _setupDeviceInfo();
     await getCacheUser();
     await checkBiometricAuthentication();
     if (isAllowBiometrics.value == true) {
       biometricAuthentication();
-    } else {
-      null;
     }
   }
 
-  void _checkVersion() async {
+  /// Setup device info (device ID, device user, etc.)
+  Future<void> _setupDeviceInfo() async {
     String deviceUser = '';
     String deviceId = '';
 
-    // Get the current app version
-    final appVersion =
-        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+    try {
+      // Get Device Id iOS
+      final info = await deviceInfo.info();
 
-    // Get Device Id iOS
-    final info = await deviceInfo.info();
+      // Get Android Id
+      String? androidId = await AndroidId().getId();
+      if (androidId == null || androidId.isEmpty || androidId == 'null') {
+        androidId = await AppDeviceId.getDeviceId();
+      }
 
-    // Get Android Id
-    String? androidId = await AndroidId().getId();
-    if (androidId == null || androidId.isEmpty || androidId == 'null') {
-      androidId = await AppDeviceId.getDeviceId();
+      if (Platform.isAndroid) {
+        deviceId = androidId;
+        deviceUser = '${info.model}-${info.brand}-${androidId}';
+      } else if (Platform.isIOS) {
+        deviceId = info.id;
+        deviceUser = '${info.model}-${info.brand}-${info.hardware}-${info.id}';
+      }
+
+      await appStorage.write('device-id', deviceId);
+      await appStorage.write('device-user', deviceUser);
+
+      AppUtils.logApp('[INFO] DEVICE ID :::: $deviceId');
+      AppUtils.logApp('[INFO] DEVICE USER :::: $deviceUser');
+    } catch (e) {
+      AppUtils.logApp('[ERROR] Failed to setup device info: $e');
     }
-
-    if (Platform.isAndroid) {
-      deviceId = androidId;
-      deviceUser = '${info.model}-${info.brand}-${androidId}';
-    } else if (Platform.isIOS) {
-      deviceId = info.id;
-      deviceUser = '${info.model}-${info.brand}-${info.hardware}-${info.id}';
-    }
-
-    await appStorage.write('device-id', deviceId);
-    await appStorage.write('device-user', deviceUser);
-
-    AppUtils.logApp('[INFO] DEVICE ID :::: $deviceId');
-    AppUtils.logApp('[INFO] DEVICE USER :::: $deviceUser');
-
-    // Get the required min version from Firebase Remote Config
-    final requiredMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRequiredMinimumVersion());
-
-    // Get the recommended min version from Firebase Remote Config
-    final recommendedMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRecommendedMinimumVersion());
-
-    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
-
-    AppUtils.logApp('[FIREBASE] APP VERSION :::: $appVersion');
-    AppUtils.logApp('[FIREBASE] APP VERSION REQUIRED :::: $requiredMinVersion');
-    AppUtils.logApp(
-        '[FIREBASE] APP VERSION RECOMMENDED :::: $recommendedMinVersion');
-    AppUtils.logApp(
-        '[FIREBASE] APP VERSION FORCE UPDATE :::: $forceUpdateVersion');
-    // Compare the versions and display a dialog if the app version is lower than
-    // the required or recommended version
-    if (appVersion < requiredMinVersion) {
-      _showUpdateVersionDialog(
-          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
-    } else if (appVersion < recommendedMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion,
-          firebaseRemoteConfig.getRecommendedMinimumVersion());
-    }
-  }
-
-  // Helper method to compare two semver versions.
-  int _getExtendedVersionNumber(String version) {
-    List<String> versionCells = version.split('.');
-    List<int> versionNumbers = versionCells.map((i) => int.parse(i)).toList();
-
-    return versionNumbers[0] * 100000 +
-        versionNumbers[1] * 1000 +
-        versionNumbers[2];
-  }
-
-  void _showUpdateVersionDialog(
-      bool isForceUpdateVersion, String recommendedMinVersion) {
-    appDialog.showAppVersionInfoDialog(
-      isForceUpdateVersion: isForceUpdateVersion,
-      title: 'New version available',
-      description:
-          'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
-      onPressLater: Get.back,
-      onPressUpdate: () async {
-        Get.back();
-        String url =
-            "https://play.google.com/store/apps/details?id=com.myroyal";
-        if (await canLaunchUrl(Uri.parse(url))) {
-          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-        } else {
-          throw 'Could not launch $url';
-        }
-      },
-    );
   }
 
   void validateForm() {
