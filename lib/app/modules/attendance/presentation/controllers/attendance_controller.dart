@@ -105,6 +105,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   DateTime? _serverTime;
   DateTime? _breakStartTime;
   DateTime? _deviceTimeAtSync;
+  DateTime? _lastDisplayTime;
   RxString countTimes = '--:--:--'.obs;
   final workDurationMinutes = 0.obs;
   final isBreakTimerDone = false.obs;
@@ -657,19 +658,33 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final nowDevice = DateTime.now();
-      
+
       // Detect device time manipulation (jump >5 seconds)
       final elapsed = nowDevice.difference(_deviceTimeAtSync!);
       if (elapsed.abs().inSeconds > 5) {
-        AppUtils.logApp("DEVICE TIME MANIPULATION DETECTED: ${elapsed.inSeconds}s");
+        AppUtils.logApp(
+          "DEVICE TIME MANIPULATION DETECTED: ${elapsed.inSeconds}s",
+        );
         _resetTimer(); // Resync with server
         return;
       }
-      
-      final currentServerTime = _serverTime!.add(elapsed);
-      displayTime.value = currentServerTime;
-      _updateLiveDuration(currentServerTime);
+
+      final candidateTime = _serverTime!.add(elapsed);
+      final currentTime = _getMonotonicDisplayTime(candidateTime);
+      displayTime.value = currentTime;
+      _updateLiveDuration(currentTime);
     });
+  }
+
+  DateTime _getMonotonicDisplayTime(DateTime candidateTime) {
+    final lastTime = _lastDisplayTime ?? displayTime.value;
+
+    if (candidateTime.isBefore(lastTime)) {
+      return lastTime;
+    }
+
+    _lastDisplayTime = candidateTime;
+    return candidateTime;
   }
 
   void _updateLiveDuration(DateTime currentServerTime) {
@@ -865,20 +880,21 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
     void updateCountdown() {
       final nowDevice = DateTime.now();
-      
+
       // Validate device time hasn't been manipulated
       if (_serverTime != null && _deviceTimeAtSync != null) {
         final timeDiff = nowDevice.difference(_deviceTimeAtSync!);
-        
+
         // If device time jumped more than 5 seconds, it was likely manipulated
         // Refresh from server to prevent cheating
         if (timeDiff.abs().inSeconds > 5) {
-          AppUtils.logApp("DEVICE TIME MANIPULATION DETECTED: ${timeDiff.inSeconds}s");
+          AppUtils.logApp(
+              "DEVICE TIME MANIPULATION DETECTED: ${timeDiff.inSeconds}s");
           _getAttendanceToday(); // Resync with server
           return;
         }
       }
-      
+
       final currentServerTime =
           (_serverTime != null && _deviceTimeAtSync != null)
               ? _serverTime!.add(nowDevice.difference(_deviceTimeAtSync!))
