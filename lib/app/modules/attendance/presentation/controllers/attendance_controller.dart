@@ -656,19 +656,23 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       );
       _deviceTimeAtSync = now;
     }
+    DateTime lastTickTime = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final nowDevice = DateTime.now();
 
-      // Detect device time manipulation (jump >5 seconds)
-      final elapsed = nowDevice.difference(_deviceTimeAtSync!);
-      if (elapsed.abs().inSeconds > 5) {
+      // Detect device time manipulation (jump >5 seconds between ticks)
+      final tickDiff = nowDevice.difference(lastTickTime);
+      lastTickTime = nowDevice;
+      
+      if (tickDiff.abs().inSeconds > 5) {
         AppUtils.logApp(
-          "DEVICE TIME MANIPULATION DETECTED: ${elapsed.inSeconds}s",
+          "DEVICE TIME MANIPULATION DETECTED: ${tickDiff.inSeconds}s",
         );
         _resetTimer(); // Resync with server
         return;
       }
 
+      final elapsed = nowDevice.difference(_deviceTimeAtSync!);
       final candidateTime = _serverTime!.add(elapsed);
       final currentTime = _getMonotonicDisplayTime(candidateTime);
       displayTime.value = currentTime;
@@ -878,18 +882,21 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       return;
     }
 
+    DateTime lastBreakTickTime = DateTime.now();
+
     void updateCountdown() {
       final nowDevice = DateTime.now();
 
       // Validate device time hasn't been manipulated
       if (_serverTime != null && _deviceTimeAtSync != null) {
-        final timeDiff = nowDevice.difference(_deviceTimeAtSync!);
+        final tickDiff = nowDevice.difference(lastBreakTickTime);
+        lastBreakTickTime = nowDevice;
 
         // If device time jumped more than 5 seconds, it was likely manipulated
         // Refresh from server to prevent cheating
-        if (timeDiff.abs().inSeconds > 5) {
+        if (tickDiff.abs().inSeconds > 5) {
           AppUtils.logApp(
-              "DEVICE TIME MANIPULATION DETECTED: ${timeDiff.inSeconds}s");
+              "DEVICE TIME MANIPULATION DETECTED: ${tickDiff.inSeconds}s");
           _getAttendanceToday(); // Resync with server
           return;
         }
@@ -1125,11 +1132,34 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       final p1 = polygon[i];
       final p2 = polygon[(i + 1) % polygon.length];
 
+      // Correction factor for longitude based on latitude
+      final double latMid = (p1.latitude + p2.latitude) / 2.0;
+      final double cosLat = cos(latMid * pi / 180.0);
+
+      // Convert differences to equivalent flat-plane units
+      final double dx = (p2.longitude - p1.longitude) * cosLat;
+      final double dy = (p2.latitude - p1.latitude);
+
+      final double px = (point.longitude - p1.longitude) * cosLat;
+      final double py = (point.latitude - p1.latitude);
+
+      final double lengthSquared = dx * dx + dy * dy;
+
+      double t = 0.0;
+      if (lengthSquared != 0.0) {
+        t = (px * dx + py * dy) / lengthSquared;
+        t = t.clamp(0.0, 1.0);
+      }
+
+      // Closest point on the segment
+      final double closestLat = p1.latitude + t * (p2.latitude - p1.latitude);
+      final double closestLng = p1.longitude + t * (p2.longitude - p1.longitude);
+
       final distance = Geolocator.distanceBetween(
         point.latitude,
         point.longitude,
-        (p1.latitude + p2.latitude) / 2,
-        (p1.longitude + p2.longitude) / 2,
+        closestLat,
+        closestLng,
       );
 
       if (distance < minDistance) {

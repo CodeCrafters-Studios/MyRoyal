@@ -228,6 +228,22 @@ class VersionService extends GetxService {
       return 0;
     }
   }
+
+  /// Check if an update is required without showing the dialog (useful for blocking auto-login)
+  Future<bool> isUpdateRequiredAsync() async {
+    try {
+      final appVersion =
+          _getExtendedVersionNumber(deviceInfo.packageInfo.version);
+      final requiredMinVersion = _getExtendedVersionNumber(
+          firebaseRemoteConfig.getRequiredMinimumVersion());
+      final recommendedMinVersion = _getExtendedVersionNumber(
+          firebaseRemoteConfig.getRecommendedMinimumVersion());
+          
+      return (appVersion < requiredMinVersion || appVersion < recommendedMinVersion);
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 /// Lifecycle observer to detect app resume

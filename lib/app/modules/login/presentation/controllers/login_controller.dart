@@ -19,6 +19,7 @@ import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:MyRoyal/base/utils/get_device_info.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:MyRoyal/base/utils/storage/app_device_id.dart';
+import 'package:MyRoyal/base/services/version_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum FormLoginValue { username, password }
@@ -76,6 +77,18 @@ class LoginController extends GetxController {
     await _setupDeviceInfo();
     await getCacheUser();
     await checkBiometricAuthentication();
+    
+    try {
+      final versionService = Get.find<VersionService>();
+      final isUpdateRequired = await versionService.isUpdateRequiredAsync();
+      if (isUpdateRequired) {
+        AppUtils.logApp('[LOGIN CONTROLLER] Update required. Skipping auto-login.');
+        return;
+      }
+    } catch (e) {
+      AppUtils.logApp('[LOGIN CONTROLLER] Error checking version service: $e');
+    }
+
     if (isAllowBiometrics.value == true) {
       biometricAuthentication();
     }
