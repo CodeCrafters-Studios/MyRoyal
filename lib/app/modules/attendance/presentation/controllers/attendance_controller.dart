@@ -663,7 +663,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       // Detect device time manipulation (jump >5 seconds between ticks)
       final tickDiff = nowDevice.difference(lastTickTime);
       lastTickTime = nowDevice;
-      
+
       if (tickDiff.abs().inSeconds > 5) {
         AppUtils.logApp(
           "DEVICE TIME MANIPULATION DETECTED: ${tickDiff.inSeconds}s",
@@ -732,8 +732,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Mohon persiapkan diri untuk mengambil foto',
         onPressedYes: () async {
-          isPerformingAction.value = true;
           Get.back();
+          isPerformingAction.value = true;
           final result = await Get.toNamed(
             Routes.VALIDATION_SELFIE,
             arguments: [
@@ -796,8 +796,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Anda yakin akan memulai sesi istirahat',
         onPressedYes: () async {
-          isPerformingAction.value = true;
           Get.back();
+          isPerformingAction.value = true;
           if (hasTakenBreak.value) {
             isPerformingAction.value = false;
             return;
@@ -943,8 +943,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         title: 'Konfirmasi',
         description: 'Anda yakin akan mengakhiri sesi istirahat',
         onPressedYes: () async {
-          isPerformingAction.value = true;
           Get.back();
+          isPerformingAction.value = true;
 
           breakTimer?.cancel();
 
@@ -1153,7 +1153,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
       // Closest point on the segment
       final double closestLat = p1.latitude + t * (p2.latitude - p1.latitude);
-      final double closestLng = p1.longitude + t * (p2.longitude - p1.longitude);
+      final double closestLng =
+          p1.longitude + t * (p2.longitude - p1.longitude);
 
       final distance = Geolocator.distanceBetween(
         point.latitude,
