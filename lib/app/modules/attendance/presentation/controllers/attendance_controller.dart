@@ -656,21 +656,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       );
       _deviceTimeAtSync = now;
     }
-    DateTime lastTickTime = DateTime.now();
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       final nowDevice = DateTime.now();
-
-      // Detect device time manipulation (jump >5 seconds between ticks)
-      final tickDiff = nowDevice.difference(lastTickTime);
-      lastTickTime = nowDevice;
-
-      if (tickDiff.abs().inSeconds > 5) {
-        AppUtils.logApp(
-          "DEVICE TIME MANIPULATION DETECTED: ${tickDiff.inSeconds}s",
-        );
-        _resetTimer(); // Resync with server
-        return;
-      }
 
       final elapsed = nowDevice.difference(_deviceTimeAtSync!);
       final candidateTime = _serverTime!.add(elapsed);
@@ -882,25 +869,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       return;
     }
 
-    DateTime lastBreakTickTime = DateTime.now();
-
     void updateCountdown() {
       final nowDevice = DateTime.now();
-
-      // Validate device time hasn't been manipulated
-      if (_serverTime != null && _deviceTimeAtSync != null) {
-        final tickDiff = nowDevice.difference(lastBreakTickTime);
-        lastBreakTickTime = nowDevice;
-
-        // If device time jumped more than 5 seconds, it was likely manipulated
-        // Refresh from server to prevent cheating
-        if (tickDiff.abs().inSeconds > 5) {
-          AppUtils.logApp(
-              "DEVICE TIME MANIPULATION DETECTED: ${tickDiff.inSeconds}s");
-          _getAttendanceToday(); // Resync with server
-          return;
-        }
-      }
 
       final currentServerTime =
           (_serverTime != null && _deviceTimeAtSync != null)
