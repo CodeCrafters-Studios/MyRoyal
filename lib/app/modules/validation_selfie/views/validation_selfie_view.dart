@@ -26,7 +26,10 @@ class ValidationSelfieView extends GetView<ValidationSelfieController> {
         if (cam == null ||
             !cam.value.isInitialized ||
             !controller.isCameraActive.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+            color: white,
+          ));
         }
 
         return Stack(

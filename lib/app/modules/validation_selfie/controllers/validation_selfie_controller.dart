@@ -379,11 +379,11 @@ class ValidationSelfieController extends GetxController {
       file: "image/png;base64,$base64Image",
     );
 
-    final json = entity.toJson();
+    // final json = entity.toJson();
 
-    print(
-        "REQUEST JSON SIZE: ${(jsonEncode(json).length / 1024).toStringAsFixed(2)} KB");
-    print(json);
+    // print(
+    //     "REQUEST JSON SIZE: ${(jsonEncode(json).length / 1024).toStringAsFixed(2)} KB");
+    // print(json);
 
     final result = await recordAttendanceUsecase(entity);
 

@@ -161,68 +161,8 @@ class HomeController extends GetxController {
     // Check and trigger custom in-app review dialog on launch count threshold
     inAppReviewService.checkAndTriggerUsageReview(appStorage,
         minAppUsageCount: 5);
-    checkVersion();
 
     // _getArticles();
-  }
-
-  void checkVersion() async {
-    // Get the current app version
-    final appVersion =
-        _getExtendedVersionNumber(deviceInfo.packageInfo.version);
-
-    // Get the required min version from Firebase Remote Config
-    final requiredMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRequiredMinimumVersion());
-
-    // Get the recommended min version from Firebase Remote Config
-    final recommendedMinVersion = _getExtendedVersionNumber(
-        firebaseRemoteConfig.getRecommendedMinimumVersion());
-
-    final forceUpdateVersion = firebaseRemoteConfig.getForceUpdateVersion();
-    newUpdate = firebaseRemoteConfig.newUpdate();
-
-    AppUtils.logApp('[INFO] NEW UPDATE :::: $newUpdate');
-
-    // Compare the versions and display a dialog if the app version is lower than
-    // the required or recommended version
-    if (appVersion < requiredMinVersion) {
-      _showUpdateVersionDialog(
-          forceUpdateVersion, firebaseRemoteConfig.getRequiredMinimumVersion());
-    } else if (appVersion < recommendedMinVersion) {
-      _showUpdateVersionDialog(forceUpdateVersion,
-          firebaseRemoteConfig.getRecommendedMinimumVersion());
-    }
-  }
-
-  // Helper method to compare two semver versions.
-  int _getExtendedVersionNumber(String version) {
-    List<String> versionCells = version.split('.');
-    List<int> versionNumbers = versionCells.map((i) => int.parse(i)).toList();
-
-    return versionNumbers[0] * 100000 +
-        versionNumbers[1] * 1000 +
-        versionNumbers[2];
-  }
-
-  void _showUpdateVersionDialog(
-      bool isForceUpdateVersion, String recommendedMinVersion) {
-    appDialog.showAppVersionInfoDialog(
-      isForceUpdateVersion: isForceUpdateVersion,
-      title: 'New version available',
-      description:
-          'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
-      onPressLater: Get.back,
-      onPressUpdate: () async {
-        String url =
-            "https://play.google.com/store/apps/details?id=com.myroyal";
-        if (await canLaunchUrl(Uri.parse(url))) {
-          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-        } else {
-          throw 'Could not launch $url';
-        }
-      },
-    );
   }
 
   void _getAllMenu() {

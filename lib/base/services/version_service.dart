@@ -129,7 +129,7 @@ class VersionService extends GetxService {
     appDialog
         .showAppVersionInfoDialog(
       isForceUpdateVersion: isForceUpdateVersion || isForce,
-      title: 'New version available',
+      title: 'Versi terbaru tersedia',
       description:
           'Tersedia versi baru $recommendedMinVersion di Google Play Store. Apakah Anda ingin memperbarui?',
       onPressLater: () {
@@ -142,7 +142,7 @@ class VersionService extends GetxService {
               '[VERSION SERVICE] Force update - cannot dismiss, re-showing dialog');
           _isUpdateDialogShown = false;
           // Delay to avoid dialog stacking
-          Future.delayed(const Duration(milliseconds: 300), () {
+          Future.delayed(const Duration(milliseconds: 1000), () {
             _showUpdateDialog(isForceUpdateVersion, recommendedMinVersion,
                 isForce: isForce);
           });
@@ -238,8 +238,9 @@ class VersionService extends GetxService {
           firebaseRemoteConfig.getRequiredMinimumVersion());
       final recommendedMinVersion = _getExtendedVersionNumber(
           firebaseRemoteConfig.getRecommendedMinimumVersion());
-          
-      return (appVersion < requiredMinVersion || appVersion < recommendedMinVersion);
+
+      return (appVersion < requiredMinVersion ||
+          appVersion < recommendedMinVersion);
     } catch (e) {
       return false;
     }
