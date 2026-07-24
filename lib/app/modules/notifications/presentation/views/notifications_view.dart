@@ -31,6 +31,7 @@ class NotificationsViewImpl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PageBase(
+      onBack: () => Get.back(),
       showBackground: false,
       title: 'Notifikasi',
       child: Obx(
