@@ -17,11 +17,9 @@ import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/initialization/firebase_remote_config.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
-import 'package:MyRoyal/base/utils/app_utils.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:MyRoyal/base/utils/get_device_info.dart';
 import 'package:MyRoyal/base/utils/storage/app_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeController extends GetxController {
   HomeController({

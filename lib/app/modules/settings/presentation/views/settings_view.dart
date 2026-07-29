@@ -134,20 +134,26 @@ class SettingsViewImpl extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Aksi',
-          style: TS.titleMedium,
+        Obx(
+          () => Visibility(
+            visible: controller.getAvailableBiometrics.value,
+            child: Text(
+              'Aksi',
+              style: TS.titleMedium,
+            ),
+          ),
         ),
         16.verticalSpace,
         Obx(
-          () => controller.getAvailableBiometrics.value
-              ? SwitchMenuSettings(
-                  assetSvg: 'assets/icons/ic_fingerprint.svg',
-                  text: 'Masuk dengan sidik jari',
-                  value: controller.switchbiometricsValue.value,
-                  onChanged: (value) => controller.iBiometrics(value),
-                )
-              : emptyBox,
+          () => Visibility(
+            visible: controller.getAvailableBiometrics.value,
+            child: SwitchMenuSettings(
+              assetSvg: 'assets/icons/ic_fingerprint.svg',
+              text: 'Masuk dengan sidik jari',
+              value: controller.switchbiometricsValue.value,
+              onChanged: (value) => controller.iBiometrics(value),
+            ),
+          ),
         ),
         80.verticalSpace,
         Container(
