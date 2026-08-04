@@ -91,11 +91,11 @@ class HomeController extends GetxController {
     //   code: 'ic_task',
     //   name: 'Tasks',
     // ),
-    // const Menu(
-    //   code: 'ic_teams',
-    //   name: 'My Teams',
-    //   isVisible: true,
-    // ),
+    const Menu(
+      id: 8,
+      code: 'ic_ocr',
+      name: 'OCR',
+    ),
     // const Menu(
     //   code: 'ic_others',
     //   name: 'Others',

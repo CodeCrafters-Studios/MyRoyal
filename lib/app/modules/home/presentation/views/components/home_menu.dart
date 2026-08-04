@@ -117,6 +117,9 @@ class HomeMenu extends GetView<HomeController> {
           case 7:
             Get.toNamed(Routes.APPROVAL);
             break;
+          case 8:
+            Get.toNamed(Routes.OCR);
+            break;
           default:
             Get.to(() => const ComingSoonScreen());
             break;

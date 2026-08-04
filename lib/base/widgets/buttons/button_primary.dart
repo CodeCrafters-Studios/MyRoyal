@@ -81,8 +81,7 @@ class _ButtonPrimaryState extends State<ButtonPrimary> {
   @override
   Widget build(BuildContext context) {
     final gradient = _effectiveGradient;
-    final borderRadius =
-        BorderRadius.all(Radius.circular(widget.borderRadius));
+    final borderRadius = BorderRadius.all(Radius.circular(widget.borderRadius));
 
     return GestureDetector(
       onTapDown: widget.isLoading || !widget.enable
@@ -119,11 +118,8 @@ class _ButtonPrimaryState extends State<ButtonPrimary> {
       LinearGradient gradient, BorderRadius borderRadius) {
     return Container(
       decoration: BoxDecoration(
-        gradient:
-            widget.isLoading ? null : gradient,
-        color: widget.isLoading
-            ? widget.color.withOpacity(0.5)
-            : null,
+        gradient: widget.isLoading ? null : gradient,
+        color: widget.isLoading ? widget.color.withOpacity(0.5) : null,
         borderRadius: borderRadius,
         boxShadow: widget.isLoading
             ? []
@@ -199,8 +195,7 @@ class _ButtonPrimaryState extends State<ButtonPrimary> {
     return Visibility(
       visible: widget.isLoading,
       replacement: Row(
-        mainAxisAlignment:
-            widget.alignment ?? MainAxisAlignment.center,
+        mainAxisAlignment: widget.alignment ?? MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           if (widget.icon != null) ...[

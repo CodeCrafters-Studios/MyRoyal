@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/settings/presentation/views/components/item_menu_settings.dart';
 import 'package:MyRoyal/app/modules/settings/presentation/views/components/switch_menu_settings.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
-import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/others/coming_soon.dart';

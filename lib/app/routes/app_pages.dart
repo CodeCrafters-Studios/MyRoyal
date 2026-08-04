@@ -37,6 +37,8 @@ import '../modules/my_teams/presentation/bindings/my_teams_binding.dart';
 import '../modules/my_teams/presentation/views/my_teams_view.dart';
 import '../modules/notifications/presentation/bindings/notifications_binding.dart';
 import '../modules/notifications/presentation/views/notifications_view.dart';
+import '../modules/ocr/bindings/ocr_binding.dart';
+import '../modules/ocr/views/ocr_view.dart';
 import '../modules/onboarding/bindings/onboarding_binding.dart';
 import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/online_app/cam/cam_app/presentation/bindings/cam_app_binding.dart';
@@ -282,6 +284,11 @@ class AppPages {
       name: _Paths.VALIDATION_SELFIE,
       page: () => const ValidationSelfieView(),
       binding: ValidationSelfieBinding(),
+    ),
+    GetPage(
+      name: _Paths.OCR,
+      page: () => const OcrView(),
+      binding: OcrBinding(),
     ),
   ];
 }
