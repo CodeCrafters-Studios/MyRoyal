@@ -30,7 +30,7 @@ class HomeMenu extends GetView<HomeController> {
             Get.toNamed(Routes.DASHBOARD);
             break;
           case 2:
-            if (controller.userData.value.data.canAccessLeave) {
+            if (controller.userData.value.data.canSubmissionLeave) {
               Get.toNamed(Routes.LEAVE_SUMMARY);
             } else {
               AppDialogImpl().showErrorDialog(

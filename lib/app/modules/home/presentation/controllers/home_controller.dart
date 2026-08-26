@@ -46,62 +46,49 @@ class HomeController extends GetxController {
   RxList<HomeMenu> mainMenu = <HomeMenu>[].obs;
   RxList<BannerEventModel> homeSlider = <BannerEventModel>[].obs;
 
-  List<Menu> getAllMenu = <Menu>[
-    const Menu(
-      id: 1,
-      code: 'ic_dashboard',
-      name: 'Dasbor',
-    ),
-    const Menu(
-      id: 2,
-      code: 'ic_leaves',
-      name: 'Izin/Cuti',
-    ),
-    const Menu(
-      id: 3,
-      code: 'ic_payroll',
-      name: 'Slip Gaji',
-    ),
-    // const Menu(
-    //   code: 'ic_visit',
-    //   name: 'Visit',
-    // ),
-    const Menu(
-      id: 4,
-      code: 'ic_webtel',
-      name: 'Webtel',
-    ),
-    const Menu(
-      id: 5,
-      code: 'ic_tracking_documents',
-      name: 'Lacak Dokumen',
-    ),
-
-    const Menu(
-      id: 6,
-      code: 'ic_online_app',
-      name: 'Aplikasi Online',
-    ),
-    const Menu(
-      id: 7,
-      code: 'ic_approval',
-      name: 'Persetujuan',
-    ),
-    // const Menu(
-    //   code: 'ic_task',
-    //   name: 'Tasks',
-    // ),
-    const Menu(
-      id: 8,
-      code: 'ic_ocr',
-      name: 'OCR',
-    ),
-    // const Menu(
-    //   code: 'ic_others',
-    //   name: 'Others',
-    //   isVisible: true,
-    // ),
-  ];
+  List<Menu> get getAllMenu => <Menu>[
+        const Menu(
+          id: 1,
+          code: 'ic_dashboard',
+          name: 'Dasbor',
+        ),
+        const Menu(
+          id: 2,
+          code: 'ic_leaves',
+          name: 'Izin/Cuti',
+        ),
+        const Menu(
+          id: 3,
+          code: 'ic_payroll',
+          name: 'Slip Gaji',
+        ),
+        const Menu(
+          id: 4,
+          code: 'ic_webtel',
+          name: 'Webtel',
+        ),
+        const Menu(
+          id: 5,
+          code: 'ic_tracking_documents',
+          name: 'Lacak Dokumen',
+        ),
+        const Menu(
+          id: 6,
+          code: 'ic_online_app',
+          name: 'Aplikasi Online',
+        ),
+        const Menu(
+          id: 7,
+          code: 'ic_approval',
+          name: 'Persetujuan',
+        ),
+        Menu(
+          id: 8,
+          code: 'ic_ocr',
+          name: 'OCR',
+          isVisible: userData.value.data.menuPermission.ptkOcr,
+        ),
+      ];
 
   Rx<UserModel> userData =
       UserModel(code: 0, message: '', data: UserDataModel.empty()).obs;
@@ -171,7 +158,9 @@ class HomeController extends GetxController {
   List<HomeMenu> generateHomeMenu(List<Menu> getAllMenu) {
     final homeMenu = <HomeMenu>[];
 
-    final mappedMenus = getAllMenu.map((menu) {
+    final visibleMenus = getAllMenu.where((m) => m.isVisible).toList();
+
+    final mappedMenus = visibleMenus.map((menu) {
       return HomeMenu(menu: menu, appStorage: appStorage);
     }).toList();
 
@@ -200,6 +189,7 @@ class HomeController extends GetxController {
                 userData.value.data.profilePicture != ''
             ? isImageAvailable.value = true
             : isImageAvailable.value;
+        _getAllMenu();
         _getBannerEvent();
       },
     );

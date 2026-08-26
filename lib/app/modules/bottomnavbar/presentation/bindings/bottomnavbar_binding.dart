@@ -38,7 +38,7 @@ import 'package:MyRoyal/app/modules/my_teams/domain/usecases/get_my_teams.dart';
 import 'package:MyRoyal/app/modules/my_teams/presentation/controllers/my_teams_controller.dart';
 import 'package:MyRoyal/app/modules/notifications/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications_usecase.dart';
 import 'package:MyRoyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:MyRoyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:MyRoyal/app/modules/payroll/data/datasources/remote_data.dart';
@@ -257,7 +257,7 @@ class BottomnavbarBinding extends Bindings {
       // Notifications
       ..lazyPut<NotificationsController>(
         () => NotificationsController(
-            getNotifications: Get.find(), tapNotification: Get.find()),
+            getNotificationsUsecase: Get.find(), tapNotification: Get.find()),
       )
       ..lazyPut<NotificationsRemoteDataSourcesImpl>(
         () => NotificationsRemoteDataSourcesImpl(
@@ -270,7 +270,7 @@ class BottomnavbarBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () => GetNotifications(
+        () => GetNotificationsUsecase(
           Get.find<NotificationsRepositoryImpl>(),
         ),
       )

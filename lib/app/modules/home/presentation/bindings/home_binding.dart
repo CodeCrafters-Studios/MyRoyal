@@ -21,7 +21,7 @@ import 'package:MyRoyal/app/modules/leave_summary/domain/usecases/get_subtitute_
 import 'package:MyRoyal/app/modules/leave_summary/presentation/controllers/leave_summary_controller.dart';
 import 'package:MyRoyal/app/modules/notifications/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications_usecase.dart';
 import 'package:MyRoyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:MyRoyal/app/modules/notifications/presentation/controllers/notifications_controller.dart';
 import 'package:MyRoyal/app/modules/payroll/data/datasources/remote_data.dart';
@@ -104,7 +104,7 @@ class HomeBinding extends Bindings {
       // Notifications
       ..lazyPut<NotificationsController>(
         () => NotificationsController(
-            getNotifications: Get.find(), tapNotification: Get.find()),
+            getNotificationsUsecase: Get.find(), tapNotification: Get.find()),
       )
       ..lazyPut<NotificationsRemoteDataSourcesImpl>(
         () => NotificationsRemoteDataSourcesImpl(
@@ -117,7 +117,7 @@ class HomeBinding extends Bindings {
         ),
       )
       ..lazyPut(
-        () => GetNotifications(
+        () => GetNotificationsUsecase(
           Get.find<NotificationsRepositoryImpl>(),
         ),
       )

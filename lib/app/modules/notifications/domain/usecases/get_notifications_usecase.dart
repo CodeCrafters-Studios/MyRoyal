@@ -3,8 +3,8 @@ import 'package:MyRoyal/app/modules/notifications/domain/repositories/notificati
 import 'package:MyRoyal/base/errors/failures.dart';
 import 'package:MyRoyal/base/usecases/usecase.dart';
 
-class GetNotifications implements UseCase {
-  GetNotifications(this.repository);
+class GetNotificationsUsecase implements UseCase {
+  GetNotificationsUsecase(this.repository);
 
   final NotificationRepository repository;
 

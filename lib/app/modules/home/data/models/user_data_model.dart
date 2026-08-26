@@ -1,7 +1,7 @@
 import 'package:MyRoyal/app/modules/home/domain/entities/user_data_entity.dart';
 
 class UserDataModel extends UserDataEntity {
-  const UserDataModel({
+  UserDataModel({
     required super.employeeId,
     required super.email,
     required super.fullName,
@@ -15,12 +15,18 @@ class UserDataModel extends UserDataEntity {
     required super.absentEndDay,
     required super.absentStartTime,
     required super.absentEndTime,
-    required super.canAccessLeave,
+    required super.canSubmissionLeave,
     required super.username,
     required super.countNotification,
+    required super.userId,
+    required super.canAccessPtk,
+    required super.shouldCreatePin,
+    required super.banned,
+    required super.bannedAt,
+    required super.menuPermission,
   });
 
-  factory UserDataModel.empty() => const UserDataModel(
+  factory UserDataModel.empty() => UserDataModel(
         employeeId: 0,
         email: '',
         fullName: '',
@@ -34,9 +40,15 @@ class UserDataModel extends UserDataEntity {
         absentEndDay: '',
         absentStartTime: '',
         absentEndTime: '',
-        canAccessLeave: false,
+        canSubmissionLeave: false,
         username: '',
         countNotification: 0,
+        userId: 0,
+        canAccessPtk: false,
+        shouldCreatePin: false,
+        banned: false,
+        bannedAt: null,
+        menuPermission: MenuPermissionModel.empty(),
       );
 
   factory UserDataModel.fromJson(Map<String, dynamic> json) => UserDataModel(
@@ -53,9 +65,16 @@ class UserDataModel extends UserDataEntity {
         absentEndDay: json["absent_end_day"] ?? '',
         absentStartTime: json["absent_start_time"] ?? '',
         absentEndTime: json["absent_end_time"] ?? '',
-        canAccessLeave: json["can_submission_leave"] ?? false,
+        canSubmissionLeave: json["can_submission_leave"] ?? false,
         username: json["username"] ?? '',
         countNotification: json["count_notification"] ?? 0,
+        userId: json["user_id"] ?? 0,
+        canAccessPtk: json["can_access_ptk"] ?? false,
+        shouldCreatePin: json["should_create_pin"] ?? false,
+        banned: json["banned"] ?? false,
+        bannedAt: json["banned_at"] ?? null,
+        menuPermission:
+            MenuPermissionModel.fromJson(json["menu_permission"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -72,8 +91,31 @@ class UserDataModel extends UserDataEntity {
         "absentEndDay": absentEndDay,
         "absentStartTime": absentStartTime,
         "absentEndTime": absentEndTime,
-        "can_submission_leave": canAccessLeave,
+        "can_submission_leave": canSubmissionLeave,
         "username": username,
         "count_notification": countNotification,
+        "user_id": userId,
+        "can_access_ptk": canAccessPtk,
+        "should_create_pin": shouldCreatePin,
+        "banned": banned,
+        "banned_at": bannedAt,
+        "menu_permission": menuPermission.toJson(),
+      };
+}
+
+class MenuPermissionModel extends MenuPermissionEntity {
+  MenuPermissionModel({required super.ptkOcr});
+
+  factory MenuPermissionModel.fromJson(Map<String, dynamic> json) =>
+      MenuPermissionModel(
+        ptkOcr: json["ptk_ocr"],
+      );
+
+  factory MenuPermissionModel.empty() => MenuPermissionModel(
+        ptkOcr: false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        "ptk_ocr": ptkOcr,
       };
 }

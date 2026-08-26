@@ -1,6 +1,8 @@
+import 'package:MyRoyal/app/modules/home/data/models/user_data_model.dart';
 import 'package:equatable/equatable.dart';
 
 class UserDataEntity extends Equatable {
+  final int userId;
   final int employeeId;
   final String email;
   final String fullName;
@@ -14,11 +16,17 @@ class UserDataEntity extends Equatable {
   final String absentEndDay;
   final String absentStartTime;
   final String absentEndTime;
-  final bool canAccessLeave;
+  final bool canAccessPtk;
+  final bool shouldCreatePin;
+  final bool canSubmissionLeave;
   final String username;
   final int countNotification;
+  final bool banned;
+  final dynamic bannedAt;
+  final MenuPermissionModel menuPermission;
 
-  const UserDataEntity({
+  UserDataEntity({
+    required this.userId,
     required this.employeeId,
     required this.email,
     required this.fullName,
@@ -32,9 +40,14 @@ class UserDataEntity extends Equatable {
     required this.absentEndDay,
     required this.absentStartTime,
     required this.absentEndTime,
-    required this.canAccessLeave,
+    required this.canAccessPtk,
+    required this.shouldCreatePin,
+    required this.canSubmissionLeave,
     required this.username,
     required this.countNotification,
+    required this.banned,
+    required this.bannedAt,
+    required this.menuPermission,
   });
 
   @override
@@ -52,8 +65,19 @@ class UserDataEntity extends Equatable {
         absentEndDay,
         absentStartTime,
         absentEndTime,
-        canAccessLeave,
+        canSubmissionLeave,
         username,
         countNotification,
+        banned,
+        bannedAt,
+        menuPermission,
       ];
+}
+
+class MenuPermissionEntity {
+  final bool ptkOcr;
+
+  MenuPermissionEntity({
+    required this.ptkOcr,
+  });
 }

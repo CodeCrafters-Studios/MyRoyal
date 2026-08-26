@@ -5,7 +5,7 @@ import 'package:MyRoyal/app/modules/notifications/data/models/tap_notification_d
 import 'package:MyRoyal/app/modules/notifications/domain/entities/notification_data_list_entities.dart';
 import 'package:MyRoyal/app/modules/notifications/domain/entities/notification_entities.dart';
 import 'package:MyRoyal/app/modules/notifications/domain/entities/tap_notification_entities.dart';
-import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications.dart';
+import 'package:MyRoyal/app/modules/notifications/domain/usecases/get_notifications_usecase.dart';
 import 'package:MyRoyal/app/modules/notifications/domain/usecases/tap_notification.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsController extends GetxController {
   NotificationsController(
-      {required this.getNotifications, required this.tapNotification});
+      {required this.getNotificationsUsecase, required this.tapNotification});
 
   RxBool isLoading = false.obs;
   RxBool isLoadMore = false.obs;
@@ -38,7 +38,7 @@ class NotificationsController extends GetxController {
     TapNotificationDataModel(0, '', ''),
   ).obs;
 
-  final GetNotifications getNotifications;
+  final GetNotificationsUsecase getNotificationsUsecase;
   final TapNotification tapNotification;
   final ScrollController scrollController = ScrollController();
 
@@ -93,7 +93,7 @@ class NotificationsController extends GetxController {
   Future<void> _getNotifications() async {
     isLoading.value = true;
 
-    final result = await getNotifications(currentPage.value);
+    final result = await getNotificationsUsecase(currentPage.value);
 
     result.fold(
       (l) {
@@ -128,7 +128,7 @@ class NotificationsController extends GetxController {
   Future<void> _getMoreNotifications() async {
     isLoadMore.value = true;
 
-    final result = await getNotifications(currentPage.value);
+    final result = await getNotificationsUsecase(currentPage.value);
 
     result.fold(
       (l) {

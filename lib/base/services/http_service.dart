@@ -120,7 +120,7 @@ class HttpService extends getx.GetxService {
     RequestType type = RequestType.json,
     String? fileName,
   }) async {
-    final url = AppConfig.environment.baseUrl + endpoint;
+    final url = endpoint.startsWith('http') ? endpoint : AppConfig.environment.baseUrl + endpoint;
     final cacheKey =
         "CACHE_$url${(params != null && params is! FormData) ? jsonEncode(params) : ''}";
 
