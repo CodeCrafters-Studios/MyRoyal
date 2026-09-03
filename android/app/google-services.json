@@ -45,6 +45,25 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:830784728566:android:14a6b94d18079b55bfebd7",
+        "android_client_info": {
+          "package_name": "com.myroyal.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTXlGpvnUgLFDv3FJDFnaDFHSWzBNeTvA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:830784728566:android:7b1cdd10f5106c09bfebd7",
         "android_client_info": {
           "package_name": "com.myroyal.development"

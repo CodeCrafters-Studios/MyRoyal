@@ -703,6 +703,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       dif -= currentServerTime.difference(breakTime.value!);
     }
 
+    workDurationMinutes.value = dif.inMinutes;
+
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     liveWorkDuration.value =
         "${twoDigits(dif.inHours)}h ${twoDigits(dif.inMinutes.remainder(60))}m";
@@ -729,6 +731,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
               currentPosition.value,
               nearestOffice.value,
               isGpsSpoofing.value,
+              workDurationMinutes.value
             ],
           );
 

@@ -52,6 +52,7 @@ class ValidationSelfieController extends GetxController {
   final debugFaceRect = Rxn<Rect>();
   NearestOfficeInfo? nearestOffice;
   bool isGpsSpoofing = false;
+  int workDurationMinutes = 0;
 
   Rx<AttendanceTodayModel> attendanceTodayRes =
       AttendanceTodayModel.empty().obs;
@@ -64,6 +65,7 @@ class ValidationSelfieController extends GetxController {
     currentPosition.value = Get.arguments[2];
     nearestOffice = Get.arguments[3];
     isGpsSpoofing = Get.arguments[4];
+    workDurationMinutes = Get.arguments[5] ?? 0;
   }
 
   @override
@@ -374,7 +376,7 @@ class ValidationSelfieController extends GetxController {
       time: DateFormat("HH:mm:ss").parse(attendanceTodayRes.value.serverTime!),
       latitude: currentPosition.value!.latitude,
       longitude: currentPosition.value!.longitude,
-      workDurationMinutes: 0,
+      workDurationMinutes: status == 'checked_out' ? workDurationMinutes : 0,
       banned: isGpsSpoofing,
       file: "image/png;base64,$base64Image",
     );
