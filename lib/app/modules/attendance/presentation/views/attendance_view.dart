@@ -351,7 +351,8 @@ class AttendanceView extends GetView<AttendanceController> {
         );
       }
 
-      final enabled = controller.isLocationValid.value;
+      final enabled =
+          controller.areActionsReady && controller.isLocationValid.value;
 
       return Column(
         children: [
@@ -393,7 +394,8 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildCheckOutBreakRow() {
-    final enabled = controller.isLocationValid.value;
+    final enabled =
+        controller.areActionsReady && controller.isLocationValid.value;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -418,7 +420,8 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildEndBreakButton() {
     return Obx(() {
-      final enabled = controller.isLocationValid.value;
+      final enabled =
+          controller.areActionsReady && controller.isLocationValid.value;
 
       return ButtonPrimary(
         fullWidth: true,
@@ -435,7 +438,8 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildCheckOutButton() {
-    final enabled = controller.isLocationValid.value;
+    final enabled =
+        controller.areActionsReady && controller.isLocationValid.value;
 
     return ButtonPrimary(
       text: 'Check Out',
@@ -845,6 +849,9 @@ class _AttendanceFlutterMapState extends State<AttendanceFlutterMap> {
           initialZoom: 18.0,
           maxZoom: 22.0,
           minZoom: 4.0,
+          onMapReady: () {
+            widget.controller.isMapReady.value = true;
+          },
         ),
         children: [
           fm.TileLayer(

@@ -86,6 +86,12 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   LatLng? _smoothedPosition;
   final isPerformingAction = false.obs;
 
+  bool get areActionsReady =>
+      !isLoadingAttendance.value &&
+      !isPerformingAction.value &&
+      isMapReady.value &&
+      currentPosition.value != null;
+
   StreamSubscription<Position>? _positionStream;
   Timer? _mapMoveDebounce;
 
@@ -711,6 +717,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> validationSelfie(String status) async {
+    if (!areActionsReady) return;
+
     if (!isLocationValid.value) {
       AppDialogImpl().showErrorSnackBar(
           description: "Anda harus berada di dalam radius kantor.");
@@ -722,6 +730,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         description: 'Mohon persiapkan diri untuk mengambil foto',
         onPressedYes: () async {
           Get.back();
+          if (!areActionsReady) return;
           isPerformingAction.value = true;
           final result = await Get.toNamed(
             Routes.VALIDATION_SELFIE,
@@ -782,11 +791,14 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void startBreakTime() async {
+    if (!areActionsReady) return;
+
     AppDialogImpl().showChoiceDialog(
         title: 'Konfirmasi',
         description: 'Anda yakin akan memulai sesi istirahat',
         onPressedYes: () async {
           Get.back();
+          if (!areActionsReady) return;
           isPerformingAction.value = true;
           if (hasTakenBreak.value) {
             isPerformingAction.value = false;
@@ -912,11 +924,14 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void endBreakTime() async {
+    if (!areActionsReady) return;
+
     AppDialogImpl().showChoiceDialog(
         title: 'Konfirmasi',
         description: 'Anda yakin akan mengakhiri sesi istirahat',
         onPressedYes: () async {
           Get.back();
+          if (!areActionsReady) return;
           isPerformingAction.value = true;
 
           breakTimer?.cancel();
