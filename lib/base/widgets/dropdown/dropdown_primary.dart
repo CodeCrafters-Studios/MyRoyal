@@ -14,6 +14,7 @@ class DropDownPrimary extends StatelessWidget {
     this.icon,
     this.borderColor,
     this.hintTextStyle,
+    this.enabled = true,
     required this.items,
     required this.onChanged,
   });
@@ -24,6 +25,7 @@ class DropDownPrimary extends StatelessWidget {
   final Widget? icon;
   final Color? borderColor;
   final TextStyle? hintTextStyle;
+  final bool enabled;
   final List<DropdownMenuItem<String>>? items;
   final void Function(String?)? onChanged;
 
@@ -64,7 +66,7 @@ class DropDownPrimary extends StatelessWidget {
                     ),
               ),
               value: value,
-              onChanged: onChanged,
+              onChanged: enabled ? onChanged : null,
             ),
           ),
         ),

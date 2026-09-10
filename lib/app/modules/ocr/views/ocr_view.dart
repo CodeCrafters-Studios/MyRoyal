@@ -98,9 +98,10 @@ class OcrView extends GetView<OcrController> {
                       fit: BoxFit.contain))),
           const SizedBox(height: 24),
           ButtonPrimary(
-              fullWidth: true,
-              text: 'Mulai Scan KTP',
-              onPressed: controller.scanDocument),
+            fullWidth: true,
+            text: 'Mulai Scan KTP',
+            onPressed: controller.scanOrRetry,
+          ),
           const SizedBox(height: 16),
           Center(
               child: GestureDetector(
@@ -123,6 +124,7 @@ class OcrView extends GetView<OcrController> {
         searchText: RegExp.escape(controller.search.text),
         child: SingleChildScrollView(
           child: Column(children: [
+            10.verticalSpace,
             _buildSearch(),
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
@@ -340,26 +342,38 @@ class OcrView extends GetView<OcrController> {
               child: Column(
                 children: [
                   _buildInput('NIK', controller.nikController,
-                      keyboardType: TextInputType.number),
-                  _buildInput('Nama Lengkap', controller.nameController),
+                      keyboardType: TextInputType.number, enabled: true),
+                  _buildInput('Nama Lengkap', controller.nameController,
+                      enabled: true),
                   Row(
                     children: [
                       Expanded(
                           child: _buildInput(
-                              'Tempat Lahir', controller.birthPlaceController)),
+                              'Tempat Lahir', controller.birthPlaceController,
+                              enabled:
+                                  controller.isFieldEnabled('Tempat Lahir'))),
                       const SizedBox(width: 8),
                       Expanded(
                           child: _buildInput(
                               'Tanggal Lahir', controller.birthDateController,
-                              readOnly: true, onTap: controller.pickBirthDate)),
+                              readOnly: true,
+                              enabled:
+                                  controller.isFieldEnabled('Tanggal Lahir'),
+                              onTap: controller.pickBirthDate)),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Obx(() => _buildDropdown(
                         label: 'Jenis Kelamin',
                         hintText: 'Pilih jenis kelamin',
-                        value: controller.selectedGender.value,
-                        items: const ['Laki-laki', 'Perempuan'],
+                        value: controller.selectedGender.value == 'Laki-laki'
+                            ? '0'
+                            : controller.selectedGender.value == 'Perempuan'
+                                ? '1'
+                                : null,
+                        items: const ['0', '1'],
+                        itemLabels: const ['Laki-laki', 'Perempuan'],
+                        enabled: controller.isFieldEnabled('Jenis Kelamin'),
                         onChanged: (value) {
                           if (value != null) {
                             controller.setGenderFromValue(value);
@@ -384,6 +398,7 @@ class OcrView extends GetView<OcrController> {
                                 if (value != null)
                                   controller.setReligionFromValue(value);
                               },
+                              enabled: controller.isFieldEnabled('Agama'),
                             ))),
                     const SizedBox(width: 8),
                     Expanded(
@@ -397,6 +412,8 @@ class OcrView extends GetView<OcrController> {
                               itemLabels: controller
                                   .dataMasterEmployeeOs.value.bloodTypes.values
                                   .toList(),
+                              enabled:
+                                  controller.isFieldEnabled('Golongan Darah'),
                               onChanged: (value) {
                                 if (value != null)
                                   controller.setBloodTypeFromValue(value);
@@ -446,6 +463,7 @@ class OcrView extends GetView<OcrController> {
                             excludeSelectedSkillId:
                                 controller.selectedMainSkillId.value),
                         onChanged: controller.selectMainSkill,
+                        enabled: controller.isFieldEnabled('Keahlian Utama'),
                       )),
                   const SizedBox(height: 8),
                   Row(children: [
@@ -458,6 +476,8 @@ class OcrView extends GetView<OcrController> {
                                   excludeSelectedSkillId: controller
                                       .selectedAdditionalSkill1Id.value),
                               onChanged: controller.selectAdditionalSkill1,
+                              enabled:
+                                  controller.isFieldEnabled('Skill Tambahan 1'),
                             ))),
                     const SizedBox(width: 8),
                     Expanded(
@@ -469,6 +489,8 @@ class OcrView extends GetView<OcrController> {
                                   excludeSelectedSkillId: controller
                                       .selectedAdditionalSkill2Id.value),
                               onChanged: controller.selectAdditionalSkill2,
+                              enabled:
+                                  controller.isFieldEnabled('Skill Tambahan 2'),
                             ))),
                   ]),
                   const SizedBox(height: 8),
@@ -555,7 +577,8 @@ class OcrView extends GetView<OcrController> {
       {int maxLines = 1,
       TextInputType? keyboardType,
       bool readOnly = false,
-      VoidCallback? onTap}) {
+      VoidCallback? onTap,
+      bool enabled = true}) {
     return Obx(() {
       final isLowConfidence =
           this.controller.lowConfidenceFields[label] ?? false;
@@ -566,7 +589,8 @@ class OcrView extends GetView<OcrController> {
           keyboardType: keyboardType,
           maxLines: maxLines,
           readOnly: readOnly,
-          onTap: onTap,
+          enabled: enabled,
+          onTap: enabled ? onTap : null,
           style: const TextStyle(color: Colors.black87),
           decoration: InputDecoration(
             labelText: label,
@@ -606,6 +630,7 @@ class OcrView extends GetView<OcrController> {
     required List<String> items,
     required ValueChanged<String?> onChanged,
     List<String>? itemLabels,
+    bool enabled = true,
   }) {
     final safeValue = value != null && items.contains(value) ? value : null;
     return DropDownPrimary(
@@ -618,6 +643,7 @@ class OcrView extends GetView<OcrController> {
           child: Text(itemLabels?[entry.key] ?? entry.value),
         );
       }).toList(),
+      enabled: enabled,
       onChanged: onChanged,
     );
   }
@@ -641,6 +667,7 @@ class OcrView extends GetView<OcrController> {
     required int? value,
     required List<dynamic> items,
     required ValueChanged<int?> onChanged,
+    bool enabled = true,
   }) {
     final ids = items.map((item) => item.id as int).toList();
     final safeValue = value != null && ids.contains(value) ? value : null;
@@ -650,6 +677,7 @@ class OcrView extends GetView<OcrController> {
       value: safeValue?.toString(),
       items: items.map((item) => item.id.toString()).toList(),
       itemLabels: items.map((item) => item.name as String).toList(),
+      enabled: enabled,
       onChanged: (selected) =>
           onChanged(selected == null ? null : int.tryParse(selected)),
     );

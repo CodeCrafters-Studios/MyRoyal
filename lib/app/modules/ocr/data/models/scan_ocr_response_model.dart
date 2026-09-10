@@ -79,10 +79,42 @@ class ScanOcrDataModel {
       }
     }
 
+    final isEmployeeData = targetMap.containsKey('id_card') ||
+        targetMap.containsKey('first_name') ||
+        targetMap.containsKey('date_of_birth');
+
     Map<String, dynamic>? fieldsObj;
+    if (isEmployeeData) {
+      fieldsObj = {
+        'nik': {'value': targetMap['id_card']?.toString() ?? ''},
+        'nama': {
+          'value': [
+            targetMap['first_name']?.toString() ?? '',
+            targetMap['last_name']?.toString() ?? '',
+          ].where((value) => value.isNotEmpty).join(' '),
+        },
+        'tempat_lahir': {'value': targetMap['birthplace']?.toString() ?? ''},
+        'tanggal_lahir': {
+          'value': targetMap['date_of_birth']?.toString() ?? '',
+        },
+        'jenis_kelamin': {'value': targetMap['gender']?.toString() ?? ''},
+        'agama': {'value': targetMap['religion_id']?.toString() ?? ''},
+        'golongan_darah': {
+          'value': targetMap['blood_type']?.toString() ?? '',
+        },
+        'status_perkawinan': {
+          'value': targetMap['marital_status']?.toString() ?? '',
+        },
+        'pekerjaan': {'value': targetMap['job']?.toString() ?? ''},
+        'kewarganegaraan': {
+          'value': targetMap['nationality']?.toString() ?? '',
+        },
+      };
+    }
+
     if (targetMap['data'] is Map<String, dynamic>) {
       fieldsObj = targetMap['data'] as Map<String, dynamic>;
-    } else {
+    } else if (fieldsObj == null) {
       bool containsFieldObjects = targetMap.values.any(
         (val) => val is Map<String, dynamic> && val.containsKey('value'),
       );
@@ -113,10 +145,11 @@ class ScanOcrDataModel {
       parsedWarnings = List<String>.from(warningsObj);
     }
 
-    final bool success = (targetMap['success'] as bool?) ??
-        (json['success'] as bool?) ??
-        (json['code'] == 200 ? true : null) ??
-        (parsedData != null && parsedData.isNotEmpty);
+    final bool success = isEmployeeData ||
+        (targetMap['success'] as bool? ??
+            json['success'] as bool? ??
+            (json['code'] == 200 ? true : null) ??
+            (parsedData != null && parsedData.isNotEmpty));
 
     return ScanOcrDataModel(
       success: success,
@@ -141,7 +174,7 @@ class DataInputOsModel {
   final String firstName;
   final String lastName;
   final String birthplace;
-  final DateTime dateOfBirth;
+  final DateTime? dateOfBirth;
   final String maritalStatus;
   final String gender;
   final bool smoker;
@@ -187,28 +220,28 @@ class DataInputOsModel {
 
   factory DataInputOsModel.fromJson(Map<String, dynamic> json) =>
       DataInputOsModel(
-        noRegistration: json["no_registration"],
-        firstName: json["first_name"],
-        lastName: json["last_name"],
-        birthplace: json["birthplace"],
-        dateOfBirth: DateTime.parse(json["date_of_birth"]),
-        maritalStatus: json["marital_status"],
-        gender: json["gender"],
-        smoker: json["smoker"],
-        idCard: json["id_card"],
-        active: json["active"],
-        religionId: json["religion_id"],
-        bloodType: json["blood_type"],
+        noRegistration: json["no_registration"]?.toString() ?? '',
+        firstName: json["first_name"]?.toString() ?? '',
+        lastName: json["last_name"]?.toString() ?? '',
+        birthplace: json["birthplace"]?.toString() ?? '',
+        dateOfBirth: DateTime.tryParse(json["date_of_birth"]?.toString() ?? ''),
+        maritalStatus: json["marital_status"]?.toString() ?? '',
+        gender: json["gender"]?.toString() ?? '',
+        smoker: json["smoker"] == true,
+        idCard: json["id_card"]?.toString() ?? '',
+        active: json["active"] == true,
+        religionId: json["religion_id"]?.toString() ?? '',
+        bloodType: json["blood_type"]?.toString() ?? '',
         mainSkill: json["main_skill"],
         additionalSkill: json["additional_skill"],
-        isInternal: json["is_internal"],
-        uuid: json["uuid"],
-        state: json["state"],
+        isInternal: json["is_internal"] == true,
+        uuid: json["uuid"]?.toString() ?? '',
+        state: json["state"]?.toString() ?? '',
         profilePicture: json["profile_picture"],
         profilePicturePath: json["profile_picture_path"],
         profilePictureName: json["profile_picture_name"],
         profilePictureDriver: json["profile_picture_driver"],
-        employeeNumber: json["employee_number"],
+        employeeNumber: json["employee_number"]?.toString() ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -216,8 +249,9 @@ class DataInputOsModel {
         "first_name": firstName,
         "last_name": lastName,
         "birthplace": birthplace,
-        "date_of_birth":
-            "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
+        "date_of_birth": dateOfBirth == null
+            ? null
+            : "${dateOfBirth!.year.toString().padLeft(4, '0')}-${dateOfBirth!.month.toString().padLeft(2, '0')}-${dateOfBirth!.day.toString().padLeft(2, '0')}",
         "marital_status": maritalStatus,
         "gender": gender,
         "smoker": smoker,

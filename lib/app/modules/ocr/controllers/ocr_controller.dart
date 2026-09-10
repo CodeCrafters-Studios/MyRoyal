@@ -90,9 +90,11 @@ class OcrController extends GetxController {
   final OcrPipeline _pipeline = OcrPipeline();
 
   DocumentScanner? _documentScanner;
+  KtpResult? _lastKtpResult;
 
   // Track which fields were auto-corrected or inferred with low confidence
   RxMap<String, bool> lowConfidenceFields = <String, bool>{}.obs;
+  final RxMap<String, bool> fieldEnabled = <String, bool>{}.obs;
 
   RxString croppedImagePath = ''.obs;
 
@@ -276,9 +278,9 @@ class OcrController extends GetxController {
         hrData != null ? "${hrData.firstName} ${hrData.lastName}".trim() : '';
     final ocrName = (ocrData?['nama'] ?? ocrData?['name'])?.value ?? '';
 
-    final hrBirthDate = hrData != null
-        ? "${hrData.dateOfBirth.day.toString().padLeft(2, '0')}/${hrData.dateOfBirth.month.toString().padLeft(2, '0')}/${hrData.dateOfBirth.year}"
-        : '';
+    final hrBirthDate = hrData?.dateOfBirth == null
+        ? ''
+        : "${hrData!.dateOfBirth!.day.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.month.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.year}";
     final ocrBirthDate =
         (ocrData?['tanggal_lahir'] ?? ocrData?['birthDate'])?.value ?? '';
 
@@ -505,8 +507,10 @@ class OcrController extends GetxController {
     nameController.text = "${hrData.firstName} ${hrData.lastName}".trim();
     nikController.text = hrData.idCard;
     birthPlaceController.text = hrData.birthplace;
-    birthDateController.text =
-        "${hrData.dateOfBirth.day.toString().padLeft(2, '0')}/${hrData.dateOfBirth.month.toString().padLeft(2, '0')}/${hrData.dateOfBirth.year}";
+    if (hrData.dateOfBirth != null) {
+      birthDateController.text =
+          "${hrData.dateOfBirth!.day.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.month.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.year}";
+    }
     setGenderFromValue(hrData.gender);
     maritalStatusController.text = hrData.maritalStatus;
     maritalStatus.value = hrData.maritalStatus;
@@ -558,10 +562,12 @@ class OcrController extends GetxController {
 
   void setGenderFromValue(String value) {
     final normalized = normalizeValue(value);
-    if (normalized == 'lakilaki' || normalized == 'male') {
+    if (normalized == '0' || normalized == 'lakilaki' || normalized == 'male') {
       selectedGender.value = 'Laki-laki';
       genderController.text = 'Laki-laki';
-    } else if (normalized == 'perempuan' || normalized == 'female') {
+    } else if (normalized == '1' ||
+        normalized == 'perempuan' ||
+        normalized == 'female') {
       selectedGender.value = 'Perempuan';
       genderController.text = 'Perempuan';
     }
@@ -766,6 +772,7 @@ class OcrController extends GetxController {
 
     try {
       final KtpResult result = await _pipeline.process(imagePath);
+      _lastKtpResult = result;
 
       developer.log(result.toString());
 
@@ -811,13 +818,26 @@ class OcrController extends GetxController {
 
       // When processImage method call and isDataLoaded value true:
       // Hit endpoint and call ocr scanocr usecases to send all data to backend
-      if (isDataLoaded.value) {
+      if (isDataLoaded.value && croppedImagePath.value.isNotEmpty) {
         await _sendOcrDataToBackend(imagePath, result);
       }
     } catch (e) {
       developer.log("Error processing image: $e");
       Get.snackbar('Error', 'Gagal memproses gambar KTP');
     }
+  }
+
+  Future<void> scanOrRetry() async {
+    if (croppedImagePath.value.isNotEmpty &&
+        isDataLoaded.value &&
+        _lastKtpResult != null) {
+      isLoadingOCR.value = true;
+      readingProgress.value = 0.8;
+      await _sendOcrDataToBackend(croppedImagePath.value, _lastKtpResult!);
+      return;
+    }
+
+    await scanDocument();
   }
 
   Future<void> _sendOcrDataToBackend(
@@ -832,6 +852,8 @@ class OcrController extends GetxController {
 
       if (scanOcrUseCase == null) {
         developer.log('ScanOcrUseCase is not registered');
+        AppDialogImpl()
+            .showErrorSnackBar(description: 'Layanan OCR belum tersedia');
         isLoadingOCR.value = false;
         return;
       }
@@ -879,6 +901,11 @@ class OcrController extends GetxController {
             'Error from scanocr backend: '
             '${failure.properties.isNotEmpty ? failure.properties.first : failure}',
           );
+          AppDialogImpl().showErrorSnackBar(
+            description: failure.properties.isNotEmpty
+                ? failure.properties.first.toString()
+                : 'Gagal mengirim data OCR',
+          );
 
           readingProgress.value = 1.0;
 
@@ -892,11 +919,15 @@ class OcrController extends GetxController {
 
           readingProgress.value = 1.0;
 
-          if (response.data == null || response.data!.dataOcr.success != true) {
+          if (response.data == null) {
             developer.log(
               'OCR backend returned failed response: '
               '${response.message}',
             );
+            AppDialogImpl().showErrorSnackBar(
+                description: response.message.isNotEmpty
+                    ? response.message
+                    : 'Gagal memproses data OCR');
 
             isDataLoadedFromBackend.value = false;
             isLoadingOCR.value = false;
@@ -904,11 +935,22 @@ class OcrController extends GetxController {
           }
 
           final responseData = response.data!;
+          if (responseData.dataOcr.success != true) {
+            developer.log('OCR extraction failed: data_ocr.success is false');
+            AppDialogImpl().showErrorSnackBar(
+                description: 'OCR gagal mengekstrak data dari KTP');
+            isDataLoadedFromBackend.value = false;
+            isLoadingOCR.value = false;
+            return;
+          }
+
           scanOcrResponseData.value = responseData;
           final ocrData = responseData.dataOcr.data;
 
           if (ocrData == null) {
             developer.log('OCR data field map is null');
+            AppDialogImpl().showErrorSnackBar(
+                description: 'Data OCR dari server tidak tersedia');
             isDataLoadedFromBackend.value = false;
             isLoadingOCR.value = false;
             return;
@@ -952,6 +994,7 @@ class OcrController extends GetxController {
           setGenderFromValue(genderController.text);
 
           _applyOcrData(ocrData);
+          _applyBackendData(responseData.dataInputOsModel);
 
           // =========================================================
           // LOG QUALITY
@@ -1000,7 +1043,10 @@ class OcrController extends GetxController {
         'Exception when calling scanocr backend: $e',
         stackTrace: stackTrace,
       );
+      AppDialogImpl()
+          .showErrorSnackBar(description: 'Gagal terhubung ke server OCR');
     }
+    developer.log('BACKEND STATUS ${isDataLoadedFromBackend.value}');
   }
 
   void _updateField({
@@ -1074,12 +1120,76 @@ class OcrController extends GetxController {
     _setFieldIfNotEmpty(ocrData['kewarganegaraan'], nationalityController);
   }
 
+  void _applyBackendData(DataInputOsModel? data) {
+    fieldEnabled.clear();
+    fieldEnabled['NIK'] = true;
+    fieldEnabled['Nama Lengkap'] = true;
+    if (data == null) return;
+
+    _setBackendField('Tempat Lahir', birthPlaceController, data.birthplace);
+    _setBackendField(
+        'Tanggal Lahir',
+        birthDateController,
+        data.dateOfBirth == null
+            ? ''
+            : '${data.dateOfBirth!.day.toString().padLeft(2, '0')}-${data.dateOfBirth!.month.toString().padLeft(2, '0')}-${data.dateOfBirth!.year}');
+    _setBackendField('Jenis Kelamin', genderController, data.gender);
+    if (data.gender.trim().isNotEmpty) setGenderFromValue(data.gender);
+    _setBackendField('Agama', religionController, data.religionId);
+    if (data.religionId.trim().isNotEmpty) {
+      setReligionFromValue(data.religionId);
+    }
+    _setBackendField('Golongan Darah', bloodTypeController, data.bloodType);
+    if (data.bloodType.trim().isNotEmpty) {
+      setBloodTypeFromValue(data.bloodType);
+    }
+
+    selectMainSkill(_skillId(data.mainSkill));
+    _setSkillFieldEnabled('Keahlian Utama', data.mainSkill);
+
+    final additionalSkills = data.additionalSkill is List
+        ? (data.additionalSkill as List)
+        : <dynamic>[];
+    final additionalSkillIds = additionalSkills.map(_skillId).toList();
+    selectAdditionalSkill1(
+        additionalSkillIds.isNotEmpty ? additionalSkillIds.first : null);
+    selectAdditionalSkill2(
+        additionalSkillIds.length > 1 ? additionalSkillIds[1] : null);
+    _setSkillFieldEnabled('Skill Tambahan 1',
+        additionalSkillIds.isNotEmpty ? additionalSkillIds.first : null);
+    _setSkillFieldEnabled('Skill Tambahan 2',
+        additionalSkillIds.length > 1 ? additionalSkillIds[1] : null);
+  }
+
+  void _setBackendField(
+      String label, TextEditingController controller, dynamic value) {
+    final text = value?.toString().trim() ?? '';
+    if (text.isNotEmpty) controller.text = text;
+    fieldEnabled[label] = text.isEmpty;
+  }
+
+  void _setSkillFieldEnabled(String label, dynamic value) {
+    fieldEnabled[label] = _skillId(value) == null;
+  }
+
+  int? _skillId(dynamic value) {
+    final id =
+        value is num ? value.toInt() : int.tryParse(value?.toString() ?? '');
+    return id != null &&
+            dataMasterEmployeeOs.value.skills.any((skill) => skill.id == id)
+        ? id
+        : null;
+  }
+
+  bool isFieldEnabled(String label) => fieldEnabled[label] ?? true;
+
   void retake() async {
     isDataLoaded.value = false;
     isDataLoadedFromBackend.value = false;
     isDifferent.value = false;
     scanOcrResponseData.value = null;
     croppedImagePath.value = '';
+    _lastKtpResult = null;
     selectedReligionId.value = null;
     selectedReligionName.value = null;
     selectedBloodType.value = null;
@@ -1104,6 +1214,7 @@ class OcrController extends GetxController {
     isDifferent.value = false;
     scanOcrResponseData.value = null;
     croppedImagePath.value = '';
+    _lastKtpResult = null;
     selectedReligionId.value = null;
     selectedReligionName.value = null;
     selectedBloodType.value = null;
@@ -1134,9 +1245,18 @@ class OcrController extends GetxController {
     if (isSubmitting.value) return;
     if (!(formKey.currentState?.validate() ?? false)) return;
     final missing = <String>[];
+    if (genderController.text.trim().isEmpty) missing.add('Jenis Kelamin');
+    if (birthPlaceController.text.trim().isEmpty) missing.add('Tempat Lahir');
+    if (birthDateController.text.trim().isEmpty) missing.add('Tanggal Lahir');
     if (selectedReligionId.value == null) missing.add('Agama');
     if (selectedBloodType.value == null) missing.add('Golongan Darah');
     if (selectedMainSkillId.value == null) missing.add('Keahlian Utama');
+    if (selectedAdditionalSkill1Id.value == null) {
+      missing.add('Skill Tambahan 1');
+    }
+    if (selectedAdditionalSkill2Id.value == null) {
+      missing.add('Skill Tambahan 2');
+    }
     if (joinDateController.text.trim().isEmpty)
       missing.add('Tanggal Bergabung');
     if (isDirect.value == null) missing.add('Direct');
@@ -1147,8 +1267,8 @@ class OcrController extends GetxController {
     }
     _clearConflictingSkills();
     if (missing.isNotEmpty) {
-      Get.snackbar('Validasi', 'Mohon lengkapi: ${missing.join(', ')}');
-      return;
+      AppDialogImpl().showErrorSnackBar(
+          description: 'Mohon lengkapi: ${missing.join(', ')}');
     }
 
     final usecase = _saveEmployeeOsUsecase ??
@@ -1178,8 +1298,8 @@ class OcrController extends GetxController {
         mainSkill: selectedMainSkillId.value!,
         additionalSkill: additionalSkills,
         joinDate: joinDateController.text.trim(),
-        isManufacturing: isManufacturing.value!,
-        isDirect: isDirect.value!,
+        isManufacturing: isManufacturing.value ?? true,
+        isDirect: isDirect.value ?? false,
       ));
       result.fold(
         (failure) {
