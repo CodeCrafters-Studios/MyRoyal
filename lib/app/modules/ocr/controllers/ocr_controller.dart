@@ -6,6 +6,7 @@ import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_data_master_employee
 import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_employee_os_usecase.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:collection/collection.dart';
 import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
@@ -201,69 +202,72 @@ class OcrController extends GetxController {
       }
 
       Get.dialog(
-        Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          insetPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Center(
-                          child: Text(
-                            '!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
+        barrierDismissible: false,
+        PopScope(
+          canPop: false,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            insetPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              '!',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Expanded(
-                        child: Text(
-                          'Perbedaan Data Scan OCR Terdeteksi',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                        const SizedBox(width: 10),
+                        const Expanded(
+                          child: Text(
+                            'Perbedaan Data Scan OCR Terdeteksi',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Hasil scan KTP tidak cocok dengan data pengajuan vendor yang terdaftar di sistem.',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildComparisonTable(hrData, ocrData),
-                ],
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Hasil scan KTP tidak cocok dengan data pengajuan vendor yang terdaftar di sistem.',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black54,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildComparisonTable(hrData, ocrData),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-        barrierDismissible: false,
       );
     });
   }
@@ -274,28 +278,28 @@ class OcrController extends GetxController {
   ) {
     final hrNIK = hrData != null ? "${hrData.idCard}" : "";
     final ocrNIK = (ocrData?['nik'] ?? ocrData?['nik'])?.value ?? '';
-    final hrName =
-        hrData != null ? "${hrData.firstName} ${hrData.lastName}".trim() : '';
-    final ocrName = (ocrData?['nama'] ?? ocrData?['name'])?.value ?? '';
+    final hrName = hrData == null
+        ? ''
+        : _capitalizeName("${hrData.firstName} ${hrData.lastName}".trim());
+    final ocrName = _capitalizeName(
+      (ocrData?['nama'] ?? ocrData?['name'])?.value ?? '',
+    );
 
     final hrBirthDate = hrData?.dateOfBirth == null
         ? ''
-        : "${hrData!.dateOfBirth!.day.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.month.toString().padLeft(2, '0')}/${hrData.dateOfBirth!.year}";
-    final ocrBirthDate =
-        (ocrData?['tanggal_lahir'] ?? ocrData?['birthDate'])?.value ?? '';
+        : _formatBirthDate(hrData!.dateOfBirth!.toIso8601String());
+    final ocrBirthDate = _formatBirthDate(
+      (ocrData?['tanggal_lahir'] ?? ocrData?['birthDate'])?.value ?? '',
+    );
 
     final hrBirthPlace = hrData?.birthplace ?? '';
     final ocrBirthPlace =
         (ocrData?['tempat_lahir'] ?? ocrData?['birthPlace'])?.value ?? '';
 
-    final hrGender = hrData?.gender ?? '';
-    final ocrGender =
-        (ocrData?['jenis_kelamin'] ?? ocrData?['gender'])?.value ?? '';
-
-    final hrMaritalStatus = hrData?.maritalStatus ?? '';
-    final ocrMaritalStatus =
-        (ocrData?['status_perkawinan'] ?? ocrData?['maritalStatus'])?.value ??
-            '';
+    final hrGender = _formatGender(hrData?.gender ?? '');
+    final ocrGender = _formatGender(
+      (ocrData?['jenis_kelamin'] ?? ocrData?['gender'])?.value ?? '',
+    );
 
     final rows = [
       {'label': 'NIK *', 'hr': hrNIK, 'ocr': ocrNIK},
@@ -303,11 +307,6 @@ class OcrController extends GetxController {
       {'label': 'Tanggal Lahir', 'hr': hrBirthDate, 'ocr': ocrBirthDate},
       {'label': 'Tempat Lahir', 'hr': hrBirthPlace, 'ocr': ocrBirthPlace},
       {'label': 'Jenis Kelamin', 'hr': hrGender, 'ocr': ocrGender},
-      {
-        'label': 'Status Perkawinan',
-        'hr': hrMaritalStatus,
-        'ocr': ocrMaritalStatus
-      },
     ];
 
     return Container(
@@ -324,44 +323,50 @@ class OcrController extends GetxController {
               color: Color(0xFFEFEFEF),
               borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
             ),
-            child: Row(
-              children: const [
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    'BIDANG DATA',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+            child: IntrinsicHeight(
+              child: Row(
+                children: const [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'BIDANG DATA',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 4),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    'DATA SISTEM (HR)',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                  SizedBox(width: 4),
+                  SizedBox(width: 1, child: ColoredBox(color: Colors.black26)),
+                  SizedBox(width: 4),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      'DATA SISTEM (HR)',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(width: 4),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    'HASIL SCAN KTP (OCR)',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                  SizedBox(width: 4),
+                  SizedBox(width: 1, child: ColoredBox(color: Colors.black26)),
+                  SizedBox(width: 4),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      'HASIL SCAN KTP (OCR)',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           // Data Rows
@@ -375,52 +380,64 @@ class OcrController extends GetxController {
             return Container(
               color: idx % 2 == 1 ? const Color(0xFFF8F9FA) : Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      item['label']!,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
+              child: IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        item['label']!,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      hrVal.isEmpty ? '-' : hrVal,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight:
-                            isDiff ? FontWeight.bold : FontWeight.normal,
-                        decoration: isDiff
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        color: Colors.black87,
+                    const SizedBox(width: 4),
+                    const SizedBox(
+                      width: 1,
+                      child: ColoredBox(color: Colors.black12),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        hrVal.isEmpty ? '-' : hrVal,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight:
+                              isDiff ? FontWeight.bold : FontWeight.normal,
+                          decoration: isDiff
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      ocrVal.isEmpty ? '-' : ocrVal,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight:
-                            isDiff ? FontWeight.bold : FontWeight.normal,
-                        decoration: isDiff
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        color: Colors.black87,
+                    const SizedBox(width: 4),
+                    const SizedBox(
+                      width: 1,
+                      child: ColoredBox(color: Colors.black12),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        ocrVal.isEmpty ? '-' : ocrVal,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight:
+                              isDiff ? FontWeight.bold : FontWeight.normal,
+                          decoration: isDiff
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),
@@ -494,6 +511,58 @@ class OcrController extends GetxController {
         ],
       ),
     );
+  }
+
+  String _formatGender(String value) {
+    switch (value.trim().toLowerCase()) {
+      case '0':
+      case 'laki-laki':
+      case 'lakilaki':
+      case 'male':
+        return 'Laki-laki';
+      case '1':
+      case 'perempuan':
+      case 'female':
+        return 'Perempuan';
+      default:
+        return value.trim();
+    }
+  }
+
+  String _formatBirthDate(String value) {
+    final trimmedValue = value.trim();
+    if (trimmedValue.isEmpty) return '';
+
+    final isoDate = DateTime.tryParse(trimmedValue);
+    if (isoDate != null) {
+      return DateFormat('dd/MM/yyyy').format(isoDate);
+    }
+
+    for (final format in ['dd/MM/yyyy', 'dd-MM-yyyy', 'yyyy-MM-dd']) {
+      try {
+        return DateFormat('dd/MM/yyyy')
+            .format(DateFormat(format).parseStrict(trimmedValue));
+      } catch (_) {}
+    }
+
+    return trimmedValue;
+  }
+
+  String _capitalizeName(String value) {
+    return value
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .map(
+      (part) {
+        return part
+            .split('-')
+            .map((namePart) => namePart.isEmpty
+                ? namePart
+                : '${namePart[0].toUpperCase()}${namePart.substring(1).toLowerCase()}')
+            .join('-');
+      },
+    ).join(' ');
   }
 
   bool _isDifferentValue(String val1, String val2) {
@@ -736,18 +805,31 @@ class OcrController extends GetxController {
   Future<void> scanDocument() async {
     try {
       if (_documentScanner == null) return;
+
       final DocumentScanningResult? result =
           await _documentScanner!.scanDocument();
-      if (result != null &&
-          result.images != null &&
-          result.images!.isNotEmpty) {
+
+      if (result == null) {
+        AppDialogImpl().showErrorSnackBar(
+            description: 'Pemindaian dibatalkan, dokumen dibuang.');
+        return;
+      }
+
+      if (result.images != null && result.images!.isNotEmpty) {
         String scannedPath = result.images!.first;
         croppedImagePath.value = scannedPath;
         await processImage(scannedPath);
       }
     } catch (e) {
       developer.log("Error scanning document: $e");
-      Get.snackbar('Error', 'Gagal membuka scanner');
+
+      if (e is PlatformException && e.message?.contains('cancelled') == true) {
+        AppDialogImpl().showErrorSnackBar(
+            description: 'Pemindaian dibatalkan, dokumen dibuang.');
+      } else {
+        AppDialogImpl().showErrorSnackBar(
+            description: 'Gagal memindai dokumen. Silakan coba lagi.');
+      }
     }
   }
 
@@ -761,7 +843,7 @@ class OcrController extends GetxController {
       }
     } catch (e) {
       developer.log("Error picking image: $e");
-      Get.snackbar('Error', 'Gagal memuat gambar');
+      AppDialogImpl().showErrorSnackBar(description: 'Gagal memuat gambar');
     }
   }
 
@@ -823,7 +905,8 @@ class OcrController extends GetxController {
       }
     } catch (e) {
       developer.log("Error processing image: $e");
-      Get.snackbar('Error', 'Gagal memproses gambar KTP');
+      AppDialogImpl()
+          .showErrorSnackBar(description: 'Gagal memproses gambar KTP');
     }
   }
 
@@ -1269,6 +1352,7 @@ class OcrController extends GetxController {
     if (missing.isNotEmpty) {
       AppDialogImpl().showErrorSnackBar(
           description: 'Mohon lengkapi: ${missing.join(', ')}');
+      return;
     }
 
     final usecase = _saveEmployeeOsUsecase ??
@@ -1276,7 +1360,8 @@ class OcrController extends GetxController {
             ? Get.find<SaveEmployeeOsUsecase>()
             : null);
     if (usecase == null) {
-      Get.snackbar('Error', 'Use case simpan belum tersedia');
+      AppDialogImpl()
+          .showErrorSnackBar(description: 'Use case simpan belum tersedia');
       return;
     }
 

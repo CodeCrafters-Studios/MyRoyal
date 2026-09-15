@@ -21,23 +21,38 @@ class OcrView extends GetView<OcrController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('OcrView2'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('OCR'),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          leading: Obx(
+            () => controller.selectedEmployeeIndex.value >= 0
+                ? const SizedBox.shrink()
+                : IconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 18.w,
+                      color: white,
+                    ),
+                  ),
+          ),
+        ),
+        body: Obx(() {
+          if (controller.isLoadingOCR.value) return _buildReadingPage(context);
+          if (controller.selectedEmployeeIndex.value >= 0 &&
+              controller.isDataLoadedFromBackend.value) {
+            return _buildInfoPage(context);
+          }
+          if (controller.selectedEmployeeIndex.value >= 0) {
+            return _buildScanPage();
+          }
+          return _buildEmployeeList();
+        }),
       ),
-      body: Obx(() {
-        if (controller.isLoadingOCR.value) return _buildReadingPage(context);
-        if (controller.selectedEmployeeIndex.value >= 0 &&
-            controller.isDataLoadedFromBackend.value) {
-          return _buildInfoPage(context);
-        }
-        if (controller.selectedEmployeeIndex.value >= 0) {
-          return _buildScanPage();
-        }
-        return _buildEmployeeList();
-      }),
     );
   }
 
@@ -100,7 +115,7 @@ class OcrView extends GetView<OcrController> {
           ButtonPrimary(
             fullWidth: true,
             text: 'Mulai Scan KTP',
-            onPressed: controller.scanOrRetry,
+            onPressed: controller.scanDocument,
           ),
           const SizedBox(height: 16),
           Center(
@@ -420,44 +435,11 @@ class OcrView extends GetView<OcrController> {
                               },
                             ))),
                   ]),
-                  const SizedBox(height: 8),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //         child: _buildInput('RT', controller.rtController)),
-                  //     const SizedBox(width: 8),
-                  //     Expanded(
-                  //         child: _buildInput('RW', controller.rwController)),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 8),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //         child: _buildInput(
-                  //             'Kelurahan/Desa', controller.villageController)),
-                  //     const SizedBox(width: 8),
-                  //     Expanded(
-                  //         child: _buildInput(
-                  //             'Kecamatan', controller.districtController)),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 8),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //         child: _buildInput(
-                  //             'Kota/Kabupaten', controller.cityController)),
-                  //     const SizedBox(width: 8),
-                  //     Expanded(
-                  //         child: _buildInput(
-                  //             'Provinsi', controller.provinceController)),
-                  //   ],
-                  // ),
 
                   const SizedBox(height: 8),
                   Obx(() => _buildSkillDropdown(
                         label: 'Keahlian Utama',
+                        hintText: 'Pilih keahlian',
                         value: controller.selectedMainSkillId.value,
                         items: controller.getAvailableSkills(
                             excludeSelectedSkillId:
@@ -470,6 +452,7 @@ class OcrView extends GetView<OcrController> {
                     Expanded(
                         child: Obx(() => _buildSkillDropdown(
                               label: 'Skill Tambahan 1',
+                              hintText: 'Pilih skill',
                               value:
                                   controller.selectedAdditionalSkill1Id.value,
                               items: controller.getAvailableSkills(
@@ -483,6 +466,7 @@ class OcrView extends GetView<OcrController> {
                     Expanded(
                         child: Obx(() => _buildSkillDropdown(
                               label: 'Skill Tambahan 2',
+                              hintText: 'Pilih skill',
                               value:
                                   controller.selectedAdditionalSkill2Id.value,
                               items: controller.getAvailableSkills(
@@ -527,19 +511,6 @@ class OcrView extends GetView<OcrController> {
                   ]),
                   const SizedBox(height: 8),
                   _buildDateInput(),
-
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //         child: _buildInput(
-                  //             'Pekerjaan', controller.workController)),
-                  //     const SizedBox(width: 8),
-                  //     Expanded(
-                  //         child: _buildInput('Kewarganegaraan',
-                  //             controller.nationalityController)),
-                  //   ],
-                  // ),
-
                   const SizedBox(height: 20),
                   Row(
                     children: [
@@ -610,14 +581,16 @@ class OcrView extends GetView<OcrController> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: secondary),
-              // isLowConfidence
-              //     ? const BorderSide(color: Colors.orange, width: 2)
-              //     : const BorderSide(color: Color(0xFF00AFA6), width: 2),
+              borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             isDense: true,
+            labelStyle: TextStyle(
+              color: Colors.grey,
+            ),
+            floatingLabelStyle: TextStyle(
+              color: primary,
+            ),
           ),
-          validator: (v) => (v == null || v.isEmpty) ? 'Mohon diisi' : null,
         ),
       );
     });
@@ -631,6 +604,8 @@ class OcrView extends GetView<OcrController> {
     required ValueChanged<String?> onChanged,
     List<String>? itemLabels,
     bool enabled = true,
+    bool searchable = false,
+    String searchHintText = 'Cari',
   }) {
     final safeValue = value != null && items.contains(value) ? value : null;
     return DropDownPrimary(
@@ -644,6 +619,8 @@ class OcrView extends GetView<OcrController> {
         );
       }).toList(),
       enabled: enabled,
+      searchable: searchable,
+      searchHintText: searchHintText,
       onChanged: onChanged,
     );
   }
@@ -664,6 +641,7 @@ class OcrView extends GetView<OcrController> {
 
   Widget _buildSkillDropdown({
     required String label,
+    required String hintText,
     required int? value,
     required List<dynamic> items,
     required ValueChanged<int?> onChanged,
@@ -673,11 +651,13 @@ class OcrView extends GetView<OcrController> {
     final safeValue = value != null && ids.contains(value) ? value : null;
     return _buildDropdown(
       label: label,
-      hintText: 'Pilih skill',
+      hintText: hintText,
       value: safeValue?.toString(),
       items: items.map((item) => item.id.toString()).toList(),
       itemLabels: items.map((item) => item.name as String).toList(),
       enabled: enabled,
+      searchable: true,
+      searchHintText: 'Cari skill',
       onChanged: (selected) =>
           onChanged(selected == null ? null : int.tryParse(selected)),
     );

@@ -495,7 +495,6 @@ class AppDialogImpl implements AppDialog {
       snackStyle: SnackStyle.FLOATING,
       messageText: Center(
         child: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
               'assets/icons/ic_danger.png',
@@ -503,9 +502,13 @@ class AppDialogImpl implements AppDialog {
               height: 20.h,
             ),
             10.horizontalSpace,
-            Text(
-              description,
-              style: TS.caption.copyWith(color: Colors.white),
+            Expanded(
+              child: Text(
+                description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: TS.caption.copyWith(color: Colors.white),
+              ),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:MyRoyal/base/services/version_service.dart';
@@ -98,12 +99,12 @@ Future configureApp(EnvironmentConfig envConfig) async {
         : "MyRoyal-Dev",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await MellotippetFirebaseRemoteConfig.initialize();
+  unawaited(MellotippetFirebaseRemoteConfig.initialize());
   await Hive.initFlutter();
-  await _setupNotifications();
+  final box = await Hive.openBox(IROYAL_STORAGE);
+  unawaited(_setupNotifications(box));
   AppConfig.environment = envConfig;
 
-  final box = await Hive.openBox(IROYAL_STORAGE);
   final deviceInfoPlugin = DeviceInfoPlugin();
   final packageInfo = await PackageInfo.fromPlatform();
   final auth = LocalAuthentication();
@@ -171,8 +172,7 @@ Future configureApp(EnvironmentConfig envConfig) async {
 }
 
 /// Configures Firebase notifications
-Future<void> _setupNotifications() async {
-  final box = await Hive.openBox(IROYAL_STORAGE);
+Future<void> _setupNotifications(Box box) async {
   AppStorage appStorage = AppStorage(box: box);
 
   try {

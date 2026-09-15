@@ -8,14 +8,14 @@ class MellotippetFirebaseRemoteConfig extends GetxService {
   static Future<void> initialize() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
 
-    await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(minutes: 1),
-        minimumFetchInterval: const Duration(hours: 1),
-      ),
-    );
-
     try {
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(minutes: 1),
+          minimumFetchInterval: const Duration(hours: 1),
+        ),
+      );
+
       final bool activated = await remoteConfig.fetchAndActivate();
       AppUtils.logApp('REMOTE CONFIG ACTIVATED: $activated');
     } catch (e) {
