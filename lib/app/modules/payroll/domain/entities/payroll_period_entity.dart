@@ -17,21 +17,29 @@ class PayrollPeriodEntity extends Equatable {
 
 class PayrollPeriodData {
   final String label;
-  final String value;
   final String filename;
+  final String value;
+  final String periodId;
 
-  PayrollPeriodData(
-      {required this.label, required this.value, required this.filename});
+  PayrollPeriodData({
+    required this.label,
+    required this.value,
+    required this.filename,
+    required this.periodId,
+  });
 
   factory PayrollPeriodData.fromJson(Map<String, dynamic> json) =>
       PayrollPeriodData(
-          label: json["label"],
-          value: json["value"],
-          filename: json["filename"]);
+        label: json["label"],
+        value: json["value"],
+        filename: json["filename"],
+        periodId: json["period_id"],
+      );
 
   Map<String, dynamic> toJson() => {
         "label": label,
         "value": value,
         "filename": filename,
+        "period_id": periodId,
       };
 }

@@ -39,6 +39,7 @@ class PayrollView extends GetView<PayrollController> {
                         () => InkWell(
                           onTap: () => controller.selectedPeriod(
                             index,
+                            controller.payrollPeriodListRes[index].periodId,
                             controller.payrollPeriodListRes[index].value,
                             controller.payrollPeriodListRes[index].filename,
                           ),
@@ -70,15 +71,29 @@ class PayrollView extends GetView<PayrollController> {
                 fullWidth: true,
                 isLoading: controller.isLoading.value,
                 margin: const EdgeInsets.only(bottom: 30),
-                onPressed: () => controller.downloadSlipUrl(
-                  controller.payrollPeriod.value.isEmpty
-                      ? controller.payrollPeriodListRes[0].value
-                      : controller.payrollPeriod.value,
-                  controller.payrollPeriod.value.isEmpty
-                      ? controller.payrollPeriodListRes[0].filename
-                      : controller.selectedFilename.value,
-                ),
-                text: 'Lanjut',
+                onPressed: () => controller.generateCodeRes.value.isEmpty
+                    ? controller.generateCode(
+                        controller.payrollPeriod.value.isEmpty
+                            ? controller.payrollPeriodListRes[0].periodId
+                            : controller.selectedPeriodId.value,
+                        controller.payrollPeriod.value.isEmpty
+                            ? controller.payrollPeriodListRes[0].value
+                            : controller.payrollPeriod.value,
+                      )
+                    : controller.downloadSlipUrl(
+                        controller.payrollPeriod.value.isEmpty
+                            ? controller.payrollPeriodListRes[0].value
+                            : controller.payrollPeriod.value,
+                        controller.payrollPeriod.value.isEmpty
+                            ? controller.payrollPeriodListRes[0].filename
+                            : controller.selectedFilename.value,
+                        controller.payrollPeriod.value.isEmpty
+                            ? controller.payrollPeriodListRes[0].periodId
+                            : controller.selectedPeriodId.value,
+                      ),
+                text: controller.generateCodeRes.value.isEmpty
+                    ? 'Buat kata sandi'
+                    : 'Lanjut',
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/generate_code_payroll_usecase.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/payroll/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/payroll/data/repositories/payroll_period_repository_impl.dart';
@@ -44,11 +45,17 @@ class PayrollBinding extends Bindings {
           Get.find<PayrollPeriodRepositoryImpl>(),
         ),
       )
+      ..lazyPut<GenerateCodePayrollUsecase>(
+        () => GenerateCodePayrollUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
       ..lazyPut<PayrollController>(
         () => PayrollController(
           payrollDataOverviewUsecase: Get.find<PayrollDataOverviewUsecase>(),
           getPayrollPeriodeUsecase: Get.find<GetPayrollPeriodeUsecase>(),
           payrollDownloadUrlUsecase: Get.find<PayrollDownloadUrlUsecase>(),
+          generateCodePayrollUsecase: Get.find<GenerateCodePayrollUsecase>(),
           downloadFile: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
         ),

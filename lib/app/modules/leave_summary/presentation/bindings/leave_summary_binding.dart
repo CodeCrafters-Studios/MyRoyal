@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/generate_code_payroll_usecase.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/home/data/repositories/home_repository_impl.dart';
 import 'package:MyRoyal/app/modules/home/domain/usecases/get_cache_user_usecase.dart';
@@ -101,11 +102,17 @@ class LeaveSummaryBinding extends Bindings {
           Get.find<PayrollPeriodRepositoryImpl>(),
         ),
       )
+      ..lazyPut<GenerateCodePayrollUsecase>(
+        () => GenerateCodePayrollUsecase(
+          Get.find<PayrollPeriodRepositoryImpl>(),
+        ),
+      )
       ..lazyPut<PayrollController>(
         () => PayrollController(
           payrollDataOverviewUsecase: Get.find<PayrollDataOverviewUsecase>(),
-          payrollDownloadUrlUsecase: Get.find<PayrollDownloadUrlUsecase>(),
           getPayrollPeriodeUsecase: Get.find<GetPayrollPeriodeUsecase>(),
+          payrollDownloadUrlUsecase: Get.find<PayrollDownloadUrlUsecase>(),
+          generateCodePayrollUsecase: Get.find<GenerateCodePayrollUsecase>(),
           downloadFile: Get.find(),
           appDialog: Get.find<AppDialogImpl>(),
         ),

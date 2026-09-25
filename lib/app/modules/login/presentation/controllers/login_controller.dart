@@ -11,6 +11,7 @@ import 'package:MyRoyal/app/modules/login/domain/usecases/login_app.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/config/environment_config.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/initialization/firebase_remote_config.dart';
 import 'package:MyRoyal/base/usecases/usecase.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
@@ -77,12 +78,13 @@ class LoginController extends GetxController {
     await _setupDeviceInfo();
     await getCacheUser();
     await checkBiometricAuthentication();
-    
+
     try {
       final versionService = Get.find<VersionService>();
       final isUpdateRequired = await versionService.isUpdateRequiredAsync();
       if (isUpdateRequired) {
-        AppUtils.logApp('[LOGIN CONTROLLER] Update required. Skipping auto-login.');
+        AppUtils.logApp(
+            '[LOGIN CONTROLLER] Update required. Skipping auto-login.');
         return;
       }
     } catch (e) {
@@ -190,6 +192,9 @@ class LoginController extends GetxController {
     r.fold((l) {
       isLoading(false);
       loginState = 'getParamsFailed';
+      unawaited(appDialog.showErrorSnackBar(
+        description: 'Gagal menyiapkan data login',
+      ));
     }, (r) {
       loginState = 'getParamsSuccess';
       loginParams(LoginParamsModel(
@@ -212,6 +217,12 @@ class LoginController extends GetxController {
     r.fold(
       (l) {
         loginState = 'loginFailed';
+        final description =
+            l.properties.isNotEmpty && l.properties.first is ApiException
+                ? (l.properties.first as ApiException).message ??
+                    'Gagal masuk. Silakan coba lagi.'
+                : 'Gagal masuk. Silakan coba lagi.';
+        unawaited(appDialog.showErrorSnackBar(description: description));
       },
       (r) {
         loginState = 'loginSuccess';

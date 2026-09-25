@@ -1,3 +1,12 @@
+import 'package:MyRoyal/app/modules/payroll/data/models/generate_code_param_model.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/usecases/generate_code_payroll_usecase.dart';
+import 'package:MyRoyal/base/design/colors.dart';
+import 'package:MyRoyal/base/design/styles.dart';
+import 'package:MyRoyal/base/errors/exception.dart';
+import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_download_url_model.dart';
@@ -19,6 +28,7 @@ class PayrollController extends GetxController {
   final GetPayrollPeriodeUsecase getPayrollPeriodeUsecase;
   final PayrollDownloadUrlUsecase payrollDownloadUrlUsecase;
   final PayrollDataOverviewUsecase payrollDataOverviewUsecase;
+  final GenerateCodePayrollUsecase generateCodePayrollUsecase;
 
   PayrollController({
     required this.downloadFile,
@@ -26,15 +36,19 @@ class PayrollController extends GetxController {
     required this.getPayrollPeriodeUsecase,
     required this.payrollDownloadUrlUsecase,
     required this.payrollDataOverviewUsecase,
+    required this.generateCodePayrollUsecase,
   });
 
   RxString payrollPeriod = ''.obs;
+  RxString selectedPeriodId = ''.obs;
   RxString selectedFilename = ''.obs;
+  RxString generateCodeRes = ''.obs;
 
   RxInt selectedIndex = 0.obs;
 
   RxBool isLoading = false.obs;
   RxBool isObsecureText = true.obs;
+  RxBool isCopied = false.obs;
 
   Rx<PayrollPeriodModel> payrollPeriodRes =
       PayrollPeriodModel(code: 0, message: '', data: []).obs;
@@ -59,6 +73,8 @@ class PayrollController extends GetxController {
 
   RxList<PayrollPeriodData> payrollPeriodListRes = <PayrollPeriodData>[].obs;
 
+  final bottomPadding = MediaQuery.of(Get.context!).viewInsets.bottom;
+
   @override
   void onInit() async {
     super.onInit();
@@ -82,13 +98,22 @@ class PayrollController extends GetxController {
     );
   }
 
-  void selectedPeriod(int index, String value, String filename) {
+  void selectedPeriod(
+      int index, String periodId, String value, String filename) {
+    generateCodeRes.value = '';
+
     selectedIndex.value = index;
+    selectedPeriodId.value = periodId;
     payrollPeriod.value = value;
     selectedFilename.value = filename;
   }
 
-  Future<void> downloadSlipUrl(String payrollPeriod, String fileName) async {
+  void toggleShow() {
+    isObsecureText.value = !isObsecureText.value;
+  }
+
+  Future<void> downloadSlipUrl(
+      String payrollPeriod, String fileName, String payrollPeriodID) async {
     appDialog.showInfoDialog(
       title: 'Disclaimer',
       description: '''
@@ -104,7 +129,7 @@ Dengan mengakses dan/atau mengunduh slip gaji ini, Anda menyatakan setuju untuk:
 
 Setiap pelanggaran terhadap kebijakan kerahasiaan ini akan dikenakan sanksi sesuai ketentuan perusahaan dan/atau hukum yang berlaku.
 
-Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
+Format Password PDF: bersumber dari pembuatan kata sandi
 ''',
       textButton: 'Unduh',
       isLoading: isLoading.value,
@@ -120,12 +145,20 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
             PayrollPeriodParamsModel(
               payrollPeriod: payrollPeriod,
               filename: fileName,
+              periodID: payrollPeriodID,
             ),
           );
 
           result.fold(
-            (l) => appDialog.showErrorSnackBar(
-                description: 'Gagal Mengunduh Dokumen'),
+            (l) {
+              final error = l.properties.first;
+
+              if (error is ApiException) {
+                AppUtils.logApp('SERVER ERROR ::: ${error.message}');
+              } else {
+                AppUtils.logApp('SERVER ERROR ::: $error');
+              }
+            },
             (r) => appDialog.showSuccessSnackBar(
                 description: 'Berhasil Mengunduh Dokumen'),
           );
@@ -138,7 +171,141 @@ Format Password PDF: ddmmyy (tanggal bulan tahun lahir) / contoh: 010172
     );
   }
 
-  void toggleShow() {
-    isObsecureText.value = !isObsecureText.value;
+  Future<void> generateCode(String payrollPeriodID, String valueMonth) async {
+    isLoading.value = true;
+
+    await Future.delayed(Duration(milliseconds: 200));
+
+    try {
+      final result = await generateCodePayrollUsecase(
+        GenerateCodeParamModel(
+          valueMonth: valueMonth,
+          payrollPeriodId: payrollPeriodID,
+        ),
+      );
+
+      result.fold((l) {
+        final error = l.properties.isNotEmpty ? l.properties.first : null;
+
+        if (error is ApiException) {
+          AppUtils.logApp('SERVER ERROR ::: ${error.message}');
+        } else {
+          AppUtils.logApp('SERVER ERROR ::: $error');
+        }
+      }, (r) {
+        generateCodeRes.value = r.password.toString();
+        showModalBottomSheet<void>(
+          context: Get.context!,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => Container(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(28.r),
+              ),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Grab handle bar
+                    Center(
+                      child: Container(
+                        width: 38,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: grey,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                    ),
+
+                    Column(
+                      children: [
+                        Text(
+                          'Kata Sandi',
+                          style: TS.titleMedium,
+                        ),
+                        4.verticalSpace,
+
+                        // Large Code Box
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 13, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: borderColor),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                generateCodeRes.value,
+                                style: TS.headlineMedium,
+                              ),
+                            ],
+                          ),
+                        ),
+                        12.verticalSpace,
+
+                        Text(
+                          'Gunakan password ini untuk membuka slip gaji',
+                          style: TS.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                        16.verticalSpace,
+
+                        // Action Buttons
+                        Obx(
+                          () => ButtonPrimary(
+                            fullWidth: true,
+                            margin: const EdgeInsets.only(bottom: 30),
+                            color: isCopied.value ? white : primary,
+                            textColor: isCopied.value ? primary : white,
+                            borderSide: isCopied.value
+                                ? BorderSide(color: primary)
+                                : BorderSide.none,
+                            onPressed: copyGenerateCode,
+                            text: isCopied.value
+                                ? 'Berhasil disalin'
+                                : 'Salin kata sandi',
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    12.verticalSpace,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      });
+    } catch (e) {
+      AppUtils.logApp("Controller error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void copyGenerateCode() {
+    Clipboard.setData(ClipboardData(text: generateCodeRes.value));
+    isCopied.value = true;
+
+    Future.delayed(const Duration(seconds: 3), () {
+      isCopied.value = false;
+    });
   }
 }

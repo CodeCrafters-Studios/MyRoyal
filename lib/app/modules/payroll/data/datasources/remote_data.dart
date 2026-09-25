@@ -1,5 +1,7 @@
+import 'package:MyRoyal/app/modules/payroll/data/models/generate_code_model.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_period_model.dart';
+import 'package:MyRoyal/app/modules/payroll/domain/entities/generate_code_entity.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/errors/failures.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
@@ -10,6 +12,7 @@ abstract class PayrollRemoteDataSources {
   Future<void> payrollDownloadUrl(Map<String, dynamic> params);
   Future<PayrollDataOverviewModel> payrollDataOverview(
       Map<String, dynamic> params);
+  Future<GenerateCodeEntity> generateCode(Map<String, dynamic> params);
 }
 
 class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
@@ -88,6 +91,38 @@ class PayrollRemoteDataSourcesImpl implements PayrollRemoteDataSources {
     } catch (e, stackTrace) {
       AppUtils.logApp('Error parsing JSON: $e\n$stackTrace');
       rethrow;
+    }
+  }
+
+  @override
+  Future<GenerateCodeEntity> generateCode(Map<String, dynamic> params) async {
+    try {
+      final r = await httpService.request(
+        endpoint: 'payroll/generate_code',
+        params: params,
+        withToken: true,
+      );
+      if (r == null) {
+        throw ApiException('No response from server');
+      }
+
+      final code = r['code'];
+      final message = r['message'] ?? 'Unknown error occurred';
+
+      if (code != 200) {
+        throw ApiException(message);
+      }
+
+      final response = GenerateCodeModel.fromJson(r['data']);
+      return response;
+    } on ServerFailure {
+      throw ApiException('Server error occurred');
+    } on ApiException catch (e) {
+      AppUtils.logApp('CATCH ERR ::: ${e.message}');
+      rethrow;
+    } catch (e) {
+      AppUtils.logApp('Generate error: $e');
+      throw ApiException(e.toString());
     }
   }
 }

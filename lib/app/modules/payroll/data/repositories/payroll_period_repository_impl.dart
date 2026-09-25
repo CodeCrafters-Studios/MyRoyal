@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/payroll/domain/entities/generate_code_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:MyRoyal/app/modules/payroll/data/datasources/remote_data.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
@@ -15,8 +16,8 @@ class PayrollPeriodRepositoryImpl implements PayrollPeriodRepository {
     try {
       final r = await remoteData.getPayrollPeriod();
       return Right(r);
-    } on ApiException {
-      return const Left(ServerFailure());
+    } on ApiException catch (e) {
+      return Left(ServerFailure(properties: [e]));
     }
   }
 
@@ -40,6 +41,17 @@ class PayrollPeriodRepositoryImpl implements PayrollPeriodRepository {
       return Right(r);
     } on ApiException {
       return const Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, GenerateCodeEntity>> generateCode(
+      Map<String, dynamic> params) async {
+    try {
+      final r = await remoteData.generateCode(params);
+      return Right(r);
+    } on ApiException catch (e) {
+      return Left(ServerFailure(properties: [e]));
     }
   }
 }

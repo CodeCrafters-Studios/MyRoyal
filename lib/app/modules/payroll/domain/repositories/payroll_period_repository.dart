@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/payroll/domain/entities/generate_code_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_data_overview_model.dart';
 import 'package:MyRoyal/app/modules/payroll/data/models/payroll_period_model.dart';
@@ -9,6 +10,9 @@ abstract class PayrollPeriodRepository {
     Map<String, dynamic> params,
   );
   Future<Either<Failure, PayrollDataOverviewModel>> payrollDataOverview(
+    Map<String, dynamic> params,
+  );
+  Future<Either<Failure, GenerateCodeEntity>> generateCode(
     Map<String, dynamic> params,
   );
 }
