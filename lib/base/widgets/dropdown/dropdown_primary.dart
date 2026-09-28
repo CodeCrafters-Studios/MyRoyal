@@ -74,20 +74,10 @@ class DropDownPrimary extends StatelessWidget {
                       items: items,
                       selectedItemBuilder: (context) =>
                           (items ?? const []).map((item) {
-                        final child = item.child;
-                        if (child is Text) {
-                          return Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              child.data ?? '',
-                              style: child.style?.copyWith(
-                                    color: Colors.black,
-                                  ) ??
-                                  const TextStyle(color: Colors.black),
-                            ),
-                          );
-                        }
-                        return child;
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: item.child,
+                        );
                       }).toList(),
                       hint: Text(
                         hintText,

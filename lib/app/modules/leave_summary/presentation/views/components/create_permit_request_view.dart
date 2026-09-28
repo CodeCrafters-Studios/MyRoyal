@@ -249,10 +249,17 @@ class CreatePermitRequestView extends StatelessWidget {
       onChanged: (value) {
         final selectedPermitType = controller.permitTypeList.firstWhere(
           (permit) => permit.type == value,
-          orElse: () =>
-              PermitTypeEntity(type: '', typeCode: '', typeTranslate: ''),
+          orElse: () => PermitTypeEntity(
+            type: '',
+            typeCode: '',
+            typeTranslate: '',
+          ),
         );
-        controller.setPermitType(value!, selectedPermitType.typeCode);
+
+        controller.setPermitType(
+          value!,
+          selectedPermitType.typeCode,
+        );
       },
     );
   }
