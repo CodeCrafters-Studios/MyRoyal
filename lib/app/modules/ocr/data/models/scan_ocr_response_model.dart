@@ -59,12 +59,16 @@ class ScanOcrDataModel {
   final Map<String, ScanOcrFieldOutput>? data;
   final ScanOcrQuality? quality;
   final List<String>? warnings;
+  final bool? isDirect;
+  final bool? isManufacturing;
 
   ScanOcrDataModel({
     required this.success,
     this.data,
     this.quality,
     this.warnings,
+    this.isDirect,
+    this.isManufacturing,
   });
 
   factory ScanOcrDataModel.fromJson(Map<String, dynamic> json) {
@@ -156,6 +160,8 @@ class ScanOcrDataModel {
       data: parsedData,
       quality: parsedQuality,
       warnings: parsedWarnings,
+      isDirect: targetMap['is_direct'] as bool?,
+      isManufacturing: targetMap['is_manufacturing'] as bool?,
     );
   }
 
@@ -165,6 +171,8 @@ class ScanOcrDataModel {
       'data': data?.map((key, value) => MapEntry(key, value.toJson())),
       'quality': quality?.toJson(),
       'warnings': warnings,
+      'is_direct': isDirect,
+      'is_manufacturing': isManufacturing,
     };
   }
 }

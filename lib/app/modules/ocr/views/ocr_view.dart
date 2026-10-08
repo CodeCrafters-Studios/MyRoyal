@@ -481,7 +481,7 @@ class OcrView extends GetView<OcrController> {
                   Row(children: [
                     Obx(() => Expanded(
                           child: _buildDropdown(
-                            label: 'Bagian',
+                            label: 'Produksi',
                             hintText: 'Pilih bagian',
                             value: controller.isManufacturing.value == null
                                 ? null
@@ -489,6 +489,7 @@ class OcrView extends GetView<OcrController> {
                                     ? 'Manufacturing'
                                     : 'Non Manufacturing',
                             items: const ['Manufacturing', 'Non Manufacturing'],
+                            itemLabels: const ['Produksi', 'Non Produksi'],
                             onChanged: (value) => controller
                                     .isManufacturing.value =
                                 value == null ? null : value == 'Manufacturing',

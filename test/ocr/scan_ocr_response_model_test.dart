@@ -37,11 +37,7 @@ void main() {
                 "source": "ocr"
               }
             },
-            "quality": {
-              "score": 0.92,
-              "sharpness": 0.88,
-              "brightness": 0.85
-            }
+            "quality": {"score": 0.92, "sharpness": 0.88, "brightness": 0.85}
           },
           "different": true
         }
@@ -62,7 +58,9 @@ void main() {
       expect(ocrData['tempat_lahir']?.value, equals("JAKARTA"));
     });
 
-    test('Correctly parses OCR response when data_ocr contains explicit success boolean', () {
+    test(
+        'Correctly parses OCR response when data_ocr contains explicit success boolean',
+        () {
       final jsonResponse = {
         "code": 200,
         "message": "Success",
@@ -87,7 +85,50 @@ void main() {
       expect(response.code, equals(200));
       expect(response.data!.different, isFalse);
       expect(response.data!.dataOcr.success, isTrue);
-      expect(response.data!.dataOcr.data!['nik']?.value, equals("3273012345678901"));
+      expect(response.data!.dataOcr.data!['nik']?.value,
+          equals("3273012345678901"));
+    });
+
+    test('Parses manufacturing and direct flags from data_ocr', () {
+      final jsonResponse = {
+        "code": 200,
+        "message": "Success",
+        "data": {
+          "id": 13,
+          "data_ocr": {
+            "id_card": "3217061202990002",
+            "is_direct": true,
+            "is_manufacturing": false
+          },
+          "different": true
+        }
+      };
+
+      final response = ScanOcrResponseModel.fromJson(jsonResponse);
+
+      expect(response.data!.dataOcr.isDirect, isTrue);
+      expect(response.data!.dataOcr.isManufacturing, isFalse);
+    });
+
+    test('Keeps unset manufacturing and direct flags null', () {
+      final jsonResponse = {
+        "code": 200,
+        "message": "Success",
+        "data": {
+          "id": 13,
+          "data_ocr": {
+            "id_card": "3217061202990002",
+            "is_direct": null,
+            "is_manufacturing": null
+          },
+          "different": true
+        }
+      };
+
+      final response = ScanOcrResponseModel.fromJson(jsonResponse);
+
+      expect(response.data!.dataOcr.isDirect, isNull);
+      expect(response.data!.dataOcr.isManufacturing, isNull);
     });
   });
 }

@@ -1028,6 +1028,8 @@ class OcrController extends GetxController {
           }
 
           scanOcrResponseData.value = responseData;
+          isDirect.value = responseData.dataOcr.isDirect;
+          isManufacturing.value = responseData.dataOcr.isManufacturing;
           final ocrData = responseData.dataOcr.data;
 
           if (ocrData == null) {
