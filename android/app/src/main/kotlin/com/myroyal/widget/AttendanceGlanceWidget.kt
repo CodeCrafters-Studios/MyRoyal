@@ -31,6 +31,7 @@ import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
 import androidx.glance.layout.Row
+import androidx.glance.layout.RowScope
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
@@ -131,6 +132,15 @@ private object Palette {
     val onColor = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFFFFFFFF))
     val inside = ColorProvider(day = Color(0xFF1E8E3E), night = Color(0xFF34A853))
     val outside = ColorProvider(day = Color(0xFFD93025), night = Color(0xFFEA4335))
+    val surface = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF1C1E26))
+
+    // Same accents as the Attendance page summary icons (lib/base/design/colors.dart):
+    // green, red, primary30, primaryAccent, urgentColor.
+    val checkIn = ColorProvider(day = Color(0xFF16A34A), night = Color(0xFF4ADE80))
+    val checkOut = ColorProvider(day = Color(0xFFDC2626), night = Color(0xFFF87171))
+    val duration = ColorProvider(day = Color(0xFF5C8DD7), night = Color(0xFF8AB4F8))
+    val breakStart = ColorProvider(day = Color(0xFF2D3580), night = Color(0xFF9FA8F5))
+    val breakEnd = ColorProvider(day = Color(0xFFF97316), night = Color(0xFFFDBA74))
 }
 
 private fun openApp(context: Context, action: WidgetAction? = null): Action {
@@ -148,6 +158,10 @@ private fun AttendanceWidgetContent(
     state: AttendanceWidgetViewState,
     map: Bitmap?,
 ) {
+    state.summary?.let {
+        SummaryContent(context, state, it)
+        return
+    }
     Box(
         modifier = GlanceModifier
             .fillMaxSize()
@@ -179,6 +193,62 @@ private fun AttendanceWidgetContent(
                 }
             }
         }
+    }
+}
+
+/** Checked out: the Attendance page's end-of-day summary, without the map. */
+@Composable
+private fun SummaryContent(context: Context, state: AttendanceWidgetViewState, summary: WidgetSummary) {
+    Column(
+        modifier = GlanceModifier
+            .fillMaxSize()
+            .background(Palette.surface)
+            .cornerRadius(16.dp)
+            .clickable(openApp(context))
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+    ) {
+        Text(
+            text = state.officeName.ifBlank { "Kehadiran" },
+            maxLines = 1,
+            style = TextStyle(color = Palette.muted, fontSize = 10.sp),
+        )
+        Text(
+            text = state.title,
+            maxLines = 1,
+            style = TextStyle(color = Palette.text, fontSize = 14.sp, fontWeight = FontWeight.Bold),
+        )
+        Spacer(GlanceModifier.defaultWeight())
+        Row(modifier = GlanceModifier.fillMaxWidth()) {
+            SummaryCell(summary.checkIn, "Check-in", Palette.checkIn)
+            SummaryCell(summary.checkOut, "Check-out", Palette.checkOut)
+            SummaryCell(summary.workDuration, "Durasi Kerja", Palette.duration)
+        }
+        Spacer(GlanceModifier.height(6.dp))
+        Row(modifier = GlanceModifier.fillMaxWidth()) {
+            SummaryCell(summary.breakStart, "Mulai Istirahat", Palette.breakStart)
+            SummaryCell(summary.breakEnd, "Selesai Istirahat", Palette.breakEnd)
+            SummaryCell(summary.breakDuration, "Durasi Istirahat", Palette.duration)
+        }
+        Spacer(GlanceModifier.defaultWeight())
+    }
+}
+
+@Composable
+private fun RowScope.SummaryCell(value: String, label: String, accent: androidx.glance.unit.ColorProvider) {
+    Column(
+        modifier = GlanceModifier.defaultWeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            text = value,
+            maxLines = 1,
+            style = TextStyle(color = Palette.text, fontSize = 13.sp, fontWeight = FontWeight.Bold),
+        )
+        Text(
+            text = label,
+            maxLines = 1,
+            style = TextStyle(color = accent, fontSize = 10.sp),
+        )
     }
 }
 

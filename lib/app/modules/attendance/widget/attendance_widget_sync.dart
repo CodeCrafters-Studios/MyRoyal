@@ -56,6 +56,7 @@ class AttendanceWidgetPayload {
     this.breakEnd = '',
     this.workedMinutesAtSync = 0,
     this.breakEndsAtEpochMs = 0,
+    this.breakMinutes = -1,
     this.serverNowAtSyncEpochMs = 0,
     this.syncedAtEpochMs = 0,
     this.officeName = '',
@@ -79,6 +80,10 @@ class AttendanceWidgetPayload {
   final String breakEnd;
   final int workedMinutesAtSync;
   final int breakEndsAtEpochMs;
+
+  /// Completed break length in minutes as computed by the app (the
+  /// "Durasi Istirahat" value), or -1 when no break was completed.
+  final int breakMinutes;
   final int serverNowAtSyncEpochMs;
   final int syncedAtEpochMs;
   final String officeName;
@@ -111,6 +116,7 @@ class AttendanceWidgetPayload {
         'breakEnd': breakEnd,
         'workedMinutesAtSync': workedMinutesAtSync < 0 ? 0 : workedMinutesAtSync,
         'breakEndsAtEpochMs': breakEndsAtEpochMs,
+        'breakMinutes': breakMinutes,
         'serverNowAtSyncEpochMs': serverNowAtSyncEpochMs,
         'syncedAtEpochMs': syncedAtEpochMs,
         'officeName': officeName,

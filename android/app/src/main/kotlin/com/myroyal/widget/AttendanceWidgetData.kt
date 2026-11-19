@@ -28,6 +28,8 @@ data class AttendanceWidgetData(
     val locationAtEpochMs: Long = 0L,
     /** App geofence result for that fix: 1 inside, 0 outside, -1 unknown. */
     val insideArea: Int = -1,
+    /** Completed break length in minutes (app value), -1 when none. */
+    val breakMinutes: Int = -1,
 ) {
     companion object {
         const val DATA_KEY = "attendance_widget_v1"
@@ -57,6 +59,7 @@ data class AttendanceWidgetData(
                     mapDotY = o.optDouble("mapDotY", -1.0),
                     locationAtEpochMs = o.optLong("locationAtEpochMs", 0L),
                     insideArea = o.optInt("insideArea", -1),
+                    breakMinutes = o.optInt("breakMinutes", -1),
                 )
             } catch (e: Exception) {
                 null

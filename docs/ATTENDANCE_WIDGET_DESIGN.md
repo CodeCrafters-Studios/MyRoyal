@@ -112,7 +112,7 @@ Privacy: the attendance map has `myLocationEnabled: true` (`attendance_view.dart
 | `checked_in` | map, "Masuk 08:00", live worked timer | **Check Out**, **Take a Break** |
 | `break_start` | break countdown | **End Break** (enabled when the countdown ends; tapping early opens the app, which shows the countdown) |
 | `break_end` | worked timer, break duration | **Check Out** |
-| `checked_out` | total hours, completed | none (tap opens the app) |
+| `checked_out` | **end-of-day summary like the Attendance page, no map** (§16) | none (tap opens the app) |
 | **stale** | last known values, greyed, "Ketuk untuk memperbarui" | none; tap opens the app |
 
 - **Stale** means `date` is before today (computed from `serverNowAtSync + elapsed`), or the last sync is more than 12 h old. Action buttons are hidden while stale, so a previous day's state can never be acted on from the widget. Opening the app refreshes the state through EPIC 01's resume refetch.
@@ -289,3 +289,19 @@ The count-up from §15 was replaced: the widget again **counts down** the break 
 Tests: Kotlin 24/24, including a worst-case late-alarm simulation where every wake lands before the end, the countdown being replaced at ≤ 10 s / 0 / negative, and zero allowance. Dart 90/90, including the early End Break tap waiting and then opening the confirm dialog.
 
 Device (SM-A336E, temporary 25 s test break in the widget's local display storage, real data restored afterwards): the countdown ran (00:14), switched to "Istirahat selesai" + End Break with about 10 s left, and stayed there; no negative time over 44 s. The real data after the restore showed "Istirahat selesai · Mulai 11:46" + End Break. ✅
+
+## 16. Change request: checked-out summary instead of the map
+
+Requested 2026-11-19. In `checked_out` the widget mirrors the Attendance page after check-out instead of showing the map:
+- Title "The End Of The Day!" (the page greeting), with the office name above it.
+- Row 1: **Check-in · Check-out · Durasi Kerja**. Row 2: **Mulai Istirahat · Selesai Istirahat · Durasi Istirahat**.
+- Same formats as the page: `formatApiTime` → `hh:mm a` (`--:--` when empty), durations `08h 00m`, and `--h --m` when there was no break. Label colors match the page icons (`green`, `red`, `primary30`, `primaryAccent`, `urgentColor`).
+- No map, no location chips, no buttons; tapping opens the app.
+- The break duration comes from the app as the new additive payload field `breakMinutes` (−1 = no completed break), so the widget doesn't recalculate it. Durasi Kerja is the app's `workedMinutesAtSync`.
+
+Tests: Kotlin 27/27 (summary values and formats, no map/location/actions, no-break placeholders, other states unchanged, 12 h formatting). Dart 92/92 (`breakMinutes` 65 for a 12:00–13:05 break, −1 without a completed break).
+
+Device (SM-A336E):
+- A seeded summary (local display data only) rendered as specified.
+- After restoring, the **real** checked-out state showed 11:54 AM / 12:00 PM / 00h 00m and 11:54 AM / 11:59 AM / 00h 05m, matching the published payload.
+- The header showed "Kehadiran" instead of the office name. After check-out the app doesn't start GPS, so a fresh process has no nearest office yet. Cosmetic.

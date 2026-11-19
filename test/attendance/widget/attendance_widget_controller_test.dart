@@ -111,6 +111,37 @@ void main() {
       });
     });
 
+    testWidgets('checked_out publishes the break length for the summary',
+        (tester) async {
+      await run(tester, setup: (h) {
+        h.repo.todayResponses
+          ..clear()
+          ..add(Right(todayResponse(
+            status: 'checked_out',
+            checkIn: '08:00:00',
+            breakStart: '12:00:00',
+            breakEnd: '13:05:00',
+            checkOut: '17:00:00',
+            serverTime: '17:05:00',
+          )));
+      }, (h) async {
+        final json = published(h)!;
+        expect(json['status'], 'checked_out');
+        expect(json['breakMinutes'], 65);
+        expect(json['workedMinutesAtSync'], 475);
+      });
+    });
+
+    testWidgets('no completed break publishes breakMinutes -1', (tester) async {
+      await run(tester, setup: (h) {
+        h.repo.todayResponses
+          ..clear()
+          ..add(Right(todayResponse(status: 'checked_in', checkIn: '08:00:00')));
+      }, (h) async {
+        expect(published(h)!['breakMinutes'], -1);
+      });
+    });
+
     testWidgets('break_start publishes the allowance end', (tester) async {
       await run(tester, setup: (h) {
         h.repo.todayResponses

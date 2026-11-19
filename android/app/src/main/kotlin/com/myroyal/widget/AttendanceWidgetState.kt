@@ -44,6 +44,16 @@ data class WidgetLocation(
     val insideArea: Boolean?,
 )
 
+/** End-of-day summary, same values and formats as the Attendance page. */
+data class WidgetSummary(
+    val checkIn: String,
+    val checkOut: String,
+    val workDuration: String,
+    val breakStart: String,
+    val breakEnd: String,
+    val breakDuration: String,
+)
+
 enum class WidgetKind { UNKNOWN, SIGNED_OUT, STALE, NOT_STARTED, WORKING, ON_BREAK, BREAK_OVER, DONE }
 
 data class AttendanceWidgetViewState(
@@ -57,6 +67,8 @@ data class AttendanceWidgetViewState(
     val dimmed: Boolean = false,
     val showMap: Boolean = true,
     val location: WidgetLocation? = null,
+    /** Set for the checked-out state: summary layout instead of the map. */
+    val summary: WidgetSummary? = null,
     /** Device time of the next state change (midnight, break end, max age). */
     val nextRefreshAtMs: Long? = null,
 )
@@ -207,12 +219,20 @@ object AttendanceWidgetStateResolver {
                 nextRefreshAtMs = refreshAt(nextMidnightDeviceMs, maxAgeAtMs),
             )
 
+            // Like the Attendance page after check-out: summary, no map.
             "checked_out" -> AttendanceWidgetViewState(
                 kind = WidgetKind.DONE,
-                title = "Selesai hari ini",
-                subtitle = "${data.checkIn} – ${data.checkOut}",
-                value = formatHoursMinutes(data.workedMinutesAtSync),
+                title = "The End Of The Day!",
                 officeName = data.officeName,
+                showMap = false,
+                summary = WidgetSummary(
+                    checkIn = clock12(data.checkIn),
+                    checkOut = clock12(data.checkOut),
+                    workDuration = formatHoursMinutes(data.workedMinutesAtSync),
+                    breakStart = clock12(data.breakStart),
+                    breakEnd = clock12(data.breakEnd),
+                    breakDuration = if (data.breakMinutes >= 0) formatHoursMinutes(data.breakMinutes) else "--h --m",
+                ),
                 nextRefreshAtMs = refreshAt(nextMidnightDeviceMs, maxAgeAtMs),
             )
 
@@ -249,6 +269,16 @@ object AttendanceWidgetStateResolver {
      * exact-alarm permission needed; ~9 wakes for a 60 min break.
      */
     fun breakRefreshAt(nowMs: Long, remainingMs: Long): Long = nowMs + remainingMs / 2
+
+    /** App's `formatApiTime`: `HH:mm` → `hh:mm a` (e.g. `05:01 PM`), `--:--` when empty. */
+    fun clock12(hhmm: String): String {
+        val parts = hhmm.split(":")
+        val h = parts.getOrNull(0)?.toIntOrNull()
+        val m = parts.getOrNull(1)?.toIntOrNull()
+        if (h == null || m == null || h !in 0..23 || m !in 0..59) return "--:--"
+        val h12 = if (h % 12 == 0) 12 else h % 12
+        return String.format(Locale.ROOT, "%02d:%02d %s", h12, m, if (h < 12) "AM" else "PM")
+    }
 
     /** `HH:mm` of an epoch instant in [zone]. */
     fun clockLabel(epochMs: Long, zone: ZoneId): String {

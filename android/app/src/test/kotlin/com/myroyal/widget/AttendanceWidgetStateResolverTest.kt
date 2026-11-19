@@ -152,10 +152,49 @@ class AttendanceWidgetStateResolverTest {
     }
 
     @Test
-    fun `checked out shows total in the app's format`() {
-        val s = AttendanceWidgetStateResolver.resolve(data("checked_out", worked = 480), syncedAt, zone)
+    fun `checked out shows the Attendance page summary without map`() {
+        val d = data("checked_out", worked = 480).copy(
+            checkIn = "08:00", checkOut = "17:05", breakStart = "12:00", breakEnd = "13:00", breakMinutes = 60,
+            mapDotX = 0.5, mapDotY = 0.5, locationAtEpochMs = syncedAt, insideArea = 1,
+        )
+        val s = AttendanceWidgetStateResolver.resolve(d, syncedAt, zone)
         assertEquals(WidgetKind.DONE, s.kind)
-        assertEquals("08h 00m", s.value)
+        assertEquals("The End Of The Day!", s.title)
+        assertTrue(!s.showMap)
+        assertNull("no map, so no location chips", s.location)
+        assertTrue(s.actions.isEmpty())
+        assertEquals(
+            WidgetSummary("08:00 AM", "05:05 PM", "08h 00m", "12:00 PM", "01:00 PM", "01h 00m"),
+            s.summary,
+        )
+    }
+
+    @Test
+    fun `checked out without a break uses the page placeholders`() {
+        val d = data("checked_out", worked = 300).copy(breakStart = "", breakEnd = "", breakMinutes = -1)
+        val summary = AttendanceWidgetStateResolver.resolve(d, syncedAt, zone).summary!!
+        assertEquals("--:--", summary.breakStart)
+        assertEquals("--:--", summary.breakEnd)
+        assertEquals("--h --m", summary.breakDuration)
+    }
+
+    @Test
+    fun `only checked out uses the summary layout`() {
+        for (status in listOf("not_started", "checked_in", "break_end")) {
+            val s = AttendanceWidgetStateResolver.resolve(data(status), syncedAt, zone)
+            assertNull(status, s.summary)
+            assertTrue(status, s.showMap)
+        }
+    }
+
+    @Test
+    fun `12 hour clock like formatApiTime`() {
+        val f = AttendanceWidgetStateResolver::clock12
+        assertEquals("12:05 AM", f("00:05"))
+        assertEquals("12:00 PM", f("12:00"))
+        assertEquals("11:59 PM", f("23:59"))
+        assertEquals("--:--", f(""))
+        assertEquals("--:--", f("25:00"))
     }
 
     // --- staleness ---------------------------------------------------------
