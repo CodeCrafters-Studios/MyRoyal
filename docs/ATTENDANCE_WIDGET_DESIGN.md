@@ -220,3 +220,21 @@ Until T09/T10 add the native widgets, `updateWidget` fails quietly (logged) and 
 | prod flavor / release build | ⚠ not built here (same sources; needs the release keystore), so it moves to T12 |
 
 Note: the emulator's dev app was downgraded from 1.5.5 to this branch's 1.5.3 build for testing.
+
+## 13. Physical device test — Samsung SM-A336E (Android 12, One UI), dev flavor
+
+Date 2026-11-19, against `dev-api.royalcorp.co.id`. The device already had a signed-in session ("Admin It Hrms"), so no credentials were entered.
+
+| Check | Result |
+|---|---|
+| Install the dev debug build of `feature/attendance-home-widget` (prod app 1.5.7 untouched) | ✅ |
+| Attendance tab loads the real backend state (not_started, inside "GEDUNG A" geofence, GPS active) | ✅ |
+| App writes payload v1 with no identity, token or GPS: `{"status":"not_started","date":"2026-11-19","officeName":"GEDUNG A",...}` | ✅ |
+| Real `takeSnapshot()` map image saved (640×558 JPEG, 24 KB; geofence and blue dot, per D2) | ✅ |
+| One UI widget picker shows "Kehadiran 4 × 2"; added to the home screen | ✅ |
+| Widget renders real data: office, "Belum check-in", map snapshot, Check In button | ✅ |
+| Widget **Check In** → app opens on the Kehadiran tab → the **existing** confirm dialog ("Mohon persiapkan diri untuk mengambil foto") | ✅ |
+| Cancelling the dialog records nothing; status stays `not_started` | ✅ |
+| Live widget update after a real backend-confirmed transaction: the employee checked in (selfie flow) and the payload became `checked_in`, `checkIn 10:54`. With the **same app process still running**, the widget switched to "Sedang bekerja · Masuk 10:54", the live timer was running, and it showed Check Out and Take a Break | ✅ (confirms the T09 `currentState` fix on hardware) |
+
+Observation: the device clock was about 2 min behind the server (check-in 10:54 against a phone clock of 10:53). The widget timer and staleness use the server clock from the payload, so the display stays consistent.
