@@ -101,12 +101,67 @@ class AttendanceWidgetStateResolverTest {
     }
 
     @Test
-    fun `break countdown and refresh when the allowance ends`() {
+    fun `break counts up from its start, shows end time, refreshes at the end`() {
+        val breakStarted = syncedAt - 10 * 60_000
         val breakEnds = syncedAt + 30 * 60_000
-        val s = AttendanceWidgetStateResolver.resolve(data("break_start", breakEndsAt = breakEnds), syncedAt, zone)
+        val d = data("break_start", breakEndsAt = breakEnds).copy(breakStartedAtEpochMs = breakStarted)
+        val s = AttendanceWidgetStateResolver.resolve(d, syncedAt, zone)
         assertEquals(WidgetKind.ON_BREAK, s.kind)
-        assertEquals(WidgetTimer.CountDown(30 * 60_000L), s.timer)
-        assertEquals(breakEnds, s.nextRefreshAtMs)
+        assertEquals(WidgetTimer.CountUp(10 * 60_000L), s.timer)
+        assertEquals("Mulai 12:00 · s/d 09:18", s.subtitle)
+        assertEquals("half of the remaining 30 min", syncedAt + 15 * 60_000L, s.nextRefreshAtMs)
+    }
+
+    @Test
+    fun `break refresh chain converges on the end and never passes it`() {
+        val end = 3_600_000L
+        var now = 0L
+        var wakes = 0
+        while (true) {
+            val next = AttendanceWidgetStateResolver.breakRefreshAt(now, end - now)
+            assertTrue(next <= end)
+            wakes++
+            if (next == end) break
+            now = next
+        }
+        assertTrue("wakes=$wakes", wakes in 5..10)
+        assertEquals(end, AttendanceWidgetStateResolver.breakRefreshAt(end - 30_000, 30_000))
+    }
+
+    @Test
+    fun `zero break allowance shows End Break immediately`() {
+        // duration_break = 0: allowance ends at the break start.
+        val started = syncedAt - 60_000
+        val d = data("break_start", breakEndsAt = started).copy(breakStartedAtEpochMs = started)
+        val s = AttendanceWidgetStateResolver.resolve(d, syncedAt, zone)
+        assertEquals(WidgetKind.BREAK_OVER, s.kind)
+        assertEquals(listOf(WidgetAction.BREAK_END), s.actions)
+    }
+
+    @Test
+    fun `regression - break timer is never negative, even when the refresh is late`() {
+        // Break allowance already over, widget not refreshed yet (inexact alarm).
+        val breakStarted = syncedAt - 12 * 60_000
+        val d = data("break_start", breakEndsAt = syncedAt - 2 * 60_000).copy(breakStartedAtEpochMs = breakStarted)
+        for (lateMs in listOf(0L, 60_000L, 6 * 60_000L)) {
+            val s = AttendanceWidgetStateResolver.resolve(d, syncedAt + lateMs, zone)
+            assertEquals(WidgetKind.BREAK_OVER, s.kind)
+            assertEquals(listOf(WidgetAction.BREAK_END), s.actions)
+            assertNull(s.timer)
+        }
+        // And while on break, the only timer is a non-negative count-up.
+        val onBreak = data("break_start", breakEndsAt = syncedAt + 60_000).copy(breakStartedAtEpochMs = breakStarted)
+        val t = AttendanceWidgetStateResolver.resolve(onBreak, syncedAt, zone).timer as WidgetTimer.CountUp
+        assertTrue(t.elapsedMs >= 0)
+    }
+
+    @Test
+    fun `older payload without break start shows no timer`() {
+        val s = AttendanceWidgetStateResolver.resolve(
+            data("break_start", breakEndsAt = syncedAt + 60_000), syncedAt, zone,
+        )
+        assertEquals(WidgetKind.ON_BREAK, s.kind)
+        assertNull(s.timer)
     }
 
     @Test

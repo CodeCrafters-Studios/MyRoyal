@@ -212,8 +212,7 @@ private fun StatusCard(context: Context, state: AttendanceWidgetViewState) {
             )
         }
         when (val timer = state.timer) {
-            is WidgetTimer.CountUp -> AndroidRemoteViews(chronometer(context, timer.elapsedMs, false))
-            is WidgetTimer.CountDown -> AndroidRemoteViews(chronometer(context, timer.remainingMs, true))
+            is WidgetTimer.CountUp -> AndroidRemoteViews(chronometer(context, timer.elapsedMs))
             null -> if (state.value.isNotBlank()) {
                 Text(
                     text = state.value,
@@ -280,17 +279,14 @@ private fun ActionButton(context: Context, action: WidgetAction, modifier: Glanc
 }
 
 /**
- * Glance has no ticking text; a RemoteViews Chronometer keeps the worked
- * time / break countdown live without waking the app every second.
+ * Glance has no ticking text; a RemoteViews Chronometer keeps the worked /
+ * break time live without waking the app every second. Count-up only (see
+ * [WidgetTimer]).
  */
-private fun chronometer(context: Context, ms: Long, countDown: Boolean): RemoteViews {
-    val base = if (countDown) {
-        SystemClock.elapsedRealtime() + ms
-    } else {
-        SystemClock.elapsedRealtime() - ms
-    }
+private fun chronometer(context: Context, elapsedMs: Long): RemoteViews {
+    val base = SystemClock.elapsedRealtime() - elapsedMs
     return RemoteViews(context.packageName, R.layout.attendance_widget_chronometer).apply {
         setChronometer(R.id.attendance_widget_chronometer, base, null, true)
-        setChronometerCountDown(R.id.attendance_widget_chronometer, countDown)
+        setChronometerCountDown(R.id.attendance_widget_chronometer, false)
     }
 }

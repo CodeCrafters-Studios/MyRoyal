@@ -257,3 +257,23 @@ Approved 2026-11-19. Option C (background tracking) was rejected: it needs "alwa
 Tests: Dart covers projection (centre, corners, north-up, off-image), payload defaults, bounds lifecycle, controller throttle and the immediate inside/outside change, no location while spoofing, and dot placement once bounds exist (90/90 attendance tests). Kotlin covers fresh vs old fix, badge, refresh at the freshness limit, stale attendance hiding the badge, off-image dot, and older payload compatibility (21/21).
 
 Device check (SM-A336E, real session, checked in): payload `mapDotX 0.409, mapDotY 0.536, insideArea 1`. The widget shows the full-screen map with a drawn blue dot, "Di dalam area", "Lokasi 11:10", "Sedang bekerja · Masuk 10:54" with the timer running, and Check Out / Take a Break. The new snapshot has no baked-in dot. ✅
+
+## 15. Bug fix: negative break timer and late End Break (reported on SM-A336E)
+
+**Symptom:** during a break the widget showed "Sedang istirahat −02:01", and End Break didn't appear when the allowance ran out.
+
+**Root cause (verified):**
+- An Android widget `Chronometer` in count-down mode can't stop at zero.
+- The switch to "Istirahat selesai" depended on one inexact `AlarmManager.set` at the break end. `dumpsys alarm` showed a delivery window of about 6.5 min.
+- Exact alarms need `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` (restricted on Android 12+, denied by default on 14), so they aren't an option.
+
+**Fix:**
+- The widget timer now only counts **up**: break time so far, from the new payload field `breakStartedAtEpochMs`, so it can never be negative. The subtitle shows the allowance end ("Mulai 11:23 · s/d 11:33"). The in-app countdown is unchanged.
+- End Break appears at 0 by using a **halving refresh chain** during breaks. Each wake is scheduled at half the remaining time, then at the end once less than 40 s remains. Every alarm targets a moment before the end and the inexact window shrinks each step, so the switch lands within seconds of 0. It runs only during a break, about 8 wakes for 60 min, with no new permission.
+- **Zero allowance** (`duration_break = 0`) → "Istirahat selesai" and End Break immediately, the same rule as the app (`isBreakTimerDone`).
+
+Tests: Kotlin 25/25 (new: break count-up, never negative even when the refresh is late, refresh chain never passes the end and converges in 5–10 wakes, zero allowance, older payload without the break start). Dart 90/90.
+
+Device (SM-A336E, real break started 11:23): after the allowance ended, the app showed 00:00:00 + End Break and the widget showed "Istirahat selesai · Mulai 11:23" + **End Break**. No negative time. ✅
+
+**For the backend team:** `duration_break` for the same break changed between fetches (the payload derived a 10 min allowance at 11:23, and 2 min at a later fetch). The app uses the value as returned (unchanged since EPIC 01), so please confirm its meaning.

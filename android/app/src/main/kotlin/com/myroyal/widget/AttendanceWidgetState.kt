@@ -16,12 +16,14 @@ enum class WidgetAction(val uriAction: String, val label: String) {
     BREAK_END("break_end", "End Break"),
 }
 
+/**
+ * Live timers only count **up**: an Android widget Chronometer cannot stop
+ * at zero, and the refresh at the end of the break is an inexact alarm
+ * (minutes late), so a count-down would show negative time.
+ */
 sealed class WidgetTimer {
-    /** Worked time, counting up from [elapsedMs] at render time. */
+    /** Worked time or break time so far, counting up from [elapsedMs] at render time. */
     data class CountUp(val elapsedMs: Long) : WidgetTimer()
-
-    /** Break allowance, counting down from [remainingMs] at render time. */
-    data class CountDown(val remainingMs: Long) : WidgetTimer()
 }
 
 /**
@@ -172,14 +174,16 @@ object AttendanceWidgetStateResolver {
                 val remaining =
                     if (data.breakEndsAtEpochMs > 0) data.breakEndsAtEpochMs - serverNow else 0L
                 if (remaining > 0) {
+                    val breakElapsed =
+                        if (data.breakStartedAtEpochMs > 0) serverNow - data.breakStartedAtEpochMs else -1L
                     AttendanceWidgetViewState(
                         kind = WidgetKind.ON_BREAK,
                         title = "Sedang istirahat",
-                        subtitle = "Mulai ${data.breakStart}",
-                        timer = WidgetTimer.CountDown(remaining),
+                        subtitle = "Mulai ${data.breakStart} · s/d ${clockLabel(data.breakEndsAtEpochMs, zone)}",
+                        timer = if (breakElapsed >= 0) WidgetTimer.CountUp(breakElapsed) else null,
                         officeName = data.officeName,
-                        // Switch to "End Break" when the allowance is over.
-                        nextRefreshAtMs = refreshAt(nowMs + remaining, nextMidnightDeviceMs, maxAgeAtMs),
+                        // Show "End Break" as close to 0 as possible (see breakRefreshAt).
+                        nextRefreshAtMs = refreshAt(breakRefreshAt(nowMs, remaining), nextMidnightDeviceMs, maxAgeAtMs),
                     )
                 } else {
                     AttendanceWidgetViewState(
@@ -227,6 +231,25 @@ object AttendanceWidgetStateResolver {
         "break_start" -> "Sedang istirahat"
         "checked_out" -> "Selesai hari ini"
         else -> "Kehadiran"
+    }
+
+    /** Below this, the next refresh targets the break end itself. */
+    const val BREAK_FINAL_STEP_MS = 40_000L
+
+    /**
+     * Next wake-up while on break. Inexact alarms may fire up to ~75 % of
+     * their delay late, so one alarm at the break end can be minutes late
+     * (End Break shown late). Waking at half the remaining time each step
+     * keeps every alarm before the end and shrinks the error to seconds,
+     * without the restricted exact-alarm permission (~8 wakes for 60 min).
+     */
+    fun breakRefreshAt(nowMs: Long, remainingMs: Long): Long =
+        if (remainingMs > BREAK_FINAL_STEP_MS) nowMs + remainingMs / 2 else nowMs + remainingMs
+
+    /** `HH:mm` of an epoch instant in [zone]. */
+    fun clockLabel(epochMs: Long, zone: ZoneId): String {
+        val t = Instant.ofEpochMilli(epochMs).atZone(zone).toLocalTime()
+        return String.format(Locale.ROOT, "%02d:%02d", t.hour, t.minute)
     }
 
     /** Same format as the app (`formatHoursMinutes`): `08h 05m`. */

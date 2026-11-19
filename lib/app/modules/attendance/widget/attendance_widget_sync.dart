@@ -56,6 +56,7 @@ class AttendanceWidgetPayload {
     this.breakEnd = '',
     this.workedMinutesAtSync = 0,
     this.breakEndsAtEpochMs = 0,
+    this.breakStartedAtEpochMs = 0,
     this.serverNowAtSyncEpochMs = 0,
     this.syncedAtEpochMs = 0,
     this.officeName = '',
@@ -79,6 +80,10 @@ class AttendanceWidgetPayload {
   final String breakEnd;
   final int workedMinutesAtSync;
   final int breakEndsAtEpochMs;
+
+  /// Break start on the server clock, for the widget's count-up break timer
+  /// (a count-down cannot stop at zero on Android widgets).
+  final int breakStartedAtEpochMs;
   final int serverNowAtSyncEpochMs;
   final int syncedAtEpochMs;
   final String officeName;
@@ -111,6 +116,7 @@ class AttendanceWidgetPayload {
         'breakEnd': breakEnd,
         'workedMinutesAtSync': workedMinutesAtSync < 0 ? 0 : workedMinutesAtSync,
         'breakEndsAtEpochMs': breakEndsAtEpochMs,
+        'breakStartedAtEpochMs': breakStartedAtEpochMs,
         'serverNowAtSyncEpochMs': serverNowAtSyncEpochMs,
         'syncedAtEpochMs': syncedAtEpochMs,
         'officeName': officeName,

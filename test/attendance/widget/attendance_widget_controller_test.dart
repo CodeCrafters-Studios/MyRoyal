@@ -127,6 +127,8 @@ void main() {
         expect(json['status'], 'break_start');
         expect(json['breakEndsAtEpochMs'],
             DateTime(2026, 11, 19, 13).millisecondsSinceEpoch);
+        expect(json['breakStartedAtEpochMs'],
+            DateTime(2026, 11, 19, 12).millisecondsSinceEpoch);
         expect(json['workedMinutesAtSync'], 240);
       });
     });

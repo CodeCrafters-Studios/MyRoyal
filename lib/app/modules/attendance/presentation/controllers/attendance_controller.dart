@@ -1486,6 +1486,10 @@ class AttendanceController extends GetxController
       breakEnd: AttendanceWidgetPayload.hhmm(breakEndTime.value),
       workedMinutesAtSync: worked,
       breakEndsAtEpochMs: breakEndsAt,
+      breakStartedAtEpochMs:
+          status == AttendanceStatus.breakStart && breakStart != null
+              ? breakStart.millisecondsSinceEpoch
+              : 0,
       serverNowAtSyncEpochMs: serverNow.millisecondsSinceEpoch,
       syncedAtEpochMs: DateTime.now().millisecondsSinceEpoch,
       officeName: _widgetOfficeName,
