@@ -305,3 +305,15 @@ Device (SM-A336E):
 - A seeded summary (local display data only) rendered as specified.
 - After restoring, the **real** checked-out state showed 11:54 AM / 12:00 PM / 00h 00m and 11:54 AM / 11:59 AM / 00h 05m, matching the published payload.
 - The header showed "Kehadiran" instead of the office name. After check-out the app doesn't start GPS, so a fresh process has no nearest office yet. Cosmetic.
+
+### 16.1 Eye-catching checked-out background (requested)
+
+- **Colours:** primary navy `#1A1D3B` background, white values, and the page accents lightened for contrast on navy (check-in `#4ADE80`, check-out `#F87171`, durations `#8AB4F8`, break start `#A5B4FC`, break end `#FDBA74`, office `#B8BCD6`). A white-background variant was tried; the user preferred navy.
+- **Abstract pattern** (`res/drawable/attendance_widget_done_bg.xml`, a vector so it stays crisp):
+  - a radial `primaryAccent`-tone glow top-right
+  - 11 flowing contour waves in `primary30` `#5C8DD7`, fainter behind the title and slightly stronger lower down
+  - translucent bubbles
+  - bold accent arcs in the **free top-right corner**, so they stay clear of the summary text (an earlier bottom-right placement crossed the "Durasi" labels)
+  - a dot texture top-left
+- The look is the same in light and dark mode. Only the checked-out state changes.
+- Device (SM-A336E, real checked-out data): all six values and labels are readable over the pattern. ✅

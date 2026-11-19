@@ -132,15 +132,17 @@ private object Palette {
     val onColor = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFFFFFFFF))
     val inside = ColorProvider(day = Color(0xFF1E8E3E), night = Color(0xFF34A853))
     val outside = ColorProvider(day = Color(0xFFD93025), night = Color(0xFFEA4335))
-    val surface = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF1C1E26))
 
-    // Same accents as the Attendance page summary icons (lib/base/design/colors.dart):
-    // green, red, primary30, primaryAccent, urgentColor.
-    val checkIn = ColorProvider(day = Color(0xFF16A34A), night = Color(0xFF4ADE80))
-    val checkOut = ColorProvider(day = Color(0xFFDC2626), night = Color(0xFFF87171))
-    val duration = ColorProvider(day = Color(0xFF5C8DD7), night = Color(0xFF8AB4F8))
-    val breakStart = ColorProvider(day = Color(0xFF2D3580), night = Color(0xFF9FA8F5))
-    val breakEnd = ColorProvider(day = Color(0xFFF97316), night = Color(0xFFFDBA74))
+    // Checked-out summary on the app primary (#1A1D3B). The page accents
+    // (green, red, primary30, primaryAccent, urgentColor) are lightened so the
+    // labels stay readable on navy; identical in light and dark mode.
+    val primary = ColorProvider(day = Color(0xFF1A1D3B), night = Color(0xFF1A1D3B))
+    val onPrimaryMuted = ColorProvider(day = Color(0xFFB8BCD6), night = Color(0xFFB8BCD6))
+    val onPrimaryCheckIn = ColorProvider(day = Color(0xFF4ADE80), night = Color(0xFF4ADE80))
+    val onPrimaryCheckOut = ColorProvider(day = Color(0xFFF87171), night = Color(0xFFF87171))
+    val onPrimaryDuration = ColorProvider(day = Color(0xFF8AB4F8), night = Color(0xFF8AB4F8))
+    val onPrimaryBreakStart = ColorProvider(day = Color(0xFFA5B4FC), night = Color(0xFFA5B4FC))
+    val onPrimaryBreakEnd = ColorProvider(day = Color(0xFFFDBA74), night = Color(0xFFFDBA74))
 }
 
 private fun openApp(context: Context, action: WidgetAction? = null): Action {
@@ -196,40 +198,51 @@ private fun AttendanceWidgetContent(
     }
 }
 
-/** Checked out: the Attendance page's end-of-day summary, without the map. */
+/**
+ * Checked out: the Attendance page's end-of-day summary, without the map, on
+ * an eye-catching primary navy background with an abstract line pattern
+ * (res/drawable/attendance_widget_done_bg.xml). Same look in light and dark.
+ */
 @Composable
 private fun SummaryContent(context: Context, state: AttendanceWidgetViewState, summary: WidgetSummary) {
-    Column(
+    Box(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(Palette.surface)
+            .background(Palette.primary)
             .cornerRadius(16.dp)
-            .clickable(openApp(context))
-            .padding(horizontal = 12.dp, vertical = 10.dp),
+            .clickable(openApp(context)),
     ) {
-        Text(
-            text = state.officeName.ifBlank { "Kehadiran" },
-            maxLines = 1,
-            style = TextStyle(color = Palette.muted, fontSize = 10.sp),
+        Image(
+            provider = ImageProvider(R.drawable.attendance_widget_done_bg),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = GlanceModifier.fillMaxSize(),
         )
-        Text(
-            text = state.title,
-            maxLines = 1,
-            style = TextStyle(color = Palette.text, fontSize = 14.sp, fontWeight = FontWeight.Bold),
-        )
-        Spacer(GlanceModifier.defaultWeight())
-        Row(modifier = GlanceModifier.fillMaxWidth()) {
-            SummaryCell(summary.checkIn, "Check-in", Palette.checkIn)
-            SummaryCell(summary.checkOut, "Check-out", Palette.checkOut)
-            SummaryCell(summary.workDuration, "Durasi Kerja", Palette.duration)
+        Column(modifier = GlanceModifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 10.dp)) {
+            Text(
+                text = state.officeName.ifBlank { "Kehadiran" },
+                maxLines = 1,
+                style = TextStyle(color = Palette.onPrimaryMuted, fontSize = 10.sp),
+            )
+            Text(
+                text = state.title,
+                maxLines = 1,
+                style = TextStyle(color = Palette.onColor, fontSize = 15.sp, fontWeight = FontWeight.Bold),
+            )
+            Spacer(GlanceModifier.defaultWeight())
+            Row(modifier = GlanceModifier.fillMaxWidth()) {
+                SummaryCell(summary.checkIn, "Check-in", Palette.onPrimaryCheckIn)
+                SummaryCell(summary.checkOut, "Check-out", Palette.onPrimaryCheckOut)
+                SummaryCell(summary.workDuration, "Durasi Kerja", Palette.onPrimaryDuration)
+            }
+            Spacer(GlanceModifier.height(6.dp))
+            Row(modifier = GlanceModifier.fillMaxWidth()) {
+                SummaryCell(summary.breakStart, "Mulai Istirahat", Palette.onPrimaryBreakStart)
+                SummaryCell(summary.breakEnd, "Selesai Istirahat", Palette.onPrimaryBreakEnd)
+                SummaryCell(summary.breakDuration, "Durasi Istirahat", Palette.onPrimaryDuration)
+            }
+            Spacer(GlanceModifier.defaultWeight())
         }
-        Spacer(GlanceModifier.height(6.dp))
-        Row(modifier = GlanceModifier.fillMaxWidth()) {
-            SummaryCell(summary.breakStart, "Mulai Istirahat", Palette.breakStart)
-            SummaryCell(summary.breakEnd, "Selesai Istirahat", Palette.breakEnd)
-            SummaryCell(summary.breakDuration, "Durasi Istirahat", Palette.duration)
-        }
-        Spacer(GlanceModifier.defaultWeight())
     }
 }
 
@@ -242,7 +255,7 @@ private fun RowScope.SummaryCell(value: String, label: String, accent: androidx.
         Text(
             text = value,
             maxLines = 1,
-            style = TextStyle(color = Palette.text, fontSize = 13.sp, fontWeight = FontWeight.Bold),
+            style = TextStyle(color = Palette.onColor, fontSize = 13.sp, fontWeight = FontWeight.Bold),
         )
         Text(
             text = label,
