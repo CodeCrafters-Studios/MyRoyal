@@ -12,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:MyRoyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
-import 'package:MyRoyal/base/services/http_service.dart';
 import 'package:MyRoyal/base/widgets/app_divider.dart';
 import 'package:MyRoyal/base/widgets/buttons/button_primary.dart';
 import 'package:MyRoyal/base/widgets/inkwell_tap.dart';
@@ -37,10 +36,10 @@ class AttendanceView extends GetView<AttendanceController> {
           toolbarHeight: 70.h,
         ),
         body: Obx(() {
-          final http = Get.find<HttpService>();
-
-          if (http.connectionStatus.value == "No connection" ||
-              controller.isLoadingAttendance.value) {
+          // Offline: keep showing the last known state once it exists
+          // (actions are disabled via areActionsReady).
+          if (controller.isLoadingAttendance.value ||
+              (controller.isOffline && !controller.hasAttendanceData)) {
             return _buildShimmer();
           }
 
