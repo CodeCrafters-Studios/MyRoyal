@@ -25,6 +25,8 @@ plugins {
     id "com.google.firebase.crashlytics" version "2.9.9" apply false
     // END: FlutterFire Configuration
     id "org.jetbrains.kotlin.android" version "2.3.10" apply false
+    // Compose compiler for the Glance home screen widget (must match Kotlin).
+    id "org.jetbrains.kotlin.plugin.compose" version "2.3.10" apply false
 }
 
 include ":app"

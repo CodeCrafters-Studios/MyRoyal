@@ -187,3 +187,36 @@ Native identifiers the T09/T10 widgets must use:
 Tests: `test/attendance/widget/` has 30 tests covering the payload contract, sync failure isolation, the once-a-day snapshot, URI parsing, D4, debounce, expiry, the cold-start tap, and the controller integration (confirmed-only publishing, midnight reset, failed POST not published, a tap waiting for GPS and then showing the normal confirm dialog, invalid or early actions rejected). Full suite: **99/99 pass**. `flutter analyze lib test/attendance`: clean.
 
 Until T09/T10 add the native widgets, `updateWidget` fails quietly (logged) and nothing changes for users.
+
+## 12. TASK 09 — Android widget (implemented)
+
+| File | What it does |
+|---|---|
+| `android/settings.gradle`, `android/app/build.gradle` | Compose compiler plugin 2.3.10 (matches Kotlin), `buildFeatures.compose`, `glance-appwidget:1.1.1` (same version as home_widget). JUnit and org.json are test-only |
+| `kotlin/com/myroyal/widget/AttendanceWidgetData.kt` | Parses payload v1 and rejects missing, malformed or unknown-schema data |
+| `kotlin/com/myroyal/widget/AttendanceWidgetState.kt` | Pure resolver: state → title, timer, buttons, stale rule (§6), next refresh time |
+| `kotlin/com/myroyal/widget/AttendanceGlanceWidget.kt` | Glance UI: map image or placeholder, office, status, live `Chronometer` (embedded `RemoteViews`), buttons. Every click is `actionStartActivity<MainActivity>(myroyal://attendance?action=…)` |
+| `kotlin/com/myroyal/widget/AttendanceWidgetReceiver.kt` | `HomeWidgetGlanceWidgetReceiver`, plus one **inexact** `AlarmManager` refresh at the next state change (midnight → stale, break allowance end, 12 h max age). No new permissions |
+| `res/xml/attendance_widget_info.xml`, `res/layout/attendance_widget_chronometer.xml`, `res/values(-night)/attendance_widget.xml` | 4×2 provider, chronometer view, label, description and colors |
+| `AndroidManifest.xml` | Receiver registration, and **`flutter_deeplinking_enabled=false`** (see below) |
+
+**Bugs found while testing on the emulator, both fixed:**
+1. Launching from the widget gave a **red screen**: "GlobalKey used multiple times (NavigatorState)". Flutter's default Android deep linking pushed the `myroyal://` URI as a route into GetX's navigator. It's now disabled in the manifest; `home_widget` delivers the URI. **T10 must set `FlutterDeepLinkingEnabled = NO` in iOS `Info.plist` for the same reason.**
+2. Widget data was read outside `provideContent`, so `updateWidget` recomposed a running session with stale values (for example, still showing "Check In" after logout). It now reads `currentState<HomeWidgetGlanceState>()` inside the composition, which is home_widget's documented pattern.
+
+**Verification**
+
+| Check | Result |
+|---|---|
+| Android unit tests `./gradlew :app:testDevDebugUnitTest --tests 'com.myroyal.widget.*'` | 14/14 pass (parsing, every status, timers, staleness, midnight and clock skew, format) |
+| `flutter build apk --debug --flavor dev` | builds |
+| Emulator (Pixel_6, API 31, dev flavor): widget picker lists "Kehadiran 4 × 2" with its description | ✅ |
+| Rendered with seeded test payloads: no data, signed out, not started (with and without map), checked in (live 2:34:xx), on break (29:5x countdown), break over (End Break), break end, checked out (`08h 00m`), stale (greyed, no buttons) | ✅ all match §6 |
+| Tap Check In / Check Out: MainActivity starts with `myroyal://attendance?action=check_in` / `check_out` (cold and warm) | ✅ |
+| Cold start from the widget opens the **Kehadiran** tab | ✅ |
+| Tap while signed out: login screen, action not replayed (D4) | ✅ |
+| "Unauthenticated." → widget data becomes `signedIn:false`, map removed | ✅ (storage checked) |
+| Live in-app refresh of a running widget session after a real attendance action | ⚠ needs a signed-in staging account, so it moves to T12 |
+| prod flavor / release build | ⚠ not built here (same sources; needs the release keystore), so it moves to T12 |
+
+Note: the emulator's dev app was downgraded from 1.5.5 to this branch's 1.5.3 build for testing.

@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.compose"
     id "com.google.gms.google-services"
     id "com.google.firebase.crashlytics"
     id "dev.flutter.flutter-gradle-plugin"
@@ -78,6 +79,11 @@ android {
     }
 
     namespace "com.myroyal"
+
+    // Jetpack Glance home screen widget (EPIC 02 / TASK 09).
+    buildFeatures {
+        compose true
+    }
     compileSdkVersion 36
     ndkVersion "27.1.12297006"
 
@@ -144,6 +150,11 @@ flutter {
 
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    // Same Glance version as home_widget 0.9.2 to avoid a second resolution.
+    implementation "androidx.glance:glance-appwidget:1.1.1"
+    testImplementation "junit:junit:4.13.2"
+    // android.jar's org.json is stubbed in JVM unit tests.
+    testImplementation "org.json:json:20240303"
     constraints {
         implementation("androidx.core:core-ktx:1.13.1") {
             because("core-ktx 1.15.0+ requires AGP 8.9+")
