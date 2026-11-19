@@ -277,3 +277,15 @@ Tests: Kotlin 25/25 (new: break count-up, never negative even when the refresh i
 Device (SM-A336E, real break started 11:23): after the allowance ended, the app showed 00:00:00 + End Break and the widget showed "Istirahat selesai · Mulai 11:23" + **End Break**. No negative time. ✅
 
 **For the backend team:** `duration_break` for the same break changed between fetches (the payload derived a 10 min allowance at 11:23, and 2 min at a later fetch). The app uses the value as returned (unchanged since EPIC 01), so please confirm its meaning.
+
+### 15.1 Follow-up: break shown as a countdown again (requested)
+
+The count-up from §15 was replaced: the widget again **counts down** the break allowance, and the countdown can still never go negative.
+- **Early switch:** at ≤ 10 s left (`BREAK_SWITCH_EARLY_MS`) the widget shows "Istirahat selesai" + End Break, so the Chronometer is gone before it reaches 0.
+- **Refresh at half the remaining time:** `breakRefreshAt = now + remaining/2`. Even if the inexact alarm is delivered as late as Android allows (75 % of its delay), it arrives before the end (0.5R + 0.375R < R). The steps shrink until ≤ 10 s are left, about 9 wakes for a 60 min break, with no exact-alarm permission.
+- **App side:** an End Break tap from the widget during those last seconds **waits** for the app's own countdown (`isBreakTimerDone`) and then shows the normal confirm dialog, instead of the earlier "belum selesai" error. The app rule is unchanged.
+- `breakStartedAtEpochMs` (only used by the count-up) was removed from the payload again.
+
+Tests: Kotlin 24/24, including a worst-case late-alarm simulation where every wake lands before the end, the countdown being replaced at ≤ 10 s / 0 / negative, and zero allowance. Dart 90/90, including the early End Break tap waiting and then opening the confirm dialog.
+
+Device (SM-A336E, temporary 25 s test break in the widget's local display storage, real data restored afterwards): the countdown ran (00:14), switched to "Istirahat selesai" + End Break with about 10 s left, and stayed there; no negative time over 44 s. The real data after the restore showed "Istirahat selesai · Mulai 11:46" + End Break. ✅

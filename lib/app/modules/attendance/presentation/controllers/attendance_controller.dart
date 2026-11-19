@@ -204,6 +204,7 @@ class AttendanceController extends GetxController
       isMapReady,
       currentPosition,
       _hasAttendanceData,
+      isBreakTimerDone,
     ], (_) => _runPendingWidgetAction());
     AttendanceWidgetLaunchHandler.instance?.attach(this);
 
@@ -1486,10 +1487,6 @@ class AttendanceController extends GetxController
       breakEnd: AttendanceWidgetPayload.hhmm(breakEndTime.value),
       workedMinutesAtSync: worked,
       breakEndsAtEpochMs: breakEndsAt,
-      breakStartedAtEpochMs:
-          status == AttendanceStatus.breakStart && breakStart != null
-              ? breakStart.millisecondsSinceEpoch
-              : 0,
       serverNowAtSyncEpochMs: serverNow.millisecondsSinceEpoch,
       syncedAtEpochMs: DateTime.now().millisecondsSinceEpoch,
       officeName: _widgetOfficeName,
@@ -1543,6 +1540,15 @@ class AttendanceController extends GetxController
       return;
     }
     if (!hasAttendanceData || !areActionsReady) return;
+
+    // The widget shows End Break up to 10 s before the allowance ends (so its
+    // countdown never goes negative): wait for the app's own countdown, then
+    // continue. Same rule as the on-screen button.
+    if (action == 'break_end' &&
+        attendanceStatus.value == AttendanceStatus.breakStart &&
+        !isBreakTimerDone.value) {
+      return;
+    }
     _pendingWidgetAction = null;
 
     final backend = _widgetActionToBackend[action]!;
@@ -1562,12 +1568,6 @@ class AttendanceController extends GetxController
         startBreakTime();
         break;
       case 'break_end':
-        // Same rule as the screen: End Break only after the countdown.
-        if (!isBreakTimerDone.value) {
-          AppDialogImpl().showErrorSnackBar(
-              description: 'Waktu istirahat belum selesai.');
-          return;
-        }
         endBreakTime();
         break;
     }

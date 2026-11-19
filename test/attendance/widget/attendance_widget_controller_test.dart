@@ -127,8 +127,6 @@ void main() {
         expect(json['status'], 'break_start');
         expect(json['breakEndsAtEpochMs'],
             DateTime(2026, 11, 19, 13).millisecondsSinceEpoch);
-        expect(json['breakStartedAtEpochMs'],
-            DateTime(2026, 11, 19, 12).millisecondsSinceEpoch);
         expect(json['workedMinutesAtSync'], 240);
       });
     });
@@ -228,7 +226,7 @@ void main() {
       });
     });
 
-    testWidgets('End Break before the countdown finishes is rejected',
+    testWidgets('End Break tapped just before the end waits for the countdown',
         (tester) async {
       await run(tester, setup: (h) {
         h.repo.todayResponses
@@ -244,8 +242,13 @@ void main() {
         await tester.pump(const Duration(seconds: 1));
         h.controller.handleWidgetAction('break_end');
         await h.settle();
-        expect(Get.isDialogOpen, isFalse);
-        expect(Get.isSnackbarOpen, isTrue);
+        expect(Get.isDialogOpen, isFalse, reason: 'countdown not done');
+        expect(Get.isSnackbarOpen, isFalse, reason: 'no error, just waits');
+
+        h.controller.isBreakTimerDone.value = true; // countdown reaches 0
+        await h.settle();
+        expect(Get.isDialogOpen, isTrue, reason: 'normal End Break confirm');
+        expect(h.repo.recorded, isEmpty);
       });
     });
 
