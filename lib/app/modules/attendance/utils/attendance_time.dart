@@ -39,8 +39,7 @@ DateTime? parseServerClock(
     parsed.second,
   );
 
-  if (notBefore != null &&
-      notBefore.difference(result) > rolloverThreshold) {
+  if (notBefore != null && notBefore.difference(result) > rolloverThreshold) {
     result = result.add(const Duration(days: 1));
   }
   return result;

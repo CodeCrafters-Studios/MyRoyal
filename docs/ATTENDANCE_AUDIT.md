@@ -80,3 +80,57 @@ Tests: `test/attendance/attendance_time_test.dart` (14 cases, including the `-12
 
 Not yet verified on a device. Remaining for T04–T06: F8, F10–F18 (the pull-to-refresh and action shimmer is unchanged).
 Out of scope, but the same bug exists elsewhere: `home_controller.dart:118,133` also compares against `"No connection"`.
+
+## 7. T04–T07 implementation (branch `fix/attendance-stabilization`, uncommitted)
+
+| Finding | Task | Fix |
+|---|---|---|
+| F8 | T04 | A failed fetch now shows a snackbar for user-initiated loads; background refreshes fail silently. If the first load fails, the screen shows an error state with **Coba Lagi** and pull-to-refresh, instead of a fake not_started screen. |
+| F10 | T04 | The GPS stream is stopped only once the refetched status is `checked_out`. Backing out of the selfie screen no longer freezes the location. |
+| F15 | T04 | Break start/end apply nothing optimistically. The UI changes only through the backend refetch. A failed POST is also followed by a refetch, in case the server stored it. |
+| F17 | T04 | `_ensureActionAllowed` guards every action. It waits for any refresh in flight, then checks that the action is valid for the **latest** status (`checked_in`←notStarted, `break_start`←checkedIn, `break_end`←breakStart, `checked_out`←checkedIn/breakEnd), that the device is inside the geofence, and that a position and nearest office exist. Missing `server_time` blocks the selfie flow. The `!` crashes are gone. |
+| — | T04 | The `_actionInProgress` lock means repeated taps submit only once. |
+| F11/F13 | T05 | The full-screen placeholder appears only while nothing has loaded yet. It is neutral (the state is unknown), so it is never a fake Check In layout. Pull, resume, reconnect and post-action refreshes keep the content on screen. While an action runs, only the action area shows `AttendanceActionShimmer(status)`, shaped like that state's buttons: the Check In circle, Check Out + Break, End Break, Check Out, or nothing. The location fetch no longer toggles the page loading flag. |
+| F16 | T05 | `onRefresh` is awaited, so the indicator stays until the data arrives. |
+| F12 | T06 | The map is no longer torn down on refresh. The map slot and the action rows have their own `Obx`, so a GPS update no longer rebuilds the whole page. |
+| F14 | T06 | Polygons are cleared before rebuilding. |
+| F18 | T06 | On `paused`: stop the clock timer, the break timer and the GPS stream. On `resumed`: restart them. In `checked_out`, the per-second clock rebuild is skipped. |
+| F21 (new) | T06 | `_fitMapBounds` re-scheduled itself every 200 ms forever when no map was built (the `checked_out` layout). Bounds are now stored and applied when `isMapReady` turns true. |
+| F22 (new) | T06 | A post-frame break countdown, and async continuations, could start timers or streams after `onClose` (logout). Guarded with `isClosed`. Found by the tests. |
+| — | T06 | GPS/permission dialogs are not stacked on resume. Turning GPS off or revoking permission invalidates the last position, so actions are disabled. Allowing permission from the dialog now starts the stream. |
+| F19 | T06 | The date line uses the server clock. |
+
+Cold-start placeholder decision: the last status is **not** persisted. A cached status could show the previous account's state after logout or an account switch. The cost is a neutral placeholder on cold start. This needs Product Owner sign-off if a state-specific cold-start shimmer is required.
+
+### T07 regression results
+
+The tests are in `test/attendance/`: `attendance_time_test.dart` (14), `attendance_shimmer_test.dart` (8) and `attendance_controller_test.dart` (29). They run the real controller with a fake repository and fake GPS (`attendance_test_fakes.dart`). Full suite: **69/69 pass**. `flutter analyze` on attendance, validation_selfie, bottomnavbar and the tests: clean.
+
+| Scenario | Automated |
+|---|---|
+| Initial `not_started` | ✅ |
+| Break start success / failure / duplicate taps / invalid state | ✅ |
+| Break end success | ✅ |
+| Check-in / check-out (selfie screen) | ⚠ guard path only; the selfie POST needs manual testing |
+| Failed requests (first load, background refresh) | ✅ |
+| GPS disabled / permission denied forever | ✅ |
+| Outside geofence / low accuracy / mock location | ✅ |
+| Network unavailable at launch and mid-session, reconnect | ✅ |
+| Minimised and resumed (throttle, previous-day refetch, GPS/timer pause) | ✅ |
+| Midnight reset, previous-day vs new-day, the `-12m` regression, night shift | ✅ |
+| Out-of-order responses | ✅ |
+| Shimmer per state | ✅ (component level) |
+| Terminated and reopened | ⚠ manual: a cold start is the same path as the initial load |
+| Foreground across real midnight (bounded retry) | ⚠ manual: uses the wall clock |
+
+### Manual device checklist (still needed before PO approval)
+
+1. Check in, check out and both break actions on Android and iOS, against staging.
+2. Leave the app minimised across 00:00, then reopen. It should show not_started without pulling to refresh.
+3. Keep the screen open across 00:00. It should reset within about 2–6 minutes of the cron running.
+4. Fully close the app and reopen it, both in checked_in and in checked_out state.
+5. Turn GPS off, then on, while the app is in the background.
+6. Use airplane mode on the attendance screen. The last state should stay and actions should be disabled.
+7. Visually check the action-area shimmer for each state, and confirm the map does not flicker on pull-to-refresh.
+
+Known, not changed (backend contract, F20): records still send the device `date`/`time`. The selfie POST still uses the `server_time` from the last fetch.

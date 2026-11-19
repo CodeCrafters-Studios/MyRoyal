@@ -51,7 +51,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     required this.getAttendanceTodayUsecase,
     required this.recordAttendanceUsecase,
     required this.getAttendanceLocationUsecase,
-  });
+    RxString? connectionStatus,
+  }) : _connectionStatusOverride = connectionStatus;
+
+  /// Test seam; defaults to [HttpService.connectionStatus].
+  final RxString? _connectionStatusOverride;
+  RxString get _connectionStatus =>
+      _connectionStatusOverride ?? Get.find<HttpService>().connectionStatus;
 
   final currentTime = DateTime.now().obs;
   final checkInTime = Rxn<DateTime>();
@@ -94,15 +100,22 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   /// Value emitted by [HttpService.connectionStatus] when offline.
   static const _offlineStatus = 'Tidak ada koneksi';
 
-  bool get isOffline =>
-      Get.find<HttpService>().connectionStatus.value == _offlineStatus;
+  bool get isOffline => _connectionStatus.value == _offlineStatus;
+
+  final _hasAttendanceData = false.obs;
 
   /// Whether today's attendance was fetched successfully at least once.
-  bool get hasAttendanceData => _lastFetchAt != null;
+  /// Until then the screen shows the initial placeholder (or an error).
+  bool get hasAttendanceData => _hasAttendanceData.value;
 
+  /// Set when the first load failed and there is nothing to show yet.
+  final hasLoadError = false.obs;
+
+  /// Whether action buttons look enabled. A background refresh does not
+  /// disable them (no flicker); actions wait for it instead, see
+  /// [_ensureActionAllowed].
   bool get areActionsReady =>
       !isLoadingAttendance.value &&
-      !isRefreshingAttendance.value &&
       !isPerformingAction.value &&
       !isOffline &&
       isMapReady.value &&
@@ -129,15 +142,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   DateTime? _deviceTimeAtSync;
   DateTime? _lastDisplayTime;
 
-  /// Device time of the last successful `today` fetch.
-  DateTime? _lastFetchAt;
-
   /// Device time of the last `today` request, successful or not.
   DateTime? _lastFetchAttemptAt;
 
   /// Incremented per `today` request; only the newest response is applied.
   int _fetchSeq = 0;
   bool _isFetchingToday = false;
+  Future<void>? _todayFetch;
 
   /// Bounded retries while the backend still returns a previous-day record
   /// (midnight cron may run a few minutes after 00:00).
@@ -159,9 +170,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _checkGmsAvailability();
 
-    final httpService = Get.find<HttpService>();
-
-    ever(httpService.connectionStatus, (String status) {
+    ever(_connectionStatus, (String status) {
       if (status == _offlineStatus) return; // keep last known state visible
 
       if (!_isInitialized) {
@@ -171,8 +180,15 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       }
     });
 
+    ever(isMapReady, (bool ready) {
+      final pending = _pendingBounds;
+      if (ready && pending != null) _fitMapBounds(pending);
+    });
+
     _runInitialOnce();
   }
+
+  List<LatLng>? _pendingBounds;
 
   Future<void> _checkGmsAvailability() async {
     if (GetPlatform.isAndroid) {
@@ -192,7 +208,18 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed || !_isInitialized) return;
+    if (!_isInitialized) return;
+
+    if (state == AppLifecycleState.paused) {
+      // Nothing is visible: stop the 1 s clock and the 1 Hz GPS stream.
+      _timer?.cancel();
+      breakTimer?.cancel();
+      _positionStream?.cancel();
+      _positionStream = null;
+      return;
+    }
+
+    if (state != AppLifecycleState.resumed) return;
 
     final last = _lastFetchAttemptAt;
     final recentlyFetched = last != null &&
@@ -202,7 +229,14 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     if (!recentlyFetched || _isPreviousDayRecord()) {
       _refreshTodaySilently();
     }
-    _initLocation();
+
+    _startTimer();
+    if (attendanceStatus.value == AttendanceStatus.breakStart) {
+      _scheduleBreakCountdownStart();
+    }
+    if (attendanceStatus.value != AttendanceStatus.checkedOut) {
+      _initLocation();
+    }
   }
 
   @override
@@ -217,24 +251,25 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
   void _runInitialOnce() {
     if (_isInitialized) return;
-
-    final httpService = Get.find<HttpService>();
-
-    if (httpService.connectionStatus.value == _offlineStatus) return;
+    if (isOffline) return;
 
     _isInitialized = true;
     _loadInitialData();
   }
 
-  void _loadInitialData() async {
+  Future<void> _loadInitialData() async {
     // Day-specific fields are reset from each `today` response in
-    // [_applyAttendanceToday]; only office locations are loaded here.
-    if (attendanceStatus.value == AttendanceStatus.notStarted) {
+    // [_applyAttendanceToday]. Office locations are loaded once and retried
+    // on refresh if the previous attempt failed.
+    if (officeLocations.isEmpty) {
       _getAttendanceLocation();
     }
 
     await _getAttendanceToday();
     _startTimer();
+    if (attendanceStatus.value != AttendanceStatus.checkedOut) {
+      await _initLocation();
+    }
   }
 
   /// Background resync that keeps the current UI (no full-screen shimmer).
@@ -276,8 +311,9 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     _refreshTodaySilently();
   }
 
+  /// Pull-to-refresh. Keeps the current content on screen while loading.
   Future<void> onRefresh() async {
-    _loadInitialData();
+    await _loadInitialData();
     if (isMapReady.value) {
       _fitMapBounds(officeCircles.map((c) => c.center).toList() +
           officePolygons.expand((p) => p.points).toList());
@@ -285,7 +321,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   Future<void> _getAttendanceLocation() async {
-    isLoadingAttendance.value = true;
     final result = await getAttendanceLocationUsecase();
 
     result.fold((l) {
@@ -303,6 +338,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
 
       officeCircles.clear();
       officeMarkers.clear();
+      officePolygons.clear();
 
       final List<LatLng> boundPoints = [];
 
@@ -369,8 +405,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       _fitMapBounds(boundPoints);
       _updateOfficeColors();
     });
-
-    isLoadingAttendance.value = false;
   }
 
   void _fitMapBounds(List<LatLng> points) {
@@ -385,11 +419,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
 
     if (!isMapReady.value || googleMapController == null) {
-      Future.delayed(const Duration(milliseconds: 200), () {
-        _fitMapBounds(points);
-      });
+      // Applied once the map reports ready (see onInit). Previously this
+      // re-scheduled itself every 200 ms forever when no map was built,
+      // e.g. in the checked-out layout.
+      _pendingBounds = points;
       return;
     }
+    _pendingBounds = null;
 
     if (points.isEmpty) return;
 
@@ -435,41 +471,59 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     return inside;
   }
 
-  Future<void> _getAttendanceToday({bool silent = false}) async {
+  /// Fetches today's attendance from the backend (the source of truth).
+  ///
+  /// Full-screen loading is only used while nothing has been loaded yet;
+  /// afterwards the current content stays visible ([isRefreshingAttendance]).
+  /// [silent] suppresses the error snackbar for background refreshes.
+  Future<void> _getAttendanceToday({bool silent = false}) {
+    final future = _fetchToday(silent: silent);
+    _todayFetch = future;
+    return future;
+  }
+
+  Future<void> _fetchToday({required bool silent}) async {
     final seq = ++_fetchSeq;
     _isFetchingToday = true;
     _lastFetchAttemptAt = DateTime.now();
-    if (silent) {
+    if (hasAttendanceData) {
       isRefreshingAttendance.value = true;
     } else {
       isLoadingAttendance.value = true;
+      hasLoadError.value = false;
     }
 
     final result = await getAttendanceTodayUsecase();
 
     // Ignore responses superseded by a newer request (e.g. a background
     // refresh racing a post-action refetch).
-    final isLatest = seq == _fetchSeq;
-    if (isLatest) {
-      result.fold(
-        (l) => AppUtils.logApp('GET ATTENDANCE TODAY FAILED ::: ${l.properties}'),
-        _applyAttendanceToday,
-      );
-      _isFetchingToday = false;
-      isRefreshingAttendance.value = false;
-    }
+    if (seq != _fetchSeq) return;
 
-    if (!silent) {
-      await _initLocation();
-      isLoadingAttendance.value = false;
-    }
+    result.fold(
+      (l) {
+        AppUtils.logApp('GET ATTENDANCE TODAY FAILED ::: ${l.properties}');
+        if (!hasAttendanceData) hasLoadError.value = true;
+        if (!silent && !isOffline) {
+          AppDialogImpl().showErrorSnackBar(
+            description: 'Gagal memuat data kehadiran. Silakan coba lagi.',
+          );
+        }
+      },
+      _applyAttendanceToday,
+    );
+
+    _isFetchingToday = false;
+    _todayFetch = null;
+    isRefreshingAttendance.value = false;
+    isLoadingAttendance.value = false;
   }
 
   /// Derives every day-specific field from [r]. Values are always overwritten
   /// (also with null) so a previous day's times never survive the midnight
   /// reset. Wall-clock values are anchored to the backend attendance `date`.
   void _applyAttendanceToday(AttendanceTodayModel r) {
-    _lastFetchAt = DateTime.now();
+    _hasAttendanceData.value = true;
+    hasLoadError.value = false;
     attendanceTodayRes.value = r;
     attendanceStatus.value = AttendanceStatusX.fromString(r.status);
 
@@ -550,6 +604,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     isGpsActive.value = serviceEnabled;
 
     if (!serviceEnabled) {
+      _invalidateLocation();
       _showEnableGpsDialog();
       return;
     }
@@ -561,11 +616,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
 
     if (permission == LocationPermission.denied) {
+      _invalidateLocation();
       _showPermissionDialog();
       return;
     }
 
     if (permission == LocationPermission.deniedForever) {
+      _invalidateLocation();
       _showPermissionSettingsDialog();
       return;
     }
@@ -573,7 +630,24 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     _startLocationStream();
   }
 
+  /// GPS off or permission missing: stop the stream and mark the last known
+  /// position as unusable so it cannot be used for an attendance action.
+  void _invalidateLocation() {
+    _positionStream?.cancel();
+    _positionStream = null;
+    isGpsActive.value = false;
+    if (isLocationValid.value) {
+      isLocationValid.value = false;
+      _updateOfficeColors();
+    }
+    buttonEnabled.value = false;
+  }
+
+  /// Resume and refresh both call [_initLocation]; never stack dialogs.
+  bool get _isDialogOpen => Get.isDialogOpen ?? false;
+
   void _showEnableGpsDialog() {
+    if (_isDialogOpen) return;
     AppDialogImpl().showInfoDialog(
         title: "GPS Tidak Aktif",
         description: "Mohon aktifkan GPS untuk melanjutkan absensi.",
@@ -586,6 +660,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _showPermissionDialog() {
+    if (_isDialogOpen) return;
     Get.defaultDialog(
       title: "Izin Lokasi Dibutuhkan",
       middleText: "Aplikasi membutuhkan akses lokasi.",
@@ -593,11 +668,13 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       onConfirm: () async {
         Get.back();
         await Geolocator.requestPermission();
+        await _initLocation();
       },
     );
   }
 
   void _showPermissionSettingsDialog() {
+    if (_isDialogOpen) return;
     Get.defaultDialog(
       title: "Izin Ditolak Permanen",
       middleText: "Silakan aktifkan izin lokasi melalui pengaturan aplikasi.",
@@ -611,6 +688,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _startLocationStream() {
+    if (isClosed) return;
     AndroidSettings locationSettings = AndroidSettings(
       accuracy: LocationAccuracy.bestForNavigation,
       distanceFilter: 1,
@@ -720,7 +798,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   }
 
   void _startTimer() {
-    if (_timer?.isActive ?? false) return;
+    // Async callers may resume after the controller was closed (logout).
+    if (isClosed || (_timer?.isActive ?? false)) return;
 
     // The clock is (re)anchored on every successful fetch in
     // [_syncServerClock]; fall back to the device clock until then.
@@ -731,10 +810,14 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _maybeRefreshAfterDateBoundary();
+      // Completed day: the clock and live duration are not shown; skip the
+      // per-second rebuilds.
+      if (attendanceStatus.value == AttendanceStatus.checkedOut) return;
+
       final currentTime = _getMonotonicDisplayTime(_currentServerTime());
       displayTime.value = currentTime;
       _updateLiveDuration(currentTime);
-      _maybeRefreshAfterDateBoundary();
     });
   }
 
@@ -777,6 +860,45 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     liveWorkDuration.value = formatHoursMinutes(worked);
   }
 
+  /// Statuses from which each backend action is valid (mirrors the buttons
+  /// shown by the view for each state).
+  static const Map<String, Set<AttendanceStatus>> _allowedFrom = {
+    'checked_in': {AttendanceStatus.notStarted},
+    'break_start': {AttendanceStatus.checkedIn},
+    'break_end': {AttendanceStatus.breakStart},
+    'checked_out': {AttendanceStatus.checkedIn, AttendanceStatus.breakEnd},
+  };
+
+  /// Prevents duplicate submissions from repeated taps.
+  bool _actionInProgress = false;
+
+  /// Waits for a running refresh, then checks that [action] is still valid
+  /// for the latest backend state and that location data is usable.
+  Future<bool> _ensureActionAllowed(String action) async {
+    final pending = _todayFetch;
+    if (pending != null) await pending;
+
+    if (!areActionsReady) return false;
+
+    if (!(_allowedFrom[action]?.contains(attendanceStatus.value) ?? false)) {
+      AppDialogImpl().showErrorSnackBar(
+          description:
+              'Status kehadiran sudah berubah. Silakan periksa kembali.');
+      return false;
+    }
+    if (!isLocationValid.value) {
+      AppDialogImpl().showErrorSnackBar(
+          description: "Anda harus berada di dalam radius kantor.");
+      return false;
+    }
+    if (nearestOffice.value == null || currentPosition.value == null) {
+      AppDialogImpl().showErrorSnackBar(
+          description: 'Lokasi belum siap. Silakan tunggu sebentar.');
+      return false;
+    }
+    return true;
+  }
+
   Future<void> validationSelfie(String status) async {
     if (!areActionsReady) return;
 
@@ -791,30 +913,52 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         description: 'Mohon persiapkan diri untuk mengambil foto',
         onPressedYes: () async {
           Get.back();
-          if (!areActionsReady) return;
-          isPerformingAction.value = true;
-          final result = await Get.toNamed(
-            Routes.VALIDATION_SELFIE,
-            arguments: [
-              status,
-              attendanceTodayRes.value,
-              currentPosition.value,
-              nearestOffice.value,
-              isGpsSpoofing.value,
-              workDurationMinutes.value
-            ],
-          );
-
-          if (result == true && status == 'checked_in') {
-            await _getAttendanceToday();
-          } else {
-            await _getAttendanceToday();
-            isGpsSpoofing.value = false;
-            _positionStream?.cancel();
-            _positionStream = null;
-          }
-          isPerformingAction.value = false;
+          await openSelfie(status);
         });
+  }
+
+  /// Opens the selfie screen, which records check-in / check-out. The state
+  /// shown afterwards always comes from a backend refetch.
+  Future<void> openSelfie(String status) async {
+    if (_actionInProgress) return;
+    _actionInProgress = true;
+    try {
+      if (!await _ensureActionAllowed(status)) return;
+
+      final serverTime = attendanceTodayRes.value.serverTime;
+      if (serverTime == null || serverTime.isEmpty) {
+        AppDialogImpl().showErrorSnackBar(
+            description: 'Data kehadiran belum siap. Silakan muat ulang.');
+        return;
+      }
+
+      isPerformingAction.value = true;
+      final result = await Get.toNamed(
+        Routes.VALIDATION_SELFIE,
+        arguments: [
+          status,
+          attendanceTodayRes.value,
+          currentPosition.value,
+          nearestOffice.value,
+          isGpsSpoofing.value,
+          workDurationMinutes.value
+        ],
+      );
+
+      await _getAttendanceToday();
+
+      if (!(result == true && status == 'checked_in')) {
+        isGpsSpoofing.value = false;
+      }
+      // GPS is only needed until the day is completed.
+      if (attendanceStatus.value == AttendanceStatus.checkedOut) {
+        _positionStream?.cancel();
+        _positionStream = null;
+      }
+    } finally {
+      _actionInProgress = false;
+      isPerformingAction.value = false;
+    }
   }
 
   void _totalHours() {
@@ -848,50 +992,69 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         description: 'Anda yakin akan memulai sesi istirahat',
         onPressedYes: () async {
           Get.back();
-          if (!areActionsReady) return;
-          isPerformingAction.value = true;
-          if (hasTakenBreak.value) {
-            isPerformingAction.value = false;
-            return;
-          }
-
-          breakTime.value = DateTime.now();
-          breakDuration.value = '';
-          isLoadingAttendance.value = true;
-
-          final entity = AttendanceRecordEntity(
-            id: attendanceTodayRes.value.attendanceId!,
-            locationID: _getNearestLocationId(),
-            status: "break_start",
-            date: breakTime.value!,
-            time: breakTime.value!,
-            latitude: currentPosition.value!.latitude,
-            longitude: currentPosition.value!.longitude,
-            workDurationMinutes: 0,
-            banned: isGpsSpoofing.value,
-            file: '',
-          );
-
-          final result = await recordAttendanceUsecase(entity);
-
-          result.fold(
-            (l) {
-              Get.snackbar("Terjadi Kesalahan", "Gagal record Break Start");
-              isLoadingAttendance.value = false;
-              isPerformingAction.value = false;
-            },
-            (r) async {
-              await _getAttendanceToday();
-              isLoadingAttendance.value = false;
-              isPerformingAction.value = false;
-            },
-          );
+          await recordBreakStart();
         });
+  }
+
+  void endBreakTime() async {
+    if (!areActionsReady) return;
+
+    AppDialogImpl().showChoiceDialog(
+        title: 'Konfirmasi',
+        description: 'Anda yakin akan mengakhiri sesi istirahat',
+        onPressedYes: () async {
+          Get.back();
+          await recordBreakEnd();
+        });
+  }
+
+  Future<void> recordBreakStart() =>
+      _recordBreak('break_start', 'Gagal record Break Start');
+
+  Future<void> recordBreakEnd() =>
+      _recordBreak('break_end', 'Gagal record Break End');
+
+  /// Records a break transition. Nothing is applied optimistically: the UI
+  /// changes only through the refetch after the POST, and a failed POST is
+  /// also followed by a refetch in case the server did store it.
+  Future<void> _recordBreak(String action, String failureMessage) async {
+    if (_actionInProgress) return;
+    _actionInProgress = true;
+    try {
+      if (!await _ensureActionAllowed(action)) return;
+      isPerformingAction.value = true;
+
+      final now = DateTime.now();
+      final position = currentPosition.value!;
+      final entity = AttendanceRecordEntity(
+        id: attendanceTodayRes.value.attendanceId ?? 0,
+        locationID: nearestOffice.value!.locationId,
+        status: action,
+        date: now,
+        time: now,
+        latitude: position.latitude,
+        longitude: position.longitude,
+        workDurationMinutes: 0,
+        banned: isGpsSpoofing.value,
+        file: '',
+      );
+
+      final result = await recordAttendanceUsecase(entity);
+      if (result.isLeft()) {
+        AppDialogImpl().showErrorSnackBar(description: failureMessage);
+      }
+
+      await _getAttendanceToday(silent: result.isLeft());
+    } finally {
+      _actionInProgress = false;
+      isPerformingAction.value = false;
+    }
   }
 
   void _scheduleBreakCountdownStart() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (attendanceStatus.value != AttendanceStatus.breakStart) {
+      // The frame can land after onClose; never start a timer then.
+      if (isClosed || attendanceStatus.value != AttendanceStatus.breakStart) {
         return;
       }
 
@@ -937,56 +1100,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
         }
       },
     );
-  }
-
-  void endBreakTime() async {
-    if (!areActionsReady) return;
-
-    AppDialogImpl().showChoiceDialog(
-        title: 'Konfirmasi',
-        description: 'Anda yakin akan mengakhiri sesi istirahat',
-        onPressedYes: () async {
-          Get.back();
-          if (!areActionsReady) return;
-          isPerformingAction.value = true;
-
-          breakTimer?.cancel();
-
-          isLoadingAttendance.value = true;
-
-          final entity = AttendanceRecordEntity(
-            id: attendanceTodayRes.value.attendanceId!,
-            locationID: _getNearestLocationId(),
-            status: "break_end",
-            date: DateTime.now(),
-            time: DateTime.now(),
-            latitude: currentPosition.value!.latitude,
-            longitude: currentPosition.value!.longitude,
-            workDurationMinutes: 0,
-            banned: isGpsSpoofing.value,
-            file: '',
-          );
-
-          final result = await recordAttendanceUsecase(entity);
-
-          result.fold(
-            (l) {
-              Get.snackbar("Terjadi Kesalahan", "Gagal record Break End");
-              isLoadingAttendance.value = false;
-              isPerformingAction.value = false;
-            },
-            (r) async {
-              // breakDuration is derived from the response in
-              // _applyAttendanceToday.
-              await _getAttendanceToday();
-
-              breakTimer?.cancel();
-              countTimes.value = '--:--:--';
-              isLoadingAttendance.value = false;
-              isPerformingAction.value = false;
-            },
-          );
-        });
   }
 
   void _updateOfficeColors() {
@@ -1189,12 +1302,6 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
 
     return DateFormat('hh:mm:ss a').format(displayTime.value);
-  }
-
-  int _getNearestLocationId() {
-    final nearest = nearestOffice.value;
-
-    return nearest!.locationId;
   }
 
   String formatApiTime(String? time) {

@@ -10,6 +10,7 @@ import 'package:latlong2/latlong.dart' as ll;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:MyRoyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
+import 'package:MyRoyal/app/modules/attendance/presentation/views/components/attendance_shimmer.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/design/styles.dart';
 import 'package:MyRoyal/base/widgets/app_divider.dart';
@@ -36,11 +37,17 @@ class AttendanceView extends GetView<AttendanceController> {
           toolbarHeight: 70.h,
         ),
         body: Obx(() {
-          // Offline: keep showing the last known state once it exists
-          // (actions are disabled via areActionsReady).
-          if (controller.isLoadingAttendance.value ||
-              (controller.isOffline && !controller.hasAttendanceData)) {
-            return _buildShimmer();
+          // Full-screen placeholder only while nothing is loaded yet. Later
+          // refreshes (pull, resume, reconnect, actions) keep the content.
+          if (!controller.hasAttendanceData) {
+            if (controller.hasLoadError.value &&
+                !controller.isLoadingAttendance.value) {
+              return _buildLoadError();
+            }
+            return const SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: AttendanceInitialShimmer(),
+            );
           }
 
           return RefreshIndicator(
@@ -96,17 +103,53 @@ class AttendanceView extends GetView<AttendanceController> {
     );
   }
 
+  Widget _buildLoadError() {
+    return RefreshIndicator(
+      backgroundColor: white,
+      color: primary,
+      onRefresh: controller.onRefresh,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 120, 24, 24),
+        children: [
+          Icon(Icons.cloud_off_rounded, size: 56, color: Colors.grey.shade500),
+          16.verticalSpace,
+          Text(
+            'Data kehadiran gagal dimuat.',
+            style: TS.titleSmall,
+            textAlign: TextAlign.center,
+          ),
+          8.verticalSpace,
+          Text(
+            'Periksa koneksi Anda lalu coba lagi.',
+            style: TS.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          20.verticalSpace,
+          Center(
+            child: ButtonPrimary(
+              text: 'Coba Lagi',
+              color: primary,
+              onPressed: controller.onRefresh,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Own Obx so GPS updates only rebuild the map slot, not the whole page.
   Widget _buildMap() {
     return SizedBox(
       height: 330.h,
-      child: controller.currentPosition.value == null
+      child: Obx(() => controller.currentPosition.value == null
           ? _buildMapShimmer()
           : GestureDetector(
               onPanDown: (_) => controller.isMapInteracting.value = true,
               onPanEnd: (_) => controller.isMapInteracting.value = false,
               onPanCancel: () => controller.isMapInteracting.value = false,
               child: AttendanceMap(controller),
-            ),
+            )),
     );
   }
 
@@ -174,7 +217,9 @@ class AttendanceView extends GetView<AttendanceController> {
       }
 
       return Text(
-        DateFormat('EEEE, dd MMMM yyyy', "id_ID").format(DateTime.now()),
+        // Server clock, so the date flips with the backend day.
+        DateFormat('EEEE, dd MMMM yyyy', "id_ID")
+            .format(controller.displayTime.value),
         style: TS.bodyMedium,
       );
     });
@@ -183,13 +228,21 @@ class AttendanceView extends GetView<AttendanceController> {
   Widget _buildActionSection() {
     final status = controller.attendanceStatus.value;
 
+    // While an action is submitted/confirmed, show a placeholder shaped like
+    // the current state's buttons instead of a full-screen shimmer.
+    final actions = Obx(() => controller.isPerformingAction.value
+        ? AttendanceActionShimmer(status: status)
+        : (status == AttendanceStatus.notStarted
+            ? _buildCheckInButton()
+            : _buildActionButtons(status)));
+
     if (status == AttendanceStatus.notStarted) {
-      return _buildCheckInButton();
+      return actions;
     }
 
     return Column(
       children: [
-        _buildActionButtons(status),
+        actions,
         status != AttendanceStatus.checkedOut
             ? 20.verticalSpace
             : const SizedBox.shrink(),
@@ -343,13 +396,6 @@ class AttendanceView extends GetView<AttendanceController> {
 
   Widget _buildCheckInButton() {
     return Obx(() {
-      if (controller.isLoadingAttendance.value) {
-        return const Padding(
-          padding: EdgeInsets.all(40),
-          child: CircularProgressIndicator(),
-        );
-      }
-
       final enabled =
           controller.areActionsReady && controller.isLocationValid.value;
 
@@ -393,28 +439,31 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildCheckOutBreakRow() {
-    final enabled =
-        controller.areActionsReady && controller.isLocationValid.value;
+    return Obx(() {
+      final enabled =
+          controller.areActionsReady && controller.isLocationValid.value;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ButtonPrimary(
-          text: 'Check Out',
-          color: enabled ? white : Colors.grey,
-          borderSide: enabled ? BorderSide(color: primary) : null,
-          textColor: enabled ? primary : Colors.white,
-          onPressed:
-              enabled ? () => controller.validationSelfie('checked_out') : null,
-        ),
-        10.horizontalSpace,
-        ButtonPrimary(
-          text: 'Take a Break',
-          color: enabled ? primary : Colors.grey,
-          onPressed: enabled ? controller.startBreakTime : null,
-        ),
-      ],
-    );
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ButtonPrimary(
+            text: 'Check Out',
+            color: enabled ? white : Colors.grey,
+            borderSide: enabled ? BorderSide(color: primary) : null,
+            textColor: enabled ? primary : Colors.white,
+            onPressed: enabled
+                ? () => controller.validationSelfie('checked_out')
+                : null,
+          ),
+          10.horizontalSpace,
+          ButtonPrimary(
+            text: 'Take a Break',
+            color: enabled ? primary : Colors.grey,
+            onPressed: enabled ? controller.startBreakTime : null,
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildEndBreakButton() {
@@ -437,96 +486,21 @@ class AttendanceView extends GetView<AttendanceController> {
   }
 
   Widget _buildCheckOutButton() {
-    final enabled =
-        controller.areActionsReady && controller.isLocationValid.value;
+    return Obx(() {
+      final enabled =
+          controller.areActionsReady && controller.isLocationValid.value;
 
-    return ButtonPrimary(
-      text: 'Check Out',
-      color: enabled ? white : Colors.grey,
-      textColor: enabled ? primary : Colors.grey,
-      borderSide: BorderSide(
-        color: enabled ? primary : Colors.grey,
-      ),
-      onPressed:
-          enabled ? () => controller.validationSelfie('checked_out') : null,
-    );
-  }
-
-  Widget _buildShimmer() {
-    return Column(
-      children: [
-        10.verticalSpace,
-
-        /// TITLE
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 20,
-            width: 160,
-            color: Colors.white,
-          ),
+      return ButtonPrimary(
+        text: 'Check Out',
+        color: enabled ? white : Colors.grey,
+        textColor: enabled ? primary : Colors.grey,
+        borderSide: BorderSide(
+          color: enabled ? primary : Colors.grey,
         ),
-
-        20.verticalSpace,
-
-        /// MAP / IMAGE PLACEHOLDER
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 300.h,
-            width: Get.width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-
-        20.verticalSpace,
-
-        /// CLOCK
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 28,
-            width: 120,
-            color: Colors.white,
-          ),
-        ),
-
-        15.verticalSpace,
-
-        /// DATE
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 16,
-            width: 200,
-            color: Colors.white,
-          ),
-        ),
-
-        30.verticalSpace,
-
-        /// BUTTON
-        Shimmer.fromColors(
-          baseColor: Colors.grey.shade300,
-          highlightColor: Colors.grey.shade100,
-          child: Container(
-            height: 120,
-            width: 120,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
-    );
+        onPressed:
+            enabled ? () => controller.validationSelfie('checked_out') : null,
+      );
+    });
   }
 }
 
