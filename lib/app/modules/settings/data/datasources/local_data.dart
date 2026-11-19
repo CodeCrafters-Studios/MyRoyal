@@ -1,3 +1,4 @@
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_sync.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/design/colors.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
@@ -23,6 +24,8 @@ class SettingsLocalDataImpl implements SettingsLocalData {
     if (confirm) {
       await appStorage.delete(CACHE_ACCESS_TOKEN);
       await appStorage.delete(CACHE_REFRESH_TOKEN);
+      // Home screen widget must not keep showing this account's data.
+      await AttendanceWidgetSync.instance.clear();
       return true;
     } else {
       return false;

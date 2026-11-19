@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:MyRoyal/base/config/app_config.dart';
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_bootstrap.dart';
 import 'package:MyRoyal/base/config/app_constants.dart';
 import 'package:MyRoyal/base/config/environment_config.dart';
 import 'package:MyRoyal/base/data/app_encryption.dart';
@@ -83,6 +84,9 @@ Future<void> setupAndRunApp(
             ),
     ),
   );
+
+  // Home screen attendance widget: launch taps + shared storage (EPIC 02).
+  unawaited(startAttendanceWidget());
 }
 
 Future<void> remoteMessageHandler(RemoteMessage message) async {

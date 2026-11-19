@@ -15,7 +15,10 @@ import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_lo
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/utils/attendance_time.dart';
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_launch_handler.dart';
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_sync.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:MyRoyal/base/errors/exception.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
 import 'package:MyRoyal/base/utils/app_utils.dart';
@@ -46,7 +49,9 @@ extension AttendanceStatusX on AttendanceStatus {
   }
 }
 
-class AttendanceController extends GetxController with WidgetsBindingObserver {
+class AttendanceController extends GetxController
+    with WidgetsBindingObserver
+    implements AttendanceWidgetActionTarget {
   AttendanceController({
     required this.getAttendanceTodayUsecase,
     required this.recordAttendanceUsecase,
@@ -185,6 +190,23 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
       if (ready && pending != null) _fitMapBounds(pending);
     });
 
+    // Home screen widget (EPIC 02): office name is shown on the widget, and
+    // a widget tap waits here until the screen can run the action.
+    ever(nearestOffice, (NearestOfficeInfo? office) {
+      final name = office?.locationName ?? '';
+      if (hasAttendanceData && name.isNotEmpty && name != _widgetOfficeName) {
+        _syncWidget();
+      }
+    });
+    everAll([
+      isLoadingAttendance,
+      isPerformingAction,
+      isMapReady,
+      currentPosition,
+      _hasAttendanceData,
+    ], (_) => _runPendingWidgetAction());
+    AttendanceWidgetLaunchHandler.instance?.attach(this);
+
     _runInitialOnce();
   }
 
@@ -242,6 +264,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
+    AttendanceWidgetLaunchHandler.instance?.detach(this);
+    _widgetSnapshotTimer?.cancel();
     _mapMoveDebounce?.cancel();
     _timer?.cancel();
     breakTimer?.cancel();
@@ -449,6 +473,7 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     googleMapController!.animateCamera(
       CameraUpdate.newLatLngBounds(bounds, 18),
     );
+    _scheduleWidgetMapSnapshot();
   }
 
   bool isPointInsidePolygon(LatLng point, List<LatLng> polygon) {
@@ -582,6 +607,8 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
     }
 
     if (!_isPreviousDayRecord()) _staleDayRetries = 0;
+
+    _syncWidget();
   }
 
   /// Re-anchors the ticking clock to the backend `server_time`.
@@ -1372,5 +1399,150 @@ class AttendanceController extends GetxController with WidgetsBindingObserver {
   String get randomEndDayMessage {
     endDayMessages.shuffle();
     return endDayMessages.first;
+  }
+
+  // ---------------------------------------------------------------------
+  // Home screen widget (EPIC 02). Display data and launch only: every
+  // attendance rule stays in the methods above (design §2-§3).
+
+  String _widgetOfficeName = '';
+  String? _pendingWidgetAction;
+  DateTime? _pendingWidgetActionAt;
+  Timer? _widgetSnapshotTimer;
+
+  static const _widgetActionToBackend = {
+    'check_in': 'checked_in',
+    'check_out': 'checked_out',
+    'break_start': 'break_start',
+    'break_end': 'break_end',
+  };
+
+  static const _statusToBackend = {
+    AttendanceStatus.notStarted: 'not_started',
+    AttendanceStatus.checkedIn: 'checked_in',
+    AttendanceStatus.breakStart: 'break_start',
+    AttendanceStatus.breakEnd: 'break_end',
+    AttendanceStatus.checkedOut: 'checked_out',
+  };
+
+  /// Writes the backend-confirmed state to the widget. Called only from
+  /// [_applyAttendanceToday] (and when the nearest office becomes known).
+  void _syncWidget() {
+    final r = attendanceTodayRes.value;
+    final status = attendanceStatus.value;
+    final serverNow = _currentServerTime();
+    _widgetOfficeName = nearestOffice.value?.locationName ?? _widgetOfficeName;
+
+    final checkIn = checkInTime.value;
+    final breakStart = breakTime.value;
+    final worked = checkIn == null
+        ? 0
+        : computeWorkDuration(
+            checkIn: checkIn,
+            end: checkOutTime.value ?? serverNow,
+            breakStart: breakStart,
+            breakEnd: breakEndTime.value,
+            onBreak: status == AttendanceStatus.breakStart,
+          ).inMinutes;
+    final breakEndsAt =
+        status == AttendanceStatus.breakStart && breakStart != null
+            ? breakStart
+                .add(Duration(minutes: r.durationBreak ?? 0))
+                .millisecondsSinceEpoch
+            : 0;
+
+    AttendanceWidgetSync.instance.save(AttendanceWidgetPayload(
+      signedIn: true,
+      status: _statusToBackend[status]!,
+      date: AttendanceWidgetPayload.ymd(r.date),
+      checkIn: AttendanceWidgetPayload.hhmm(checkIn),
+      checkOut: AttendanceWidgetPayload.hhmm(checkOutTime.value),
+      breakStart: AttendanceWidgetPayload.hhmm(breakStart),
+      breakEnd: AttendanceWidgetPayload.hhmm(breakEndTime.value),
+      workedMinutesAtSync: worked,
+      breakEndsAtEpochMs: breakEndsAt,
+      serverNowAtSyncEpochMs: serverNow.millisecondsSinceEpoch,
+      syncedAtEpochMs: DateTime.now().millisecondsSinceEpoch,
+      officeName: _widgetOfficeName,
+    ));
+  }
+
+  /// A widget button was tapped. The action waits until the screen is ready
+  /// (data loaded, map and GPS available) and then goes through the same
+  /// guarded entry points as the on-screen buttons.
+  @override
+  void handleWidgetAction(String action) {
+    if (!_widgetActionToBackend.containsKey(action)) return;
+    _pendingWidgetAction = action;
+    _pendingWidgetActionAt = DateTime.now();
+    _runPendingWidgetAction();
+  }
+
+  void _runPendingWidgetAction() {
+    final action = _pendingWidgetAction;
+    final at = _pendingWidgetActionAt;
+    if (action == null || at == null || isClosed) return;
+
+    if (DateTime.now().difference(at) >
+        AttendanceWidgetLaunchHandler.pendingTtl) {
+      _pendingWidgetAction = null;
+      return;
+    }
+    if (!hasAttendanceData || !areActionsReady) return;
+    _pendingWidgetAction = null;
+
+    final backend = _widgetActionToBackend[action]!;
+    if (!(_allowedFrom[backend]?.contains(attendanceStatus.value) ?? false)) {
+      AppDialogImpl().showErrorSnackBar(
+          description:
+              'Status kehadiran sudah berubah. Silakan periksa kembali.');
+      return;
+    }
+
+    switch (action) {
+      case 'check_in':
+      case 'check_out':
+        validationSelfie(backend);
+        break;
+      case 'break_start':
+        startBreakTime();
+        break;
+      case 'break_end':
+        // Same rule as the screen: End Break only after the countdown.
+        if (!isBreakTimerDone.value) {
+          AppDialogImpl().showErrorSnackBar(
+              description: 'Waktu istirahat belum selesai.');
+          return;
+        }
+        endBreakTime();
+        break;
+    }
+  }
+
+  /// Saves a small map image for the widget, at most once per day (D2).
+  void _scheduleWidgetMapSnapshot() {
+    final day = _currentServerTime();
+    if (!AttendanceWidgetSync.instance.needsMapSnapshot(day)) return;
+
+    _widgetSnapshotTimer?.cancel();
+    // Let the camera animation to the office bounds finish first.
+    _widgetSnapshotTimer = Timer(const Duration(seconds: 2), () async {
+      final map = googleMapController;
+      if (isClosed || map == null || !isMapReady.value) return;
+      try {
+        final png = await map.takeSnapshot();
+        if (png == null || isClosed) return;
+        final jpeg = await FlutterImageCompress.compressWithList(
+          png,
+          minWidth: 640,
+          minHeight: 320,
+          quality: 70,
+          format: CompressFormat.jpeg,
+        );
+        await AttendanceWidgetSync.instance.saveMapSnapshot(jpeg, day);
+      } catch (e) {
+        AppUtils.logApp('WIDGET ::: map snapshot failed: $e');
+      }
+    });
   }
 }
