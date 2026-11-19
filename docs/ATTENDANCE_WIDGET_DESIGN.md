@@ -91,7 +91,7 @@ Decisions D1–D5 in §9 were **approved** on 2026-11-19 (recommended options). 
 | `officeName` | string | nearest office from the last session |
 | `mapImage` | file path | snapshot PNG, or empty → placeholder |
 
-**Not stored:** the token, name, NIK, employee ID or raw GPS coordinates. Widgets are visible to anyone who sees the home screen.
+**Not stored:** the token, name, NIK, employee ID or raw GPS coordinates. Widgets are visible to anyone who sees the home screen. Since §14 the user's position is published only as a dot position on the map image (0–1 fractions), plus the app's own inside/outside result and the fix time.
 
 ## 5. Map preview
 
@@ -238,3 +238,22 @@ Date 2026-11-19, against `dev-api.royalcorp.co.id`. The device already had a sig
 | Live widget update after a real backend-confirmed transaction: the employee checked in (selfie flow) and the payload became `checked_in`, `checkIn 10:54`. With the **same app process still running**, the widget switched to "Sedang bekerja · Masuk 10:54", the live timer was running, and it showed Check Out and Take a Break | ✅ (confirms the T09 `currentState` fix on hardware) |
 
 Observation: the device clock was about 2 min behind the server (check-in 10:54 against a phone clock of 10:53). The widget timer and staleness use the server clock from the payload, so the display stays consistent.
+
+## 14. Change request: full-screen map + location while the app is in use (options A + B)
+
+Approved 2026-11-19. Option C (background tracking) was rejected: it needs "always" location permission, store review and HR consent, and it would reverse D1.
+
+| Aspect | Implementation |
+|---|---|
+| Layout | The map image fills the whole widget (`ContentScale.Crop`). A translucent status card is top-left, the location chips top-right, and the action buttons along the bottom |
+| A: last known location | Blue dot plus "Lokasi HH:mm" from the last GPS fix while the app was in use |
+| B: live while in use | Every accepted fix (accuracy ≤ 25 m, the existing filters) updates the widget, **throttled to 30 s**. A change between inside and outside the geofence is published immediately. The GPS stream only runs while the app is in the foreground (EPIC 01), so nothing tracks in the background and no permissions changed |
+| Inside/outside badge | The app's **existing** `isLocationValid` result, not reimplemented natively. Shown only while the fix is under 15 min old and the attendance data isn't stale. Display only: actions still re-validate in the app |
+| Privacy | No coordinates are stored for the widget. Dart projects the fix onto the snapshot using the snapshot's `getVisibleRegion()` bounds (Web Mercator) and stores only `mapDotX`/`mapDotY` (0–1), `insideArea` (1/0/−1) and `locationAtEpochMs`. Nothing is published while GPS spoofing is detected |
+| Snapshot | Once per day per app process. The camera is held on the office bounds (`newLatLngBounds`, so bearing and tilt are 0). The in-app my-location layer is hidden for about 0.4 s so the old dot isn't baked into the image. The bounds are kept with the image; no dot is shown until bounds exist |
+| Dot rendering | Drawn **into the bitmap** on the Android side, so it stays correct after cropping. Grey when the fix is older than 15 min; a refresh is scheduled for that moment |
+| Payload | Additive fields, schema still 1; older payloads parse with defaults |
+
+Tests: Dart covers projection (centre, corners, north-up, off-image), payload defaults, bounds lifecycle, controller throttle and the immediate inside/outside change, no location while spoofing, and dot placement once bounds exist (90/90 attendance tests). Kotlin covers fresh vs old fix, badge, refresh at the freshness limit, stale attendance hiding the badge, off-image dot, and older payload compatibility (21/21).
+
+Device check (SM-A336E, real session, checked in): payload `mapDotX 0.409, mapDotY 0.536, insideArea 1`. The widget shows the full-screen map with a drawn blue dot, "Di dalam area", "Lokasi 11:10", "Sedang bekerja · Masuk 10:54" with the timer running, and Check Out / Take a Break. The new snapshot has no baked-in dot. ✅

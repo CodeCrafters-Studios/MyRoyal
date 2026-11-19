@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -127,6 +128,69 @@ void main() {
         expect(json['breakEndsAtEpochMs'],
             DateTime(2026, 11, 19, 13).millisecondsSinceEpoch);
         expect(json['workedMinutesAtSync'], 240);
+      });
+    });
+  });
+
+  group('live location (A + B)', () {
+    const bounds = WidgetMapBounds(
+      north: officeLat + 0.001,
+      south: officeLat - 0.001,
+      east: officeLng + 0.001,
+      west: officeLng - 0.001,
+    );
+
+    testWidgets('publishes geofence result without a dot before the snapshot',
+        (tester) async {
+      await run(tester, (h) async {
+        h.geo.emit();
+        await h.settle();
+        final json = published(h)!;
+        expect(json['insideArea'], 1);
+        expect(json['locationAtEpochMs'], greaterThan(0));
+        expect(json['mapDotX'], -1, reason: 'no snapshot bounds yet');
+      });
+    });
+
+    testWidgets('places the dot on the map image once bounds exist',
+        (tester) async {
+      await run(tester, (h) async {
+        await AttendanceWidgetSync.instance
+            .saveMapSnapshot(Uint8List(1), DateTime(2026, 11, 19), bounds);
+        h.geo.emit();
+        await h.settle();
+        final json = published(h)!;
+        expect(json['mapDotX'], closeTo(0.5, 0.01));
+        expect(json['mapDotY'], closeTo(0.5, 0.01));
+        expect(json.keys, isNot(contains('latitude')));
+      });
+    });
+
+    testWidgets('throttled, but an inside/outside change is immediate',
+        (tester) async {
+      await run(tester, (h) async {
+        h.geo.emit();
+        await h.settle();
+        final writes = h.widgetStore.refreshes;
+
+        h.geo.emit(lat: officeLat + 0.00002); // same area, within 30 s
+        await h.settle();
+        expect(h.widgetStore.refreshes, writes);
+
+        h.geo.emit(lat: officeLat + 0.05); // leaves the geofence
+        await h.settle();
+        expect(h.widgetStore.refreshes, writes + 1);
+        expect(published(h)!['insideArea'], 0);
+      });
+    });
+
+    testWidgets('no location is published while spoofing is detected',
+        (tester) async {
+      await run(tester, (h) async {
+        h.geo.emit(mocked: true);
+        await h.settle();
+        expect(published(h)!['insideArea'], -1);
+        expect(published(h)!['locationAtEpochMs'], 0);
       });
     });
   });

@@ -557,7 +557,8 @@ class _AttendanceMapState extends State<AttendanceMap>
                     const LatLng(-6.8621, 107.5006),
                 zoom: 21,
               ),
-              myLocationEnabled: true,
+              // Briefly off while the widget map image is captured.
+              myLocationEnabled: !widget.controller.hideMyLocationLayer.value,
               myLocationButtonEnabled: false,
               zoomControlsEnabled: false,
               circles: widget.controller.officeCircles.toSet(),

@@ -6,7 +6,46 @@ import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_sync.dar
 
 import 'fake_widget_store.dart';
 
+const bounds = WidgetMapBounds(
+  north: -6.1990,
+  south: -6.2010,
+  east: 106.8180,
+  west: 106.8160,
+);
+
 void main() {
+  group('projectToMapImage', () {
+    test('centre of the bounds is the centre of the image', () {
+      final p = projectToMapImage(-6.2000, 106.8170, bounds)!;
+      expect(p.x, closeTo(0.5, 1e-6));
+      expect(p.y, closeTo(0.5, 1e-3));
+    });
+
+    test('corners map to 0 and 1', () {
+      final tl = projectToMapImage(-6.1990, 106.8160, bounds)!;
+      final br = projectToMapImage(-6.2010, 106.8180, bounds)!;
+      expect(tl.x, closeTo(0, 1e-9));
+      expect(tl.y, closeTo(0, 1e-9));
+      expect(br.x, closeTo(1, 1e-9));
+      expect(br.y, closeTo(1, 1e-9));
+    });
+
+    test('north is up: a point further north has a smaller y', () {
+      final north = projectToMapImage(-6.1995, 106.8170, bounds)!;
+      final south = projectToMapImage(-6.2005, 106.8170, bounds)!;
+      expect(north.y, lessThan(south.y));
+    });
+
+    test('outside the image or degenerate bounds gives null', () {
+      expect(projectToMapImage(-6.3000, 106.8170, bounds), isNull);
+      expect(projectToMapImage(-6.2000, 106.9000, bounds), isNull);
+      expect(
+          projectToMapImage(-6.2, 106.8,
+              const WidgetMapBounds(north: 1, south: 1, east: 2, west: 1)),
+          isNull);
+    });
+  });
+
   group('AttendanceWidgetPayload', () {
     test('serialises the v1 contract without identity or location', () {
       final json = const AttendanceWidgetPayload(
@@ -33,6 +72,14 @@ void main() {
               signedIn: true, workedMinutesAtSync: -12)
           .toJson();
       expect(json['workedMinutesAtSync'], 0);
+    });
+
+    test('location defaults to unknown', () {
+      final json = const AttendanceWidgetPayload(signedIn: true).toJson();
+      expect(json['mapDotX'], -1);
+      expect(json['mapDotY'], -1);
+      expect(json['locationAtEpochMs'], 0);
+      expect(json['insideArea'], -1);
     });
 
     test('signed-out payload', () {
@@ -76,7 +123,7 @@ void main() {
       final sync = AttendanceWidgetSync(store: FakeWidgetStore(fail: true));
       await sync.save(const AttendanceWidgetPayload(signedIn: true));
       await sync.clear();
-      await sync.saveMapSnapshot(Uint8List(1), DateTime(2026, 11, 19));
+      await sync.saveMapSnapshot(Uint8List(1), DateTime(2026, 11, 19), bounds);
     });
 
     test('map snapshot at most once per day, reset on clear', () async {
@@ -85,19 +132,22 @@ void main() {
       final day = DateTime(2026, 11, 19, 8);
 
       expect(sync.needsMapSnapshot(day), isTrue);
-      await sync.saveMapSnapshot(Uint8List.fromList([1, 2, 3]), day);
+      await sync.saveMapSnapshot(Uint8List.fromList([1, 2, 3]), day, bounds);
       expect(store.files[AttendanceWidgetSync.mapKey], isNotNull);
       expect(sync.needsMapSnapshot(DateTime(2026, 11, 19, 17)), isFalse);
       expect(sync.needsMapSnapshot(DateTime(2026, 11, 20, 0, 5)), isTrue);
 
+      expect(sync.mapBounds, same(bounds));
+
       await sync.clear();
       expect(sync.needsMapSnapshot(DateTime(2026, 11, 19, 17)), isTrue);
+      expect(sync.mapBounds, isNull);
     });
 
     test('a failed snapshot write is retried later', () async {
       final sync = AttendanceWidgetSync(store: FakeWidgetStore(fail: true));
       final day = DateTime(2026, 11, 19);
-      await sync.saveMapSnapshot(Uint8List(1), day);
+      await sync.saveMapSnapshot(Uint8List(1), day, bounds);
       expect(sync.needsMapSnapshot(day), isTrue);
     });
   });

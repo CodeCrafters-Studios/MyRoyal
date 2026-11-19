@@ -822,6 +822,7 @@ class AttendanceController extends GetxController
     distanceFromOffice.value = nearestDistance;
 
     _calculateNearestOffice(smoothed);
+    _publishWidgetLocation(smoothed);
   }
 
   void _startTimer() {
@@ -1364,7 +1365,7 @@ class AttendanceController extends GetxController
   }
 
   void _moveMapRealtime(LatLng pos) {
-    if (isPerformingAction.value) return;
+    if (isPerformingAction.value || _isFramingWidgetSnapshot) return;
 
     _mapMoveDebounce?.cancel();
 
@@ -1406,6 +1407,22 @@ class AttendanceController extends GetxController
   // attendance rule stays in the methods above (design §2-§3).
 
   String _widgetOfficeName = '';
+
+  /// Hides the in-app blue dot for a moment so it is not baked into the
+  /// widget map image (the widget draws its own, current dot).
+  final hideMyLocationLayer = false.obs;
+  bool _isFramingWidgetSnapshot = false;
+
+  /// Last accepted GPS fix shown on the widget (kept in memory only).
+  LatLng? _widgetLocation;
+  DateTime? _widgetLocationAt;
+  bool? _widgetInsideArea;
+  DateTime? _widgetLocationWrittenAt;
+
+  /// Live widget location updates while the app is in use (option B) are
+  /// throttled; a change of inside/outside is published immediately.
+  static const _widgetLocationThrottle = Duration(seconds: 30);
+
   String? _pendingWidgetAction;
   DateTime? _pendingWidgetActionAt;
   Timer? _widgetSnapshotTimer;
@@ -1451,6 +1468,14 @@ class AttendanceController extends GetxController
                 .millisecondsSinceEpoch
             : 0;
 
+    // Location: only as a dot on the map image + the app's geofence result.
+    // Not published while GPS spoofing is detected.
+    final location = isGpsSpoofing.value ? null : _widgetLocation;
+    final bounds = AttendanceWidgetSync.instance.mapBounds;
+    final dot = location != null && bounds != null
+        ? projectToMapImage(location.latitude, location.longitude, bounds)
+        : null;
+
     AttendanceWidgetSync.instance.save(AttendanceWidgetPayload(
       signedIn: true,
       status: _statusToBackend[status]!,
@@ -1464,7 +1489,32 @@ class AttendanceController extends GetxController
       serverNowAtSyncEpochMs: serverNow.millisecondsSinceEpoch,
       syncedAtEpochMs: DateTime.now().millisecondsSinceEpoch,
       officeName: _widgetOfficeName,
+      mapDotX: dot?.x ?? -1,
+      mapDotY: dot?.y ?? -1,
+      locationAtEpochMs:
+          location == null ? 0 : _widgetLocationAt!.millisecondsSinceEpoch,
+      insideArea: location == null ? -1 : (_widgetInsideArea! ? 1 : 0),
     ));
+  }
+
+  /// Called for every accepted GPS fix (stream runs only while the app is in
+  /// use; it is paused in the background, EPIC 01).
+  void _publishWidgetLocation(LatLng position) {
+    if (!hasAttendanceData || isGpsSpoofing.value) return;
+
+    final now = DateTime.now();
+    final inside = isLocationValid.value;
+    final changed = _widgetInsideArea != inside;
+    final last = _widgetLocationWrittenAt;
+    final due = last == null || now.difference(last) >= _widgetLocationThrottle;
+
+    _widgetLocation = position;
+    _widgetLocationAt = now;
+    _widgetInsideArea = inside;
+    if (!changed && !due) return;
+
+    _widgetLocationWrittenAt = now;
+    _syncWidget();
   }
 
   /// A widget button was tapped. The action waits until the screen is ready
@@ -1519,17 +1569,26 @@ class AttendanceController extends GetxController
     }
   }
 
-  /// Saves a small map image for the widget, at most once per day (D2).
+  /// Saves the widget map image, at most once per day (D2), together with
+  /// its geographic bounds so the widget can place a live dot on it.
   void _scheduleWidgetMapSnapshot() {
     final day = _currentServerTime();
     if (!AttendanceWidgetSync.instance.needsMapSnapshot(day)) return;
 
     _widgetSnapshotTimer?.cancel();
-    // Let the camera animation to the office bounds finish first.
-    _widgetSnapshotTimer = Timer(const Duration(seconds: 2), () async {
+    // Keep the camera on the office bounds (no GPS follow) until captured.
+    _isFramingWidgetSnapshot = true;
+    _widgetSnapshotTimer = Timer(const Duration(milliseconds: 1500), () async {
       final map = googleMapController;
-      if (isClosed || map == null || !isMapReady.value) return;
+      if (isClosed || map == null || !isMapReady.value) {
+        _isFramingWidgetSnapshot = false;
+        return;
+      }
+      hideMyLocationLayer.value = true;
       try {
+        await Future<void>.delayed(const Duration(milliseconds: 400));
+        if (isClosed || !isMapReady.value) return;
+        final region = await map.getVisibleRegion();
         final png = await map.takeSnapshot();
         if (png == null || isClosed) return;
         final jpeg = await FlutterImageCompress.compressWithList(
@@ -1539,9 +1598,22 @@ class AttendanceController extends GetxController
           quality: 70,
           format: CompressFormat.jpeg,
         );
-        await AttendanceWidgetSync.instance.saveMapSnapshot(jpeg, day);
+        await AttendanceWidgetSync.instance.saveMapSnapshot(
+          jpeg,
+          day,
+          WidgetMapBounds(
+            north: region.northeast.latitude,
+            south: region.southwest.latitude,
+            east: region.northeast.longitude,
+            west: region.southwest.longitude,
+          ),
+        );
+        _syncWidget(); // place the current dot on the new image
       } catch (e) {
         AppUtils.logApp('WIDGET ::: map snapshot failed: $e');
+      } finally {
+        _isFramingWidgetSnapshot = false;
+        if (!isClosed) hideMyLocationLayer.value = false;
       }
     });
   }

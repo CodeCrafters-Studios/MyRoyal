@@ -162,4 +162,72 @@ class AttendanceWidgetStateResolverTest {
         assertEquals("00h 00m", AttendanceWidgetStateResolver.formatHoursMinutes(-5))
         assertEquals("01h 05m", AttendanceWidgetStateResolver.formatHoursMinutes(65))
     }
+
+    // --- location (A + B) -----------------------------------------------
+
+    private fun located(inside: Int = 1, at: Long = syncedAt, x: Double = 0.4, y: Double = 0.6) =
+        data("checked_in").copy(mapDotX = x, mapDotY = y, locationAtEpochMs = at, insideArea = inside)
+
+    @Test
+    fun `fresh fix shows dot, badge and time label`() {
+        val s = AttendanceWidgetStateResolver.resolve(located(), syncedAt + 60_000, zone)
+        val loc = s.location!!
+        assertEquals(0.4f, loc.dotX!!, 1e-6f)
+        assertEquals(0.6f, loc.dotY!!, 1e-6f)
+        assertTrue(loc.fresh)
+        assertEquals(true, loc.insideArea)
+        assertEquals("Lokasi 08:48", loc.label)
+    }
+
+    @Test
+    fun `outside geofence badge`() {
+        val loc = AttendanceWidgetStateResolver.resolve(located(inside = 0), syncedAt, zone).location!!
+        assertEquals(false, loc.insideArea)
+    }
+
+    @Test
+    fun `old fix is dimmed and has no badge`() {
+        val now = syncedAt + AttendanceWidgetStateResolver.FRESH_MS + 1
+        val loc = AttendanceWidgetStateResolver.resolve(located(), now, zone).location!!
+        assertTrue(!loc.fresh)
+        assertNull(loc.insideArea)
+        assertEquals(0.4f, loc.dotX!!, 1e-6f)
+    }
+
+    @Test
+    fun `badge refresh is scheduled when the fix goes old`() {
+        val s = AttendanceWidgetStateResolver.resolve(located(), syncedAt, zone)
+        assertEquals(syncedAt + AttendanceWidgetStateResolver.FRESH_MS, s.nextRefreshAtMs)
+    }
+
+    @Test
+    fun `stale attendance never shows a current badge`() {
+        val afterMidnight = at(2026, 11, 20, 0, 5)
+        val s = AttendanceWidgetStateResolver.resolve(
+            located(at = afterMidnight - 60_000), afterMidnight, zone,
+        )
+        assertEquals(WidgetKind.STALE, s.kind)
+        assertNull(s.location!!.insideArea)
+        assertTrue(!s.location!!.fresh)
+    }
+
+    @Test
+    fun `no fix, off-image dot and signed out`() {
+        assertNull(AttendanceWidgetStateResolver.resolve(data("checked_in"), syncedAt, zone).location)
+
+        val off = AttendanceWidgetStateResolver.resolve(located(x = -1.0, y = -1.0), syncedAt, zone).location!!
+        assertNull(off.dotX)
+        assertEquals(true, off.insideArea)
+
+        val out = AttendanceWidgetStateResolver.resolve(located().copy(signedIn = false), syncedAt, zone)
+        assertNull(out.location)
+    }
+
+    @Test
+    fun `old payload without location fields still parses`() {
+        val d = AttendanceWidgetData.parse("""{"schema":1,"signedIn":true,"status":"checked_in"}""")!!
+        assertEquals(-1.0, d.mapDotX, 0.0)
+        assertEquals(0L, d.locationAtEpochMs)
+        assertEquals(-1, d.insideArea)
+    }
 }

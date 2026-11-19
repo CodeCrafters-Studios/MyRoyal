@@ -24,6 +24,22 @@ sealed class WidgetTimer {
     data class CountDown(val remainingMs: Long) : WidgetTimer()
 }
 
+/**
+ * Where the user was at the last GPS fix while the app was in use (design
+ * option A + B). Display only: actions are always re-validated by the app.
+ */
+data class WidgetLocation(
+    /** Dot position on the map image (0..1), null when off the image. */
+    val dotX: Float?,
+    val dotY: Float?,
+    /** Recent enough to be shown as current (see FRESH_MS). */
+    val fresh: Boolean,
+    /** "Lokasi 10:54". */
+    val label: String,
+    /** Inside/outside badge; only for a fresh fix, else null. */
+    val insideArea: Boolean?,
+)
+
 enum class WidgetKind { UNKNOWN, SIGNED_OUT, STALE, NOT_STARTED, WORKING, ON_BREAK, BREAK_OVER, DONE }
 
 data class AttendanceWidgetViewState(
@@ -36,6 +52,7 @@ data class AttendanceWidgetViewState(
     val officeName: String = "",
     val dimmed: Boolean = false,
     val showMap: Boolean = true,
+    val location: WidgetLocation? = null,
     /** Device time of the next state change (midnight, break end, max age). */
     val nextRefreshAtMs: Long? = null,
 )
@@ -50,7 +67,43 @@ object AttendanceWidgetStateResolver {
     /** Data older than this is shown as stale (design §6). */
     const val MAX_AGE_MS = 12L * 60 * 60 * 1000
 
+    /** A location fix older than this is shown dimmed and without a badge. */
+    const val FRESH_MS = 15L * 60 * 1000
+
     fun resolve(data: AttendanceWidgetData?, nowMs: Long, zone: ZoneId): AttendanceWidgetViewState {
+        val state = resolveStatus(data, nowMs, zone)
+        if (data == null || !state.showMap) return state
+
+        val location = resolveLocation(data, nowMs, zone, stale = state.kind == WidgetKind.STALE)
+            ?: return state
+        // Re-render when the fix stops being fresh, so the badge disappears.
+        val freshUntil = data.locationAtEpochMs + FRESH_MS
+        val next = listOfNotNull(state.nextRefreshAtMs, freshUntil.takeIf { location.fresh && it > nowMs })
+            .minOrNull()
+        return state.copy(location = location, nextRefreshAtMs = next)
+    }
+
+    fun resolveLocation(
+        data: AttendanceWidgetData,
+        nowMs: Long,
+        zone: ZoneId,
+        stale: Boolean = false,
+    ): WidgetLocation? {
+        if (data.locationAtEpochMs <= 0) return null
+        val age = nowMs - data.locationAtEpochMs
+        val fresh = !stale && age in 0..FRESH_MS
+        val onImage = data.mapDotX in 0.0..1.0 && data.mapDotY in 0.0..1.0
+        val time = Instant.ofEpochMilli(data.locationAtEpochMs).atZone(zone).toLocalTime()
+        return WidgetLocation(
+            dotX = if (onImage) data.mapDotX.toFloat() else null,
+            dotY = if (onImage) data.mapDotY.toFloat() else null,
+            fresh = fresh,
+            label = String.format(Locale.ROOT, "Lokasi %02d:%02d", time.hour, time.minute),
+            insideArea = if (fresh && data.insideArea in 0..1) data.insideArea == 1 else null,
+        )
+    }
+
+    private fun resolveStatus(data: AttendanceWidgetData?, nowMs: Long, zone: ZoneId): AttendanceWidgetViewState {
         if (data == null) {
             return AttendanceWidgetViewState(
                 kind = WidgetKind.UNKNOWN,

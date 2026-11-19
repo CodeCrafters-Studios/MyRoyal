@@ -21,6 +21,13 @@ data class AttendanceWidgetData(
     val serverNowAtSyncEpochMs: Long,
     val syncedAtEpochMs: Long,
     val officeName: String,
+    /** Dot on the map image as fractions (0..1), -1 when unknown. */
+    val mapDotX: Double = -1.0,
+    val mapDotY: Double = -1.0,
+    /** Device time of the GPS fix behind the dot, 0 when none. */
+    val locationAtEpochMs: Long = 0L,
+    /** App geofence result for that fix: 1 inside, 0 outside, -1 unknown. */
+    val insideArea: Int = -1,
 ) {
     companion object {
         const val DATA_KEY = "attendance_widget_v1"
@@ -46,6 +53,10 @@ data class AttendanceWidgetData(
                     serverNowAtSyncEpochMs = o.optLong("serverNowAtSyncEpochMs", 0L),
                     syncedAtEpochMs = o.optLong("syncedAtEpochMs", 0L),
                     officeName = o.optString("officeName", ""),
+                    mapDotX = o.optDouble("mapDotX", -1.0),
+                    mapDotY = o.optDouble("mapDotY", -1.0),
+                    locationAtEpochMs = o.optLong("locationAtEpochMs", 0L),
+                    insideArea = o.optInt("insideArea", -1),
                 )
             } catch (e: Exception) {
                 null
