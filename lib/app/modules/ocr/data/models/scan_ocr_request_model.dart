@@ -23,12 +23,14 @@ class ScanOcrRequestModel {
   final String? file;
   final String? imagePath;
   final int id;
+  final String? type;
 
   ScanOcrRequestModel({
     required this.data,
     this.file,
     this.imagePath,
     required this.id,
+    this.type,
   });
 
   Map<String, dynamic> toJson() {
@@ -36,6 +38,7 @@ class ScanOcrRequestModel {
       'data': data.map((key, value) => MapEntry(key, value.toJson())),
       if (file != null) 'file': file,
       'id': id,
+      'type': type,
     };
   }
 
@@ -44,6 +47,7 @@ class ScanOcrRequestModel {
       'data':
           jsonEncode(data.map((key, value) => MapEntry(key, value.toJson()))),
       'id': id,
+      'type': type,
     };
 
     if (imagePath != null && imagePath!.isNotEmpty) {

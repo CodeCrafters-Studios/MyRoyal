@@ -22,6 +22,9 @@ class EmployeeOsDataEntity {
   final String idCard;
   final String fullName;
   final String status;
+  final dynamic userCreatedPtk;
+  final dynamic section;
+  final dynamic unit;
 
   EmployeeOsDataEntity({
     required this.id,
@@ -29,5 +32,8 @@ class EmployeeOsDataEntity {
     required this.idCard,
     required this.fullName,
     required this.status,
+    required this.userCreatedPtk,
+    required this.section,
+    required this.unit,
   });
 }

@@ -2,6 +2,7 @@ import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_data_master_employee
 import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_employee_os_usecase.dart';
 import 'package:get/get.dart';
 import 'package:MyRoyal/base/services/http_service.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 
 import '../controllers/ocr_controller.dart';
 import '../data/datasources/ocr_remote_data_source.dart';
@@ -37,6 +38,7 @@ class OcrBinding extends Bindings {
       () => OcrController(
           scanOcrUseCase: Get.find<ScanOcrUseCase>(),
           saveEmployeeOsUsecase: Get.find<SaveEmployeeOsUsecase>(),
+          appStorage: Get.find<AppStorage>(),
           Get.find<GetEmployeeOsUsecase>(),
           Get.find<GetDataMasterEmployeeOsUsecase>()),
     );

@@ -130,5 +130,45 @@ void main() {
       expect(response.data!.dataOcr.isDirect, isNull);
       expect(response.data!.dataOcr.isManufacturing, isNull);
     });
+
+    test('Parses HRMS data when data_ocr is null', () {
+      final response = ScanOcrResponseModel.fromJson({
+        "code": 200,
+        "message": "Data OCR berhasil didapat!.",
+        "data": {
+          "id": 13,
+          "data_ocr": null,
+          "data_inputed_os": {
+            "no_registration": "GMBI5655",
+            "first_name": "Test",
+            "last_name": "Keempat",
+            "birthplace": "Jakarta",
+            "date_of_birth": "1991-11-11",
+            "marital_status": "0",
+            "gender": "1",
+            "smoker": false,
+            "id_card": "3204289716381003",
+            "religion_id": "4",
+            "blood_type": "O-",
+            "main_skill": 134,
+            "additional_skill": ["153"],
+            "is_direct": null,
+            "is_manufacturing": null
+          },
+          "different": false
+        }
+      });
+
+      final hrData = response.data!.dataInputOsModel!;
+      expect(response.code, 200);
+      expect(response.success, isTrue);
+      expect(response.data!.dataOcr.data, isNull);
+      expect(hrData.firstName, "Test");
+      expect(hrData.lastName, "Keempat");
+      expect(hrData.dateOfBirth, DateTime(1991, 11, 11));
+      expect(hrData.idCard, "3204289716381003");
+      expect(hrData.mainSkill, 134);
+      expect(hrData.additionalSkill, ["153"]);
+    });
   });
 }

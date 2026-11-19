@@ -1,7 +1,9 @@
 class ApiException implements Exception {
-  ApiException(this.message);
+  ApiException(this.message, {this.statusCode, this.responseData});
 
   final String? message;
+  final int? statusCode;
+  final dynamic responseData;
 }
 
 class CacheException implements Exception {

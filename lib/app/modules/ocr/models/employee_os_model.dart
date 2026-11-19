@@ -31,6 +31,9 @@ class EmployeeOsDataModel extends EmployeeOsDataEntity {
     required super.idCard,
     required super.fullName,
     required super.status,
+    required super.userCreatedPtk,
+    required super.section,
+    required super.unit,
   });
 
   factory EmployeeOsDataModel.fromJson(Map<String, dynamic> json) =>
@@ -40,6 +43,9 @@ class EmployeeOsDataModel extends EmployeeOsDataEntity {
         idCard: json["id_card"],
         fullName: json["full_name"],
         status: json["status"],
+        userCreatedPtk: json["user_created_ptk"],
+        section: json["section"],
+        unit: json["unit"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,5 +54,8 @@ class EmployeeOsDataModel extends EmployeeOsDataEntity {
         "id_card": idCard,
         "full_name": fullName,
         "status": status,
+        "user_created_ptk": userCreatedPtk,
+        "section": status,
+        "unit": status,
       };
 }

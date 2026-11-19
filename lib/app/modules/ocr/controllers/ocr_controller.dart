@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
+
 import 'package:MyRoyal/app/modules/ocr/data/models/scan_ocr_response_model.dart';
 import 'package:MyRoyal/app/modules/ocr/domain/entities/data_master_employee_os_entity.dart';
 import 'package:MyRoyal/app/modules/ocr/domain/entities/employee_os_entity.dart';
 import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_data_master_employee_os_usecase.dart';
 import 'package:MyRoyal/app/modules/ocr/domain/usecases/get_employee_os_usecase.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
+import 'package:MyRoyal/base/utils/storage/app_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -32,14 +36,20 @@ class OcrController extends GetxController {
   OcrController(
       this._getEmployeeOsUsecase, this._getDataMasterEmployeeOsUsecase,
       {ScanOcrUseCase? scanOcrUseCase,
-      SaveEmployeeOsUsecase? saveEmployeeOsUsecase})
+      SaveEmployeeOsUsecase? saveEmployeeOsUsecase,
+      required AppStorage appStorage})
       : _scanOcrUseCase = scanOcrUseCase,
-        _saveEmployeeOsUsecase = saveEmployeeOsUsecase;
+        _saveEmployeeOsUsecase = saveEmployeeOsUsecase,
+        _appStorage = appStorage;
 
+  final AppStorage _appStorage;
+  int _employeeRequestId = 0;
   RxBool isLoadingOCR = false.obs;
   RxBool isDataLoaded = false.obs;
   RxBool isDataLoadedFromBackend = false.obs;
   RxBool isLoading = false.obs;
+  RxBool isLoadMore = false.obs;
+  RxBool isRefreshing = false.obs;
   RxBool hasMoreData = true.obs;
 
   RxDouble readingProgress = 0.0.obs;
@@ -47,6 +57,7 @@ class OcrController extends GetxController {
   RxInt currentPage = 1.obs;
   RxInt totalPages = 1.obs;
   RxInt selectedEmployeeIndex = (-1).obs;
+  RxString selectedEmployeeStatus = 'waiting'.obs;
   RxString maritalStatus = ''.obs;
 
   final TextEditingController nameController = TextEditingController();
@@ -92,12 +103,14 @@ class OcrController extends GetxController {
 
   DocumentScanner? _documentScanner;
   KtpResult? _lastKtpResult;
+  bool _needsManualFallback = false;
 
   // Track which fields were auto-corrected or inferred with low confidence
   RxMap<String, bool> lowConfidenceFields = <String, bool>{}.obs;
   final RxMap<String, bool> fieldEnabled = <String, bool>{}.obs;
 
   RxString croppedImagePath = ''.obs;
+  final ScrollController employeeListScrollController = ScrollController();
 
   final Rx<EmployeeOsEntity> employeeData =
       EmployeeOsEntity(currentPage: 1, data: [], totalPage: 1).obs;
@@ -134,7 +147,10 @@ class OcrController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    await _getEmployeesOS();
+    employeeListScrollController.addListener(_onEmployeeListScroll);
+    final restored =
+        await _restoreEmployeeStatusCache(selectedEmployeeStatus.value);
+    await _getEmployeesOS(showLoading: !restored);
     await _getDataMasterEmployeeOs();
 
     _differentWorker = ever<bool>(
@@ -158,6 +174,9 @@ class OcrController extends GetxController {
   @override
   void onClose() {
     _differentWorker.dispose();
+    employeeListScrollController
+      ..removeListener(_onEmployeeListScroll)
+      ..dispose();
 
     nameController.dispose();
     nikController.dispose();
@@ -193,13 +212,20 @@ class OcrController extends GetxController {
     final responseData = scanOcrResponseData.value;
     if (responseData == null) return;
 
-    final hrData = responseData.dataInputOsModel;
-    final ocrData = responseData.dataOcr.data;
-
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (isClosed || Get.isDialogOpen == true) {
+      if (isClosed ||
+          Get.isDialogOpen == true ||
+          !isDifferent.value ||
+          scanOcrResponseData.value == null ||
+          scanOcrResponseData.value != responseData) {
         return;
       }
+
+      final currentResponse = scanOcrResponseData.value;
+      if (currentResponse == null) return;
+
+      final hrData = currentResponse.dataInputOsModel;
+      final ocrData = currentResponse.dataOcr.data;
 
       Get.dialog(
         barrierDismissible: false,
@@ -515,12 +541,12 @@ class OcrController extends GetxController {
 
   String _formatGender(String value) {
     switch (value.trim().toLowerCase()) {
-      case '0':
+      case '1':
       case 'laki-laki':
       case 'lakilaki':
       case 'male':
         return 'Laki-laki';
-      case '1':
+      case '0':
       case 'perempuan':
       case 'female':
         return 'Perempuan';
@@ -631,10 +657,10 @@ class OcrController extends GetxController {
 
   void setGenderFromValue(String value) {
     final normalized = normalizeValue(value);
-    if (normalized == '0' || normalized == 'lakilaki' || normalized == 'male') {
+    if (normalized == '1' || normalized == 'lakilaki' || normalized == 'male') {
       selectedGender.value = 'Laki-laki';
       genderController.text = 'Laki-laki';
-    } else if (normalized == '1' ||
+    } else if (normalized == '0' ||
         normalized == 'perempuan' ||
         normalized == 'female') {
       selectedGender.value = 'Perempuan';
@@ -732,7 +758,11 @@ class OcrController extends GetxController {
 
   void onChanged(String value) {
     valueListener.value = value;
-    final query = value.trim().toLowerCase();
+    _applyEmployeeSearch(value);
+  }
+
+  void _applyEmployeeSearch([String? value]) {
+    final query = (value ?? search.text).trim().toLowerCase();
     if (query.isEmpty) {
       filteredEmployeeDataList.assignAll(employeeDataList);
       return;
@@ -746,25 +776,111 @@ class OcrController extends GetxController {
     }));
   }
 
+  Future<void> setEmployeeStatus(String status) async {
+    if (selectedEmployeeStatus.value == status) return;
+
+    final selectionRequestId = ++_employeeRequestId;
+    selectedEmployeeStatus.value = status;
+    if (employeeListScrollController.hasClients) {
+      employeeListScrollController.jumpTo(0);
+    }
+    isLoading.value = false;
+    isLoadMore.value = false;
+    isRefreshing.value = false;
+
+    // 1. Instantly display cached data if available (Stale)
+    final restored = await _restoreEmployeeStatusCache(status);
+    if (selectionRequestId != _employeeRequestId) return;
+
+    // If no cache was restored, clear previous list
+    if (!restored) {
+      employeeDataList.clear();
+      filteredEmployeeDataList.clear();
+      currentPage.value = 1;
+      totalPages.value = 1;
+      hasMoreData.value = true;
+    }
+
+    // 2. Fetch fresh data from API (Revalidate)
+    // If cache was restored, fetch silently in the background (showLoading: false)
+    // If no cache was restored, show shimmer loader (showLoading: true)
+    await _fetchEmployeePage(
+      1,
+      replace: true,
+      showLoading: !restored,
+    );
+  }
+
   void clear() {
     search.clear();
     valueListener.value = '';
     filteredEmployeeDataList.assignAll(employeeDataList);
   }
 
-  Future<void> _getEmployeesOS() async {
-    isLoading.value = true;
+  Future<void> onRefreshEmployees() async {
+    await _fetchEmployeePage(1, replace: true, showLoading: false);
+  }
 
-    final result = await _getEmployeeOsUsecase(currentPage.value);
+  void _onEmployeeListScroll() {
+    if (!employeeListScrollController.hasClients ||
+        employeeListScrollController.position.extentAfter > 300) {
+      return;
+    }
+    loadMoreEmployeeData();
+  }
 
-    result.fold(
-      (l) {
+  Future<void> loadMoreEmployeeData() async {
+    if (isLoading.value ||
+        isLoadMore.value ||
+        isRefreshing.value ||
+        !hasMoreData.value) {
+      return;
+    }
+    await _fetchEmployeePage(currentPage.value + 1, replace: false);
+  }
+
+  Future<void> _getEmployeesOS({bool showLoading = true}) async {
+    await _fetchEmployeePage(1, replace: true, showLoading: showLoading);
+  }
+
+  Future<void> _fetchEmployeePage(
+    int page, {
+    required bool replace,
+    bool showLoading = true,
+  }) async {
+    final requestId = ++_employeeRequestId;
+    final status = selectedEmployeeStatus.value;
+    if (replace && showLoading) {
+      isLoading.value = true;
+    } else if (replace) {
+      isRefreshing.value = true;
+    } else if (!replace) {
+      isLoadMore.value = true;
+    }
+
+    final result = await _getEmployeeOsUsecase({
+      'page': page,
+      'status': status,
+    });
+
+    await result.fold<Future<void>>(
+      (l) async {
+        if (requestId != _employeeRequestId) return;
         isLoading.value = false;
+        isLoadMore.value = false;
+        isRefreshing.value = false;
+        AppDialogImpl().showErrorSnackBar(
+          description: l.properties.firstOrNull?.toString() ??
+              'Gagal memuat data Employee OS',
+        );
       },
-      (r) {
+      (r) async {
+        if (requestId != _employeeRequestId) return;
         isLoading.value = false;
+        isLoadMore.value = false;
+        isRefreshing.value = false;
         employeeData.value = r;
-        employeeDataList.addAll(employeeData.value.data
+        final pageData = employeeData.value.data
             .map(
               (e) => EmployeeOsDataEntity(
                 id: e.id,
@@ -772,37 +888,146 @@ class OcrController extends GetxController {
                 idCard: e.idCard,
                 fullName: e.fullName,
                 status: e.status,
+                userCreatedPtk: e.userCreatedPtk,
+                section: e.section,
+                unit: e.unit,
               ),
             )
-            .toList());
-        filteredEmployeeDataList.assignAll(employeeDataList);
-
-        totalPages.value = employeeData().totalPage;
-
-        if (currentPage.value >= totalPages.value) {
-          hasMoreData.value = false;
+            .toList();
+        if (replace) {
+          employeeDataList.assignAll(pageData);
+        } else {
+          employeeDataList.addAll(pageData);
         }
+        _applyEmployeeSearch();
+
+        currentPage.value = page;
+        totalPages.value = employeeData().totalPage;
+        hasMoreData.value = currentPage.value < totalPages.value;
+        await _persistEmployeeStatusCache(status);
       },
     );
   }
 
-  Future<void> _getDataMasterEmployeeOs() async {
-    isLoading.value = true;
+  String _employeeCacheKey(String status) => 'employee_os_list_$status';
 
+  Future<bool> _restoreEmployeeStatusCache(String status) async {
+    final cached = await _appStorage.read(_employeeCacheKey(status));
+    if (cached == null) return false;
+    if (selectedEmployeeStatus.value != status) return false;
+
+    try {
+      final json = jsonDecode(cached) as Map<String, dynamic>;
+      final rows = (json['data'] as List<dynamic>).map((item) {
+        final row = item as Map<String, dynamic>;
+        return EmployeeOsDataEntity(
+          id: row['id'] as int,
+          noRegistration: row['no_registration'] as String,
+          idCard: row['id_card'] as String,
+          fullName: row['full_name'] as String,
+          status: row['status'] as String,
+          userCreatedPtk: row['user_created_ptk'],
+          section: row['section'],
+          unit: row['unit'],
+        );
+      }).toList();
+
+      employeeDataList.assignAll(rows);
+      currentPage.value = json['current_page'] as int;
+      totalPages.value = json['total_page'] as int;
+      hasMoreData.value = currentPage.value < totalPages.value;
+      _applyEmployeeSearch();
+      isLoading.value = false;
+      isLoadMore.value = false;
+      isRefreshing.value = false;
+      return true;
+    } on FormatException catch (error, stackTrace) {
+      developer.log('Invalid cached Employee OS data for $status',
+          error: error, stackTrace: stackTrace);
+      await _appStorage.delete(_employeeCacheKey(status));
+      return false;
+    } on TypeError catch (error, stackTrace) {
+      developer.log('Invalid cached Employee OS data for $status',
+          error: error, stackTrace: stackTrace);
+      await _appStorage.delete(_employeeCacheKey(status));
+      return false;
+    }
+  }
+
+  Future<void> _persistEmployeeStatusCache(String status) async {
+    final cache = {
+      'current_page': currentPage.value,
+      'total_page': totalPages.value,
+      'data': employeeDataList
+          .map((employee) => {
+                'id': employee.id,
+                'no_registration': employee.noRegistration,
+                'id_card': employee.idCard,
+                'full_name': employee.fullName,
+                'status': employee.status,
+                'user_created_ptk': employee.userCreatedPtk,
+                'section': employee.section,
+                'unit': employee.unit,
+              })
+          .toList(),
+    };
+    try {
+      await _appStorage.write(
+        _employeeCacheKey(status),
+        jsonEncode(cache),
+      );
+    } catch (error, stackTrace) {
+      developer.log('Failed to cache Employee OS data',
+          error: error, stackTrace: stackTrace);
+      AppDialogImpl().showErrorSnackBar(
+        description: 'Gagal menyimpan cache data Employee OS',
+      );
+    }
+  }
+
+  Future<void> _getDataMasterEmployeeOs() async {
     final result = await _getDataMasterEmployeeOsUsecase();
 
     result.fold(
-      (l) {
-        isLoading.value = false;
-      },
+      (l) => AppDialogImpl().showErrorSnackBar(
+        description: l.properties.firstOrNull?.toString() ??
+            'Gagal memuat data master Employee OS',
+      ),
       (r) {
-        isLoading.value = false;
         dataMasterEmployeeOs.value = r;
       },
     );
   }
 
   Future<void> scanDocument() async {
+    if (_needsManualFallback) {
+      await AppDialogImpl().showInfoDialog(
+        title: 'KTP tidak dapat terbaca',
+        description:
+            'KTP hasil scan sebelumnya tidak dapat terbaca karena buram atau rusak, sehingga tidak dapat diproses. Proses selanjutnya akan menampilkan data sesuai HRMS. Pastikan untuk memeriksa kembali data tersebut.',
+        textButton: 'Lanjutkan',
+        onPress: () {
+          Get.back();
+          final result = _lastKtpResult;
+          if (result == null || croppedImagePath.value.isEmpty) {
+            AppDialogImpl().showErrorSnackBar(
+              description: 'Data scan KTP sebelumnya tidak tersedia',
+            );
+            return;
+          }
+
+          isLoadingOCR.value = true;
+          readingProgress.value = 0.8;
+          _sendOcrDataToBackend(
+            croppedImagePath.value,
+            result,
+            type: 'manual',
+          );
+        },
+      );
+      return;
+    }
+
     try {
       if (_documentScanner == null) return;
 
@@ -848,6 +1073,8 @@ class OcrController extends GetxController {
   }
 
   Future<void> processImage(String imagePath) async {
+    _needsManualFallback = false;
+    _lastKtpResult = null;
     isLoadingOCR.value = true;
     isDataLoaded.value = false;
     readingProgress.value = 0.1;
@@ -904,6 +1131,10 @@ class OcrController extends GetxController {
         await _sendOcrDataToBackend(imagePath, result);
       }
     } catch (e) {
+      isLoadingOCR.value = false;
+      readingProgress.value = 0.0;
+      isDataLoaded.value = false;
+      isDataLoadedFromBackend.value = false;
       developer.log("Error processing image: $e");
       AppDialogImpl()
           .showErrorSnackBar(description: 'Gagal memproses gambar KTP');
@@ -923,10 +1154,8 @@ class OcrController extends GetxController {
     await scanDocument();
   }
 
-  Future<void> _sendOcrDataToBackend(
-    String imagePath,
-    KtpResult result,
-  ) async {
+  Future<void> _sendOcrDataToBackend(String imagePath, KtpResult result,
+      {String type = 'scan'}) async {
     try {
       final scanOcrUseCase = _scanOcrUseCase ??
           (Get.isRegistered<ScanOcrUseCase>()
@@ -974,21 +1203,21 @@ class OcrController extends GetxController {
         // selectedEmployeeIndex biasanya adalah index list,
         // bukan employee ID.
         id: employeeDataList[selectedEmployeeIndex.value].id,
+        type: type,
       );
 
       final res = await scanOcrUseCase.call(request);
 
       res.fold(
         (failure) {
+          final message = failure.properties.isNotEmpty
+              ? failure.properties.first.toString()
+              : 'Gagal mengirim data OCR';
           developer.log(
             'Error from scanocr backend: '
             '${failure.properties.isNotEmpty ? failure.properties.first : failure}',
           );
-          AppDialogImpl().showErrorSnackBar(
-            description: failure.properties.isNotEmpty
-                ? failure.properties.first.toString()
-                : 'Gagal mengirim data OCR',
-          );
+          AppDialogImpl().showErrorDialog(description: message);
 
           readingProgress.value = 1.0;
 
@@ -1001,6 +1230,17 @@ class OcrController extends GetxController {
           );
 
           readingProgress.value = 1.0;
+
+          if (response.code == 422 &&
+              _isUnreadableKtpMessage(response.message)) {
+            _needsManualFallback = true;
+            AppDialogImpl().showErrorDialog(
+              description: response.message,
+            );
+            isDataLoadedFromBackend.value = false;
+            isLoadingOCR.value = false;
+            return;
+          }
 
           if (response.data == null) {
             developer.log(
@@ -1018,7 +1258,10 @@ class OcrController extends GetxController {
           }
 
           final responseData = response.data!;
-          if (responseData.dataOcr.success != true) {
+          final hrData = responseData.dataInputOsModel;
+          final ocrData = responseData.dataOcr.data;
+          final isHrmsFallback = ocrData == null && hrData != null;
+          if (responseData.dataOcr.success != true && !isHrmsFallback) {
             developer.log('OCR extraction failed: data_ocr.success is false');
             AppDialogImpl().showErrorSnackBar(
                 description: 'OCR gagal mengekstrak data dari KTP');
@@ -1028,14 +1271,15 @@ class OcrController extends GetxController {
           }
 
           scanOcrResponseData.value = responseData;
-          isDirect.value = responseData.dataOcr.isDirect;
-          isManufacturing.value = responseData.dataOcr.isManufacturing;
-          final ocrData = responseData.dataOcr.data;
-
-          if (ocrData == null) {
+          isDirect.value = responseData.dataOcr.isDirect ?? hrData?.isDirect;
+          isManufacturing.value =
+              responseData.dataOcr.isManufacturing ?? hrData?.isManufacturing;
+          if (ocrData == null && !isHrmsFallback) {
             developer.log('OCR data field map is null');
             AppDialogImpl().showErrorSnackBar(
                 description: 'Data OCR dari server tidak tersedia');
+            scanOcrResponseData.value = null;
+            isDifferent.value = false;
             isDataLoadedFromBackend.value = false;
             isLoadingOCR.value = false;
             return;
@@ -1043,43 +1287,41 @@ class OcrController extends GetxController {
 
           isDifferent.value = false;
 
-          // =========================================================
-          // UPDATE OCR RESULT
-          // =========================================================
+          if (isHrmsFallback) {
+            _applyBackendData(hrData);
+          } else {
+            final ocrFields = ocrData!;
+            _updateField(
+              output: ocrFields['nik'],
+              controller: nikController,
+              field: result.nik,
+            );
+            _updateField(
+              output: ocrFields['nama'],
+              controller: nameController,
+              field: result.name,
+            );
+            _updateField(
+              output: ocrFields['tempat_lahir'] ?? ocrFields['birthPlace'],
+              controller: birthPlaceController,
+              field: result.birthPlace,
+            );
+            _updateField(
+              output: ocrFields['tanggal_lahir'] ?? ocrFields['birthDate'],
+              controller: birthDateController,
+              field: result.birthDate,
+            );
+            _updateField(
+              output: ocrFields['jenis_kelamin'] ?? ocrFields['gender'],
+              controller: genderController,
+              field: result.gender,
+            );
+            setGenderFromValue(genderController.text);
+            _applyOcrData(ocrFields);
+            _applyBackendData(hrData);
+          }
 
-          _updateField(
-            output: ocrData['nik'],
-            controller: nikController,
-            field: result.nik,
-          );
-
-          _updateField(
-            output: ocrData['nama'],
-            controller: nameController,
-            field: result.name,
-          );
-
-          _updateField(
-            output: ocrData['tempat_lahir'] ?? ocrData['birthPlace'],
-            controller: birthPlaceController,
-            field: result.birthPlace,
-          );
-
-          _updateField(
-            output: ocrData['tanggal_lahir'] ?? ocrData['birthDate'],
-            controller: birthDateController,
-            field: result.birthDate,
-          );
-
-          _updateField(
-            output: ocrData['jenis_kelamin'] ?? ocrData['gender'],
-            controller: genderController,
-            field: result.gender,
-          );
-          setGenderFromValue(genderController.text);
-
-          _applyOcrData(ocrData);
-          _applyBackendData(responseData.dataInputOsModel);
+          _needsManualFallback = false;
 
           // =========================================================
           // LOG QUALITY
@@ -1120,9 +1362,11 @@ class OcrController extends GetxController {
         },
       );
     } catch (e, stackTrace) {
-      readingProgress.value = 1.0;
+      readingProgress.value = 0.0;
       isDataLoadedFromBackend.value = false;
       isLoadingOCR.value = false;
+      isDifferent.value = false;
+      scanOcrResponseData.value = null;
 
       developer.log(
         'Exception when calling scanocr backend: $e',
@@ -1133,6 +1377,9 @@ class OcrController extends GetxController {
     }
     developer.log('BACKEND STATUS ${isDataLoadedFromBackend.value}');
   }
+
+  bool _isUnreadableKtpMessage(String message) =>
+      message.toLowerCase().contains('kualitas gambar ktp kurang jelas');
 
   void _updateField({
     required ScanOcrFieldOutput? output,
@@ -1209,8 +1456,28 @@ class OcrController extends GetxController {
     fieldEnabled.clear();
     fieldEnabled['NIK'] = true;
     fieldEnabled['Nama Lengkap'] = true;
+    fieldEnabled['Tempat Lahir'] = true;
+    fieldEnabled['Tanggal Lahir'] = true;
+    fieldEnabled['Jenis Kelamin'] = true;
+    fieldEnabled['Agama'] = true;
+    fieldEnabled['Golongan Darah'] = true;
+    fieldEnabled['Keahlian Utama'] = true;
+    fieldEnabled['Skill Tambahan 1'] = true;
+    fieldEnabled['Skill Tambahan 2'] = true;
     if (data == null) return;
 
+    _setBackendField(
+      'NIK',
+      nikController,
+      data.idCard,
+    );
+    _setBackendField(
+      'Nama Lengkap',
+      nameController,
+      '${data.firstName} ${data.lastName}'.trim(),
+    );
+    maritalStatusController.text = data.maritalStatus;
+    maritalStatus.value = data.maritalStatus;
     _setBackendField('Tempat Lahir', birthPlaceController, data.birthplace);
     _setBackendField(
         'Tanggal Lahir',
@@ -1230,7 +1497,6 @@ class OcrController extends GetxController {
     }
 
     selectMainSkill(_skillId(data.mainSkill));
-    _setSkillFieldEnabled('Keahlian Utama', data.mainSkill);
 
     final additionalSkills = data.additionalSkill is List
         ? (data.additionalSkill as List)
@@ -1240,21 +1506,13 @@ class OcrController extends GetxController {
         additionalSkillIds.isNotEmpty ? additionalSkillIds.first : null);
     selectAdditionalSkill2(
         additionalSkillIds.length > 1 ? additionalSkillIds[1] : null);
-    _setSkillFieldEnabled('Skill Tambahan 1',
-        additionalSkillIds.isNotEmpty ? additionalSkillIds.first : null);
-    _setSkillFieldEnabled('Skill Tambahan 2',
-        additionalSkillIds.length > 1 ? additionalSkillIds[1] : null);
   }
 
   void _setBackendField(
       String label, TextEditingController controller, dynamic value) {
     final text = value?.toString().trim() ?? '';
     if (text.isNotEmpty) controller.text = text;
-    fieldEnabled[label] = text.isEmpty;
-  }
-
-  void _setSkillFieldEnabled(String label, dynamic value) {
-    fieldEnabled[label] = _skillId(value) == null;
+    fieldEnabled[label] = true;
   }
 
   int? _skillId(dynamic value) {
@@ -1268,13 +1526,44 @@ class OcrController extends GetxController {
 
   bool isFieldEnabled(String label) => fieldEnabled[label] ?? true;
 
-  void retake() async {
+  void retake() {
+    if (Get.isDialogOpen == true) {
+      Get.back();
+    }
+
+    isLoadingOCR.value = false;
     isDataLoaded.value = false;
     isDataLoadedFromBackend.value = false;
+    isSubmitting.value = false;
+    readingProgress.value = 0.0;
     isDifferent.value = false;
     scanOcrResponseData.value = null;
     croppedImagePath.value = '';
     _lastKtpResult = null;
+
+    nikController.clear();
+    nameController.clear();
+    birthPlaceController.clear();
+    birthDateController.clear();
+    genderController.clear();
+    addressController.clear();
+    rtController.clear();
+    rwController.clear();
+    villageController.clear();
+    districtController.clear();
+    cityController.clear();
+    provinceController.clear();
+    religionController.clear();
+    maritalStatusController.clear();
+    bloodTypeController.clear();
+    mainSkillsController.clear();
+    additionalFirstSkillsController.clear();
+    additionalSecondSkillsController.clear();
+    workController.clear();
+    nationalityController.clear();
+    phoneController.clear();
+    joinDateController.clear();
+
     selectedReligionId.value = null;
     selectedReligionName.value = null;
     selectedBloodType.value = null;
@@ -1282,40 +1571,18 @@ class OcrController extends GetxController {
     selectedMainSkillId.value = null;
     selectedAdditionalSkill1Id.value = null;
     selectedAdditionalSkill2Id.value = null;
+    maritalStatus.value = '';
     isDirect.value = null;
     isManufacturing.value = null;
-    joinDateController.clear();
-    religionController.clear();
-    bloodTypeController.clear();
-    mainSkillsController.clear();
-    additionalFirstSkillsController.clear();
-    additionalSecondSkillsController.clear();
+
     lowConfidenceFields.clear();
+    fieldEnabled.clear();
+    _needsManualFallback = false;
+    formKey.currentState?.reset();
   }
 
   void reset() async {
-    isDataLoaded.value = false;
-    isDataLoadedFromBackend.value = false;
-    isDifferent.value = false;
-    scanOcrResponseData.value = null;
-    croppedImagePath.value = '';
-    _lastKtpResult = null;
-    selectedReligionId.value = null;
-    selectedReligionName.value = null;
-    selectedBloodType.value = null;
-    selectedGender.value = null;
-    selectedMainSkillId.value = null;
-    selectedAdditionalSkill1Id.value = null;
-    selectedAdditionalSkill2Id.value = null;
-    isDirect.value = null;
-    isManufacturing.value = null;
-    joinDateController.clear();
-    religionController.clear();
-    bloodTypeController.clear();
-    mainSkillsController.clear();
-    additionalFirstSkillsController.clear();
-    additionalSecondSkillsController.clear();
-    lowConfidenceFields.clear();
+    retake();
     search.clear();
     valueListener.value = '';
     selectedEmployeeIndex.value = -1;
@@ -1335,13 +1602,6 @@ class OcrController extends GetxController {
     if (birthDateController.text.trim().isEmpty) missing.add('Tanggal Lahir');
     if (selectedReligionId.value == null) missing.add('Agama');
     if (selectedBloodType.value == null) missing.add('Golongan Darah');
-    if (selectedMainSkillId.value == null) missing.add('Keahlian Utama');
-    if (selectedAdditionalSkill1Id.value == null) {
-      missing.add('Skill Tambahan 1');
-    }
-    if (selectedAdditionalSkill2Id.value == null) {
-      missing.add('Skill Tambahan 2');
-    }
     if (joinDateController.text.trim().isEmpty)
       missing.add('Tanggal Bergabung');
     if (isDirect.value == null) missing.add('Direct');
@@ -1382,11 +1642,12 @@ class OcrController extends GetxController {
         fullName: nameController.text.trim(),
         religionId: selectedReligionId.value!,
         bloodType: selectedBloodType.value!,
-        mainSkill: selectedMainSkillId.value!,
+        mainSkill: selectedMainSkillId.value,
         additionalSkill: additionalSkills,
         joinDate: joinDateController.text.trim(),
         isManufacturing: isManufacturing.value ?? true,
         isDirect: isDirect.value ?? false,
+        fileKtp: await _getKtpImageBase64(),
       ));
       result.fold(
         (failure) {
@@ -1403,6 +1664,28 @@ class OcrController extends GetxController {
       );
     } finally {
       isSubmitting.value = false;
+    }
+  }
+
+  Future<String?> _getKtpImageBase64() async {
+    if (_needsManualFallback ||
+        _lastKtpResult == null ||
+        croppedImagePath.value.isEmpty) {
+      return null;
+    }
+
+    try {
+      return base64Encode(await File(croppedImagePath.value).readAsBytes());
+    } on FileSystemException catch (error, stackTrace) {
+      developer.log(
+        'Failed to read scanned KTP image',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      AppDialogImpl().showErrorSnackBar(
+        description: 'Gagal membaca gambar KTP',
+      );
+      return null;
     }
   }
 }

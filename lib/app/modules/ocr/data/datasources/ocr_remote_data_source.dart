@@ -29,12 +29,36 @@ class OcrRemoteDataSourceImpl implements OcrRemoteDataSource {
       final r = await httpService.multipart(
         endpoint: 'employeeos/scanocr',
         formData: formData,
+        showPopUp: false,
         withToken: true,
       );
       return ScanOcrResponseModel.fromJson(r);
     } on ApiException catch (e) {
       AppUtils.logApp('CATCH ERR OCR API ::: ${e.message}');
-      throw ApiException(e.message ?? 'An error occurred while scanning OCR');
+      if (e.statusCode == 422) {
+        final responseData = e.responseData;
+        if (responseData is Map) {
+          final parsedResponse = ScanOcrResponseModel.fromJson(
+            Map<String, dynamic>.from(responseData),
+          );
+          return ScanOcrResponseModel(
+            code: 422,
+            message: parsedResponse.message.isNotEmpty
+                ? parsedResponse.message
+                : e.message ?? 'Gagal memproses data OCR',
+            data: parsedResponse.data,
+          );
+        }
+        return ScanOcrResponseModel(
+          code: 422,
+          message: e.message ?? 'Gagal memproses data OCR',
+        );
+      }
+      throw ApiException(
+        e.message ?? 'An error occurred while scanning OCR',
+        statusCode: e.statusCode,
+        responseData: e.responseData,
+      );
     } catch (e, stackTrace) {
       AppUtils.logApp('Error in scanOcr: $e\n$stackTrace');
       rethrow;
@@ -44,10 +68,19 @@ class OcrRemoteDataSourceImpl implements OcrRemoteDataSource {
   @override
   Future<EmployeeOsModel> getEmployeeOs(params) async {
     try {
+      if (params is! Map<String, dynamic>) {
+        throw ArgumentError('Employee OS list parameters must be a map');
+      }
+      final status = params['status'] as String? ?? 'waiting';
+      const statuses = {'waiting', 'approve', 'approval'};
+      if (!statuses.contains(status)) {
+        throw ArgumentError('Unsupported Employee OS status: $status');
+      }
+
       final r = await httpService.request(
         withToken: true,
-        endpoint: 'employeeos/list_data/waiting',
-        params: {'page': params},
+        endpoint: 'employeeos/list_data/$status',
+        params: {'page': params['page'] ?? 1},
         method: Method.GET,
       );
       if (r == null) {

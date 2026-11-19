@@ -4,12 +4,13 @@ class SaveEmployeeOsRequestModel {
   final String fullName;
   final int religionId;
   final String bloodType;
-  final int mainSkill;
+  final int? mainSkill;
   final List<int> additionalSkill;
   final String joinDate;
   final bool isManufacturing;
   final bool isDirect;
   final String action;
+  final String? fileKtp;
 
   SaveEmployeeOsRequestModel({
     required this.id,
@@ -17,12 +18,13 @@ class SaveEmployeeOsRequestModel {
     required this.fullName,
     required this.religionId,
     required this.bloodType,
-    required this.mainSkill,
+    this.mainSkill,
     this.additionalSkill = const [],
     required this.joinDate,
     required this.isManufacturing,
     required this.isDirect,
     this.action = 'approve',
+    required this.fileKtp,
   });
 
   Map<String, dynamic> toJson() => {
@@ -37,5 +39,6 @@ class SaveEmployeeOsRequestModel {
         'is_manufacturing': isManufacturing,
         'is_direct': isDirect,
         'action': action,
+        'file_ktp': fileKtp,
       };
 }

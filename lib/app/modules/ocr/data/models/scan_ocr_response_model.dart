@@ -192,6 +192,8 @@ class DataInputOsModel {
   final String bloodType;
   final dynamic mainSkill;
   final dynamic additionalSkill;
+  final bool? isDirect;
+  final bool? isManufacturing;
   final bool isInternal;
   final String uuid;
   final String state;
@@ -216,6 +218,8 @@ class DataInputOsModel {
     required this.bloodType,
     required this.mainSkill,
     required this.additionalSkill,
+    required this.isDirect,
+    required this.isManufacturing,
     required this.isInternal,
     required this.uuid,
     required this.state,
@@ -242,6 +246,8 @@ class DataInputOsModel {
         bloodType: json["blood_type"]?.toString() ?? '',
         mainSkill: json["main_skill"],
         additionalSkill: json["additional_skill"],
+        isDirect: json["is_direct"] as bool?,
+        isManufacturing: json["is_manufacturing"] as bool?,
         isInternal: json["is_internal"] == true,
         uuid: json["uuid"]?.toString() ?? '',
         state: json["state"]?.toString() ?? '',
@@ -269,6 +275,8 @@ class DataInputOsModel {
         "blood_type": bloodType,
         "main_skill": mainSkill,
         "additional_skill": additionalSkill,
+        "is_direct": isDirect,
+        "is_manufacturing": isManufacturing,
         "is_internal": isInternal,
         "uuid": uuid,
         "state": state,
@@ -302,7 +310,7 @@ class ScanOcrResponseDataModel {
             )
           : ScanOcrDataModel(
               success: false,
-              data: {},
+              data: null,
               warnings: [],
             ),
       dataInputOsModel: json['data_inputed_os'] is Map<String, dynamic>
@@ -347,7 +355,9 @@ class ScanOcrResponseModel {
     );
   }
 
-  bool get success => code == 200 && data?.dataOcr.success == true;
+  bool get success =>
+      code == 200 &&
+      (data?.dataOcr.success == true || data?.dataInputOsModel != null);
 
   Map<String, dynamic> toJson() {
     return {

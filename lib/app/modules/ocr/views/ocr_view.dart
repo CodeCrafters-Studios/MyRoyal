@@ -137,57 +137,127 @@ class OcrView extends GetView<OcrController> {
 
       return SearchTextInheritedWidget(
         searchText: RegExp.escape(controller.search.text),
-        child: SingleChildScrollView(
-          child: Column(children: [
-            10.verticalSpace,
-            _buildSearch(),
-            ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: REdgeInsets.only(bottom: 100, top: 15),
-              itemCount: controller.filteredEmployeeDataList.length,
-              separatorBuilder: (_, __) => 10.verticalSpace,
-              itemBuilder: (_, index) {
-                final data = controller.filteredEmployeeDataList[index];
-                return RPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SearchHighlightText(data.fullName,
-                                  style: TS.labelLarge,
-                                  highlightStyle: TS.labelLarge.copyWith(
-                                      backgroundColor: Colors.yellow)),
-                              SearchHighlightText(
-                                  '${data.id} / ${data.noRegistration}',
-                                  style: TS.bodyMedium,
-                                  highlightStyle: TS.bodyMedium.copyWith(
-                                      backgroundColor: Colors.yellow)),
-                              SearchHighlightText(data.status,
-                                  style: TS.bodySmall.copyWith(color: greyText),
-                                  highlightStyle: TS.bodySmall.copyWith(
-                                      color: greyText,
-                                      backgroundColor: Colors.yellow)),
-                            ]),
-                        ButtonPrimary(
-                            text: 'Scan',
-                            onPressed: () {
-                              final rawIndex = controller.employeeDataList
-                                  .indexWhere(
-                                      (employee) => employee.id == data.id);
-                              controller.selectedEmployeeIndex.value = rawIndex;
-                            }),
-                      ]),
-                );
-              },
-            ),
-          ]),
+        child: RefreshIndicator(
+          onRefresh: controller.onRefreshEmployees,
+          child: SingleChildScrollView(
+            controller: controller.employeeListScrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(children: [
+              10.verticalSpace,
+              _buildSearch(),
+              _buildStatusFilter(),
+              if (controller.filteredEmployeeDataList.isEmpty)
+                Padding(
+                  padding: REdgeInsets.symmetric(vertical: 36),
+                  child: Text(
+                    'Tidak ada data untuk status ini',
+                    style: TS.bodyMedium.copyWith(color: greyText),
+                  ),
+                ),
+              ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: REdgeInsets.only(bottom: 100, top: 15),
+                itemCount: controller.filteredEmployeeDataList.length,
+                separatorBuilder: (_, __) => 10.verticalSpace,
+                itemBuilder: (_, index) {
+                  final data = controller.filteredEmployeeDataList[index];
+                  return RPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SearchHighlightText(data.fullName,
+                                      style: TS.labelLarge,
+                                      highlightStyle: TS.labelLarge.copyWith(
+                                          backgroundColor: Colors.yellow)),
+                                  SearchHighlightText(
+                                      '${data.section} | ${data.userCreatedPtk}',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TS.bodySmall,
+                                      highlightStyle: TS.bodyMedium.copyWith(
+                                          backgroundColor: Colors.yellow)),
+                                  SearchHighlightText(
+                                      '${data.idCard} - ${data.noRegistration}',
+                                      style:
+                                          TS.bodySmall.copyWith(color: black),
+                                      highlightStyle: TS.bodySmall.copyWith(
+                                          color: greyText,
+                                          backgroundColor: Colors.yellow)),
+                                  SearchHighlightText(data.status,
+                                      style: TS.bodySmall
+                                          .copyWith(color: greyText),
+                                      highlightStyle: TS.bodySmall.copyWith(
+                                          color: greyText,
+                                          backgroundColor: Colors.yellow)),
+                                ]),
+                          ),
+                          if (controller.selectedEmployeeStatus.value ==
+                              'waiting')
+                            ButtonPrimary(
+                                text: 'Scan',
+                                onPressed: () {
+                                  final rawIndex = controller.employeeDataList
+                                      .indexWhere(
+                                          (employee) => employee.id == data.id);
+                                  controller.selectedEmployeeIndex.value =
+                                      rawIndex;
+                                }),
+                        ]),
+                  );
+                },
+              ),
+              if (controller.isLoadMore.value)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 24),
+                  child: Center(
+                    child: CircularProgressIndicator(color: primary),
+                  ),
+                ),
+            ]),
+          ),
         ),
       );
     });
+  }
+
+  Widget _buildStatusFilter() {
+    const statuses = [
+      ('waiting', 'Waiting'),
+      ('approve', 'Approve'),
+      ('approval', 'Approval'),
+    ];
+
+    return Obx(
+      () => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: REdgeInsets.only(left: 16, right: 16, top: 12),
+        child: Row(
+          children: statuses.map((status) {
+            final isSelected =
+                controller.selectedEmployeeStatus.value == status.$1;
+            return Padding(
+              padding: REdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                label: Text(status.$2),
+                selected: isSelected,
+                selectedColor: primary,
+                labelStyle: TS.bodySmall.copyWith(
+                  color: isSelected ? white : black,
+                ),
+                onSelected: (_) => controller.setEmployeeStatus(status.$1),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Widget _buildEmployeeShimmer() {
@@ -382,11 +452,11 @@ class OcrView extends GetView<OcrController> {
                         label: 'Jenis Kelamin',
                         hintText: 'Pilih jenis kelamin',
                         value: controller.selectedGender.value == 'Laki-laki'
-                            ? '0'
+                            ? '1'
                             : controller.selectedGender.value == 'Perempuan'
-                                ? '1'
+                                ? '0'
                                 : null,
-                        items: const ['0', '1'],
+                        items: const ['1', '0'],
                         itemLabels: const ['Laki-laki', 'Perempuan'],
                         enabled: controller.isFieldEnabled('Jenis Kelamin'),
                         onChanged: (value) {
@@ -395,6 +465,10 @@ class OcrView extends GetView<OcrController> {
                           }
                         },
                       )),
+                  _buildInput(
+                    'Status Perkawinan',
+                    controller.maritalStatusController,
+                  ),
                   // const SizedBox(height: 8),
                   // _buildInput('Alamat', controller.addressController,
                   //     maxLines: 2),

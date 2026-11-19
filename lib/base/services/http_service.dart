@@ -120,7 +120,9 @@ class HttpService extends getx.GetxService {
     RequestType type = RequestType.json,
     String? fileName,
   }) async {
-    final url = endpoint.startsWith('http') ? endpoint : AppConfig.environment.baseUrl + endpoint;
+    final url = endpoint.startsWith('http')
+        ? endpoint
+        : AppConfig.environment.baseUrl + endpoint;
     final cacheKey =
         "CACHE_$url${(params != null && params is! FormData) ? jsonEncode(params) : ''}";
 
@@ -192,11 +194,21 @@ class HttpService extends getx.GetxService {
       }
 
       _handleError(message, showPopUp, code);
-      throw ApiException(message);
+      throw ApiException(
+        message,
+        statusCode: code,
+        responseData: response.data,
+      );
     } on DioException catch (e) {
       final message = _extractMessage(e.response?.data);
       _handleError(message, showPopUp, e.response?.statusCode);
-      throw ApiException(message);
+      throw ApiException(
+        message,
+        statusCode: e.response?.statusCode,
+        responseData: e.response?.data,
+      );
+    } on ApiException {
+      rethrow;
     } catch (e) {
       final message = e.toString();
 
@@ -211,12 +223,14 @@ class HttpService extends getx.GetxService {
     Method method = Method.POST,
     Map<String, dynamic>? params,
     bool withToken = false,
+    bool showPopUp = true,
   }) {
     return _execute(
       endpoint: endpoint,
       method: method,
       params: params,
       withToken: withToken,
+      showPopUp: showPopUp,
       type: RequestType.json,
     );
   }
@@ -226,12 +240,14 @@ class HttpService extends getx.GetxService {
     required Map<String, dynamic> body,
     required String fileName,
     bool withToken = true,
+    bool showPopUp = true,
   }) async {
     final result = await _execute(
       endpoint: endpoint,
       method: Method.POST,
       params: body,
       withToken: withToken,
+      showPopUp: showPopUp,
       type: RequestType.download,
       fileName: fileName,
     );
@@ -243,12 +259,14 @@ class HttpService extends getx.GetxService {
     required String endpoint,
     required FormData formData,
     bool withToken = true,
+    bool showPopUp = true,
   }) {
     return _execute(
       endpoint: endpoint,
       method: Method.POST,
       params: formData,
       withToken: withToken,
+      showPopUp: showPopUp,
       type: RequestType.multipart,
     );
   }

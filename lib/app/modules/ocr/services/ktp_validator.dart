@@ -82,7 +82,10 @@ class KtpValidator {
   }
 
   static bool validateGender(String gender) {
-    return KtpDictionaries.genders.contains(gender.trim().toUpperCase());
+    final clean = gender.trim().toUpperCase();
+    return KtpDictionaries.genders.contains(clean) ||
+        clean == '1' ||
+        clean == '0';
   }
 
   static bool validateRtRw(String rt, String rw) {
