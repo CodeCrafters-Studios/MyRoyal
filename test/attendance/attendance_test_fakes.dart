@@ -15,7 +15,10 @@ import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_lo
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/get_attendance_today_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/domain/usecases/record_attendance_usecase.dart';
 import 'package:MyRoyal/app/modules/attendance/presentation/controllers/attendance_controller.dart';
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_sync.dart';
 import 'package:MyRoyal/base/errors/failures.dart';
+
+import 'widget/fake_widget_store.dart';
 
 const officeLat = -6.200000;
 const officeLng = 106.816666;
@@ -179,10 +182,12 @@ class Harness {
   final repo = FakeAttendanceRepository();
   final geo = FakeGeolocator();
   final connection = onlineStatus.obs;
+  final widgetStore = FakeWidgetStore();
   late AttendanceController controller;
 
   Future<AttendanceController> start() async {
     GeolocatorPlatform.instance = geo;
+    AttendanceWidgetSync.instance = AttendanceWidgetSync(store: widgetStore);
     await tester.pumpWidget(ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (_, __) => const GetMaterialApp(home: Scaffold()),

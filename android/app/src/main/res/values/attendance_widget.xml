@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="attendance_widget_label">Kehadiran</string>
+    <string name="attendance_widget_description">Status kehadiran hari ini dan pintasan check-in, istirahat, dan check-out.</string>
+    <color name="attendance_widget_text">#FF1A1D3B</color>
+</resources>

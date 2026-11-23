@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:MyRoyal/app/modules/attendance/widget/attendance_widget_sync.dart';
 import 'package:MyRoyal/app/routes/app_pages.dart';
 import 'package:MyRoyal/app/shared/services/in_app_review_service.dart';
 import 'package:MyRoyal/base/utils/dialog/app_dialog.dart';
@@ -409,6 +410,7 @@ class HttpService extends getx.GetxService {
           onPress: () async {
             await appStorage.delete(CACHE_ACCESS_TOKEN);
             await appStorage.delete(CACHE_REFRESH_TOKEN);
+            await AttendanceWidgetSync.instance.clear();
             getx.Get.offAllNamed(Routes.LOGIN);
           },
         );
